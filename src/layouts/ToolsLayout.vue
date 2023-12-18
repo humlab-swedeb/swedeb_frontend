@@ -1,0 +1,123 @@
+<template>
+  <q-layout view="hHh Lpr fFf">
+    <q-header class="row no-wrap">
+      <q-toolbar
+        class="bg-grey-8 text-white"
+        style="max-width: 400px; min-width: 400px"
+      >
+        <q-toolbar-title>SweDeb</q-toolbar-title>
+        <q-tabs no-caps color="black" class="gt-sm">
+          <q-route-tab to="/" label="Start" />
+          <q-route-tab to="/" label="Om SweDeb" />
+          <q-route-tab to="/" label="FAQ" />
+        </q-tabs>
+
+        <q-btn flat round icon="menu" class="lt-md">
+          <q-menu>
+            <q-list>
+              <q-item to="/" clickable>
+                <q-item-section>Start</q-item-section>
+              </q-item>
+              <q-item to="/about" clickable>
+                <q-item-section>Om SweDeb</q-item-section>
+              </q-item>
+              <q-item to="/qa" clickable>
+                <q-item-section>QA</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
+      </q-toolbar>
+      <q-toolbar class="bg-white">
+        <q-tabs no-caps active-color="green-8" class="text-bold text-black">
+          <q-route-tab to="/tools/wordtrends" label="Ordtrender" />
+          <q-route-tab to="/tools/kwic" label="KWIC" />
+          <q-route-tab to="/tools/speeches" label="Anföranden" />
+          <q-route-tab to="/tools/ngram" label="N-Grams" />
+        </q-tabs>
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer
+      v-model="drawer"
+      show-if-above
+      :mini="!drawer || miniState"
+      @click.capture="drawerClick"
+      :width="400"
+      :breakpoint="400"
+      bordered
+      class="bg-grey-3"
+    >
+      <!-- If small -->
+      <template v-slot:mini>
+        <div class="cursor-pointer fit">
+          <q-item>
+            <q-btn
+              dense
+              round
+              unelevated
+              color="primary"
+              icon="chevron_right"
+              @click="miniState = false"
+            />
+          </q-item>
+
+          <q-item>
+            <p class="metadata-filter-text">Metadata filter</p>
+          </q-item>
+        </div>
+      </template>
+
+      <!-- If exdended -->
+      <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
+        <ApiTest />
+        <metaDataFilter />
+      </q-scroll-area>
+
+      <div class="q-mini-drawer-hide absolute" style="top: 15px; right: -17px">
+        <q-btn
+          dense
+          round
+          unelevated
+          color="primary"
+          icon="chevron_left"
+          @click="miniState = true"
+        />
+      </div>
+    </q-drawer>
+
+    <q-page-container>
+      <q-page class="q-px-lg q-py-md">
+        <router-view />
+      </q-page>
+    </q-page-container>
+  </q-layout>
+</template>
+
+<script setup>
+import ApiTest from "src/components/ApiTest.vue";
+import metaDataFilter from 'src/components/metaDataFilter.vue';
+import { ref } from "vue";
+
+const miniState = ref(false);
+
+const drawer = ref(false);
+
+const drawerClick = (e) => {
+  // if in "mini" state and user
+  // click on drawer, we switch it to "normal" mode
+  if (miniState.value) {
+    miniState.value = false;
+    e.stopPropagation();
+  }
+};
+</script>
+
+<style scoped>
+.metadata-filter-text {
+  writing-mode: vertical-lr;
+  rotate: 180deg;
+  padding: 0 0 20px 0;
+  font-weight: bold;
+}
+</style>
