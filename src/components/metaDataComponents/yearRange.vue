@@ -1,5 +1,5 @@
 <template>
-  <q-item-label class="text-bold">{{ $t("year") }}</q-item-label>
+  <q-item-label class="text-bold">{{ $t("year") + ":" }}</q-item-label>
   <q-list>
     <q-item class="q-px-none">
       <q-item-label>{{ $t("yearRangeMin") }}</q-item-label>
@@ -9,7 +9,6 @@
         :max="2020"
         label-always
         class="q-mt-md q-mb-lg"
-        drag-range
         switch-label-side
       />
       <q-item-label>{{ $t("yearRangeMax") }}</q-item-label>

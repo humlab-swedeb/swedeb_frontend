@@ -69,12 +69,17 @@
       </template>
 
       <!-- If exdended -->
-      <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-        <ApiTest />
+      <q-scroll-area
+        class="fit q-pt-md"
+        :horizontal-thumb-style="{ opacity: 0 }"
+      >
         <metaDataFilter />
       </q-scroll-area>
 
-      <div class="q-mini-drawer-hide absolute" style="top: 15px; right: -17px">
+      <div
+        class="q-mini-drawer-hide absolute"
+        style="top: 15px; right: -17px; overflow: hidden"
+      >
         <q-btn
           dense
           round
@@ -95,8 +100,7 @@
 </template>
 
 <script setup>
-import ApiTest from "src/components/ApiTest.vue";
-import metaDataFilter from 'src/components/metaDataFilter.vue';
+import metaDataFilter from "src/components/metaDataFilter.vue";
 import { ref } from "vue";
 
 const miniState = ref(false);

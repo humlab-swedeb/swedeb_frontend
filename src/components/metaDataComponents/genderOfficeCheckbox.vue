@@ -1,5 +1,5 @@
 <template>
-    <q-item-label class="text-bold">{{ $t(`${props.type}`) }}</q-item-label>
+  <q-item-label class="text-bold">{{ $t(`${props.type}`) + ":" }}</q-item-label>
   <q-checkbox
     @click="store.selectAll(props.type)"
     v-model="store[`${props.type}AllSelect`]"
