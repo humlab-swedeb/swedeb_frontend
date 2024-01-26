@@ -5,9 +5,7 @@
         <q-item-label caption class="text-black text-bold">
           Valda filtreringsalternativ:
         </q-item-label>
-        <!-- Iterate over the displayedData object -->
         <div v-for="(value, key) in displayedData" :key="key">
-          <!-- If the value is an array with elements, display them comma-separated -->
           <div v-if="Array.isArray(value) && value.length > 0">
             {{ key }}: {{ value.join(", ") }}
           </div>

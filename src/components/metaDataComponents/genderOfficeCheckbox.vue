@@ -20,6 +20,9 @@
 
 <script setup>
 import { dataStore } from "src/stores/dataStore.js";
+import { defineProps } from "vue";
 const store = dataStore();
+store.getOfficeOptions();
+store.getGenderOptions();
 const props = defineProps(["type"]);
 </script>

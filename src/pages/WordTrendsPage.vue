@@ -1,6 +1,7 @@
 <template>
   <div v-show="showData">
     <ShowData />
+    <br />
     <DataTable />
   </div>
 </template>

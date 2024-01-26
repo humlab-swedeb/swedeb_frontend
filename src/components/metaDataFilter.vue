@@ -41,7 +41,7 @@
           <dropdownSelection type="subOffice" />
           <dropdownSelection type="speakers" />
         </q-card-section>
-        <q-btn @click="handleSubmit" class="fit q-py-md" color="primary"
+        <q-btn @click="handleSubmit" no-caps class="fit q-py-sm" color="primary"
           >Submit</q-btn
         >
       </q-card-section>
@@ -49,12 +49,16 @@
       -->
     </q-slide-transition>
   </q-card>
+  <q-card flat class="q-ma-md bg-transparent">
+    <searchBar />
+  </q-card>
 </template>
 
 <script setup>
 import yearRange from "src/components/metaDataComponents/yearRange.vue";
 import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
+import searchBar from "src/components/searchBar.vue";
 import { dataStore } from "src/stores/dataStore.js";
 import { ref } from "vue";
 const store = dataStore();

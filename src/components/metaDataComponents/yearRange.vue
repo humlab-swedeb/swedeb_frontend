@@ -5,8 +5,8 @@
       <q-item-label>{{ $t("yearRangeMin") }}</q-item-label>
       <q-range
         v-model="store.selected.yearRange"
-        :min="1920"
-        :max="2020"
+        :min="min"
+        :max="max"
         label-always
         class="q-mt-md q-mb-lg"
         switch-label-side
@@ -18,5 +18,16 @@
 
 <script setup>
 import { dataStore } from "src/stores/dataStore.js";
+import { ref } from "vue";
 const store = dataStore();
+
+let min = ref(0);
+let max = ref(0);
+
+const getYearRange = async () => {
+  min.value = await store.getStartYear();
+  max.value = await store.getEndYear();
+};
+
+getYearRange();
 </script>
