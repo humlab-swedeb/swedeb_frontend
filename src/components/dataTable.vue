@@ -40,8 +40,8 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { dataStore } from "src/stores/dataStore.js";
-const store = dataStore();
+import { metaDataStore } from "src/stores/metaDataStore.js";
+const store = metaDataStore();
 const displayedData = ref({});
 const rows = ref([]);
 const columns = ref([]);

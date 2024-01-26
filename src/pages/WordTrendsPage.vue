@@ -8,9 +8,9 @@
 <script setup>
 import ShowData from "src/components/ShowData.vue";
 import DataTable from "src/components/dataTable.vue";
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref, watchEffect } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 const showData = ref(false);
 
 watchEffect(() => {

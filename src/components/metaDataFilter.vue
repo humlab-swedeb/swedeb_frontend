@@ -59,9 +59,9 @@ import yearRange from "src/components/metaDataComponents/yearRange.vue";
 import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import searchBar from "src/components/searchBar.vue";
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 const showing = ref(true);
 
 const handleSubmit = () => {

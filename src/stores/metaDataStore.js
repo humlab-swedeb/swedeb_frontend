@@ -7,7 +7,7 @@ import qs from "qs";
   // andra konfigurationer här...
 }); */
 
-export const dataStore = defineStore("dataStore", {
+export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
     data: null,
 

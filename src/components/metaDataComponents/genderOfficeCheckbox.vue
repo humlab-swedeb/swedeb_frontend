@@ -19,9 +19,9 @@
 </template>
 
 <script setup>
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { defineProps } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 store.getOfficeOptions();
 store.getGenderOptions();
 const props = defineProps(["type"]);

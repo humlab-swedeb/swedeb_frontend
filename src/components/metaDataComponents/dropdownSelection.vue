@@ -17,7 +17,7 @@
     :popup-content-style="{
       borderRadius: '0px 0px 7px 7px',
     }"
-    option-label="speaker_name"
+    :option-label="customOptionLabel"
   >
     <template v-slot:selected-item="select">
       <q-chip
@@ -28,7 +28,15 @@
         @remove="select.removeAtIndex(select.index)"
       >
         <q-item-label v-if="props.type === 'speakers'">
-          {{ select.opt.speaker_name }}
+          {{ select.opt.speaker_name }} ({{
+            select.opt.speaker_birth_year
+              ? select.opt.speaker_birth_year.year
+              : ""
+          }}-{{
+            select.opt.speaker_death_year
+              ? select.opt.speaker_death_year.year
+              : " "
+          }})
         </q-item-label>
         <q-item-label v-else>{{ select.opt }}</q-item-label>
       </q-chip>
@@ -37,9 +45,9 @@
 </template>
 
 <script setup>
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { defineProps, ref, watchEffect } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 const props = defineProps(["type"]);
 
 const options = ref([]);
@@ -52,7 +60,14 @@ const getChipStyle = (opt) => {
       fontWeight: "bold",
       border: `2px solid ${store.getPartyColor(opt)}`,
     };
-  } else {
+  } /* else if (props.type === "speakers") {
+    return {
+      backgroundColor: "white",
+      color: store.getPartyColor(opt.speaker_party[0]),
+      fontWeight: "bold",
+      border: `2px solid ${store.getPartyColor(opt.speaker_party[0])}`,
+    };
+  } */ else {
     return {}; // Returnera tom objekt för andra typer
   }
 };
@@ -78,6 +93,23 @@ watchEffect(async () => {
     console.error("Error updating options:", error);
   }
 });
+
+const customOptionLabel = (opt) => {
+  if (props.type === "speakers") {
+    // Check if both birth year and death year are defined
+    const birthYear = opt.speaker_birth_year
+      ? opt.speaker_birth_year.year
+      : " ";
+    const deathYear = opt.speaker_death_year
+      ? opt.speaker_death_year.year
+      : " ";
+
+    return `${opt.speaker_name} (${birthYear}-${deathYear})`;
+  } else {
+    // Adjust for other types if necessary
+    return opt; // Return to default display for other types
+  }
+};
 </script>
 
 <style scoped>

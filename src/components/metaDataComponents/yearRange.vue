@@ -17,9 +17,9 @@
 </template>
 
 <script setup>
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 
 let min = ref(0);
 let max = ref(0);

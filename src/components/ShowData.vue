@@ -20,9 +20,9 @@
 </template>
 
 <script setup>
-import { dataStore } from "src/stores/dataStore.js";
+import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref, watchEffect } from "vue";
-const store = dataStore();
+const store = metaDataStore();
 const displayedData = ref({});
 const showData = ref(false);
 
