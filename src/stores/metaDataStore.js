@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import qs from "qs";
 
 /* const api = axios.create({
   baseURL: "http://127.0.0.1:8000/",
@@ -39,6 +38,34 @@ export const metaDataStore = defineStore("metaDataStore", {
   }),
 
   actions: {
+    addParamArray(current_key, api_key, query_params) {
+      const party_value = this.selected[current_key];
+      if (party_value.length > 0) {
+        party_value.forEach((item) => query_params.append(api_key, item));
+      }
+    },
+
+    getSelectedParams() {
+      const searchParams = new URLSearchParams();
+
+      this.addParamArray("party", "parties", searchParams);
+      this.addParamArray("gender", "genders", searchParams);
+      this.addParamArray("office", "office_types", searchParams);
+      this.addParamArray("subOffice", "sub_office_types", searchParams);
+      this.addParamArray("speakers", "speaker_ids", searchParams);
+
+      const year_value = this.selected["yearRange"];
+      if (year_value.min !== null) {
+        searchParams.append("from_year", year_value.min);
+      }
+
+      if (year_value.max !== null) {
+        searchParams.append("to_year", year_value.max);
+      }
+
+      return searchParams.toString();
+    },
+
     async getStartYear() {
       try {
         const path = "/metadata/start_year";
@@ -115,11 +142,9 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getSpeakersOptions() {
       try {
         const path = "/metadata/speakers";
-        const queryString = qs.stringify(
-          { parties: this.selected.party },
-          { arrayFormat: "repeat" }
-        );
+        const queryString = this.getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
+        /*         console.log(`${path}/?${queryString}`); */
         /* const response = await api.get(
           "/metadata/speakers?parties=L"
         ); */

@@ -12,7 +12,7 @@
     use-chips
     filled
     bg-color="white"
-    color="primary"
+    color="accent"
     class="q-my-lg shadow"
     :popup-content-style="{
       borderRadius: '0px 0px 7px 7px',

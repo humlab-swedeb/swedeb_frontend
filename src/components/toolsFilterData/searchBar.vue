@@ -10,7 +10,7 @@
     @input="search"
   >
     <template v-slot:prepend>
-      <q-icon name="search" color="primary" />
+      <q-icon name="search" color="accent" />
     </template>
   </q-input>
 </template>

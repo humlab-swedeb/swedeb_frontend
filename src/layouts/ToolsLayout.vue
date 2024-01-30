@@ -29,7 +29,7 @@
         </q-btn>
       </q-toolbar>
       <q-toolbar class="bg-white">
-        <q-tabs no-caps active-color="green-8" class="text-bold text-black">
+        <q-tabs no-caps active-color="accent" class="text-bold text-black">
           <q-route-tab to="/tools/wordtrends" label="Ordtrender" />
           <q-route-tab to="/tools/kwic" label="KWIC" />
           <q-route-tab to="/tools/speeches" label="Anföranden" />
@@ -56,7 +56,7 @@
               dense
               round
               unelevated
-              color="primary"
+              color="accent"
               icon="chevron_right"
               @click="miniState = false"
             />
@@ -84,7 +84,7 @@
           dense
           round
           unelevated
-          color="primary"
+          color="accent"
           icon="chevron_left"
           @click="miniState = true"
         />

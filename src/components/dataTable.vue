@@ -18,7 +18,7 @@
           <q-td auto-width>
             <q-btn
               size="sm"
-              color="primary"
+              color="accent"
               round
               dense
               flat
@@ -58,7 +58,6 @@ watchEffect(() => {
       party: speaker.speaker_party[0],
       gender: speaker.gender,
     }));
-    console.log(displayedData.value.speakers);
 
     columns.value = [
       {

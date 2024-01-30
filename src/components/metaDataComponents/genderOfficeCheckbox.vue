@@ -4,6 +4,7 @@
     @click="store.selectAll(props.type)"
     v-model="store[`${props.type}AllSelect`]"
     label="Välj alla"
+    color="accent"
   />
   <br />
   <q-checkbox
@@ -14,6 +15,7 @@
     :label="o"
     class="q-ml-md"
     size="sm"
+    color="accent"
     @click="store.ifAllSelected(props.type)"
   />
 </template>

@@ -6,13 +6,13 @@
       class="items-center cursor-pointer q-pr-sm bg-white"
     >
       <q-card-section class="text-subtitle1">
-        <q-icon name="o_filter_alt" color="primary" size="sm" class="q-pr-sm" />
+        <q-icon name="o_filter_alt" color="accent" size="sm" class="q-pr-sm" />
         {{ $t("metaDataFilter") }}</q-card-section
       >
 
       <q-space />
       <q-btn
-        color="primary"
+        color="accent"
         round
         flat
         dense
@@ -41,16 +41,16 @@
           <dropdownSelection type="subOffice" />
           <dropdownSelection type="speakers" />
         </q-card-section>
-        <q-btn @click="handleSubmit" no-caps class="fit q-py-sm" color="primary"
-          >Submit</q-btn
-        >
       </q-card-section>
       <!--       </q-scroll-area>
       -->
     </q-slide-transition>
   </q-card>
   <q-card flat class="q-ma-md bg-transparent">
-    <searchBar />
+    <toolsFilters />
+    <q-btn @click="handleSubmit" no-caps class="fit q-py-sm" color="accent">
+      Submit
+    </q-btn>
   </q-card>
 </template>
 
@@ -58,7 +58,7 @@
 import yearRange from "src/components/metaDataComponents/yearRange.vue";
 import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
-import searchBar from "src/components/searchBar.vue";
+import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref } from "vue";
 const store = metaDataStore();

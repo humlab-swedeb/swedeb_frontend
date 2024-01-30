@@ -1,11 +1,20 @@
 <template>
-  <div>
-    <!-- Your template code here -->
+  <div v-show="showData">
+    <SpeechDataTable />
   </div>
 </template>
 
-<script>
-export default {
-  // Your script code here
-}
+<script setup>
+import SpeechDataTable from "src/components/speechDataTable.vue";
+import { metaDataStore } from "src/stores/metaDataStore";
+import { ref, watchEffect } from "vue";
+
+const metaStore = metaDataStore();
+const showData = ref(false);
+
+watchEffect(() => {
+  if (metaStore.submitEvent) {
+    showData.value = true;
+  }
+});
 </script>

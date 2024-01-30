@@ -10,6 +10,7 @@
         label-always
         class="q-mt-md q-mb-lg"
         switch-label-side
+        color="accent"
       />
       <q-item-label>{{ $t("yearRangeMax") }}</q-item-label>
     </q-item>

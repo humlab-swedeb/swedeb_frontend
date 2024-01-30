@@ -18,4 +18,10 @@ export default {
   party: "Parti",
   gender: "Kön",
   speakers: "Talare",
+
+  toolsFilterTitle: "Verktygsspecifika Filter",
+  "/tools/wordtrends": "Ordtrender",
+  "/tools/kwic": "Key word in context",
+  "/tools/speeches": "Anföranden",
+  "/tools/ngram": "N-grams",
 };

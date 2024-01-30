@@ -1,7 +1,7 @@
 <template>
   <q-card v-ripple class="grid-item shadow-5 text-center">
     <q-card-section>
-      <q-icon :name="icon" color="primary" size="sm"></q-icon>
+      <q-icon :name="icon" color="accent" size="sm"></q-icon>
     </q-card-section>
     <q-card-section>
       <p class="text-subtitle1 text-bold">{{ title }}</p>
@@ -12,8 +12,8 @@
 
 <script>
 export default {
-  name: 'IndexToolCard',
-  props: ['icon', 'title', 'text'],
+  name: "IndexToolCard",
+  props: ["icon", "title", "text"],
 
   setup() {
     return {};
