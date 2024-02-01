@@ -6,7 +6,7 @@
     multiple
     clearable
     v-model="store.selected[props.type]"
-    :options="options"
+    :options="filterOptions"
     :label="$t(`${props.type}`)"
     label-color="black"
     use-chips
@@ -18,6 +18,8 @@
       borderRadius: '0px 0px 7px 7px',
     }"
     :option-label="customOptionLabel"
+    @filter="filterHandler"
+    :use-input="props.type === 'speakers'"
   >
     <template v-slot:selected-item="select">
       <q-chip
@@ -46,11 +48,12 @@
 
 <script setup>
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { defineProps, ref, watchEffect } from "vue";
+import { defineProps, ref, watchEffect, computed } from "vue";
 const store = metaDataStore();
 const props = defineProps(["type"]);
 
 const options = ref([]);
+const filterOptions = ref([]);
 
 const getChipStyle = (opt) => {
   if (props.type === "party") {
@@ -68,7 +71,7 @@ const getChipStyle = (opt) => {
       border: `2px solid ${store.getPartyColor(opt.speaker_party[0])}`,
     };
   } */ else {
-    return {}; // Returnera tom objekt för andra typer
+    return {};
   }
 };
 
@@ -93,6 +96,20 @@ watchEffect(async () => {
     console.error("Error updating options:", error);
   }
 });
+
+const filterHandler = (searchTerm, updateOptions) => {
+  if (props.type === "speakers") {
+    const lowercasedInput = searchTerm.toLowerCase();
+    filterOptions.value = options.value.filter((opt) =>
+      customOptionLabel(opt).toLowerCase().includes(lowercasedInput)
+    );
+    updateOptions(filterOptions.value);
+  } else {
+    // For other types, set filterOptions to be the same as options.value
+    filterOptions.value = options.value;
+    updateOptions(filterOptions.value);
+  }
+};
 
 const customOptionLabel = (opt) => {
   if (props.type === "speakers") {
