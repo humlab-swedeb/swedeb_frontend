@@ -48,7 +48,7 @@
 
 <script setup>
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { defineProps, ref, watchEffect, computed } from "vue";
+import { defineProps, ref, watchEffect } from "vue";
 const store = metaDataStore();
 const props = defineProps(["type"]);
 

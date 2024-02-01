@@ -24,4 +24,6 @@ export default {
   "/tools/kwic": "Key word in context",
   "/tools/speeches": "Anföranden",
   "/tools/ngram": "N-grams",
+
+  speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 };

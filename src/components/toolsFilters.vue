@@ -11,7 +11,9 @@
   <q-card-section v-if="$route.path === '/tools/kwic'">
     <inputNrOfWords />
   </q-card-section>
-  <q-card-section flat class="q-ma-md bg-transparent"> </q-card-section>
+  <q-card-section v-if="$route.path === '/tools/speeches'">
+    {{ $t("speechesNoTools") }}
+  </q-card-section>
 </template>
 
 <script setup>

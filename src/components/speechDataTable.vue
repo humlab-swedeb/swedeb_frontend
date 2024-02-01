@@ -1,5 +1,12 @@
 <template>
-  <q-table bordered flat :rows="rows" :columns="columns" row-key="id">
+  <q-table
+    bordered
+    flat
+    :rows="rows"
+    :columns="columns"
+    row-key="id"
+    :rows-per-page-options="[10, 20, 50, 100, 0]"
+  >
     <template v-slot:body="props">
       <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
