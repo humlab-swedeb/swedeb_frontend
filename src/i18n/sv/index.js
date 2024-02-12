@@ -7,6 +7,7 @@ export default {
 
   // MetaDataFilter component
   metaDataFilter: "Filtrera på metadata",
+  metaDataFilterMini: "Metadatafilter",
 
   // YearRange component (used in MetaDataFilter)
   year: "År",

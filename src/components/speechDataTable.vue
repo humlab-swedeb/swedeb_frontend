@@ -67,7 +67,6 @@ watchEffect(async () => {
   if (metaStore.submitEvent) {
     await speechStore.getSpeechesResult();
     displayedData.value = { ...speechStore.speechesData };
-    console.log(displayedData.value.speech_list);
 
     rows.value = displayedData.value.speech_list.map((speech) => ({
       id: speech.speech_id_column,

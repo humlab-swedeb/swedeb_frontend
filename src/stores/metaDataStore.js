@@ -38,6 +38,24 @@ export const metaDataStore = defineStore("metaDataStore", {
   }),
 
   actions: {
+    async resetSelectedState() {
+      this.selected = {
+        party: [],
+        gender: [],
+        office: [],
+        subOffice: [],
+        speakers: [],
+        yearRange: {
+          min: null,
+          max: null,
+        },
+      };
+      this.selected.yearRange.min = await this.getStartYear();
+      this.selected.yearRange.max = await this.getEndYear();
+      this.genderAllSelect = false;
+      this.officeAllSelect = false;
+    },
+
     addParamArray(current_key, api_key, query_params) {
       const party_value = this.selected[current_key];
       if (party_value.length > 0) {

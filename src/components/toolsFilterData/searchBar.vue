@@ -7,6 +7,7 @@
     placeholder="T.ex klimat eller skola"
     label="Sök på ordtrender"
     bg-color="white"
+    color="accent"
     @input="search"
   >
     <template v-slot:prepend>

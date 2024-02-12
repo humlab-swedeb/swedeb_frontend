@@ -63,7 +63,7 @@
           </q-item>
 
           <q-item>
-            <p class="metadata-filter-text">Metadata filter</p>
+            <p class="metadata-filter-text">{{$t("metaDataFilterMini")}}</p>
           </q-item>
         </div>
       </template>

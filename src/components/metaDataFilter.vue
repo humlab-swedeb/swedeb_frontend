@@ -26,7 +26,7 @@
  -->
       <q-card-section class="q-px-md q-pt-none">
         <q-separator />
-        <q-card-section class="q-px-none">
+        <q-card-section class="q-px-none q-pb-none">
           <!-- PLACE METADATA FILTER COMPONENTS HERE -->
           <yearRange />
           <dropdownSelection type="party" />
@@ -40,6 +40,18 @@
           </q-card-section>
           <dropdownSelection type="subOffice" />
           <dropdownSelection type="speakers" />
+          <div class="column items-end q-">
+            <q-btn
+              v-if="hasSelections"
+              @click="store.resetSelectedState"
+              class="buttonStyle col"
+              flat
+              no-caps
+              label="Rensa filter"
+              color="grey-7"
+            >
+            </q-btn>
+          </div>
         </q-card-section>
       </q-card-section>
       <!--       </q-scroll-area>
@@ -60,7 +72,7 @@ import genderOfficeCheckbox from "src/components/metaDataComponents/genderOffice
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 const store = metaDataStore();
 const showing = ref(true);
 
@@ -68,6 +80,21 @@ const handleSubmit = () => {
   store.submitEvent = true;
   store.updateEvent = true;
 };
+
+const hasSelections = computed(() => {
+  const { party, gender, office, subOffice, speakers } = store.selected;
+  return (
+    party.length > 0 ||
+    gender.length > 0 ||
+    office.length > 0 ||
+    subOffice.length > 0 ||
+    speakers.length > 0
+  );
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.buttonStyle {
+  text-decoration: underline;
+}
+</style>

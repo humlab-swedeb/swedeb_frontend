@@ -9,6 +9,7 @@
       label="Vänster"
       type="number"
       class="bg-white"
+      color="accent"
     >
       <template v-slot:prepend>
         <q-icon name="chevron_left" color="accent" size="sm" />
@@ -23,6 +24,7 @@
       label="Höger"
       type="number"
       class="bg-white"
+      color="accent"
     >
       <template v-slot:append>
         <q-icon name="chevron_right" color="accent" size="sm" />
