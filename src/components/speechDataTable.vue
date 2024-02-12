@@ -10,7 +10,11 @@
     <template v-slot:body="props">
       <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          <q-item-label v-if="col.name === 'party'" class="text-bold">
+          <q-item-label
+            v-if="col.name === 'party'"
+            class="text-bold"
+            :style="{ color: metaStore.getPartyColor(col.value) }"
+          >
             {{ col.value }}
           </q-item-label>
           <q-item-label v-else>
@@ -131,3 +135,5 @@ watchEffect(async () => {
   }
 });
 </script>
+
+<style scoped></style>
