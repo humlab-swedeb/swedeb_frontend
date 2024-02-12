@@ -20,6 +20,7 @@
     :option-label="customOptionLabel"
     @filter="filterHandler"
     :use-input="props.type === 'speakers'"
+    @clear="handleClear"
   >
     <template v-slot:selected-item="select">
       <q-chip
@@ -30,7 +31,18 @@
         @remove="select.removeAtIndex(select.index)"
       >
         <q-item-label v-if="props.type === 'speakers'">
-          {{ select.opt.speaker_name }} ({{
+          {{ select.opt.speaker_name }},
+          {{ getPartyLabel(select.opt.speaker_party[0]) }}
+          <!--       <span
+            :style="{
+              backgroundColor: store.getPartyColor(select.opt.speaker_party[0]),
+              color: 'white',
+              padding: '0.2rem 0.5rem',
+              borderRadius: '0.2rem',
+            }"
+          >
+            {{ select.opt.speaker_party[0] }} </span
+          > -->({{
             select.opt.speaker_birth_year
               ? select.opt.speaker_birth_year.year
               : ""
@@ -121,11 +133,25 @@ const customOptionLabel = (opt) => {
       ? opt.speaker_death_year.year
       : " ";
 
-    return `${opt.speaker_name} (${birthYear}-${deathYear})`;
+    let party = opt.speaker_party ? opt.speaker_party : "";
+    party = getPartyLabel(opt.speaker_party);
+
+    return `${opt.speaker_name}, ${party}  (${birthYear}-${deathYear})`;
   } else {
-    // Adjust for other types if necessary
     return opt; // Return to default display for other types
   }
+};
+
+const getPartyLabel = (party) => {
+  if (party && party !== "None") {
+    return party;
+  } else {
+    return "Okänt"; // Display "Okänt" for "None" or empty party
+  }
+};
+
+const handleClear = () => {
+  store.selected[props.type] = [];
 };
 </script>
 
