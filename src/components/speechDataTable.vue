@@ -32,6 +32,7 @@
           />
         </q-td>
       </q-tr>
+      <!-- If row in table is clicked, EXPAND -->
       <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%">
           <div class="text-left">
