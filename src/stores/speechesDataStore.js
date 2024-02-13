@@ -1,6 +1,5 @@
-import { defineStore, useStore } from "pinia";
+import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import qs from "qs";
 import { metaDataStore } from "./metaDataStore";
 
 export const speechesDataStore = defineStore("speechesData", {

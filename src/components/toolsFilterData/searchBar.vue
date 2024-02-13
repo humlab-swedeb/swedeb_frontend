@@ -1,6 +1,6 @@
 <template>
   <q-input
-    v-model="searchText"
+    v-model="wtStore.searchText"
     rounded
     outlined
     clearable
@@ -8,7 +8,6 @@
     label="Sök på ordtrender"
     bg-color="white"
     color="accent"
-    @input="search"
   >
     <template v-slot:prepend>
       <q-icon name="search" color="accent" />
@@ -18,10 +17,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
-const searchText = ref("");
-
-const search = () => {
-  // Perform search logic here
-};
+const wtStore = wordTrendsDataStore();
+/* const props = defineProps({
+  searchStore: Object,
+  searchMethod: String,
+});
+props.searchStore[props.searchMethod](searchText.value); */
 </script>

@@ -23,6 +23,8 @@
   <q-tab-panels v-model="tabs">
     <q-tab-panel name="diagram">
       <div>diagram</div>
+
+      <lineChart v-show="showData" />
     </q-tab-panel>
     <q-tab-panel name="table">
       <div>tabell</div>
@@ -35,6 +37,7 @@
 <script setup>
 import ShowData from "src/components/ShowData.vue";
 import DataTable from "src/components/dataTable.vue";
+import lineChart from "src/components/lineChart.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref, watchEffect } from "vue";
 import i18n from "src/i18n/sv";
