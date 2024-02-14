@@ -72,16 +72,13 @@ import genderOfficeCheckbox from "src/components/metaDataComponents/genderOffice
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { ref, computed } from "vue";
 const store = metaDataStore();
-const wtStore = wordTrendsDataStore();
 const showing = ref(true);
 
 const handleSubmit = async () => {
   store.submitEvent = true;
   store.updateEvent = true;
-  await wtStore.getWordTrendsResult(wtStore.searchText);
 };
 
 const hasSelections = computed(() => {

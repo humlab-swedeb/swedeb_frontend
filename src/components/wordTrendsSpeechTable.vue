@@ -6,7 +6,6 @@
     :columns="columns"
     row-key="id"
     :rows-per-page-options="[10, 20, 50, 100, 0]"
-    v-if="!loading"
   >
     <template v-slot:body="props">
       <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
@@ -34,14 +33,14 @@
         </q-td>
       </q-tr>
       <!-- If row in table is clicked, EXPAND -->
-      <q-tr v-show="props.expand" :props="props">
+      <!-- <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%">
           <div class="text-left">
             <q-item-label caption>{{ speakerNote }}</q-item-label>
             <q-item-label>{{ speechText }}</q-item-label>
           </div>
         </q-td>
-      </q-tr>
+      </q-tr> -->
     </template>
   </q-table>
 </template>
@@ -49,11 +48,9 @@
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const metaStore = metaDataStore();
-const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
 const props = defineProps(["type"]);
 
@@ -62,29 +59,22 @@ const rows = ref([]);
 const columns = ref([]);
 const speakerNote = ref("");
 const speechText = ref("");
-const loading = ref(false);
 
-const expandRow = async (props) => {
+/* const expandRow = async (props) => {
   props.expand = !props.expand;
   if (props.expand) {
     const speechData = await speechStore.getSpeech(props.row.id);
     speakerNote.value = speechData.speaker_note;
     speechText.value = speechData.speech_text;
   }
-};
+}; */
 
 watchEffect(async () => {
-  if (metaStore.submitEvent || wtStore.wordTrendsSpeeches.length > 0) {
-    loading.value = true;
-    if (props.type === "wordTrends") {
-      if (wtStore.wordTrendsSpeeches.length === 0) {
-        await wtStore.getWordTrendsSpeeches(wtStore.searchText);
-      }
-      displayedData.value = wtStore.wordTrendsSpeeches;
-    } else if (props.type === "speeches") {
-      await speechStore.getSpeechesResult();
-      displayedData.value = speechStore.speechesData;
-    }
+  const wordTrends = wtStore.wordTrendsSpeeches;
+  if (metaStore.submitEvent || wordTrends.length > 0) {
+    displayedData.value = wordTrends;
+    console.log(displayedData.value, "displayedData");
+
     rows.value = displayedData.value.map((speech) => ({
       id: speech.speech_id_column,
       speaker: speech.speaker_column,
@@ -145,7 +135,6 @@ watchEffect(async () => {
     ];
 
     metaStore.submitEvent = false;
-    loading.value = false;
   }
 });
 </script>

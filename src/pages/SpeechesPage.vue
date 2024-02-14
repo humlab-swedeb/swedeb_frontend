@@ -1,6 +1,6 @@
 <template>
   <div v-show="showData">
-    <SpeechDataTable />
+    <SpeechDataTable type="speeches" />
   </div>
 </template>
 
