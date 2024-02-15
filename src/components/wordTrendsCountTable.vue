@@ -8,7 +8,20 @@
       row-key="year"
       style="width: fit-content"
       separator="vertical"
+      class="bg-grey-2"
     >
+      <template v-slot:body="props">
+        <q-tr :props="props" class="bg-white">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class="bg-white"
+          >
+            {{ col.value }}
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
   </div>
 </template>

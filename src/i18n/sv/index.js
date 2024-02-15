@@ -8,6 +8,7 @@ export default {
   // MetaDataFilter component
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
+  selectedMetaDataTitle: "Valda filtreringsalternativ:",
 
   // YearRange component (used in MetaDataFilter)
   year: "År",

@@ -7,10 +7,23 @@
     row-key="id"
     :rows-per-page-options="[10, 20, 50, 100, 0]"
     v-if="!loading"
+    class="bg-grey-2"
   >
+    <template v-slot:header="props">
+      <q-tr :props="props">
+        <q-th v-for="col in props.cols" :key="col.name" :props="props" class="">
+          {{ col.label }}
+        </q-th>
+      </q-tr>
+    </template>
     <template v-slot:body="props">
       <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+        <q-td
+          v-for="col in props.cols"
+          :key="col.name"
+          :props="props"
+          class="bg-white"
+        >
           <q-item-label
             v-if="col.name === 'party'"
             class="text-bold"
@@ -22,7 +35,7 @@
             {{ col.value }}
           </q-item-label>
         </q-td>
-        <q-td auto-width>
+        <q-td auto-width class="bg-white">
           <q-btn
             size="sm"
             color="accent"

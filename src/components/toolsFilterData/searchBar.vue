@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();

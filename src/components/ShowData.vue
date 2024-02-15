@@ -3,7 +3,7 @@
     <q-slide-transition v-show="showData">
       <q-list dense bordered class="q-pa-md rounded-borders bg-grey-2">
         <q-item-label caption class="text-black text-bold">
-          Valda filtreringsalternativ:
+          {{ $t("selectedMetaDataTitle") }}
         </q-item-label>
         <div v-for="(value, key) in displayedData" :key="key" class="q-mr-md">
           <div v-if="Array.isArray(value) && value.length > 0">
@@ -11,7 +11,7 @@
           </div>
           <!-- If the key is 'yearRange', display the min and max values -->
           <div v-else-if="key === 'yearRange'">
-            {{ customKey(key) }}: {{ value.min }} - {{ value.max }}
+            <b>{{ customKey(key) }}:</b> {{ value.min }} - {{ value.max }}
           </div>
         </div>
       </q-list>
@@ -33,6 +33,7 @@ const customKeys = {
   party: i18n.party,
   gender: i18n.gender,
   yearRange: i18n.year,
+  speakers: i18n.speakers,
 };
 const customKey = (key) => customKeys[key] || key;
 
