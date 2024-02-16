@@ -15,7 +15,6 @@ export const speechesDataStore = defineStore("speechesData", {
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
         this.speechesData = response.data.speech_list;
-        console.log("speechesData", this.speechesData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

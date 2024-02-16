@@ -87,12 +87,10 @@ const expandRow = async (props) => {
 };
 
 watchEffect(async () => {
-  if (metaStore.submitEvent || wtStore.wordTrendsSpeeches.length > 0) {
+  if (metaStore.submitEvent) {
     loading.value = true;
     if (props.type === "wordTrends") {
-      if (wtStore.wordTrendsSpeeches.length === 0) {
-        await wtStore.getWordTrendsSpeeches(wtStore.searchText);
-      }
+      await wtStore.getWordTrendsSpeeches(wtStore.searchText);
       displayedData.value = wtStore.wordTrendsSpeeches;
     } else if (props.type === "speeches") {
       await speechStore.getSpeechesResult();

@@ -31,10 +31,10 @@
           <yearRange />
           <dropdownSelection type="party" />
           <q-card-section horizontal class="q-px-none">
-            <q-card-section>
+            <q-card-section class="q-pb-none">
               <genderOfficeCheckbox type="gender" />
             </q-card-section>
-            <q-card-section>
+            <q-card-section class="q-pb-none">
               <genderOfficeCheckbox type="office" />
             </q-card-section>
           </q-card-section>

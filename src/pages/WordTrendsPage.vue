@@ -59,8 +59,8 @@ const formattedIntro = intro;
 watchEffect(async () => {
   if (store.submitEvent && store.updateEvent) {
     await wtStore.getWordTrendsResult(wtStore.searchText);
-    /*     await wtStore.getWordTrendsSpeeches(wtStore.searchText);
-     */ showData.value = true;
+    await wtStore.getWordTrendsSpeeches(wtStore.searchText);
+    showData.value = true;
   }
 });
 </script>

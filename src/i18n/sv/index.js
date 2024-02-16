@@ -39,4 +39,17 @@ export default {
   test-korpus är lemmatiserad, vilket innebär att sökresultaten baseras på
   ordets grammatiska rot.
 `,
+
+  kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
+  t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
+  höger om sökningen. För att få fler träffar kan&nbsp;<code>.*</code> användas,
+  t ex <code>information.*</code>. Under Filtrera sökresultat kan du avgränsa
+  anförandena till vissa partier, talare eller år. Observera att denna test-korpus är
+  lemmatiserad, dvs sökresultateten baseras på ordets grammatiska rot.`,
+
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
+  till vissa partier, talare eller år. Observera att du i dagsläget endast kan ladda ner en lista med
+  metadata om anföranden och inte talen i sig (men det kommer man kunna göra i den färdiga versionen).`,
+
+  ngramIntro: `Under utveckling.`,
 };
