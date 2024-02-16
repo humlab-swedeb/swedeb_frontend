@@ -42,7 +42,6 @@ import ShowData from "src/components/ShowData.vue";
 import lineChart from "src/components/lineChart.vue";
 import wordTrendsCountTable from "src/components/wordTrendsCountTable.vue";
 import speechDataTable from "src/components/speechDataTable.vue";
-import wordTrendsSpeechTable from "src/components/wordTrendsSpeechTable.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { ref, watchEffect } from "vue";

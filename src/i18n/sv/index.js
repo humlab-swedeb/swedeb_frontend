@@ -52,4 +52,15 @@ export default {
   metadata om anföranden och inte talen i sig (men det kommer man kunna göra i den färdiga versionen).`,
 
   ngramIntro: `Under utveckling.`,
+
+  kwicLable: {
+    left_word: "Vänster",
+    node_word: "Sökord",
+    right_word: "Höger",
+    year_title: "År",
+    name: "Talare",
+    party_abbrev: "Parti",
+    speech_title: "Taltitel",
+    gender: "Kön",
+  },
 };
