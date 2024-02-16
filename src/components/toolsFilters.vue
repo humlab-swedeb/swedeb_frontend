@@ -8,7 +8,7 @@
   >
     <searchBar />
   </q-card-section>
-  <q-card-section v-if="$route.path === '/tools/kwic'">
+  <q-card-section v-if="$route.path === '/tools/kwic'" class="q-pt-none">
     <inputNrOfWords />
   </q-card-section>
   <q-card-section v-if="$route.path === '/tools/speeches'">

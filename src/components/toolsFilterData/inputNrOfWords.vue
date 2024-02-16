@@ -1,6 +1,6 @@
-<template lang="">
-  <p caption class="q-my-sm">
-    Välj hur många ord som ska visas till vänster och höger om sökorden
+<template>
+  <p caption>
+    {{ $t("nrOfWordsIntro") }}
   </p>
   <q-card-section horizontal class="">
     <q-input
@@ -10,13 +10,17 @@
       type="number"
       class="bg-white"
       color="accent"
+      max="10"
+      min="0"
     >
       <template v-slot:prepend>
         <q-icon name="chevron_left" color="accent" size="sm" />
       </template>
     </q-input>
 
-    <q-item-label class="q-ma-none q-pa-md text-bold">Sökord</q-item-label>
+    <q-item-label class="q-ma-none q-pa-md text-bold">{{
+      $t("nrOfWordsSearch")
+    }}</q-item-label>
 
     <q-input
       v-model="kwicStore.wordsRight"
@@ -25,6 +29,8 @@
       type="number"
       class="bg-white"
       color="accent"
+      max="10"
+      min="0"
     >
       <template v-slot:append>
         <q-icon name="chevron_right" color="accent" size="sm" />

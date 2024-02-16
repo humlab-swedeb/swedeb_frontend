@@ -27,6 +27,11 @@ export default {
   "/tools/speeches": "Anföranden",
   "/tools/ngram": "N-grams",
 
+  // NRofWORDS
+  nrOfWordsIntro:
+    "Välj hur många ord som ska visas till vänster och höger om sökorden",
+  nrOfWordsSearch: "Sökord",
+
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
   // Introduction to tool
