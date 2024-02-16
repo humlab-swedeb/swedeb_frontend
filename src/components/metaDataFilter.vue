@@ -60,7 +60,32 @@
   </q-card>
   <q-card flat class="q-ma-md bg-transparent">
     <toolsFilters />
-    <q-btn @click="handleSubmit" no-caps class="fit q-py-sm" color="accent">
+    <q-btn
+      @click="handleSubmit"
+      no-caps
+      class="fit q-py-sm"
+      color="accent"
+      v-if="$route.path !== '/tools/speeches'"
+      :disabled="wtStore.searchText.length < 1"
+    >
+      Submit
+      <q-tooltip
+        v-if="wtStore.searchText.length < 1"
+        anchor="top middle"
+        self="bottom middle"
+        :offset="[10, 10]"
+        class="bg-accent text-white"
+      >
+        Please enter at least 1 characters
+      </q-tooltip>
+    </q-btn>
+    <q-btn
+      @click="handleSubmit"
+      no-caps
+      class="fit q-py-sm"
+      color="accent"
+      v-else-if="$route.path === '/tools/speeches'"
+    >
       Submit
     </q-btn>
   </q-card>
@@ -72,8 +97,10 @@ import genderOfficeCheckbox from "src/components/metaDataComponents/genderOffice
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
+import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { ref, computed } from "vue";
 const store = metaDataStore();
+const wtStore = wordTrendsDataStore();
 const showing = ref(true);
 
 const handleSubmit = async () => {

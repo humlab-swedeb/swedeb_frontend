@@ -8,6 +8,7 @@
     label="Sök på ordtrender"
     bg-color="white"
     color="accent"
+    :rules="[(val) => val.length >= 1 || 'Sökordet måste vara minst 1 tecken']"
   >
     <template v-slot:prepend>
       <q-icon name="search" color="accent" />
@@ -19,9 +20,4 @@
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();
-/* const props = defineProps({
-  searchStore: Object,
-  searchMethod: String,
-});
-props.searchStore[props.searchMethod](searchText.value); */
 </script>
