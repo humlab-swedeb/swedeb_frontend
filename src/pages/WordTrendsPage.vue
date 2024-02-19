@@ -33,7 +33,11 @@
       <div>anföranden</div>
       <!-- <wordTrendsSpeechTable v-show="showData" /> -->
 
-      <speechDataTable type="wordTrends" v-show="showData" />
+      <speechDataTable
+        type="wordTrends"
+        v-show="showData"
+        :dataLoaded="dataLoaded"
+      />
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -49,6 +53,7 @@ import i18n from "src/i18n/sv";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const showData = ref(false);
+const dataLoaded = ref(false);
 
 const tabs = ref("speech");
 
@@ -60,6 +65,7 @@ watchEffect(async () => {
     await wtStore.getWordTrendsResult(wtStore.searchText);
     await wtStore.getWordTrendsSpeeches(wtStore.searchText);
     showData.value = true;
+    dataLoaded.value = true;
   }
 });
 </script>

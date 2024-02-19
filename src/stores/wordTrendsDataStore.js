@@ -27,7 +27,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrendsSpeeches = response.data.speech_list;
-        return this.wordTrendsSpeeches;
+        //return this.wordTrendsSpeeches;
       } catch (error) {
         console.error("Error fetching data:", error);
       }

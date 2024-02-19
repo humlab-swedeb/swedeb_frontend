@@ -68,7 +68,11 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
-const props = defineProps(["type"]);
+//const props = defineProps(["type"]);
+const props = defineProps({
+  dataLoaded: Boolean,
+  type: String,
+});
 
 const displayedData = ref({});
 const rows = ref([]);
@@ -85,17 +89,18 @@ const expandRow = async (props) => {
     speechText.value = speechData.speech_text;
   }
 };
-
 watchEffect(async () => {
-  if (metaStore.submitEvent) {
+  if (metaStore.submitEvent || props.dataLoaded) {
     loading.value = true;
     if (props.type === "wordTrends") {
-      await wtStore.getWordTrendsSpeeches(wtStore.searchText);
+      //await wtStore.getWordTrendsSpeeches(wtStore.searchText);
       displayedData.value = wtStore.wordTrendsSpeeches;
     } else if (props.type === "speeches") {
       await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
+    console.log(displayedData.value);
+
     rows.value = displayedData.value.map((speech) => ({
       id: speech.speech_id_column,
       speaker: speech.speaker_column,
@@ -104,6 +109,7 @@ watchEffect(async () => {
       source: speech.source_column,
       year: speech.year_column,
     }));
+
     columns.value = [
       {
         name: "id",
@@ -116,7 +122,7 @@ watchEffect(async () => {
       {
         name: "speaker",
         required: true,
-        label: "Speaker",
+        label: "Talare",
         field: "speaker",
         sortable: true,
         align: "left",
@@ -124,7 +130,7 @@ watchEffect(async () => {
       {
         name: "gender",
         required: true,
-        label: "Gender",
+        label: "Kön",
         field: "gender",
         sortable: true,
         align: "left",
@@ -132,7 +138,7 @@ watchEffect(async () => {
       {
         name: "party",
         required: true,
-        label: "Party",
+        label: "Parti",
         field: "party",
         sortable: true,
         align: "left",
@@ -140,7 +146,7 @@ watchEffect(async () => {
       {
         name: "source",
         required: true,
-        label: "Source",
+        label: "Källa",
         field: "source",
         sortable: true,
         align: "left",
@@ -148,7 +154,7 @@ watchEffect(async () => {
       {
         name: "year",
         required: true,
-        label: "Year",
+        label: "År",
         field: "year",
         sortable: true,
         align: "left",
