@@ -25,7 +25,10 @@
             <q-item-label caption class="text-accent">{{
               $t("contact")
             }}</q-item-label>
-            <q-item-label class="q-px-xl q-pt-md text-left" style="font-size: 12px">
+            <q-item-label
+              class="q-px-xl q-pt-md text-left"
+              style="font-size: 12px"
+            >
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Consequatur officiis molestiae quam odio, quasi voluptatum dolorum
               inventore cumque dolore nobis laboriosam sunt in debitis vitae
@@ -36,7 +39,6 @@
               color="accent"
               label="swedeb@swedeb.com"
               class="q-my-md q-px-lg"
-
               icon="alternate_email"
               href="mailto:example@example.com"
             />
@@ -44,12 +46,12 @@
         </q-card>
         <q-card flat class="bg-transparent col-2">
           <q-card-section class="q-pb-xs">
-            <router-link to="/about" class="text-deco">{{
+            <router-link to="/about" class="link-deco">{{
               $t("about")
             }}</router-link>
           </q-card-section>
           <q-card-section class="q-pt-xs">
-            <router-link to="/faq" class="text-deco">{{
+            <router-link to="/faq" class="link-deco">{{
               $t("faq")
             }}</router-link>
           </q-card-section>
@@ -100,29 +102,6 @@
       0% 100%
     );
     background-color: lighten($accentLight, 20%);
-  }
-}
-
-.text-deco {
-  text-decoration: none;
-  color: black;
-  position: relative;
-
-  &:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 2px;
-    background-color: $accent;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s ease;
-  }
-
-  &:hover::after {
-    transform: scaleX(1);
   }
 }
 </style>

@@ -9,6 +9,7 @@
     <kwicDataTabel />
   </div>
 </template>
+
 <script setup>
 import ShowData from "src/components/ShowData.vue";
 import kwicDataTabel from "src/components/kwicDataTable.vue";

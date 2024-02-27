@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr fFf">
+  <q-layout view="hHh Lpr lff">
     <q-header class="row no-wrap">
       <q-toolbar
         class="bg-grey-8 text-white"
@@ -96,6 +96,12 @@
         <router-view />
       </q-page>
     </q-page-container>
+    <q-footer>
+      <q-toolbar class="q-py-md q-flex justify-center">
+        <router-link to="/about" class="link-deco q-mr-md">{{ $t("about") }}</router-link>
+        <router-link to="/faq" class="link-deco q-mr-md">{{ $t("faq") }}</router-link>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 
