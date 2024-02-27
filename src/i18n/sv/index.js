@@ -5,6 +5,35 @@ export default {
   failed: "Misslyckades",
   success: "Lyckades",
 
+  // MAIN LAYOUT
+  swedeb: "SweDeb",
+  home: "Hem",
+  tools: "Verktyg",
+  about: "Om SweDeb",
+  faq: "FAQ",
+  contact: "Kontakt",
+
+  indexPageIntroText: `Detta forskningsinfrastrukturprojekt syftar till att tillgängliggöra
+  de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället,
+  från åtminstone 1920 till idag. Projektet kommer att
+  utveckla ett publikt användargränssnitt - SweDeb - som ska göra det
+  möjligt för forskare att få access, filtrera samt att utforska detta unika
+  material med hjälp av olika metoder genom detta online-verktyg`,
+
+  wordTrendsTitle: "Ordtrender",
+  wordTrendsText:
+    "Sök på ett eller flera ord för att se hur de har använts över tid.",
+  wordTrendsIcon: "trending_up",
+  kwicTitle: "KWIC",
+  kwicText: "Se hur ett ord används i olika sammanhang",
+  kwicIcon: "o_library_books",
+  speechesTitle: "Anföranden",
+  speechesText: "Se vilka anföranden specifika personer gjort",
+  speechesIcon: "o_campaign",
+  nGramsTitle: "N-Gram",
+  nGramsText: "Se hur ett ord har använts över tid",
+  nGramsIcon: "show_chart",
+
   // MetaDataFilter component
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",

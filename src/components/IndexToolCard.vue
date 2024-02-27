@@ -1,24 +1,24 @@
 <template>
-  <q-card v-ripple class="grid-item shadow-5 text-center">
+  <q-card
+    v-ripple
+    class="grid-item shadow-5 text-center cursor-pointer bg-primary q-hoverable"
+  >
     <q-card-section>
-      <q-icon :name="icon" color="accent" size="sm"></q-icon>
-    </q-card-section>
-    <q-card-section>
-      <p class="text-subtitle1 text-bold">{{ title }}</p>
+      <q-icon :name="icon" color="accent" size="md"></q-icon>
+      <q-item-label class="text-h6 q-my-md">{{ title }}</q-item-label>
       <p class="text-center">{{ text }}</p>
     </q-card-section>
   </q-card>
 </template>
 
-<script>
-export default {
-  name: "IndexToolCard",
-  props: ["icon", "title", "text"],
+<script setup>
+import { defineProps } from "vue";
 
-  setup() {
-    return {};
-  },
-};
+const props = defineProps({
+  icon: String,
+  title: String,
+  text: String,
+});
 </script>
 
 <style scoped>

@@ -1,76 +1,64 @@
 <template>
-  <q-page class="flex flex-center">
-    <div
-      style="
-        width: 80vw;
-        max-width: 1000px;
-
-        background-color: rgb(219, 219, 219);
-        border-radius: 7px;
-      "
-      class="q-pa-lg"
-    >
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae
-      excepturi deleniti hic eveniet eius necessitatibus sit suscipit ea modi
-      ratione commodi qui voluptatem, ut eum tempora quis? Id, quia dolorem.
-
-      <div class="grid-container q-mt-lg">
-        <IndexToolCard @click="redirect(wordTrendsTitle)" :title="wordTrendsTitle" :text="wordTrendsText" :icon='wordTrendsIcon'/>
-        <IndexToolCard @click="redirect(kwicTitle)" :title="kwicTitle" :text="kwicText" :icon='kwicIcon'/>
-        <IndexToolCard @click="redirect(speechesTitle)" :title="speechesTitle" :text="speechesText" :icon='speechesIcon'/>
-        <IndexToolCard @click="redirect(nGramsTitle)" :title="nGramsTitle" :text="nGramsText" :icon='nGramsIcon'/>
+  <q-card flat class="row justify-center max-width q-pa-lg q-px-xl">
+    <q-item-label class="text-h3">SweDeb</q-item-label>
+    <q-card-section class="text-align text-body2">
+      {{ $t("indexPageIntroText") }}
+    </q-card-section>
+    <q-card-section class="full-width q-pt-lg">
+      <div class="grid-container">
+        <IndexToolCard
+          @click="redirect('tools/wordtrends')"
+          :title="$t('wordTrendsTitle')"
+          :text="$t('wordTrendsText')"
+          :icon="$t('wordTrendsIcon')"
+        />
+        <IndexToolCard
+          @click="redirect('tools/kwic')"
+          :title="$t('kwicTitle')"
+          :text="$t('kwicText')"
+          :icon="$t('kwicIcon')"
+        />
+        <IndexToolCard
+          @click="redirect('tools/speeches')"
+          :title="$t('speechesTitle')"
+          :text="$t('speechesText')"
+          :icon="$t('speechesIcon')"
+        />
+        <IndexToolCard
+          @click="redirect('tools/ngram')"
+          :title="$t('nGramsTitle')"
+          :text="$t('nGramsText')"
+          :icon="$t('nGramsIcon')"
+        />
       </div>
-    </div>
-  </q-page>
+    </q-card-section>
+  </q-card>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import IndexToolCard from '../components/IndexToolCard.vue';
+<script setup>
+import { useRouter } from "vue-router";
+import IndexToolCard from "../components/IndexToolCard.vue";
 
-export default defineComponent({
-  name: 'IndexPage',
-  components: { IndexToolCard },
-  data() {
-    return {
-      wordTrendsTitle: 'Ordtrender',
-      wordTrendsText: 'Se vilka ord som är mest populära i dag',
-      wordTrendsIcon: 'trending_up',
-      kwicTitle: 'KWIC',
-      kwicText: 'Se hur ett ord används i olika sammanhang',
-      kwicIcon: 'o_library_books',
-      speechesTitle: 'Anföranden',
-      speechesText: 'Se vilka anföranden specifika personer gjort',
-      speechesIcon: 'o_campaign',
-      nGramsTitle: 'N-Gram',
-      nGramsText: 'Se hur ett ord har använts över tid',
-      nGramsIcon: 'show_chart',
+const router = useRouter();
 
-    };
-  },
-  methods: {
-    redirect(title) {
-      if (title === 'Ordtrender') {
-        this.$router.push('tools/wordtrends');
-      }
-      else if (title === 'KWIC') {
-        this.$router.push('tools/kwic');
-      }
-      else if (title === 'Anföranden') {
-        this.$router.push('tools/speeches');
-      }
-      else if (title === 'N-Gram') {
-        this.$router.push('tools/ngram');
-      }
-    },
-  },
-});
+const redirect = (route) => {
+  router.push(route);
+};
 </script>
 
 <style scoped>
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
+  grid-gap: 30px;
+  padding: 0 100px;
+}
+
+.max-width {
+  max-width: 1600px;
+}
+
+.text-align {
+  padding: 0 200px;
 }
 </style>

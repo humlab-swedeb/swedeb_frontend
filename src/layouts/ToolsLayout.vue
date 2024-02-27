@@ -8,8 +8,8 @@
         <q-toolbar-title>SweDeb</q-toolbar-title>
         <q-tabs no-caps color="black" class="gt-sm">
           <q-route-tab to="/" label="Start" />
-          <q-route-tab to="/" label="Om SweDeb" />
-          <q-route-tab to="/" label="FAQ" />
+          <q-route-tab to="/about" label="Om SweDeb" />
+          <q-route-tab to="/faq" label="FAQ" />
         </q-tabs>
 
         <q-btn flat round icon="menu" class="lt-md">
@@ -21,7 +21,7 @@
               <q-item to="/about" clickable>
                 <q-item-section>Om SweDeb</q-item-section>
               </q-item>
-              <q-item to="/qa" clickable>
+              <q-item to="/faq" clickable>
                 <q-item-section>QA</q-item-section>
               </q-item>
             </q-list>
