@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="row justify-center">
     <apex-chart
       v-if="dataLoaded"
       :options="chartOptions"
       :series="series"
       type="line"
-      height="350"
+      height="400"
+      width="900"
     />
   </div>
 </template>
@@ -20,7 +21,7 @@ const chartOptions = ref({
   chart: {
     type: "line",
     height: 350,
-    fontFamily: "Roboto, sans-serif",
+    fontFamily: "Open-Sans, sans-serif",
     background: "#fff",
   },
   xaxis: {
@@ -37,7 +38,7 @@ const chartOptions = ref({
   },
   tooltip: {
     style: {
-      fontFamily: "Roboto, sans-serif", // Change font family of tooltips
+      fontFamily: "Open-Sans, sans-serif", // Change font family of tooltips
     },
   },
   legend: {
@@ -65,7 +66,7 @@ const chartOptions = ref({
     style: {
       fontSize: "14px",
       fontWeight: "bold",
-      fontFamily: "Roboto, sans-serif",
+      fontFamily: "Open-Sans, sans-serif",
       color: "grey",
     },
   },

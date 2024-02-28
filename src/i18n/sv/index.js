@@ -97,4 +97,61 @@ export default {
     speech_title: "Taltitel",
     gender: "Kön",
   },
+
+  // ABOUT PAGE
+  aboutPageTitle: "Om SweDeb",
+  peopleDevelopment: {
+    0: {
+      name: "Fredrik Mohammadi Norén",
+      title: "Projektledare",
+      description: "Fredrik är projektledare för SweDeb.",
+    },
+    1: {
+      name: "Johan Jarlbrink",
+      title: "Forskare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    2: {
+      name: "Rebecka Weegar",
+      title: "Systemutvecklare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    3: {
+      name: "Roger Mähler",
+      title: "Systemutvecklare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    4: {
+      name: "Marita Nilsson",
+      title: "Krav och test",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    5: {
+      name: "Kajsa Palm",
+      title: "Frontendutveckling, UX/UI",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+  },
+  peopleReference: {
+    0: {
+      name: "Hanna Bäck",
+      title: "Forskare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    1: {
+      name: "Simon Lindgren",
+      title: "Forskare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    2: {
+      name: "Linda Sandström",
+      title: "Forskare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+    3: {
+      name: "Måns Magnusson",
+      title: "Forskare",
+      description: "Johan är utvecklare för SweDeb.",
+    },
+  },
 };

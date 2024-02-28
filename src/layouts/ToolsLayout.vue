@@ -2,7 +2,7 @@
   <q-layout view="hHh Lpr lff">
     <q-header class="row no-wrap">
       <q-toolbar
-        class="bg-grey-8 text-white"
+        class="bg-secondary text-grey-9"
         style="max-width: 400px; min-width: 400px"
       >
         <q-toolbar-title>SweDeb</q-toolbar-title>

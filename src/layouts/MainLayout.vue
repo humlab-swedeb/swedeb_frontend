@@ -17,7 +17,7 @@
     <q-footer class="bg-secondary text-black">
       <div class="custom-footer"></div>
       <q-toolbar class="row justify-center q-px-xl q-py-md">
-        <q-card class="col-5 text-center q-mr-lg transparentColor" flat>
+        <q-card bordered class="col-5 text-center q-mr-lg transparentColor" flat>
           <q-card-section>
             <q-item-label class="text-subtitle1">{{
               $t("swedeb")

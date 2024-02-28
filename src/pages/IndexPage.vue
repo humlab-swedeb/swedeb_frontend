@@ -54,9 +54,7 @@ const redirect = (route) => {
   padding: 0 100px;
 }
 
-.max-width {
-  max-width: 1600px;
-}
+
 
 .text-align {
   padding: 0 200px;
