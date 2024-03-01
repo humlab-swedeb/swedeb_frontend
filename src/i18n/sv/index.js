@@ -128,7 +128,7 @@ export default {
     },
     5: {
       name: "Kajsa Palm",
-      title: "Frontendutveckling, UX/UI",
+      title: "Systemutvecklare, UX/UI",
       description: "Johan är utvecklare för SweDeb.",
     },
   },
@@ -152,6 +152,19 @@ export default {
       name: "Måns Magnusson",
       title: "Forskare",
       description: "Johan är utvecklare för SweDeb.",
+    },
+  },
+
+  // FAQ PAGE
+  faqPageTitle: "FAQ: Vanliga frågor och svar",
+  faqContent: {
+    0: {
+      q: "Vad är SweDeb?",
+      a: "SweDeb är en förkortning av Swedish Debates. SweDeb är en forskningsinfrastruktur som syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
+    },
+    1: {
+      q: "Vad är syftet med SweDeb?",
+      a: "SweDeb syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
     },
   },
 };
