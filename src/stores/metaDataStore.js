@@ -132,58 +132,32 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getOfficeOptions() {
       const path = "/metadata/office_types";
       const response = await api.get(path);
-      this.options.office = response.data.office_types;
+      this.options.office = response.data.office_type_list.map(office_type=>office_type.office);
     },
 
     async getGenderOptions() {
       const path = "/metadata/genders";
       const response = await api.get(path);
-      this.options.gender = response.data.genders;
+      this.options.gender = response.data.gender_list.map(gender=>gender.swedish_gender);
     },
 
     async getSubOfficeOptions() {
       const path = "/metadata/sub_office_types";
       const response = await api.get(path);
-      this.options.subOffice = response.data.sub_office_types;
+      const sub_offices = response.data.sub_office_type_list.map(subOffice=>subOffice.identifier);
+      this.options.subOffice = sub_offices.filter((subOffice) => subOffice !== null);
+
     },
 
-    /*     async getPartyOptions() {
-      try {
-        const path = "/metadata/speakers";
-        const response = await api.get(path);
-        this.options.speakers = response.data;
-        console.log(this.options.speakers.speaker_list);
-
-        this.options.party = this.options.speakers.map(
-          (speakers) => speakers.party
-        );
-        //get rid of duplicates
-        this.options.party = [...new Set(this.options.party)];
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }, */
 
     async getSpeakersOptions() {
       try {
         const path = "/metadata/speakers";
         const queryString = this.getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
-        /*         console.log(`${path}/?${queryString}`); */
-        /* const response = await api.get(
-          "/metadata/speakers?parties=L"
-        ); */
+
         this.options.speakers = response.data.speaker_list;
 
-        /*         // Filter speakers based on selected party
-        const selectedParty = this.selected.party;
-        if (selectedParty.length > 0) {
-          this.options.speakers = this.options.speakers
-            .filter((speaker) => selectedParty.includes(speaker.party))
-            .map((speaker) => speaker.name);
-        } else {
-          this.options.speakers = this.data.map((speaker) => speaker.name);
-        } */
       } catch (error) {
         console.error("Error fetching data:", error);
       }
