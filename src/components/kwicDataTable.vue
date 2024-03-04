@@ -103,7 +103,7 @@ watchEffect(() => {
         left_word: entry.left_word,
         node_word: entry.node_word,
         right_word: entry.right_word,
-        year_title: entry.year_title,
+        year_title: entry.year,
         name: entry.name,
         party_abbrev: entry.party_abbrev,
         speech_title: entry.speech_title,

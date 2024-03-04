@@ -85,12 +85,14 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     async getStartYear() {
+
       try {
         const path = "/metadata/start_year";
         const response = await api.get(path);
-        this.selected.yearRange.min = parseInt(response.data.year);
-        return this.selected.yearRange.min;
-      } catch (error) {}
+        const min_year = parseInt(response.data);
+        //this.selected.yearRange.min = min_year;
+        return min_year;
+      } catch (error) {console.log(error);}
     },
     async getEndYear() {
       try {

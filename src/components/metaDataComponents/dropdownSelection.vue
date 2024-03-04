@@ -31,8 +31,8 @@
         @remove="select.removeAtIndex(select.index)"
       >
         <q-item-label v-if="props.type === 'speakers'">
-          {{ select.opt.speaker_name }},
-          {{ getPartyLabel(select.opt.speaker_party[0]) }}
+          {{ select.opt.name }},
+          {{ getPartyLabel(select.opt.party_abbrev[0]) }}
           <!--       <span
             :style="{
               backgroundColor: store.getPartyColor(select.opt.speaker_party[0]),
@@ -43,12 +43,12 @@
           >
             {{ select.opt.speaker_party[0] }} </span
           > -->({{
-            select.opt.speaker_birth_year
-              ? select.opt.speaker_birth_year.year
+            select.opt.year_of_birth
+              ? select.opt.year_of_birth
               : ""
           }}-{{
-            select.opt.speaker_death_year
-              ? select.opt.speaker_death_year.year
+            select.opt.year_of_death
+              ? select.opt.year_of_death
               : " "
           }})
         </q-item-label>
@@ -126,17 +126,17 @@ const filterHandler = (searchTerm, updateOptions) => {
 const customOptionLabel = (opt) => {
   if (props.type === "speakers") {
     // Check if both birth year and death year are defined
-    const birthYear = opt.speaker_birth_year
-      ? opt.speaker_birth_year.year
+    const birthYear = opt.year_of_birth
+      ? opt.year_of_birth
       : " ";
-    const deathYear = opt.speaker_death_year
-      ? opt.speaker_death_year.year
+    const deathYear = opt.year_of_death
+      ? opt.year_of_death
       : " ";
 
-    let party = opt.speaker_party ? opt.speaker_party : "";
-    party = getPartyLabel(opt.speaker_party);
+    let party = opt.party_abbrev ? opt.party_abbrev : "";
+    party = getPartyLabel(opt.party_abbrev);
 
-    return `${opt.speaker_name}, ${party}  (${birthYear}-${deathYear})`;
+    return `${opt.name}, ${party}  (${birthYear}-${deathYear})`;
   } else {
     return opt; // Return to default display for other types
   }

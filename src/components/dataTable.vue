@@ -54,8 +54,8 @@ watchEffect(() => {
 
     rows.value = displayedData.value.speakers.map((speaker, index) => ({
       id: index + 1,
-      speakers: speaker.speaker_name,
-      party: speaker.speaker_party[0],
+      speakers: speaker.name,
+      party: speaker.party_abbrev,
       gender: speaker.gender,
     }));
 
