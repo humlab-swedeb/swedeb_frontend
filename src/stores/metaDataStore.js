@@ -120,8 +120,12 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getPartyOptions() {
       const path = "/metadata/parties";
       const response = await api.get(path);
-      this.options.party = response.data.party_list;
+
       //this.options.party = response.data.party_list.map(party => party.party_abbrev);
+      this.partyOptions = response.data.party_list.reduce((acc, party) => {
+        acc[party.party_abbrev] = party.party_id;
+        return acc;
+      }, {});
 
     },
 

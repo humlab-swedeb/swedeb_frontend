@@ -52,6 +52,7 @@
               : " "
           }})
         </q-item-label>
+
         <q-item-label v-else>{{ select.opt }}</q-item-label>
       </q-chip>
     </template>
@@ -91,7 +92,7 @@ watchEffect(async () => {
   try {
     if (props.type === "party") {
       await store.getPartyOptions();
-      options.value = store.options.party || [];
+      options.value = Object.keys(store.partyOptions) || [];
     } else if (props.type === "subOffice") {
       await store.getSubOfficeOptions();
       options.value = store.options.subOffice || [];
@@ -143,7 +144,7 @@ const customOptionLabel = (opt) => {
 };
 
 const getPartyLabel = (party) => {
-  if (party && party !== "None") {
+  if (party && party !== "None" && party !== "?") {
     return party;
   } else {
     return "Okänt"; // Display "Okänt" for "None" or empty party
