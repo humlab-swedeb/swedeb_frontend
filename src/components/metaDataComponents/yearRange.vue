@@ -2,7 +2,7 @@
   <q-item-label class="text-bold">{{ $t("year") + ":" }}</q-item-label>
   <q-list>
     <q-item class="q-px-none">
-      <q-item-label>{{ $t("yearRangeMin") }}</q-item-label>
+      <q-item-label>{{ min }}</q-item-label>
       <q-range
         v-model="store.selected.yearRange"
         :min="min"
@@ -12,7 +12,7 @@
         switch-label-side
         color="accent"
       />
-      <q-item-label>{{ $t("yearRangeMax") }}</q-item-label>
+      <q-item-label>{{ max }}</q-item-label>
     </q-item>
   </q-list>
 </template>

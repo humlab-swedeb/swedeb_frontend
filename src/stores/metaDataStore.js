@@ -25,8 +25,8 @@ export const metaDataStore = defineStore("metaDataStore", {
       subOffice: [],
       speakers: [],
       yearRange: {
-        min: null,
-        max: null,
+        min: 0,
+        max: 0,
       },
     },
 
@@ -90,7 +90,6 @@ export const metaDataStore = defineStore("metaDataStore", {
         const path = "/metadata/start_year";
         const response = await api.get(path);
         const min_year = parseInt(response.data);
-        //this.selected.yearRange.min = min_year;
         return min_year;
       } catch (error) {console.log(error);}
     },
@@ -98,8 +97,8 @@ export const metaDataStore = defineStore("metaDataStore", {
       try {
         const path = "/metadata/end_year";
         const response = await api.get(path);
-        this.selected.yearRange.max = parseInt(response.data.year);
-        return this.selected.yearRange.max;
+        const max_year = parseInt(response.data);
+        return max_year;
       } catch (error) {}
     },
 
@@ -121,7 +120,9 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getPartyOptions() {
       const path = "/metadata/parties";
       const response = await api.get(path);
-      this.options.party = response.data.parties;
+      this.options.party = response.data.party_list;
+      //this.options.party = response.data.party_list.map(party => party.party_abbrev);
+
     },
 
     async getOfficeOptions() {

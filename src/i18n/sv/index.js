@@ -41,8 +41,8 @@ export default {
 
   // YearRange component (used in MetaDataFilter)
   year: "År",
-  yearRangeMin: "1920",
-  yearRangeMax: "2022",
+  //yearRangeMin: "1920",
+  //yearRangeMax: "2022",
 
   office: "Office type",
   subOffice: "Sub office type",

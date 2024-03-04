@@ -102,12 +102,12 @@ watchEffect(async () => {
     console.log(displayedData.value);
 
     rows.value = displayedData.value.map((speech) => ({
-      id: speech.speech_id_column,
-      speaker: speech.speaker_column,
-      gender: speech.gender_column,
-      party: speech.party_column,
-      source: speech.source_column,
-      year: speech.year_column,
+      id: speech.document_name,
+      speaker: speech.name,
+      gender: speech.gender,
+      party: speech.party_abbrev,
+      source: speech.speech_link,
+      year: speech.year,
     }));
 
     columns.value = [
