@@ -32,7 +32,7 @@
       >
         <q-item-label v-if="props.type === 'speakers'">
           {{ select.opt.name }},
-          {{ getPartyLabel(select.opt.party_abbrev[0]) }}
+          {{ getPartyLabel(select.opt.party_abbrev) }}
           <!--       <span
             :style="{
               backgroundColor: store.getPartyColor(select.opt.speaker_party[0]),

@@ -74,16 +74,23 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
+    addSpeakerParam(query_params) {
+      if (this.selected.speakers.length > 0) {
+        this.selected.speakers.forEach((speaker) => query_params.append("speaker_idsgit", speaker.person_id));
+      }
+    },
+
 
     getSelectedParams() {
       const searchParams = new URLSearchParams();
 
       //this.addParamArray("party", "parties", searchParams);
       this.addPartyParam(searchParams);
+      this.addSpeakerParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
       this.addParamArray("office", "office_types", searchParams);
       this.addParamArray("subOffice", "sub_office_types", searchParams);
-      this.addParamArray("speakers", "speaker_ids", searchParams);
+      //this.addParamArray("speakers", "speaker_ids", searchParams);
 
       const year_value = this.selected["yearRange"];
       if (year_value.min !== null) {
