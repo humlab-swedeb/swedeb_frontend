@@ -76,7 +76,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     addSpeakerParam(selected_params) {
       if (this.selected.speakers.length > 0) {
-        this.selected.speakers.forEach((speaker) => selected_params.append("speaker_idsgit", speaker.person_id));
+        this.selected.speakers.forEach((speaker) => selected_params.append("speaker_ids", speaker.person_id));
       }
     },
 
