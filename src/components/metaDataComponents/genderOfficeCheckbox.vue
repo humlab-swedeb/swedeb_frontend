@@ -1,3 +1,4 @@
+
 <template>
   <q-item-label class="text-bold">{{ $t(`${props.type}`) + ":" }}</q-item-label>
   <q-checkbox
@@ -8,11 +9,11 @@
   />
   <br />
   <q-checkbox
-    v-for="o in store.options[props.type]"
-    :key="o"
+    v-for="(value, key) in store.options[props.type]"
+    :key="key"
     v-model="store.selected[props.type]"
-    :val="o"
-    :label="o"
+    :val="key"
+    :label="value"
     class="q-ml-md"
     size="sm"
     color="accent"

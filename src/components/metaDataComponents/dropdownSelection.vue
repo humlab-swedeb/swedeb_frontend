@@ -92,7 +92,7 @@ watchEffect(async () => {
   try {
     if (props.type === "party") {
       await store.getPartyOptions();
-      options.value = Object.keys(store.partyOptions) || [];
+      options.value = Object.keys(store.options.party) || [];
     } else if (props.type === "subOffice") {
       await store.getSubOfficeOptions();
       options.value = store.options.subOffice || [];

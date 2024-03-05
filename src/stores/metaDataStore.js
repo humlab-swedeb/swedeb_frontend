@@ -11,8 +11,8 @@ export const metaDataStore = defineStore("metaDataStore", {
     data: null,
 
     options: {
-      party: [],
-      gender: [],
+      party: {},
+      gender: {},
       office: [],
       subOffice: [],
       speakers: [],
@@ -54,20 +54,33 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.selected.yearRange.max = await this.getEndYear();
       this.genderAllSelect = false;
       this.officeAllSelect = false;
+
     },
 
     addParamArray(current_key, api_key, query_params) {
-      const party_value = this.selected[current_key];
-      if (party_value.length > 0) {
-        party_value.forEach((item) => query_params.append(api_key, item));
+      const param_value = this.selected[current_key];
+
+      if (param_value.length > 0) {
+        param_value.forEach((item) => query_params.append(api_key, item));
       }
     },
+
+    addPartyParam(query_params){
+
+      if (this.selected.party.length > 0) {
+        // add the value from this.party.options for each selected party in this.party.selected
+        this.selected.party.forEach((party) => query_params.append("party_id", this.options.party[party]));
+
+      }
+    },
+
 
     getSelectedParams() {
       const searchParams = new URLSearchParams();
 
-      this.addParamArray("party", "parties", searchParams);
-      this.addParamArray("gender", "genders", searchParams);
+      //this.addParamArray("party", "parties", searchParams);
+      this.addPartyParam(searchParams);
+      this.addParamArray("gender", "gender_id", searchParams);
       this.addParamArray("office", "office_types", searchParams);
       this.addParamArray("subOffice", "sub_office_types", searchParams);
       this.addParamArray("speakers", "speaker_ids", searchParams);
@@ -121,8 +134,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const path = "/metadata/parties";
       const response = await api.get(path);
 
-      //this.options.party = response.data.party_list.map(party => party.party_abbrev);
-      this.partyOptions = response.data.party_list.reduce((acc, party) => {
+      this.options.party = response.data.party_list.reduce((acc, party) => {
         acc[party.party_abbrev] = party.party_id;
         return acc;
       }, {});
@@ -138,7 +150,10 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getGenderOptions() {
       const path = "/metadata/genders";
       const response = await api.get(path);
-      this.options.gender = response.data.gender_list.map(gender=>gender.swedish_gender);
+      this.options.gender = response.data.gender_list.reduce((acc, gender) => {
+        acc[gender.gender_id] = gender.swedish_gender;
+        return acc;
+    }, {});
     },
 
     async getSubOfficeOptions() {
