@@ -65,18 +65,18 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
-    addPartyParam(query_params){
+    addPartyParam(selected_params){
 
       if (this.selected.party.length > 0) {
         // add the value from this.party.options for each selected party in this.party.selected
-        this.selected.party.forEach((party) => query_params.append("party_id", this.options.party[party]));
+        this.selected.party.forEach((party) => selected_params.append("party_id", this.options.party[party]));
 
       }
     },
 
-    addSpeakerParam(query_params) {
+    addSpeakerParam(selected_params) {
       if (this.selected.speakers.length > 0) {
-        this.selected.speakers.forEach((speaker) => query_params.append("speaker_idsgit", speaker.person_id));
+        this.selected.speakers.forEach((speaker) => selected_params.append("speaker_idsgit", speaker.person_id));
       }
     },
 
@@ -84,13 +84,11 @@ export const metaDataStore = defineStore("metaDataStore", {
     getSelectedParams() {
       const searchParams = new URLSearchParams();
 
-      //this.addParamArray("party", "parties", searchParams);
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
       this.addParamArray("office", "office_types", searchParams);
       this.addParamArray("subOffice", "sub_office_types", searchParams);
-      //this.addParamArray("speakers", "speaker_ids", searchParams);
 
       const year_value = this.selected["yearRange"];
       if (year_value.min !== null) {
@@ -101,6 +99,15 @@ export const metaDataStore = defineStore("metaDataStore", {
         searchParams.append("to_year", year_value.max);
       }
 
+      return searchParams.toString();
+    },
+
+    getSelectedParamsForSpeakerList(){
+      const searchParams = new URLSearchParams();
+      this.addPartyParam(searchParams);
+      this.addParamArray("gender", "gender_id", searchParams);
+      this.addParamArray("office", "office_types", searchParams);
+      this.addParamArray("subOffice", "sub_office_types", searchParams);
       return searchParams.toString();
     },
 
@@ -175,7 +182,7 @@ export const metaDataStore = defineStore("metaDataStore", {
     async getSpeakersOptions() {
       try {
         const path = "/metadata/speakers";
-        const queryString = this.getSelectedParams();
+        const queryString = this.getSelectedParamsForSpeakerList();
         const response = await api.get(`${path}?${queryString}`);
 
         this.options.speakers = response.data.speaker_list;
@@ -185,14 +192,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
-    /*     getPartyFromSpeaker(speaker) {
-      try {
-        const speakerObj = this.data.find((obj) => obj.name === speaker);
-        return speakerObj.party;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }, */
+
 
     selectAll(type) {
       this.selected[type] = this.options[type];
