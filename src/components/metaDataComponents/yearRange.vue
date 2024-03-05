@@ -29,6 +29,8 @@ const getYearRange = async () => {
   try {
     min.value = await store.getStartYear();
     max.value = await store.getEndYear();
+    store.selected.yearRange.min = min.value;
+    store.selected.yearRange.max = max.value;
   } catch (error) {
     console.error("Error fetching year range:", error);
   }
