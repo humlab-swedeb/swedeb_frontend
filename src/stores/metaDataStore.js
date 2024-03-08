@@ -130,22 +130,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       } catch (error) {}
     },
 
-    getPartyColor(party) {
-      /*
-      const colorMap = {
-        S: "#E8112d",
-        M: "#52BDEC",
-        SD: "#DDDD00",
-        C: "#009933",
-        V: "#DA291C",
-        KD: "#000077",
-        L: "#006AB3",
-        MP: "#83CF39",
-        FI: "#CD1B68",
-      };
-      return colorMap[party] || "#808080";
-      */
-      return store.options.party[party].party_color || "#808080";
+    getPartyColor(party_abbreviation) {
+
+      return this.options.party[party_abbreviation].party_color || "#808080";
     },
 
     async getPartyOptions() {
@@ -156,7 +143,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         acc[party.party_abbrev] = {
           party_id: party.party_id,
           party_name: party.party,
-          party_colour: party.party_color,
+          party_color: party.party_color,
         };
         return acc;
       }, {});

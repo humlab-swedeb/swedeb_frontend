@@ -103,6 +103,7 @@ watchEffect(async () => {
 
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
+      protocol: speech.formatted_speech_id,
       speaker: speech.name,
       gender: speech.gender,
       party: speech.party_abbrev,
@@ -111,12 +112,13 @@ watchEffect(async () => {
     }));
 
     columns.value = [
+
       {
-        name: "id",
+        name: "protocol",
         required: true,
-        label: "ID",
+        label: "Anförande",
         align: "left",
-        field: "id",
+        field: "protocol",
         sortable: true,
       },
       {
