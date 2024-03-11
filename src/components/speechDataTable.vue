@@ -1,4 +1,5 @@
 <template>
+  <div>
   <q-table
     bordered
     flat
@@ -6,6 +7,7 @@
     :columns="columns"
     row-key="id"
     :rows-per-page-options="[10, 20, 50, 100, 0]"
+    v-model:pagination="pagination"
     v-if="!loading"
     class="bg-grey-2"
   >
@@ -57,6 +59,16 @@
       </q-tr>
     </template>
   </q-table>
+
+
+    <q-btn
+      color="primary"
+      label="Download Data"
+      @click="downloadData"
+    ></q-btn>
+
+  </div>
+
 </template>
 
 <script setup>
@@ -64,10 +76,12 @@ import { ref, watchEffect, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
+const downloadStore = downloadDataStore();
 //const props = defineProps(["type"]);
 const props = defineProps({
   dataLoaded: Boolean,
@@ -99,7 +113,6 @@ watchEffect(async () => {
       await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
-    console.log(displayedData.value);
 
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
@@ -112,7 +125,6 @@ watchEffect(async () => {
     }));
 
     columns.value = [
-
       {
         name: "protocol",
         required: true,
@@ -167,6 +179,25 @@ watchEffect(async () => {
     loading.value = false;
   }
 });
+const pagination = ref({
+  /* Your pagination configuration */
+});
+
+const downloadData = () => {
+  // Accessing the current page from the pagination object
+  const currentPage = pagination.value.page;
+
+  const startIndex = pagination.value.rowsPerPage * (currentPage - 1);
+  const endIndex = pagination.value.rowsPerPage * currentPage;
+  const documentNames = displayedData.value.slice(startIndex, endIndex).map(speech => speech.document_name);
+
+  console.log(currentPage)
+  console.log(documentNames);
+  downloadStore.getSpeechesZip(documentNames);
+  //console.log(response);
+
+
+};
 </script>
 
 <style scoped></style>
