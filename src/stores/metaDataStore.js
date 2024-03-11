@@ -102,6 +102,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       return searchParams.toString();
     },
 
+
     getSelectedParamsForSpeakerList() {
       const searchParams = new URLSearchParams();
       this.addPartyParam(searchParams);

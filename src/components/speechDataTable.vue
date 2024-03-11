@@ -191,7 +191,8 @@ const downloadData = () => {
     .slice(startIndex, endIndex)
     .map((speech) => speech.document_name);
 
-  downloadStore.getSpeechesZip(documentNames);
+  const paramString = metaStore.getSelectedParams();
+  downloadStore.getSpeechesZip(documentNames, paramString);
 };
 </script>
 
