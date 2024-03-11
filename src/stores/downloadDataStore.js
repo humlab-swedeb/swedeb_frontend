@@ -13,7 +13,6 @@ export const downloadDataStore = defineStore("downloadData", {
           responseType: "blob",
         });
 
-        console.log(response.data);
         const url = window.URL.createObjectURL(new Blob([response.data]));
 
         // Create an anchor element

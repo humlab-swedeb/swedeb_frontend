@@ -1,74 +1,72 @@
 <template>
   <div>
-  <q-table
-    bordered
-    flat
-    :rows="rows"
-    :columns="columns"
-    row-key="id"
-    :rows-per-page-options="[10, 20, 50, 100, 0]"
-    v-model:pagination="pagination"
-    v-if="!loading"
-    class="bg-grey-2"
-  >
-    <template v-slot:header="props">
-      <q-tr :props="props">
-        <q-th v-for="col in props.cols" :key="col.name" :props="props" class="">
-          {{ col.label }}
-        </q-th>
-      </q-tr>
-    </template>
-    <template v-slot:body="props">
-      <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-        <q-td
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props"
-          class="bg-white"
-        >
-          <q-item-label
-            v-if="col.name === 'party'"
-            class="text-bold"
-            :style="{ color: metaStore.getPartyColor(col.value) }"
+    <q-table
+      bordered
+      flat
+      :rows="rows"
+      :columns="columns"
+      row-key="id"
+      :rows-per-page-options="[10, 20, 50, 100, 0]"
+      v-model:pagination="pagination"
+      v-if="!loading"
+      class="bg-grey-2"
+    >
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class=""
           >
-            {{ col.value }}
-          </q-item-label>
-          <q-item-label v-else>
-            {{ col.value }}
-          </q-item-label>
-        </q-td>
-        <q-td auto-width class="bg-white">
-          <q-btn
-            size="sm"
-            color="accent"
-            round
-            dense
-            flat
-            :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-          />
-        </q-td>
-      </q-tr>
-      <!-- If row in table is clicked, EXPAND -->
-      <q-tr v-show="props.expand" :props="props">
-        <q-td colspan="100%">
-          <div class="text-left">
-            <q-item-label caption>{{ speakerNote }}</q-item-label>
-            <q-item-label>{{ speechText }}</q-item-label>
-          </div>
-        </q-td>
-      </q-tr>
-    </template>
-  </q-table>
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class="bg-white"
+          >
+            <q-item-label
+              v-if="col.name === 'party'"
+              class="text-bold"
+              :style="{ color: metaStore.getPartyColor(col.value) }"
+            >
+              {{ col.value }}
+            </q-item-label>
+            <q-item-label v-else>
+              {{ col.value }}
+            </q-item-label>
+          </q-td>
+          <q-td auto-width class="bg-white">
+            <q-btn
+              size="sm"
+              color="accent"
+              round
+              dense
+              flat
+              :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+            />
+          </q-td>
+        </q-tr>
+        <!-- If row in table is clicked, EXPAND -->
+        <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%">
+            <div class="text-left">
+              <q-item-label caption>{{ speakerNote }}</q-item-label>
+              <q-item-label>{{ speechText }}</q-item-label>
+            </div>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
 
-
-    <q-btn
-      color="primary"
-      label="Download Data"
-      @click="downloadData"
-    ></q-btn>
-
+    <q-btn color="primary" label="Download Data" @click="downloadData"></q-btn>
   </div>
-
 </template>
 
 <script setup>
@@ -189,14 +187,11 @@ const downloadData = () => {
 
   const startIndex = pagination.value.rowsPerPage * (currentPage - 1);
   const endIndex = pagination.value.rowsPerPage * currentPage;
-  const documentNames = displayedData.value.slice(startIndex, endIndex).map(speech => speech.document_name);
+  const documentNames = displayedData.value
+    .slice(startIndex, endIndex)
+    .map((speech) => speech.document_name);
 
-  console.log(currentPage)
-  console.log(documentNames);
   downloadStore.getSpeechesZip(documentNames);
-  //console.log(response);
-
-
 };
 </script>
 
