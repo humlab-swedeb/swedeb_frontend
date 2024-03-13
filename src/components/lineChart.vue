@@ -5,8 +5,7 @@
       :options="chartOptions"
       :series="series"
       type="line"
-      height="400"
-      width="900"
+      class="fit"
     />
   </div>
 </template>
@@ -22,7 +21,7 @@ const chartOptions = ref({
     type: "line",
     height: 350,
     fontFamily: "Open-Sans, sans-serif",
-    background: "#fff",
+    background: "#fcfcfc",
   },
   xaxis: {
     categories: [],
@@ -33,29 +32,30 @@ const chartOptions = ref({
     },
   },
   stroke: {
-    curve: "smooth",
-    width: [3, 3],
+    curve: "straight",
+    width: 3,
+    dashArray: generateDashArray(0),
   },
   tooltip: {
     style: {
-      fontFamily: "Open-Sans, sans-serif", // Change font family of tooltips
+      fontFamily: "Open-Sans, sans-serif",
+      maxHeight: "30px",
     },
   },
   legend: {
-    position: "top", // Placera legenden ovanför diagrammet
+    position: "top",
+    horizontalAlign: "left",
     labels: {
       colors: "#000000", // Färg på legendtexten
       fontSize: "16px", // Justera storlek på legendtexten
     },
   },
-  colors: ["#ff0000", "#00ff00", "#0000ff"],
+  /* colors: ["#ff0000", "#00ff00", "#0000ff"] */
 
   markers: {
     size: 0,
   },
-  fill: {
-    type: "gradient" / "solid" / "pattern" / "image",
-  },
+
   title: {
     text: "Hello",
     align: "center",
@@ -87,10 +87,28 @@ watchEffect(() => {
     series.value = seriesData;
     // Uppdatera x-axel kategorier
     chartOptions.value.xaxis.categories = categories;
+    chartOptions.value.stroke.dashArray = generateDashArray(
+      seriesData.length,
+      5
+    );
 
     // Markera att data har laddats
     dataLoaded.value = true;
   }
 });
 const ApexChart = VueApexCharts;
+
+function generateDashArray(totalLines, interval) {
+  const dashArray = [];
+  const dashValues = [0, 2, 4, 6, 8, 10]; // De olika värdena för dash
+
+  for (let i = 0; i < totalLines; i++) {
+    const dashIndex = Math.floor(i / interval) % dashValues.length;
+    dashArray.push(dashValues[dashIndex]);
+  }
+  console.log(dashArray);
+  return dashArray;
+}
 </script>
+
+<style scoped></style>

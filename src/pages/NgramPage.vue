@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-pa-md">
+  <q-card flat class="q-pa-md background">
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
 </template>

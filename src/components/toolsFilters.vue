@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center text-h6">
+  <div v-if="$route.path !=='/tools/speeches'" class="text-center text-h6">
     <q-item-label>{{ $t("toolsFilterTitle") }}</q-item-label>
     <q-item-label caption class="text-bold">{{ $t($route.path) }}</q-item-label>
   </div>
