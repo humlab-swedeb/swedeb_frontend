@@ -65,7 +65,8 @@
       </template>
     </q-table>
 
-    <q-btn color="primary" label="Download Data" @click="downloadData"></q-btn>
+    <q-btn color="primary" label="Ladda ner tal"  @click="downloadSpeeches"></q-btn>
+
   </div>
 </template>
 
@@ -177,11 +178,9 @@ watchEffect(async () => {
     loading.value = false;
   }
 });
-const pagination = ref({
-  /* Your pagination configuration */
-});
+const pagination = ref({});
 
-const downloadData = () => {
+function downloadSpeeches() {
   // Accessing the current page from the pagination object
   const currentPage = pagination.value.page;
 
@@ -191,9 +190,9 @@ const downloadData = () => {
     .slice(startIndex, endIndex)
     .map((speech) => speech.document_name);
 
-  const paramString = metaStore.getSelectedParams();
+  const paramString = metaStore.selectedMetadataToText();
   downloadStore.getSpeechesZip(documentNames, paramString);
-};
+}
 </script>
 
 <style scoped></style>

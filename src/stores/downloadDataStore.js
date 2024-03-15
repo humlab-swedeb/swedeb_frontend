@@ -4,11 +4,15 @@ import JSZip from "jszip";
 
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
+
+
+
+
     async getSpeechesZip(speech_list, selected_metadata) {
       try {
         const path = "tools/speech_download/";
         const json_payload = JSON.stringify(speech_list);
-        console.log(json_payload);
+
         const response = await api.post(path, json_payload, {
           headers: { "Content-Type": "application/json" },
           responseType: "blob",
@@ -23,8 +27,8 @@ export const downloadDataStore = defineStore("downloadData", {
         const originalZip = await zip.loadAsync(originalZipBlob);
 
         // Create a new text file with the selected metadata
-        const textContent = JSON.stringify(selected_metadata);
-        originalZip.file('metadata.txt', textContent);
+
+        originalZip.file('metadata.txt', selected_metadata);
 
         // Generate the new ZIP file asynchronously
         const newZipBlob = await originalZip.generateAsync({ type: 'blob' });

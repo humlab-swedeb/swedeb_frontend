@@ -81,6 +81,51 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
+    genderToText(gender_id) {
+      return this.options.gender[gender_id];
+    },
+
+    getMetarRow(metadata_variable, metadata_variable_name) {
+      // Helper function to create a string representation of selected metadata
+      let selected = "Alla";
+      if (metadata_variable.length > 0) {
+        selected = metadata_variable.join(", ");
+      }
+      return `Valda ${metadata_variable_name}: ${selected}`;
+    },
+
+    getSpeakerAsString(speaker) {
+      // Helper function to create a string representation of a speaker
+      const year_of_death = speaker.year_of_death ? speaker.year_of_death : "";
+      return `${speaker.name}, ${speaker.party_abbrev}, ${speaker.year_of_birth} - ${year_of_death}`;
+    },
+
+    selectedMetadataToText() {
+      // String representation of selected metadata to be included in downloads
+      const selected_years_start = this.selected.yearRange.min;
+      const selected_years_end = this.selected.yearRange.max;
+      const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
+
+      const selected_parties = this.getMetarRow(this.selected.party, "partier");
+      const selected_speakers_as_string = this.selected.speakers.map(
+        (speaker) => this.getSpeakerAsString(speaker)
+      );
+      const selected_speakers = this.getMetarRow(
+        selected_speakers_as_string,
+        "talare"
+      );
+      const selected_genders_as_string = this.selected.gender.map(
+        (gender) => this.options.gender[gender]
+      );
+
+      const selected_genders = this.getMetarRow(
+        selected_genders_as_string,
+        "kön"
+      );
+
+      return `${year_string}\n${selected_parties}\n${selected_speakers}\n${selected_genders}`;
+    },
+
     getSelectedParams() {
       const searchParams = new URLSearchParams();
 
@@ -101,7 +146,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       return searchParams.toString();
     },
-
 
     getSelectedParamsForSpeakerList() {
       const searchParams = new URLSearchParams();
@@ -132,7 +176,6 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getPartyColor(party_abbreviation) {
-
       return this.options.party[party_abbreviation].party_color || "#808080";
     },
 
