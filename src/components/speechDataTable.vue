@@ -19,21 +19,38 @@
             :props="props"
             class=""
           >
-            {{ col.value }}
-          </q-item-label>
-          <q-item-label v-else>
-            {{ col.value }}
-          </q-item-label>
-        </q-td>
-        <q-td auto-width class="bg-white">
-          <q-btn
-            size="sm"
-            color="accent"
-            round
-            dense
-            flat
-            :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-          />
+          {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class="bg-white"
+          >
+            <q-item-label
+              v-if="col.name === 'party'"
+              class="text-bold"
+              :style="{ color: metaStore.getPartyColor(col.value) }"
+            >
+              {{ col.value }}
+            </q-item-label>
+            <q-item-label v-else>
+              {{ col.value }}
+            </q-item-label>
+          </q-td>
+          <q-td auto-width class="bg-white">
+            <q-btn
+              size="sm"
+              color="accent"
+              round
+              dense
+              flat
+              :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+            />
         </q-td>
       </q-tr>
       <!-- If row in table is clicked, EXPAND -->
@@ -53,7 +70,7 @@
     </template>
   </q-table>
   <q-btn color="primary" label="Ladda ner tal"  @click="downloadSpeeches"></q-btn>
-
+</div>
 </template>
 
 <script setup>
