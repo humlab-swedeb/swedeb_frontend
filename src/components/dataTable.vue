@@ -75,7 +75,7 @@ watchEffect(() => {
         field: "party",
         sortable: true,
         align: "left",
-        style: (row) => ({ color: store.getPartyColor(row.party) }),
+        style: (row) => ({ color: store.getPartyColor(row.party)}),
       },
       {
         name: "speakers",

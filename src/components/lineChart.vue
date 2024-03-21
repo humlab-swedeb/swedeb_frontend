@@ -33,7 +33,7 @@ const chartOptions = ref({
     },
   },
   stroke: {
-    curve: "smooth",
+   
     width: [3, 3],
   },
   tooltip: {
