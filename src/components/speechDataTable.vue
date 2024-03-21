@@ -48,9 +48,14 @@
       </q-tr>
       <!-- If row in table is clicked, EXPAND -->
       <q-tr v-show="props.expand" :props="props">
-        <q-td colspan="100%">
-          <div class="text-left">
-            <q-item-label caption>{{ speakerNote }}</q-item-label>
+        <q-td colspan="7">
+          <div>
+            {{ props.row }}
+          </div>
+          <div class="text-left" style="white-space: normal">
+            <q-item-label caption class="text-bold">{{
+              speakerNote
+            }}</q-item-label>
             <q-item-label>{{ speechText }}</q-item-label>
           </div>
         </q-td>
@@ -87,13 +92,13 @@ const expandRow = async (props) => {
     const speechData = await speechStore.getSpeech(props.row.id);
     speakerNote.value = speechData.speaker_note;
     speechText.value = speechData.speech_text;
+    console.log(speechData);
   }
 };
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {
     loading.value = true;
     if (props.type === "wordTrends") {
-      //await wtStore.getWordTrendsSpeeches(wtStore.searchText);
       displayedData.value = wtStore.wordTrendsSpeeches;
     } else if (props.type === "speeches") {
       await speechStore.getSpeechesResult();

@@ -55,7 +55,7 @@ const wtStore = wordTrendsDataStore();
 const showData = ref(false);
 const dataLoaded = ref(false);
 
-const tabs = ref("diagram");
+const tabs = ref("speech");
 
 const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;

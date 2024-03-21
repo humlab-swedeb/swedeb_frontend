@@ -56,6 +56,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         this.wordHits = response.data.hit_list;
         this.wordHitsSelected = this.wordHits;
+        this.searchText = "";
       } catch (error) {
         console.error("Error fetching data:", error);
       }

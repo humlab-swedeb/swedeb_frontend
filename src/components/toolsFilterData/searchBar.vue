@@ -9,15 +9,16 @@
     bg-color="white"
     color="accent"
     @keydown.enter="
-      wtStore.getWordHits(wtStore.searchText);
-      wtStore.addChip();
+      wtStore.searchText.includes('*')
+        ? wtStore.getWordHits(wtStore.searchText)
+        : wtStore.addChip()
     "
   >
     <template v-slot:prepend>
       <q-icon name="search" color="accent" />
     </template>
     <template v-slot:append>
-      <q-btn round @click="wtStore.addChip" icon='add'/>
+      <q-btn round @click="wtStore.addChip" icon="add" />
     </template>
   </q-input>
   <div class="row fit q-py-md">
