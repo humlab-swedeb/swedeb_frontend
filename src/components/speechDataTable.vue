@@ -1,33 +1,23 @@
 <template>
-  <q-table
-    bordered
-    flat
-    :rows="rows"
-    :columns="columns"
-    row-key="id"
-    :rows-per-page-options="[10, 20, 50, 100, 0]"
-    v-if="!loading"
-    class="bg-grey-2"
-  >
-    <template v-slot:header="props">
-      <q-tr :props="props">
-        <q-th v-for="col in props.cols" :key="col.name" :props="props" class="">
-          {{ col.label }}
-        </q-th>
-      </q-tr>
-    </template>
-    <template v-slot:body="props">
-      <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-        <q-td
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props"
-          class="bg-white"
-        >
-          <q-item-label
-            v-if="col.name === 'party'"
-            class="text-bold"
-            :style="{ color: metaStore.getPartyColor(col.value) }"
+  <div>
+    <q-table
+      bordered
+      flat
+      :rows="rows"
+      :columns="columns"
+      row-key="id"
+      :rows-per-page-options="[10, 20, 50, 100, 0]"
+      v-model:pagination="pagination"
+      v-if="!loading"
+      class="bg-grey-2"
+    >
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class=""
           >
             {{ col.value }}
           </q-item-label>
@@ -62,6 +52,8 @@
       </q-tr>
     </template>
   </q-table>
+  <q-btn color="primary" label="Ladda ner tal"  @click="downloadSpeeches"></q-btn>
+
 </template>
 
 <script setup>
@@ -69,10 +61,12 @@ import { ref, watchEffect, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
+const downloadStore = downloadDataStore();
 //const props = defineProps(["type"]);
 const props = defineProps({
   dataLoaded: Boolean,
@@ -104,10 +98,10 @@ watchEffect(async () => {
       await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
-    console.log(displayedData.value);
 
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
+      protocol: speech.formatted_speech_id,
       speaker: speech.name,
       gender: speech.gender,
       party: speech.party_abbrev,
@@ -117,11 +111,11 @@ watchEffect(async () => {
 
     columns.value = [
       {
-        name: "id",
+        name: "protocol",
         required: true,
-        label: "ID",
+        label: "Anförande",
         align: "left",
-        field: "id",
+        field: "protocol",
         sortable: true,
       },
       {
@@ -170,6 +164,21 @@ watchEffect(async () => {
     loading.value = false;
   }
 });
+const pagination = ref({});
+
+function downloadSpeeches() {
+  // Accessing the current page from the pagination object
+  const currentPage = pagination.value.page;
+
+  const startIndex = pagination.value.rowsPerPage * (currentPage - 1);
+  const endIndex = pagination.value.rowsPerPage * currentPage;
+  const documentNames = displayedData.value
+    .slice(startIndex, endIndex)
+    .map((speech) => speech.document_name);
+
+  const paramString = metaStore.selectedMetadataToText();
+  downloadStore.getSpeechesZip(documentNames, paramString);
+}
 </script>
 
 <style scoped></style>

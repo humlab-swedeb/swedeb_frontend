@@ -35,6 +35,7 @@ const chartOptions = ref({
     curve: "straight",
     width: 3,
     dashArray: generateDashArray(0),
+
   },
   tooltip: {
     style: {

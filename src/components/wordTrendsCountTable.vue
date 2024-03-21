@@ -23,6 +23,11 @@
         </q-tr>
       </template>
     </q-table>
+    <q-btn
+      label="Download"
+      color="primary"
+      @click="downloadWTCounts"
+      class="q-mt-md" />
   </div>
 </template>
 
@@ -76,7 +81,14 @@ watchEffect(() => {
       });
     }
   }
+
+
 });
+function downloadWTCounts() {
+  console.log('download word counts')
+  //downloadStore.getSpeechesZip(documentNames, paramString);
+  wtStore.downloadCSV();
+}
 </script>
 
 <style></style>
