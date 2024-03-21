@@ -21,9 +21,10 @@
       />
     </q-card-section>
 
-    <q-slide-transition v-show="showing">
-      <!--       <q-scroll-area v-show="showing" style="height: 80px">
- -->
+    <!-- <q-slide-transition v-show="showing"> -->
+    <q-slide-transition
+      v-if="$route.path === '/tools/speeches' ? showing : !showing"
+    >
       <q-card-section class="q-px-md q-pt-none">
         <q-separator />
         <q-card-section class="q-px-none q-pb-none">
@@ -31,14 +32,15 @@
           <yearRange />
           <dropdownSelection type="party" />
           <q-card-section horizontal class="q-px-none">
-            <q-card-section class="q-pb-none">
+            <q-card-section class="q-py-none">
               <genderOfficeCheckbox type="gender" />
             </q-card-section>
-            <q-card-section class="q-pb-none">
+            <q-card-section class="q-py-none">
               <genderOfficeCheckbox type="office" />
             </q-card-section>
           </q-card-section>
-          <dropdownSelection type="subOffice" />
+          <!-- Do not show sub office type as of now -->
+          <!-- <dropdownSelection type="subOffice" /> -->
           <dropdownSelection type="speakers" />
           <div class="column items-end q-">
             <q-btn
@@ -66,17 +68,16 @@
       class="fit q-py-sm"
       color="accent"
       v-if="$route.path !== '/tools/speeches'"
-      :disabled="wtStore.searchText.length < 1"
+      :disabled="wtStore.searchWords.length < 1"
     >
-      Submit
+      Sök
       <q-tooltip
         v-if="wtStore.searchText.length < 1"
         anchor="top middle"
         self="bottom middle"
         :offset="[10, 10]"
-        class="bg-accent text-white"
       >
-        Please enter at least 1 characters
+        Sökordet måste vara minst 1 tecken
       </q-tooltip>
     </q-btn>
     <q-btn
@@ -86,7 +87,7 @@
       color="accent"
       v-else-if="$route.path === '/tools/speeches'"
     >
-      Submit
+      Sök
     </q-btn>
   </q-card>
 </template>

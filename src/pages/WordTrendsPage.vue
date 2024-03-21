@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-pa-md">
+  <q-card flat class="q-pa-md background">
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
 
@@ -19,7 +19,7 @@
     <q-tab name="speech" icon="groups" label="Anföranden" />
   </q-tabs>
 
-  <q-tab-panels v-model="tabs">
+  <q-tab-panels v-model="tabs" class="background">
     <q-tab-panel name="diagram">
       <div>diagram</div>
 
@@ -62,8 +62,9 @@ const formattedIntro = intro;
 
 watchEffect(async () => {
   if (store.submitEvent && store.updateEvent) {
-    await wtStore.getWordTrendsResult(wtStore.searchText);
-    await wtStore.getWordTrendsSpeeches(wtStore.searchText);
+    const textString = wtStore.generateStringOfSelected();
+    await wtStore.getWordTrendsResult(textString);
+    await wtStore.getWordTrendsSpeeches(textString);
     showData.value = true;
     dataLoaded.value = true;
   }
