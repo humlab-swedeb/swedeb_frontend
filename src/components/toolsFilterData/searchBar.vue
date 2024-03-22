@@ -5,12 +5,12 @@
     outlined
     clearable
     placeholder="T.ex klimat eller skola"
-    label="Sök på ordtrender"
+    label="Lägg till ord"
     bg-color="white"
     color="accent"
     @keydown.enter="
       wtStore.searchText.includes('*')
-        ? wtStore.getWordHits(wtStore.searchText)
+        ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
         : wtStore.addChip()
     "
   >

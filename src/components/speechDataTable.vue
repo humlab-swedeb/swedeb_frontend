@@ -6,7 +6,7 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
-      :rows-per-page-options="[10, 20, 50, 100, 0]"
+      :rows-per-page-options="[10, 20, 50]"
       v-model:pagination="pagination"
       v-if="!loading"
       class="bg-grey-2"
@@ -19,7 +19,7 @@
             :props="props"
             class=""
           >
-          {{ col.label }}
+            {{ col.label }}
           </q-th>
         </q-tr>
       </template>
@@ -51,26 +51,68 @@
               flat
               :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
             />
-        </q-td>
-      </q-tr>
-      <!-- If row in table is clicked, EXPAND -->
-      <q-tr v-show="props.expand" :props="props">
-        <q-td colspan="7">
-          <div>
-            {{ props.row }}
-          </div>
-          <div class="text-left" style="white-space: normal">
-            <q-item-label caption class="text-bold">{{
-              speakerNote
-            }}</q-item-label>
-            <q-item-label>{{ speechText }}</q-item-label>
-          </div>
-        </q-td>
-      </q-tr>
-    </template>
-  </q-table>
-  <q-btn color="primary" label="Ladda ner tal"  @click="downloadSpeeches"></q-btn>
-</div>
+          </q-td>
+        </q-tr>
+        <!-- If row in table is clicked, EXPAND -->
+        <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="7" no-hover>
+            <q-card flat class="bg-transparent">
+              <q-card-section bordered class="q-px-md">
+                <q-item-label caption class="text-bold">
+                  {{ props.row.year }}
+                </q-item-label>
+                <q-item-label>
+                  {{ props.row.protocol }}
+                </q-item-label>
+                <q-item-label>
+                  {{ props.row.speaker }}, {{ props.row.gender }},
+                  {{ props.row.party }}
+                </q-item-label>
+              </q-card-section>
+              <q-card-section class="row">
+                <q-card-section
+                  class="q-pa-none q-pr-md col-10"
+                  style="white-space: normal"
+                >
+                  <q-item-label caption class="text-bold">{{
+                    speakerNote
+                  }}</q-item-label>
+                  <q-item-label>{{ speechText }}</q-item-label>
+                </q-card-section>
+                <q-card-section class="col-2 q-pa-none">
+                  <div class="row q-gutter-y-md">
+                    <q-btn
+                      no-caps
+                      icon="open_in_new"
+                      :href="props.row.source"
+                      label="Källa"
+                      class="full-width"
+                      color="accent"
+                    />
+                    <q-btn
+
+                    outline
+                      no-caps
+                      icon="download"
+                      label="Ladda ned"
+                      class="full-width"
+                      color="accent"
+                    >
+                    </q-btn>
+                  </div>
+                </q-card-section>
+              </q-card-section>
+            </q-card>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <q-btn
+      color="primary"
+      label="Ladda ner tal"
+      @click="downloadSpeeches"
+    ></q-btn>
+  </div>
 </template>
 
 <script setup>
@@ -159,14 +201,14 @@ watchEffect(async () => {
         sortable: true,
         align: "left",
       },
-      {
+      /* {
         name: "source",
         required: true,
         label: "Källa",
         field: "source",
         sortable: true,
         align: "left",
-      },
+      }, */
       {
         name: "year",
         required: true,

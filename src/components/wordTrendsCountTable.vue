@@ -9,6 +9,7 @@
       style="width: fit-content"
       separator="vertical"
       class="bg-grey-2"
+      :rows-per-page-options="[10, 20, 50]"
     >
       <template v-slot:body="props">
         <q-tr :props="props" class="bg-white">
@@ -27,7 +28,8 @@
       label="Download"
       color="primary"
       @click="downloadWTCounts"
-      class="q-mt-md" />
+      class="q-mt-md"
+    />
   </div>
 </template>
 
@@ -81,11 +83,9 @@ watchEffect(() => {
       });
     }
   }
-
-
 });
 function downloadWTCounts() {
-  console.log('download word counts')
+  console.log("download word counts");
   //downloadStore.getSpeechesZip(documentNames, paramString);
   wtStore.downloadCSV();
 }
