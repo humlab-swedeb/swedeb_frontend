@@ -30,6 +30,7 @@
             :key="col.name"
             :props="props"
             class="bg-white"
+            :class="props.expand ? 'bg-grey-3' : ''"
           >
             <q-item-label
               v-if="col.name === 'party'"
@@ -38,11 +39,18 @@
             >
               {{ col.value }}
             </q-item-label>
+            <q-item-label v-else-if="col.name === 'hit'" class="text-bold">
+              {{ col.value }}
+            </q-item-label>
             <q-item-label v-else>
               {{ col.value }}
             </q-item-label>
           </q-td>
-          <q-td auto-width class="bg-white">
+          <q-td
+            auto-width
+            class="bg-white"
+            :class="props.expand ? 'bg-grey-3' : ''"
+          >
             <q-btn
               size="sm"
               color="accent"
@@ -57,17 +65,19 @@
         <q-tr v-show="props.expand" :props="props">
           <q-td colspan="7" no-hover>
             <q-card flat class="bg-transparent">
-              <q-card-section bordered class="q-px-md">
-                <q-item-label caption class="text-bold">
-                  {{ props.row.year }}
-                </q-item-label>
-                <q-item-label>
-                  {{ props.row.protocol }}
-                </q-item-label>
-                <q-item-label>
-                  {{ props.row.speaker }}, {{ props.row.gender }},
-                  {{ props.row.party }}
-                </q-item-label>
+              <q-card-section class="q-px-md row">
+                <q-card-section class="col q-pa-none">
+                  <q-item-label
+                    class="text-h6"
+                    :style="{ color: metaStore.getPartyColor(props.row.party) }"
+                    >{{ props.row.speaker }}, ({{ props.row.party }}),
+                    {{ props.row.gender }}
+                  </q-item-label>
+                  <q-item-label>{{ props.row.protocol }}</q-item-label>
+                </q-card-section>
+                <q-card-section class="col q-pa-none">
+                  <q-item-label>{{ props.row.hit }}</q-item-label>
+                </q-card-section>
               </q-card-section>
               <q-card-section class="row">
                 <q-card-section
@@ -80,24 +90,24 @@
                   <q-item-label>{{ speechText }}</q-item-label>
                 </q-card-section>
                 <q-card-section class="col-2 q-pa-none">
-                  <div class="row q-gutter-y-md">
+                  <div class="column q-gutter-y-md">
                     <q-btn
                       no-caps
-                      icon="open_in_new"
                       :href="props.row.source"
-                      label="Källa"
-                      class="full-width"
-                      color="accent"
-                    />
+                      class="full-width items-start text-grey-8"
+                      color="white"
+                    >
+                      <q-icon left name="open_in_new" color="accent" />
+                      <q-item-label>Öppna källa</q-item-label>
+                    </q-btn>
                     <q-btn
-
-                    outline
+                      outline
                       no-caps
-                      icon="download"
-                      label="Ladda ned"
-                      class="full-width"
+                      class="full-width items-start text-grey-8"
                       color="accent"
                     >
+                      <q-icon left name="open_in_new" color="accent" />
+                      <q-item-label>Ladda ned</q-item-label>
                     </q-btn>
                   </div>
                 </q-card-section>
@@ -145,7 +155,6 @@ const expandRow = async (props) => {
     const speechData = await speechStore.getSpeech(props.row.id);
     speakerNote.value = speechData.speaker_note;
     speechText.value = speechData.speech_text;
-    console.log(speechData);
   }
 };
 watchEffect(async () => {
@@ -158,15 +167,19 @@ watchEffect(async () => {
       displayedData.value = speechStore.speechesData;
     }
 
-    rows.value = displayedData.value.map((speech) => ({
-      id: speech.document_name,
-      protocol: speech.formatted_speech_id,
-      speaker: speech.name,
-      gender: speech.gender,
-      party: speech.party_abbrev,
-      source: speech.speech_link,
-      year: speech.year,
-    }));
+    rows.value = displayedData.value.map((speech) => {
+      console.log(speech); // Add this line to console log the speech variable
+      return {
+        id: speech.document_name,
+        protocol: speech.formatted_speech_id,
+        hit: speech.hit,
+        speaker: speech.name,
+        gender: speech.gender,
+        party: speech.party_abbrev,
+        source: speech.speech_link,
+        year: speech.year,
+      };
+    });
 
     columns.value = [
       {
@@ -218,6 +231,17 @@ watchEffect(async () => {
         align: "left",
       },
     ];
+
+    if (props.type === "wordTrends") {
+      columns.value.splice(1, 0, {
+        name: "hit",
+        required: true,
+        label: "Sökord",
+        field: "hit",
+        sortable: true,
+        align: "left",
+      });
+    }
 
     metaStore.submitEvent = false;
     loading.value = false;

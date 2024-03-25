@@ -6,13 +6,13 @@
           {{ $t("selectedMetaDataTitle") }}
         </q-item-label>
         <div v-for="(value, key) in displayedData" :key="key" class="q-mr-md">
-
           <!-- If the key is 'yearRange', display the min and max values -->
           <div v-if="key === 'yearRange'">
             <b>{{ customKey(key) }}:</b> {{ value.min }} - {{ value.max }}
           </div>
           <div v-else-if="key === 'speakers'">
-            <b>{{ customKey(key) }}:</b> {{ value.map((speaker) => speaker.name).join(", ") }}
+            <b>{{ customKey(key) }}:</b>
+            {{ value.map((speaker) => speaker.name).join(", ") }}
           </div>
           <div v-else-if="Array.isArray(value) && value.length > 0">
             <b>{{ customKey(key) }}:</b> {{ value.join(", ") }}
