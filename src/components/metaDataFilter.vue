@@ -36,7 +36,7 @@
               <genderOfficeCheckbox type="gender" />
             </q-card-section>
             <q-card-section class="q-py-none">
-              <genderOfficeCheckbox type="office" />
+              <!-- <genderOfficeCheckbox type="office" /> -->
             </q-card-section>
           </q-card-section>
           <!-- Do not show sub office type as of now -->
@@ -102,7 +102,7 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { ref, computed } from "vue";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
-const showing = ref(true);
+const showing = ref(false);
 
 const handleSubmit = async () => {
   store.submitEvent = true;

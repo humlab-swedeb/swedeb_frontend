@@ -5,20 +5,20 @@
     outlined
     clearable
     placeholder="T.ex klimat eller skola"
-    label="Sök på ordtrender"
+    label="Lägg till ord"
     bg-color="white"
     color="accent"
     @keydown.enter="
       wtStore.searchText.includes('*')
-        ? wtStore.getWordHits(wtStore.searchText)
+        ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
         : wtStore.addChip()
     "
   >
     <template v-slot:prepend>
       <q-icon name="search" color="accent" />
     </template>
-    <template v-slot:append>
-      <q-btn round @click="wtStore.addChip" icon="add" />
+    <template v-slot:after>
+      <q-btn round color="accent" @click="wtStore.addChip" icon="add" />
     </template>
   </q-input>
   <div class="row fit q-py-md">
@@ -45,11 +45,13 @@
     </q-card-section>
     <q-card-section class="col q-pa-none">
       <q-btn
-        v-if="wtStore.wordHitsSelected.length > 0"
+        v-if="
+          wtStore.wordHitsSelected.length > 0 || wtStore.searchWords.length > 0
+        "
         no-caps
         flat
         label="Ta bort alla ord"
-        @click="wtStore.wordHitsSelected = []"
+        @click="(wtStore.wordHitsSelected = []) && (wtStore.searchWords = [])"
       />
     </q-card-section>
   </div>
@@ -89,7 +91,6 @@
 
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref } from "vue";
 
 const wtStore = wordTrendsDataStore();
 /* const addChip = () => {

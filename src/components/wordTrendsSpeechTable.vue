@@ -75,8 +75,6 @@ watchEffect(async () => {
   const wordTrends = wtStore.wordTrendsSpeeches;
   if (metaStore.submitEvent || wordTrends.length > 0) {
     displayedData.value = wordTrends;
-    console.log(displayedData.value, "displayedData");
-
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
       speaker: speech.name,
