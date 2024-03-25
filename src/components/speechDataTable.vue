@@ -167,19 +167,16 @@ watchEffect(async () => {
       displayedData.value = speechStore.speechesData;
     }
 
-    rows.value = displayedData.value.map((speech) => {
-      console.log(speech); // Add this line to console log the speech variable
-      return {
-        id: speech.document_name,
-        protocol: speech.formatted_speech_id,
-        hit: speech.hit,
-        speaker: speech.name,
-        gender: speech.gender,
-        party: speech.party_abbrev,
-        source: speech.speech_link,
-        year: speech.year,
-      };
-    });
+    rows.value = displayedData.value.map((speech) => ({
+      id: speech.document_name,
+      protocol: speech.formatted_speech_id,
+      hit: speech.hit,
+      speaker: speech.name,
+      gender: speech.gender,
+      party: speech.party_abbrev,
+      source: speech.speech_link,
+      year: speech.year,
+    }));
 
     columns.value = [
       {
