@@ -10,12 +10,25 @@
           <div v-if="key === 'yearRange'">
             <b>{{ customKey(key) }}:</b> {{ value.min }} - {{ value.max }}
           </div>
-          <div v-else-if="key === 'speakers'">
+          <div v-else-if="key === 'speakers' && value.length > 0">
             <b>{{ customKey(key) }}:</b>
             {{ value.map((speaker) => speaker.name).join(", ") }}
           </div>
+          <div v-else-if="key === 'gender' && value.length > 0">
+            <b>{{ customKey(key) }}:</b>
+            {{ value.map((gender_id) => store.options.gender[gender_id]).join(", ") }}
+          </div>
+          <div v-else-if="key === 'gender'">
+            <b>{{ customKey(key) }}: </b>Alla
+          </div>
           <div v-else-if="Array.isArray(value) && value.length > 0">
             <b>{{ customKey(key) }}:</b> {{ value.join(", ") }}
+          </div>
+          <div v-else-if="key==='office' || key === 'subOffice'">
+            <!-- If the key is 'office' or 'subOffice', do nothing for now -->
+          </div>
+          <div v-else-if="value.length == 0">
+            <b>{{ customKey(key) }}:</b> Alla
           </div>
         </div>
       </q-list>
