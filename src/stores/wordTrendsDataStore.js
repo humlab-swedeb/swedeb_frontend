@@ -55,7 +55,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           `${path}?${queryString}&n_hits=${n_hits}`
         );
         this.wordHits = response.data.hit_list;
-        this.wordHitsSelected = this.wordHits;
+        this.wordHitsSelected = [...new Set([...this.wordHitsSelected, ...this.wordHits])];
         this.searchText = "";
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -67,8 +67,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       if (text !== "") {
         text = text.split(",");
         text.forEach((word) => {
-          if (!this.searchWords.includes(word) && !word.includes("*")) {
-            this.searchWords.push(word);
+          if (!this.wordHitsSelected.includes(word) && !word.includes("*")) {
+            this.wordHitsSelected.push(word);
           }
         });
 
@@ -76,9 +76,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
-    removeChip(index) {
-      this.searchWords.splice(index, 1); // Remove the chip at the specified index
-    },
+
 
     generateStringOfSelected() {
       this.searchString = [...this.wordHitsSelected, ...this.searchWords];
