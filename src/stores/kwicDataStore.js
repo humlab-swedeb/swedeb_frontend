@@ -5,8 +5,8 @@ import { metaDataStore } from "./metaDataStore";
 export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     /* selected: metaDataStore().selected, */
-    wordsLeft: 0,
-    wordsRight: 0,
+    wordsLeft: 2,
+    wordsRight: 2,
     kwicData: [],
   }),
 

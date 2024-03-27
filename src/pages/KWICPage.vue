@@ -30,7 +30,8 @@ const showData = ref(false);
 
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
-    await kwicStore.getKwicResult(wtStore.searchText);
+    const textString = wtStore.generateStringOfSelected();
+    await kwicStore.getKwicResult(textString);
     showData.value = true;
   }
 });

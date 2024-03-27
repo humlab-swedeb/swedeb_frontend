@@ -3,9 +3,16 @@
     :rows="rows"
     :columns="columns"
     row-key="id"
-    :rows-per-page-options="[10, 20, 30]"
+    :rows-per-page-options="[10, 20, 50]"
     :pagination="pagination"
   >
+    <template v-slot:header="props">
+      <q-tr :props="props">
+        <q-th v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.label }}
+        </q-th>
+      </q-tr>
+    </template>
     <template v-slot:body="props">
       <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
         <q-td
@@ -13,9 +20,10 @@
           :key="col.name"
           :props="props"
           class="bg-white"
+          :class="props.expand ? 'bg-grey-3' : ''"
         >
           <q-item-label
-            v-if="col.name === 'party_abbrev'"
+            v-if="col.name === 'party'"
             class="text-bold"
             :style="{ color: metaStore.getPartyColor(col.value) }"
           >
@@ -28,7 +36,11 @@
             {{ col.value }}
           </q-item-label>
         </q-td>
-        <q-td auto-width class="bg-white">
+        <q-td
+          auto-width
+          class="bg-white"
+          :class="props.expand ? 'bg-grey-3' : ''"
+        >
           <q-btn
             size="sm"
             color="accent"
@@ -40,14 +52,7 @@
         </q-td>
       </q-tr>
       <!-- If row in table is clicked, EXPAND -->
-      <q-tr v-show="props.expand" :props="props">
-        <q-td colspan="100%">
-          <div class="text-left">
-            <q-item-label caption>{{ speakerNote }}</q-item-label>
-            <q-item-label>{{ speechText }}</q-item-label>
-          </div>
-        </q-td>
-      </q-tr>
+      <expandingTableRow :props="props" />
     </template>
   </q-table>
 </template>
@@ -57,7 +62,7 @@ import { ref, watchEffect } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
-import i18n from "src/i18n/sv";
+import expandingTableRow from "src/components/expandingTableRow.vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
@@ -65,51 +70,84 @@ const speechStore = speechesDataStore();
 
 const rows = ref([]);
 const columns = ref([]);
-const speakerNote = ref("");
-const speechText = ref("");
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
-  if (props.expand) {
-    const speechData = await speechStore.getSpeech(props.row.id);
-    speakerNote.value = speechData.speaker_note;
-    speechText.value = speechData.speech_text;
-  }
 };
 
 watchEffect(() => {
   if (metaStore.submitEvent) {
-    if (Array.isArray(kwicStore.kwicData) && kwicStore.kwicData.length > 0) {
-      const uniqueColumns = new Set();
-      kwicStore.kwicData.forEach((entry) => {
-        Object.keys(entry).forEach((word) => {
-          uniqueColumns.add(word);
-        });
-      });
+    rows.value = kwicStore.kwicData.map((entry) => ({
+      id: entry.speech_title,
+      left_word: entry.left_word,
+      node_word: entry.node_word,
+      right_word: entry.right_word,
+      year: entry.year,
+      speaker: entry.name,
+      party: entry.party_abbrev,
+      gender: entry.gender,
+      person_id: entry.person_id,
+      link: entry.link,
+    }));
 
-      const allColumns = [
-        ...Array.from(uniqueColumns).map((word) => ({
-          name: word,
-          required: true,
-          label: i18n.kwicLable[word],
-          field: word,
-          sortable: true,
-          align: word === "left_word" ? "right" : "left",
-        })),
-      ];
-
-      columns.value = allColumns;
-      rows.value = kwicStore.kwicData.map((entry) => ({
-        left_word: entry.left_word,
-        node_word: entry.node_word,
-        right_word: entry.right_word,
-        year_title: entry.year,
-        name: entry.name,
-        party_abbrev: entry.party_abbrev,
-        speech_title: entry.speech_title,
-        gender: entry.gender,
-      }));
-    }
+    columns.value = [
+      {
+        name: "left_word",
+        required: true,
+        label: "Väster",
+        align: "right",
+        field: "left_word",
+        sortable: true,
+      },
+      {
+        name: "node_word",
+        required: true,
+        label: "Nod",
+        field: "node_word",
+        sortable: true,
+        align: "center",
+      },
+      {
+        name: "right_word",
+        required: true,
+        label: "Höger",
+        field: "right_word",
+        sortable: true,
+        align: "left",
+      },
+      {
+        name: "speaker",
+        required: true,
+        label: "Talare",
+        field: "speaker",
+        sortable: true,
+        align: "left",
+      },
+      {
+        name: "party",
+        required: true,
+        label: "Parti",
+        field: "party",
+        sortable: true,
+        align: "left",
+      },
+      {
+        name: "year",
+        required: true,
+        label: "År",
+        field: "year",
+        sortable: true,
+        align: "left",
+      },
+      {
+        name: "id",
+        required: true,
+        label: "Anförande",
+        field: "id",
+        sortable: true,
+        align: "left",
+      },
+    ];
   }
 });
 

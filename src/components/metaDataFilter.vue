@@ -23,7 +23,7 @@
 
     <!-- <q-slide-transition v-show="showing"> -->
     <q-slide-transition
-      v-if="$route.path === '/tools/speeches' ? showing : !showing"
+      v-if="$route.path === '/tools/speeches' ? !showing : showing"
     >
       <q-card-section class="q-px-md q-pt-none">
         <q-separator />
