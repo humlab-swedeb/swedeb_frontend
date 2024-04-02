@@ -45,6 +45,7 @@
                 no-caps
                 class="full-width items-start text-grey-8"
                 color="accent"
+                @click="downloadCurrentSpeech"
               >
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>Ladda ned</q-item-label>
@@ -61,9 +62,11 @@
 import { ref, watchEffect, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
+const downloadStore = downloadDataStore();
 
 const props = defineProps({
   props: Object,
@@ -71,14 +74,41 @@ const props = defineProps({
 
 const speakerNote = ref("");
 const speechText = ref("");
+const originalSpeechText = ref("");
+
+const replaceNewLine = (str) => {
+ return str.replace(/\n/g, "<br><br>");
+};
+
+const replaceWordWithBoldTags = (str, word) => {
+  // add bold tags to word hits. Only matches whole words
+ // which might not be ideal for lemmatized matches
+  const regex = new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "giu");
+  return str.replace(regex, `<b>${word}</b>`);
+};
+
+const downloadCurrentSpeech = () => {
+  console.log('downloading...')
+  console.log(props)
+  console.log(props.props.row)
+  downloadStore.downloadCurrentSpeechText(
+    originalSpeechText.value,
+    props.props.row
+  );
+}
 
 watchEffect(() => {
   if (props.props.expand) {
     (async () => {
-      console.log(props.props);
+
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
-      speechText.value = speechData.speech_text;
+      originalSpeechText.value = speechData.speech_text;
+
+      speechText.value = replaceWordWithBoldTags(
+        replaceNewLine(speechData.speech_text),
+        props.props.row.hit
+      );
     })();
   }
 });
