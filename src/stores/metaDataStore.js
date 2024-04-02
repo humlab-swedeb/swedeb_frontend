@@ -56,6 +56,16 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.officeAllSelect = false;
     },
 
+    async fetchAllMetaData() {
+      // to load all metadata on mount
+      this.getStartYear()
+      this.getEndYear()
+      this.getPartyOptions()
+      this.getOfficeOptions()
+      this.getGenderOptions()
+      this.getSpeakersOptions()
+    },
+
     addParamArray(current_key, api_key, query_params) {
       const param_value = this.selected[current_key];
 

@@ -82,28 +82,21 @@ const getChipStyle = (opt) => {
     return {};
   }
 };
-
 watchEffect(async () => {
-  try {
-    if (props.type === "party") {
-      await store.getPartyOptions();
-      options.value = Object.keys(store.options.party) || [];
-    } else if (props.type === "subOffice") {
-      await store.getSubOfficeOptions();
-      options.value = store.options.subOffice || [];
-    } else if (props.type === "speakers") {
-      if (store.selected.party.length > 0) {
-        await store.getSpeakersOptions();
-        options.value = store.options.speakers || [];
-      } else {
-        await store.getSpeakersOptions();
-        options.value = store.options.speakers || [];
-      }
-    }
-  } catch (error) {
-    console.error("Error updating options:", error);
-  }
-});
+	  try {
+	    if (props.type === "party") {
+	      options.value = Object.keys(store.options.party) || [];
+	    } else if (props.type === "subOffice") {
+	      options.value = store.options.subOffice || [];
+	    } else if (props.type === "speakers") {
+	      // speaker list always updated (also on clear)
+	      await store.getSpeakersOptions();
+	      options.value = store.options.speakers || [];
+	    }
+	  } catch (error) {
+	    console.error("Error updating options:", error);
+	  }
+	});
 
 const filterHandler = (searchTerm, updateOptions) => {
   if (props.type === "speakers") {
