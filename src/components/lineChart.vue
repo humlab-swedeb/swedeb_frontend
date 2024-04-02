@@ -107,7 +107,6 @@ function generateDashArray(totalLines, interval) {
     const dashIndex = Math.floor(i / interval) % dashValues.length;
     dashArray.push(dashValues[dashIndex]);
   }
-  console.log(dashArray);
   return dashArray;
 }
 </script>

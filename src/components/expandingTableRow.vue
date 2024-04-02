@@ -88,9 +88,7 @@ const replaceWordWithBoldTags = (str, word) => {
 };
 
 const downloadCurrentSpeech = () => {
-  console.log('downloading...')
-  console.log(props)
-  console.log(props.props.row)
+
   downloadStore.downloadCurrentSpeechText(
     originalSpeechText.value,
     props.props.row
@@ -99,15 +97,16 @@ const downloadCurrentSpeech = () => {
 
 watchEffect(() => {
   if (props.props.expand) {
+
     (async () => {
+
 
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
-
       speechText.value = replaceWordWithBoldTags(
         replaceNewLine(speechData.speech_text),
-        props.props.row.hit
+        props.props.row.node_word
       );
     })();
   }

@@ -85,8 +85,6 @@ watchEffect(() => {
   }
 });
 function downloadWTCounts() {
-  console.log("download word counts");
-  //downloadStore.getSpeechesZip(documentNames, paramString);
   wtStore.downloadCSV();
 }
 </script>
