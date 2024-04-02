@@ -105,6 +105,7 @@
                       no-caps
                       class="full-width items-start text-grey-8"
                       color="accent"
+                      @click="downloadCurrentSpeech(props.row)"
                     >
                       <q-icon left name="open_in_new" color="accent" />
                       <q-item-label>Ladda ned</q-item-label>
@@ -159,13 +160,15 @@ const rows = ref([]);
 const columns = ref([]);
 const speakerNote = ref("");
 const speechText = ref("");
+const originalSpeechText = ref("");
 const loading = ref(false);
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
   if (props.expand) {
     const speechData = await speechStore.getSpeech(props.row.id);
-    const speech = replaceNewLine(speechData.speech_text);
+    originalSpeechText.value = speechData.speech_text;
+    const speech = replaceNewLine(originalSpeechText.value);
     const highlightedSpeech = replaceWordWithBoldTags(speech, props.row.hit);
     speakerNote.value = speechData.speaker_note;
     speechText.value = highlightedSpeech;
@@ -259,6 +262,14 @@ watchEffect(async () => {
   }
 });
 const pagination = ref({});
+
+
+
+function downloadCurrentSpeech(currentProps) {
+  console.log(currentProps)
+  console.log(originalSpeechText.value)
+  downloadStore.downloadCurrentSpeechText(originalSpeechText.value, currentProps);
+}
 
 function downloadSpeeches() {
   // Accessing the current page from the pagination object
