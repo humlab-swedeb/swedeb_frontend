@@ -4,8 +4,7 @@ import JSZip from "jszip";
 
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
-
-    formatProps(currentProps){
+    formatProps(currentProps) {
       const speaker = currentProps.speaker;
       const hit = currentProps.hit;
       const id = currentProps.id;
@@ -14,18 +13,14 @@ export const downloadDataStore = defineStore("downloadData", {
       // gender, source, protocol
 
       return `Talare: ${speaker}\nSökord: ${hit}\nProtokoll-ID: ${id}\nParti: ${party}\nÅr: ${year}\n\n`;
-
     },
 
-    formatFileName(currentProps){
+    formatFileName(currentProps) {
       const speaker = currentProps.speaker;
 
       const id = currentProps.id;
       return `${speaker}_${id}.txt`.replace(/ /g, "_");
-
     },
-
-
 
     async downloadCurrentSpeechText(text, currentMetadata) {
       try {

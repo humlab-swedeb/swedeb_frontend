@@ -263,12 +263,11 @@ watchEffect(async () => {
 });
 const pagination = ref({});
 
-
-
 function downloadCurrentSpeech(currentProps) {
-  console.log(currentProps)
-  console.log(originalSpeechText.value)
-  downloadStore.downloadCurrentSpeechText(originalSpeechText.value, currentProps);
+  downloadStore.downloadCurrentSpeechText(
+    originalSpeechText.value,
+    currentProps
+  );
 }
 
 function downloadSpeeches() {
