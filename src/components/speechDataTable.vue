@@ -13,12 +13,7 @@
     >
       <template v-slot:header="props">
         <q-tr :props="props">
-          <q-th
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-            class=""
-          >
+          <q-th v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.label }}
           </q-th>
         </q-tr>
@@ -62,60 +57,9 @@
           </q-td>
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
-        <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="7" no-hover>
-            <q-card flat class="bg-transparent">
-              <q-card-section class="q-px-md row">
-                <q-card-section class="col q-pa-none">
-                  <q-item-label
-                    class="text-h6"
-                    :style="{ color: metaStore.getPartyColor(props.row.party) }"
-                    >{{ props.row.speaker }}, ({{ props.row.party }}),
-                    {{ props.row.gender }}
-                  </q-item-label>
-                  <q-item-label>{{ props.row.protocol }}</q-item-label>
-                </q-card-section>
-                <q-card-section class="col q-pa-none">
-                  <q-item-label>{{ props.row.hit }}</q-item-label>
-                </q-card-section>
-              </q-card-section>
-              <q-card-section class="row">
-                <q-card-section
-                  class="q-pa-none q-pr-md col-10"
-                  style="white-space: normal"
-                >
-                  <q-item-label caption class="text-bold">{{
-                    speakerNote
-                  }}</q-item-label>
-                  <q-item-label>{{ speechText }}</q-item-label>
-                </q-card-section>
-                <q-card-section class="col-2 q-pa-none">
-                  <div class="column q-gutter-y-md">
-                    <q-btn
-                      no-caps
-                      :href="props.row.source"
-                      class="full-width items-start text-grey-8"
-                      color="white"
-                    >
-                      <q-icon left name="open_in_new" color="accent" />
-                      <q-item-label>Öppna källa</q-item-label>
-                    </q-btn>
-                    <q-btn
-                      outline
-                      no-caps
-                      class="full-width items-start text-grey-8"
-                      color="accent"
-                      @click="downloadCurrentSpeech(props.row)"
-                    >
-                      <q-icon left name="open_in_new" color="accent" />
-                      <q-item-label>Ladda ned</q-item-label>
-                    </q-btn>
-                  </div>
-                </q-card-section>
-              </q-card-section>
-            </q-card>
-          </q-td>
-        </q-tr>
+
+        <expandingTableRow :props="props" />
+
       </template>
     </q-table>
     <q-btn
@@ -132,12 +76,13 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
+import expandingTableRow from "src/components/expandingTableRow.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
 const downloadStore = downloadDataStore();
-//const props = defineProps(["type"]);
+
 const props = defineProps({
   dataLoaded: Boolean,
   type: String,
@@ -158,13 +103,14 @@ const replaceWordWithBoldTags = (str, word) => {
 const displayedData = ref({});
 const rows = ref([]);
 const columns = ref([]);
-const speakerNote = ref("");
-const speechText = ref("");
+
 const originalSpeechText = ref("");
+
 const loading = ref(false);
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
+
   if (props.expand) {
     const speechData = await speechStore.getSpeech(props.row.id);
     originalSpeechText.value = speechData.speech_text;
@@ -173,6 +119,7 @@ const expandRow = async (props) => {
     speakerNote.value = speechData.speaker_note;
     speechText.value = highlightedSpeech;
   }
+
 };
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {

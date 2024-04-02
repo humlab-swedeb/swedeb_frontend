@@ -18,11 +18,16 @@
       <q-icon name="search" color="accent" />
     </template>
     <template v-slot:after>
-      <q-btn round color="accent" @click="wtStore.addChip" icon="add" />
+      <q-btn
+        round
+        color="accent"
+        @click="wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()"
+        icon="add"
+      />
     </template>
   </q-input>
   <div class="row fit q-py-md">
-    <q-card-section class="col q-pa-none">
+    <!--     <q-card-section class="col q-pa-none">
       <q-btn
         no-caps
         label="Liknande ord"
@@ -42,34 +47,25 @@
           <code>klimat*</code>
         </q-tooltip>
       </q-btn>
-    </q-card-section>
+    </q-card-section> -->
     <q-card-section class="col q-pa-none">
       <q-btn
-        v-if="
-          wtStore.wordHitsSelected.length > 0 || wtStore.searchWords.length > 0
-        "
+        v-if="wtStore.wordHitsSelected.length > 0"
         no-caps
         flat
         label="Ta bort alla ord"
-        @click="(wtStore.wordHitsSelected = []) && (wtStore.searchWords = [])"
+        color="grey-7"
+        class="resetStyle"
+        @click="wtStore.wordHitsSelected = []"
       />
     </q-card-section>
   </div>
-  <div>
+  <div v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">Valda ord:</q-item-label>
-    <q-chip
-      removable
-      @remove="removeChip(word)"
-      v-for="word in wtStore.searchWords"
-      :key="word"
-    >
-      {{ word }}
-    </q-chip>
     <q-select
       v-if="wtStore.wordHitsSelected.length > 0"
       v-model="wtStore.wordHitsSelected"
       :options="wtStore.wordHits"
-      label="Liknande ord"
       multiple
       color="accent"
       use-chips
@@ -93,17 +89,4 @@
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();
-/* const addChip = () => {
-  if (wtStore.searchText.trim() !== "") {
-    wtStore.addChip(wtStore.searchText.trim());
-
-    //wtStore.searchText = ""; // Återställer sökfältet
-  }
-}; */
-const removeChip = (chip) => {
-  const index = wtStore.searchWords.indexOf(chip);
-  if (index !== -1) {
-    wtStore.removeChip(index); // Call removeChip method from store
-  }
-};
 </script>

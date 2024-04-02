@@ -23,7 +23,7 @@
 
     <!-- <q-slide-transition v-show="showing"> -->
     <q-slide-transition
-      v-if="$route.path === '/tools/speeches' ? showing : !showing"
+      v-if="$route.path === '/tools/speeches' ? !showing : showing"
     >
       <q-card-section class="q-px-md q-pt-none">
         <q-separator />
@@ -46,7 +46,7 @@
             <q-btn
               v-if="hasSelections"
               @click="store.resetSelectedState"
-              class="buttonStyle col"
+              class="resetStyle col"
               flat
               no-caps
               label="Rensa filter"
@@ -68,16 +68,16 @@
       class="fit q-py-sm"
       color="accent"
       v-if="$route.path !== '/tools/speeches'"
-      :disabled="wtStore.searchWords.length < 1"
+      :disabled="wtStore.wordHitsSelected.length < 1"
     >
       Sök
       <q-tooltip
-        v-if="wtStore.searchText.length < 1"
+        v-if="wtStore.wordHitsSelected.length < 1"
         anchor="top middle"
         self="bottom middle"
         :offset="[10, 10]"
       >
-        Sökordet måste vara minst 1 tecken
+        Lägg till ett eller flera sökord
       </q-tooltip>
     </q-btn>
     <q-btn
@@ -122,7 +122,5 @@ const hasSelections = computed(() => {
 </script>
 
 <style scoped>
-.buttonStyle {
-  text-decoration: underline;
-}
+
 </style>

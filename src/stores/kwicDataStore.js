@@ -5,14 +5,15 @@ import { metaDataStore } from "./metaDataStore";
 export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     /* selected: metaDataStore().selected, */
-    wordsLeft: 0,
-    wordsRight: 0,
+    wordsLeft: 2,
+    wordsRight: 2,
     kwicData: [],
   }),
 
   actions: {
     async getKwicResult(search) {
       try {
+        console.log(search);
         const path = `/tools/kwic/${search}`;
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
