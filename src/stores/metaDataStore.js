@@ -110,6 +110,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${speaker.name}, ${speaker.party_abbrev}, ${speaker.year_of_birth} - ${year_of_death}`;
     },
 
+
     selectedMetadataToText() {
       // String representation of selected metadata to be included in downloads
       const selected_years_start = this.selected.yearRange.min;
