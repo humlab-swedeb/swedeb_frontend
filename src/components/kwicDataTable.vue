@@ -66,10 +66,11 @@ import expandingTableRow from "src/components/expandingTableRow.vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
-const speechStore = speechesDataStore();
+
 
 const rows = ref([]);
 const columns = ref([]);
+
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
