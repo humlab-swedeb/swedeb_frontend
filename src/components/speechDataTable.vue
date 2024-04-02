@@ -142,6 +142,18 @@ const props = defineProps({
   type: String,
 });
 
+const replaceNewLine = (str) => {
+  return str.replace(/\n/g, "<br><br>");
+};
+
+const replaceWordWithBoldTags = (str, word) => {
+  // add bold tags to word hits. Only matches whole words
+  // which might not be ideal for lemmatized matches
+  const regex = new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "giu");
+  const res = str.replace(regex, `<b>${word}</b>`);
+  return res;
+};
+
 const displayedData = ref({});
 const rows = ref([]);
 const columns = ref([]);
@@ -153,8 +165,10 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
   if (props.expand) {
     const speechData = await speechStore.getSpeech(props.row.id);
+    const speech = replaceNewLine(speechData.speech_text);
+    const highlightedSpeech = replaceWordWithBoldTags(speech, props.row.hit);
     speakerNote.value = speechData.speaker_note;
-    speechText.value = speechData.speech_text;
+    speechText.value = highlightedSpeech;
   }
 };
 watchEffect(async () => {
