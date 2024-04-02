@@ -18,16 +18,10 @@
             <b>{{ customKey(key) }}:</b>
             {{ value.map((gender_id) => store.options.gender[gender_id]).join(", ") }}
           </div>
-          <div v-else-if="key === 'gender'">
-            <b>{{ customKey(key) }}: </b>Alla
-          </div>
-          <div v-else-if="Array.isArray(value) && value.length > 0">
+          <div v-else-if="key === 'party' && value.length > 0">
             <b>{{ customKey(key) }}:</b> {{ value.join(", ") }}
           </div>
-          <div v-else-if="key==='office' || key === 'subOffice'">
-            <!-- If the key is 'office' or 'subOffice', do nothing for now -->
-          </div>
-          <div v-else-if="value.length == 0">
+          <div v-else-if="(key === 'gender' || key === 'speakers' || key === 'party') && value.length == 0">
             <b>{{ customKey(key) }}:</b> Alla
           </div>
         </div>
@@ -53,6 +47,10 @@ const customKeys = {
   speakers: i18n.speakers,
 };
 const customKey = (key) => customKeys[key] || key;
+
+const getJoinedGender = () => {
+  return store.selected.gender.map(gender => store.options.gender[gender]).join(", ");
+};
 
 watchEffect(() => {
   // When the submitEvent is triggered in the store, update the displayedData and showData values
