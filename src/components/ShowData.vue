@@ -10,12 +10,18 @@
           <div v-if="key === 'yearRange'">
             <b>{{ customKey(key) }}:</b> {{ value.min }} - {{ value.max }}
           </div>
-          <div v-else-if="key === 'speakers'">
+          <div v-else-if="key === 'speakers' && value.length > 0">
             <b>{{ customKey(key) }}:</b>
             {{ value.map((speaker) => speaker.name).join(", ") }}
           </div>
-          <div v-else-if="Array.isArray(value) && value.length > 0">
+          <div v-else-if="key === 'party'  && value.length > 0">
             <b>{{ customKey(key) }}:</b> {{ value.join(", ") }}
+          </div>
+          <div v-else-if=" key === 'gender'  && value.length > 0">
+            <b>{{ customKey(key) }}:</b> {{ getJoinedGender() }}
+          </div>
+          <div v-else-if="(key === 'party' || key === 'gender' || key === 'speakers') ">
+            <b>{{ customKey(key) }}:</b> Alla
           </div>
         </div>
       </q-list>
@@ -40,6 +46,10 @@ const customKeys = {
   speakers: i18n.speakers,
 };
 const customKey = (key) => customKeys[key] || key;
+
+const getJoinedGender = () => {
+  return store.selected.gender.map(gender => store.options.gender[gender]).join(", ");
+};
 
 watchEffect(() => {
   // When the submitEvent is triggered in the store, update the displayedData and showData values
