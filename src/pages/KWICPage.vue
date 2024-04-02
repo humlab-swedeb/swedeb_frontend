@@ -31,6 +31,7 @@ const showData = ref(false);
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
     const textString = wtStore.generateStringOfSelected();
+    console.log("textString: ", textString);
     await kwicStore.getKwicResult(textString);
     showData.value = true;
   }

@@ -9,7 +9,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     searchText: "",
     wordHits: [],
     wordHitsSelected: [],
-    searchWords: [],
     searchString: [],
   }),
 
@@ -79,7 +78,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
 
     generateStringOfSelected() {
-      this.searchString = [...this.wordHitsSelected, ...this.searchWords];
+      this.searchString = [...this.wordHitsSelected];
       this.searchString = this.searchString.join(",");
       return this.searchString;
     },

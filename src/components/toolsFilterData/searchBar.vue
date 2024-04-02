@@ -50,15 +50,13 @@
     </q-card-section> -->
     <q-card-section class="col q-pa-none">
       <q-btn
-        v-if="
-          wtStore.wordHitsSelected.length > 0 || wtStore.searchWords.length > 0
-        "
+        v-if="wtStore.wordHitsSelected.length > 0"
         no-caps
         flat
         label="Ta bort alla ord"
         color="grey-7"
         class="resetStyle"
-        @click="(wtStore.wordHitsSelected = []) && (wtStore.searchWords = [])"
+        @click="wtStore.wordHitsSelected = []"
       />
     </q-card-section>
   </div>
@@ -91,5 +89,4 @@
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();
-
 </script>
