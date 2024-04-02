@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect,defineProps } from "vue";
+import { ref, watchEffect, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 
@@ -75,6 +75,7 @@ const speechText = ref("");
 watchEffect(() => {
   if (props.props.expand) {
     (async () => {
+      console.log(props.props);
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       speechText.value = speechData.speech_text;
