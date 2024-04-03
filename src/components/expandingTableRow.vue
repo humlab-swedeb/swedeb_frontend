@@ -27,7 +27,7 @@
             <q-item-label caption class="text-bold">{{
               speakerNote
             }}</q-item-label>
-            <q-item-label>{{ speechText }}</q-item-label>
+            <div v-html="speechText"></div>
           </q-card-section>
           <q-card-section class="col-2 q-pa-none">
             <div class="column q-gutter-y-md">
