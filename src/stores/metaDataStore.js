@@ -1,10 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 
-/* const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
-  // andra konfigurationer här...
-}); */
 
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
@@ -16,6 +12,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       office: [],
       subOffice: [],
       speakers: [],
+      yearRange: {
+        min: 0,
+        max: 0,
+      },
     },
 
     selected: {
@@ -46,20 +46,22 @@ export const metaDataStore = defineStore("metaDataStore", {
         subOffice: [],
         speakers: [],
         yearRange: {
-          min: null,
-          max: null,
+          min: this.options.yearRange.min,
+          max: this.options.yearRange.max,
         },
       };
-      this.selected.yearRange.min = await this.getStartYear();
-      this.selected.yearRange.max = await this.getEndYear();
+      //this.selected.yearRange.min = await this.getStartYear();
+      //this.selected.yearRange.max = await this.getEndYear();
       this.genderAllSelect = false;
       this.officeAllSelect = false;
     },
 
     async fetchAllMetaData() {
       // to load all metadata on mount
-      this.getStartYear()
-      this.getEndYear()
+      //this.getStartYear()
+      //this.getEndYear()
+      console.log("fetching all metadata")
+      this.getYearOptions()
       this.getPartyOptions()
       this.getOfficeOptions()
       this.getGenderOptions()
@@ -165,6 +167,25 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.addParamArray("office", "office_types", searchParams);
       this.addParamArray("subOffice", "sub_office_types", searchParams);
       return searchParams.toString();
+    },
+
+    async getYearOptions(){
+      try {
+
+        const start_path = "/metadata/start_year";
+        const end_path = "/metadata/end_year";
+
+        const start_response = await api.get(start_path);
+        const end_response = await api.get(end_path);
+
+        this.options.yearRange.min =  parseInt(start_response.data);
+        this.options.yearRange.max =  parseInt(end_response.data);
+        this.selected.yearRange.min =  parseInt(start_response.data);
+        this.selected.yearRange.max =  parseInt(end_response.data);
+
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     async getStartYear() {

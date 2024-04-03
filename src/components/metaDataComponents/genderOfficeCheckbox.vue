@@ -1,4 +1,3 @@
-
 <template>
   <q-item-label class="text-bold">{{ $t(`${props.type}`) + ":" }}</q-item-label>
   <q-checkbox
@@ -25,7 +24,6 @@
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { defineProps } from "vue";
 const store = metaDataStore();
-store.getOfficeOptions();
-store.getGenderOptions();
+
 const props = defineProps(["type"]);
 </script>

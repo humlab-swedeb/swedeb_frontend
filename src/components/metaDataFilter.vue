@@ -116,7 +116,9 @@ const hasSelections = computed(() => {
     gender.length > 0 ||
     office.length > 0 ||
     subOffice.length > 0 ||
-    speakers.length > 0
+    speakers.length > 0 ||
+    store.selected.yearRange.min !== store.options.yearRange.min ||
+    store.selected.yearRange.max !== store.options.yearRange.max
   );
 });
 </script>
