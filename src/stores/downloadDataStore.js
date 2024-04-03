@@ -5,8 +5,9 @@ import JSZip from "jszip";
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
     formatProps(currentProps) {
+      const currentWordKey = 'hit' in currentProps ? 'hit' : 'node_word';
       const speaker = currentProps.speaker;
-      const hit = currentProps.hit;
+      const hit = currentProps[currentWordKey];
       const id = currentProps.id;
       const party = currentProps.party;
       const year = currentProps.year;

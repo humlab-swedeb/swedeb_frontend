@@ -95,6 +95,11 @@ const downloadCurrentSpeech = () => {
   );
 }
 
+const getCurrentWord = () => {
+  const currentWordKey = 'hit' in props.props.row ? 'hit' : 'node_word';
+  return props.props.row[currentWordKey];
+};
+
 watchEffect(() => {
   if (props.props.expand) {
 
@@ -106,7 +111,7 @@ watchEffect(() => {
       originalSpeechText.value = speechData.speech_text;
       speechText.value = replaceWordWithBoldTags(
         replaceNewLine(speechData.speech_text),
-        props.props.row.node_word
+        getCurrentWord()
       );
     })();
   }
