@@ -1,4 +1,5 @@
 <template>
+  <template v-if="wtStore.wordTrendsSpeeches && wtStore.wordTrendsSpeeches.length > 0 || $route.path === '/tools/speeches'">
   <div>
     <q-table
       bordered
@@ -68,6 +69,12 @@
       @click="downloadSpeeches"
     ></q-btn>
   </div>
+  </template>
+  <template v-else>
+    <div class="no-data-message">
+        Inga resultat för sökningen. Försök med ett annat sökord, eller andra filtreringsalternativ.
+      </div>
+  </template>
 </template>
 
 <script setup>

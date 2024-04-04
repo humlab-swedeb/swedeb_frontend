@@ -184,7 +184,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         this.selected.yearRange.max =  parseInt(end_response.data);
 
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
