@@ -47,14 +47,18 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         }
       }
       try {
+
         const n_hits = 1000;
+
         const path = `/tools/word_trend_hits/${searchTerm}`;
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(
           `${path}?${queryString}&n_hits=${n_hits}`
         );
-        this.wordHits = response.data.hit_list;
-        this.wordHitsSelected = [...new Set([...this.wordHitsSelected, ...this.wordHits])];
+        this.wordHits = [...this.wordHits, ...response.data.hit_list].sort();
+        this.wordHitsSelected = [
+          ...new Set([...this.wordHitsSelected, ...this.wordHits]),
+        ].sort();
         this.searchText = "";
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -68,14 +72,16 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         text.forEach((word) => {
           if (!this.wordHitsSelected.includes(word) && !word.includes("*")) {
             this.wordHitsSelected.push(word);
+            this.wordHits.push(word);
           }
         });
+
+        this.wordHitsSelected.sort();
+        this.wordHits.sort();
 
         this.searchText = ""; // Reset the search field
       }
     },
-
-
 
     generateStringOfSelected() {
       this.searchString = [...this.wordHitsSelected];

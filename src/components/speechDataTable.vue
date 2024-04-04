@@ -60,11 +60,13 @@
         <!-- If row in table is clicked, EXPAND -->
 
         <expandingTableRow :props="props" />
-
       </template>
     </q-table>
     <q-btn
-      color="primary"
+      no-caps
+      icon="download"
+      class="q-my-md text-grey-8"
+      color="secondary"
       label="Ladda ner tal"
       @click="downloadSpeeches"
     ></q-btn>
@@ -95,15 +97,9 @@ const props = defineProps({
   type: String,
 });
 
-
-
-
-
 const displayedData = ref({});
 const rows = ref([]);
 const columns = ref([]);
-
-
 
 const loading = ref(false);
 
@@ -199,8 +195,6 @@ watchEffect(async () => {
   }
 });
 const pagination = ref({});
-
-
 
 function downloadSpeeches() {
   // Accessing the current page from the pagination object

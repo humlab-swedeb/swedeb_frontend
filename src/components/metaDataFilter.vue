@@ -60,35 +60,56 @@
       -->
     </q-slide-transition>
   </q-card>
-  <q-card flat class="q-ma-md bg-transparent">
+  <q-card flat class="q-ma-md bg-transparent padding-bot">
     <toolsFilters />
-    <q-btn
-      @click="handleSubmit"
-      no-caps
-      class="fit q-py-sm"
-      color="accent"
-      v-if="$route.path !== '/tools/speeches'"
-      :disabled="wtStore.wordHitsSelected.length < 1"
-    >
-      Sök
-      <q-tooltip
-        v-if="wtStore.wordHitsSelected.length < 1"
-        anchor="top middle"
-        self="bottom middle"
-        :offset="[10, 10]"
+    <div class="q-pa-lg full-width sticky-bottom">
+      <q-btn
+        @click="handleSubmit"
+        no-caps
+        class="fit text-h6"
+        color="accent"
+        label="Sök"
+        v-if="$route.path !== '/tools/speeches'"
+        :disabled="
+          wtStore.wordHitsSelected.length < 1 ||
+          ($route.path === '/tools/wordtrends' &&
+            wtStore.wordHitsSelected.some((word) => word.includes(' ')))
+        "
       >
-        Lägg till ett eller flera sökord
-      </q-tooltip>
-    </q-btn>
-    <q-btn
-      @click="handleSubmit"
-      no-caps
-      class="fit q-py-sm"
-      color="accent"
-      v-else-if="$route.path === '/tools/speeches'"
-    >
-      Sök
-    </q-btn>
+        <q-tooltip
+          v-if="wtStore.wordHitsSelected.length < 1"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+        >
+          Lägg till ett eller flera sökord
+        </q-tooltip>
+        <q-tooltip
+          v-if="
+            $route.path === '/tools/wordtrends' &&
+            wtStore.wordHitsSelected.some((word) => word.includes(' '))
+          "
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+        >
+          I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
+          dessa för att genomföra söknngen <br /><br />
+          <code>{{
+            wtStore.wordHitsSelected.filter((word) => word.includes(" "))
+          }}</code>
+        </q-tooltip>
+      </q-btn>
+      <q-btn
+        @click="handleSubmit"
+        no-caps
+        class="fit q-py-sm"
+        color="accent"
+        v-else-if="$route.path === '/tools/speeches'"
+      >
+        Sök
+      </q-btn>
+    </div>
   </q-card>
 </template>
 
@@ -99,9 +120,11 @@ import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
+const kwicStore = kwicDataStore();
 const showing = ref(false);
 
 const handleSubmit = async () => {
@@ -123,6 +146,16 @@ const hasSelections = computed(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.sticky-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, $secondary, rgb(238, 238, 238, 0.5));
+}
 
+.padding-bot {
+  padding-bottom: 80px;
+}
 </style>

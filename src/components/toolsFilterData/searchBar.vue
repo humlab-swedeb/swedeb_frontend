@@ -15,7 +15,7 @@
     "
   >
     <template v-slot:prepend>
-      <q-icon name="search" color="accent" />
+      <q-icon name="query_stats" color="accent" />
     </template>
     <template v-slot:after>
       <q-btn
@@ -27,27 +27,6 @@
     </template>
   </q-input>
   <div class="row fit q-py-md">
-    <!--     <q-card-section class="col q-pa-none">
-      <q-btn
-        no-caps
-        label="Liknande ord"
-        icon="emergency"
-        color="accent"
-        @click="wtStore.getWordHits(wtStore.searchText)"
-        :disabled="!wtStore.searchText.includes('*')"
-      >
-        <q-tooltip
-          v-if="!wtStore.searchText.includes('*')"
-          anchor="top middle"
-          self="bottom middle"
-          :offset="[10, 10]"
-          class="bg-accent text-white"
-        >
-          Sök på ett ord med en asterisk (*) för att hitta liknande ord. T.ex
-          <code>klimat*</code>
-        </q-tooltip>
-      </q-btn>
-    </q-card-section> -->
     <q-card-section class="col q-pa-none">
       <q-btn
         v-if="wtStore.wordHitsSelected.length > 0"
@@ -56,7 +35,7 @@
         label="Ta bort alla ord"
         color="grey-7"
         class="resetStyle"
-        @click="wtStore.wordHitsSelected = []"
+        @click="(wtStore.wordHitsSelected = []) && (wtStore.wordHits = [])"
       />
     </q-card-section>
   </div>
@@ -76,6 +55,7 @@
           square
           removable
           dense
+          :class="{ 'chip-with-blank-space': select.opt.includes(' ') }"
           @remove="select.removeAtIndex(select.index)"
         >
           {{ select.opt }}
@@ -86,7 +66,24 @@
 </template>
 
 <script setup>
+import { watchEffect } from "vue";
+import { useRoute } from "vue-router";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();
+const route = useRoute();
+
+watchEffect(() => {
+  if (route.path === "/tools/kwic") {
+    wtStore.wordHits = [];
+    wtStore.wordHitsSelected = [];
+  }
+});
 </script>
+
+<style lang="scss" scoped>
+.chip-with-blank-space {
+  color: white;
+  background-color: $accent;
+}
+</style>
