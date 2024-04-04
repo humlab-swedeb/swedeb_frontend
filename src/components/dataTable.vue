@@ -51,6 +51,7 @@ watchEffect(() => {
   if (store.submitEvent) {
     displayedData.value = { ...store.selected };
     store.submitEvent = false;
+   
 
     rows.value = displayedData.value.speakers.map((speaker, index) => ({
       id: index + 1,

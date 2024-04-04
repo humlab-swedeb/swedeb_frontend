@@ -1,4 +1,5 @@
 <template>
+  <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
   <q-table
     :rows="rows"
     :columns="columns"
@@ -56,12 +57,18 @@
     </template>
   </q-table>
 </template>
+<template v-else>
+      <!-- Show a message when there's no data -->
+      <div class="no-data-message">
+        Inga resultat för sökningen. Försök med ett annat sökord, eller andra filtreringsalternativ.
+      </div>
+</template>
+</template>
 
 <script setup>
 import { ref, watchEffect } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
-import { speechesDataStore } from "src/stores/speechesDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 
 const metaStore = metaDataStore();
@@ -78,6 +85,10 @@ const expandRow = async (props) => {
 
 watchEffect(() => {
   if (metaStore.submitEvent) {
+    if (kwicStore.kwicData.length === 0) {
+      console.log('No data')
+      return;
+    }
     rows.value = kwicStore.kwicData.map((entry) => ({
       id: entry.speech_title,
       left_word: entry.left_word,
