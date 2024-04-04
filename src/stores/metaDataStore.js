@@ -134,8 +134,13 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${year_string}\n${selected_parties}\n${selected_speakers}\n${selected_genders}`;
     },
 
-    getSelectedParams() {
+    getSelectedParams(additional_params = {}) {
       const searchParams = new URLSearchParams();
+
+
+      for (const key in additional_params) {
+        searchParams.append(key, additional_params[key]);
+      }
 
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);

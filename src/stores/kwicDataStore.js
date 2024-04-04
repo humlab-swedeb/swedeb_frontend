@@ -15,7 +15,10 @@ export const kwicDataStore = defineStore("kwicData", {
       try {
         console.log(search);
         const path = `/tools/kwic/${search}`;
-        const queryString = metaDataStore().getSelectedParams();
+
+        const additional_params = {'words_before': this.wordsLeft, 'words_after': this.wordsRight};
+
+        const queryString = metaDataStore().getSelectedParams(additional_params);
         const response = await api.get(`${path}?${queryString}`);
         this.kwicData = response.data.kwic_list;
       } catch (error) {
