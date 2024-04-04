@@ -6,7 +6,7 @@ export const downloadDataStore = defineStore("downloadData", {
   actions: {
     formatProps(currentProps) {
       const speaker = currentProps.speaker;
-      const hit = currentProps.hit;
+      const hit = currentProps.node_word;
       const id = currentProps.id;
       const party = currentProps.party;
       const year = currentProps.year;

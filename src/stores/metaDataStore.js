@@ -50,17 +50,12 @@ export const metaDataStore = defineStore("metaDataStore", {
           max: this.options.yearRange.max,
         },
       };
-      //this.selected.yearRange.min = await this.getStartYear();
-      //this.selected.yearRange.max = await this.getEndYear();
       this.genderAllSelect = false;
       this.officeAllSelect = false;
     },
 
     async fetchAllMetaData() {
       // to load all metadata on mount
-      //this.getStartYear()
-      //this.getEndYear()
-      console.log("fetching all metadata")
       this.getYearOptions()
       this.getPartyOptions()
       this.getOfficeOptions()
@@ -139,8 +134,13 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${year_string}\n${selected_parties}\n${selected_speakers}\n${selected_genders}`;
     },
 
-    getSelectedParams() {
+    getSelectedParams(additional_params = {}) {
       const searchParams = new URLSearchParams();
+
+
+      for (const key in additional_params) {
+        searchParams.append(key, additional_params[key]);
+      }
 
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
@@ -184,28 +184,10 @@ export const metaDataStore = defineStore("metaDataStore", {
         this.selected.yearRange.max =  parseInt(end_response.data);
 
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
 
-    async getStartYear() {
-      try {
-        const path = "/metadata/start_year";
-        const response = await api.get(path);
-        const min_year = parseInt(response.data);
-        return min_year;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getEndYear() {
-      try {
-        const path = "/metadata/end_year";
-        const response = await api.get(path);
-        const max_year = parseInt(response.data);
-        return max_year;
-      } catch (error) {}
-    },
 
     getPartyColor(party_abbreviation) {
       return this.options.party[party_abbreviation].party_color || "#808080";

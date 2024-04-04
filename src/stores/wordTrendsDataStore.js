@@ -47,7 +47,9 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         }
       }
       try {
-        const n_hits = 30;
+
+        const n_hits = 1000;
+
         const path = `/tools/word_trend_hits/${searchTerm}`;
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(
