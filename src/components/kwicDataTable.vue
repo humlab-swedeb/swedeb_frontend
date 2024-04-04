@@ -89,6 +89,8 @@ watchEffect(() => {
       gender: entry.gender,
       person_id: entry.person_id,
       link: entry.link,
+      protocol: entry.formatted_speech_id,
+
     }));
 
     columns.value = [
@@ -144,7 +146,7 @@ watchEffect(() => {
         name: "id",
         required: true,
         label: "Anförande",
-        field: "id",
+        field: "protocol",
         sortable: true,
         align: "left",
       },

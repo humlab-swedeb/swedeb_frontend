@@ -117,7 +117,7 @@ watchEffect(async () => {
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
       protocol: speech.formatted_speech_id,
-      hit: speech.hit,
+      node_word: speech.node_word,
       speaker: speech.name,
       gender: speech.gender,
       party: speech.party_abbrev,
@@ -178,10 +178,10 @@ watchEffect(async () => {
 
     if (props.type === "wordTrends") {
       columns.value.splice(1, 0, {
-        name: "hit",
+        name: "node_word",
         required: true,
         label: "Sökord",
-        field: "hit",
+        field: "node_word",
         sortable: true,
         align: "left",
       });

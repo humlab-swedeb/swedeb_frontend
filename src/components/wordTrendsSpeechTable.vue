@@ -59,17 +59,7 @@ const props = defineProps(["type"]);
 const displayedData = ref({});
 const rows = ref([]);
 const columns = ref([]);
-const speakerNote = ref("");
-const speechText = ref("");
 
-/* const expandRow = async (props) => {
-  props.expand = !props.expand;
-  if (props.expand) {
-    const speechData = await speechStore.getSpeech(props.row.id);
-    speakerNote.value = speechData.speaker_note;
-    speechText.value = speechData.speech_text;
-  }
-}; */
 
 watchEffect(async () => {
   const wordTrends = wtStore.wordTrendsSpeeches;
