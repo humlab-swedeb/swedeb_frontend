@@ -47,7 +47,7 @@
                 color="accent"
                 @click="downloadCurrentSpeech"
               >
-                <q-icon left name="open_in_new" color="accent" />
+                <q-icon left name="download" color="accent" />
                 <q-item-label>Ladda ned</q-item-label>
               </q-btn>
             </div>
