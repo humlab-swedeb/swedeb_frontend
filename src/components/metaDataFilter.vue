@@ -152,7 +152,7 @@ const hasSelections = computed(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, $secondary, rgb(238, 238, 238, 0.5));
+  background: linear-gradient(to top, #EEEEEE, rgb(238, 238, 238, 0.5));
 }
 
 .padding-bot {
