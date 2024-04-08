@@ -25,13 +25,19 @@
       </template>
     </q-table>
     <q-btn
-      label="Download"
-      color="primary"
+      no-caps
+      icon="download"
+      class="q-my-md text-grey-8"
+      color="secondary"
+      label="Ladda ner resultat"
       @click="downloadWTCounts"
-      class="q-mt-md"
-    />
+      ></q-btn>
   </div>
 </template>
+
+
+
+
 
 <script setup>
 import { ref, watchEffect } from "vue";

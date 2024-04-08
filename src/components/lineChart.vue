@@ -58,7 +58,7 @@ const chartOptions = ref({
   },
 
   title: {
-    text: "Hello",
+    text: "",
     align: "center",
     margin: 0,
     offsetX: 0,

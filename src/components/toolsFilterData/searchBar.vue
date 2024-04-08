@@ -56,7 +56,10 @@
           removable
           dense
           :class="{ 'chip-with-blank-space': select.opt.includes(' ') }"
-          @remove="select.removeAtIndex(select.index)"
+          @remove="
+            select.removeAtIndex(select.index);
+            doThing(select.opt);
+          "
         >
           {{ select.opt }}
         </q-chip>
@@ -72,6 +75,11 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 
 const wtStore = wordTrendsDataStore();
 const route = useRoute();
+
+const doThing = (wordToRemove) => {
+  console.log(wordToRemove);
+  wtStore.wordHits = wtStore.wordHits.filter((word) => word !== wordToRemove);
+};
 
 watchEffect(() => {
   if (route.path === "/tools/kwic") {
