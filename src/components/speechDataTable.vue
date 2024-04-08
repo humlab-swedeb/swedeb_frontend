@@ -1,5 +1,4 @@
 <template>
-  <template v-if="wtStore.wordTrendsSpeeches && wtStore.wordTrendsSpeeches.length > 0 || $route.path === '/tools/speeches'">
   <div>
     <q-table
       bordered
@@ -71,12 +70,6 @@
       @click="downloadSpeeches"
     ></q-btn>
   </div>
-  </template>
-  <template v-else>
-    <div class="no-data-message">
-        Inga resultat för sökningen. Försök med ett annat sökord, eller andra filtreringsalternativ.
-      </div>
-  </template>
 </template>
 
 <script setup>
@@ -120,7 +113,7 @@ watchEffect(async () => {
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
       protocol: speech.formatted_speech_id,
-      node_word: speech.node_word,
+      hit: speech.hit,
       speaker: speech.name,
       gender: speech.gender,
       party: speech.party_abbrev,
@@ -181,10 +174,10 @@ watchEffect(async () => {
 
     if (props.type === "wordTrends") {
       columns.value.splice(1, 0, {
-        name: "node_word",
+        name: "hit",
         required: true,
         label: "Sökord",
-        field: "node_word",
+        field: "hit",
         sortable: true,
         align: "left",
       });
