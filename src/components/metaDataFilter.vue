@@ -73,7 +73,9 @@
         :disabled="
           wtStore.wordHitsSelected.length < 1 ||
           ($route.path === '/tools/wordtrends' &&
-            wtStore.wordHitsSelected.some((word) => word.includes(' ')))
+            wtStore.wordHitsSelected.some(
+              (word) => word.includes(' ') || word.includes('*')
+            ))
         "
       >
         <q-tooltip
@@ -87,7 +89,9 @@
         <q-tooltip
           v-if="
             $route.path === '/tools/wordtrends' &&
-            wtStore.wordHitsSelected.some((word) => word.includes(' '))
+            wtStore.wordHitsSelected.some(
+              (word) => word.includes(' ') || word.includes('*')
+            )
           "
           anchor="top middle"
           self="bottom middle"
@@ -96,7 +100,9 @@
           I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
           dessa för att genomföra söknngen <br /><br />
           <code>{{
-            wtStore.wordHitsSelected.filter((word) => word.includes(" "))
+            wtStore.wordHitsSelected.filter(
+              (word) => word.includes(" ") || word.includes("*")
+            )
           }}</code>
         </q-tooltip>
       </q-btn>
@@ -152,7 +158,7 @@ const hasSelections = computed(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, #EEEEEE, rgb(238, 238, 238, 0.5));
+  background: linear-gradient(to top, #eeeeee, rgb(238, 238, 238, 0.5));
 }
 
 .padding-bot {

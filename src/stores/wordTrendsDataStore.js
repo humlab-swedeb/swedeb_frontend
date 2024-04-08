@@ -83,6 +83,19 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
+    addKWICChip() {
+      let text = this.searchText.trim();
+
+      if (text !== "") {
+
+            this.wordHitsSelected.push(text);
+            this.wordHits.push(text);
+
+
+        this.searchText = ""; // Reset the search field
+      }
+    },
+
     generateStringOfSelected() {
       this.searchString = [...this.wordHitsSelected];
       this.searchString = this.searchString.join(",");

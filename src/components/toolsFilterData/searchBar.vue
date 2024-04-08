@@ -8,11 +8,7 @@
     label="Lägg till ord"
     bg-color="white"
     color="accent"
-    @keydown.enter="
-      wtStore.searchText.includes('*')
-        ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
-        : wtStore.addChip()
-    "
+    @keydown.enter="addSearchWord"
   >
     <template v-slot:prepend>
       <q-icon name="query_stats" color="accent" />
@@ -21,7 +17,7 @@
       <q-btn
         round
         color="accent"
-        @click="wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()"
+        @click="addSearchWord"
         icon="add"
       />
     </template>
@@ -58,7 +54,7 @@
           :class="{ 'chip-with-blank-space': select.opt.includes(' ') }"
           @remove="
             select.removeAtIndex(select.index);
-            doThing(select.opt);
+            removeSelectedWord(select.opt);
           "
         >
           {{ select.opt }}
@@ -76,9 +72,19 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 const wtStore = wordTrendsDataStore();
 const route = useRoute();
 
-const doThing = (wordToRemove) => {
-  console.log(wordToRemove);
+const removeSelectedWord = (wordToRemove) => {
   wtStore.wordHits = wtStore.wordHits.filter((word) => word !== wordToRemove);
+};
+
+const addSearchWord =() => {
+
+  if (route.path === "/tools/kwic") {
+    wtStore.addKWICChip();
+  }else{
+    wtStore.searchText.includes('*')
+        ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
+        : wtStore.addChip()
+  }
 };
 
 watchEffect(() => {

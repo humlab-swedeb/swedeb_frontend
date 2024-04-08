@@ -34,7 +34,7 @@
             >
               {{ col.value }}
             </q-item-label>
-            <q-item-label v-else-if="col.name === 'hit'" class="text-bold">
+            <q-item-label v-else-if="col.name === 'node_word'" class="text-bold">
               {{ col.value }}
             </q-item-label>
             <q-item-label v-else>
@@ -113,7 +113,7 @@ watchEffect(async () => {
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
       protocol: speech.formatted_speech_id,
-      hit: speech.hit,
+      node_word: speech.node_word,
       speaker: speech.name,
       gender: speech.gender,
       party: speech.party_abbrev,
@@ -174,10 +174,10 @@ watchEffect(async () => {
 
     if (props.type === "wordTrends") {
       columns.value.splice(1, 0, {
-        name: "hit",
+        name: "node_word",
         required: true,
         label: "Sökord",
-        field: "hit",
+        field: "node_word",
         sortable: true,
         align: "left",
       });
