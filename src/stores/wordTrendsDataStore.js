@@ -48,7 +48,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
       try {
 
-        const n_hits = 1000;
+        const n_hits = 15;
 
         const path = `/tools/word_trend_hits/${searchTerm}`;
         const queryString = metaDataStore().getSelectedParams();
@@ -78,6 +78,19 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
         this.wordHitsSelected.sort();
         this.wordHits.sort();
+
+        this.searchText = ""; // Reset the search field
+      }
+    },
+
+    addKWICChip() {
+      let text = this.searchText.trim();
+
+      if (text !== "") {
+
+            this.wordHitsSelected.push(text);
+            this.wordHits.push(text);
+
 
         this.searchText = ""; // Reset the search field
       }
