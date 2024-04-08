@@ -28,5 +28,6 @@ export const speechesDataStore = defineStore("speechesData", {
         console.error("Error fetching data:", error);
       }
     },
+
   },
 });

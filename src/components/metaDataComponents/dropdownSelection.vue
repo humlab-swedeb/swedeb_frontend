@@ -16,6 +16,7 @@
     class="q-my-lg shadow"
     :popup-content-style="{
       borderRadius: '0px 0px 7px 7px',
+      height: '300px',
     }"
     :option-label="customOptionLabel"
     @filter="filterHandler"
@@ -43,14 +44,8 @@
           >
             {{ select.opt.speaker_party[0] }} </span
           > -->({{
-            select.opt.year_of_birth
-              ? select.opt.year_of_birth
-              : ""
-          }}-{{
-            select.opt.year_of_death
-              ? select.opt.year_of_death
-              : " "
-          }})
+            select.opt.year_of_birth ? select.opt.year_of_birth : ""
+          }}-{{ select.opt.year_of_death ? select.opt.year_of_death : " " }})
         </q-item-label>
 
         <q-item-label v-else>{{ select.opt }}</q-item-label>
@@ -87,28 +82,21 @@ const getChipStyle = (opt) => {
     return {};
   }
 };
-
 watchEffect(async () => {
-  try {
-    if (props.type === "party") {
-      await store.getPartyOptions();
-      options.value = Object.keys(store.options.party) || [];
-    } else if (props.type === "subOffice") {
-      await store.getSubOfficeOptions();
-      options.value = store.options.subOffice || [];
-    } else if (props.type === "speakers") {
-      if (store.selected.party.length > 0) {
-        await store.getSpeakersOptions();
-        options.value = store.options.speakers || [];
-      } else {
-        await store.getSpeakersOptions();
-        options.value = store.options.speakers || [];
-      }
-    }
-  } catch (error) {
-    console.error("Error updating options:", error);
-  }
-});
+	  try {
+	    if (props.type === "party") {
+	      options.value = Object.keys(store.options.party) || [];
+	    } else if (props.type === "subOffice") {
+	      options.value = store.options.subOffice || [];
+	    } else if (props.type === "speakers") {
+	      // speaker list always updated (also on clear)
+	      await store.getSpeakersOptions();
+	      options.value = store.options.speakers || [];
+	    }
+	  } catch (error) {
+	    console.error("Error updating options:", error);
+	  }
+	});
 
 const filterHandler = (searchTerm, updateOptions) => {
   if (props.type === "speakers") {
@@ -127,12 +115,8 @@ const filterHandler = (searchTerm, updateOptions) => {
 const customOptionLabel = (opt) => {
   if (props.type === "speakers") {
     // Check if both birth year and death year are defined
-    const birthYear = opt.year_of_birth
-      ? opt.year_of_birth
-      : " ";
-    const deathYear = opt.year_of_death
-      ? opt.year_of_death
-      : " ";
+    const birthYear = opt.year_of_birth ? opt.year_of_birth : " ";
+    const deathYear = opt.year_of_death ? opt.year_of_death : " ";
 
     let party = opt.party_abbrev ? opt.party_abbrev : "";
     party = getPartyLabel(opt.party_abbrev);

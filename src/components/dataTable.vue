@@ -51,6 +51,7 @@ watchEffect(() => {
   if (store.submitEvent) {
     displayedData.value = { ...store.selected };
     store.submitEvent = false;
+   
 
     rows.value = displayedData.value.speakers.map((speaker, index) => ({
       id: index + 1,
@@ -75,7 +76,7 @@ watchEffect(() => {
         field: "party",
         sortable: true,
         align: "left",
-        style: (row) => ({ color: store.getPartyColor(row.party) }),
+        style: (row) => ({ color: store.getPartyColor(row.party)}),
       },
       {
         name: "speakers",

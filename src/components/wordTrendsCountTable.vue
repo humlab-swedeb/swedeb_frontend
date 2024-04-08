@@ -9,6 +9,7 @@
       style="width: fit-content"
       separator="vertical"
       class="bg-grey-2"
+      :rows-per-page-options="[10, 20, 50]"
     >
       <template v-slot:body="props">
         <q-tr :props="props" class="bg-white">
@@ -23,8 +24,20 @@
         </q-tr>
       </template>
     </q-table>
+    <q-btn
+      no-caps
+      icon="download"
+      class="q-my-md text-grey-8"
+      color="secondary"
+      label="Ladda ner resultat"
+      @click="downloadWTCounts"
+      ></q-btn>
   </div>
 </template>
+
+
+
+
 
 <script setup>
 import { ref, watchEffect } from "vue";
@@ -77,6 +90,9 @@ watchEffect(() => {
     }
   }
 });
+function downloadWTCounts() {
+  wtStore.downloadCSV();
+}
 </script>
 
 <style></style>

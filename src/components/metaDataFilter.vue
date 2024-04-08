@@ -21,9 +21,10 @@
       />
     </q-card-section>
 
-    <q-slide-transition v-show="showing">
-      <!--       <q-scroll-area v-show="showing" style="height: 80px">
- -->
+    <!-- <q-slide-transition v-show="showing"> -->
+    <q-slide-transition
+      v-if="$route.path === '/tools/speeches' ? !showing : showing"
+    >
       <q-card-section class="q-px-md q-pt-none">
         <q-separator />
         <q-card-section class="q-px-none q-pb-none">
@@ -31,20 +32,21 @@
           <yearRange />
           <dropdownSelection type="party" />
           <q-card-section horizontal class="q-px-none">
-            <q-card-section class="q-pb-none">
+            <q-card-section class="q-py-none">
               <genderOfficeCheckbox type="gender" />
             </q-card-section>
-            <q-card-section class="q-pb-none">
-              <genderOfficeCheckbox type="office" />
+            <q-card-section class="q-py-none">
+              <!-- <genderOfficeCheckbox type="office" /> -->
             </q-card-section>
           </q-card-section>
-          <dropdownSelection type="subOffice" />
+          <!-- Do not show sub office type as of now -->
+          <!-- <dropdownSelection type="subOffice" /> -->
           <dropdownSelection type="speakers" />
           <div class="column items-end q-">
             <q-btn
               v-if="hasSelections"
               @click="store.resetSelectedState"
-              class="buttonStyle col"
+              class="resetStyle col"
               flat
               no-caps
               label="Rensa filter"
@@ -58,36 +60,62 @@
       -->
     </q-slide-transition>
   </q-card>
-  <q-card flat class="q-ma-md bg-transparent">
+  <q-card flat class="q-ma-md bg-transparent padding-bot">
     <toolsFilters />
-    <q-btn
-      @click="handleSubmit"
-      no-caps
-      class="fit q-py-sm"
-      color="accent"
-      v-if="$route.path !== '/tools/speeches'"
-      :disabled="wtStore.searchText.length < 1"
-    >
-      Submit
-      <q-tooltip
-        v-if="wtStore.searchText.length < 1"
-        anchor="top middle"
-        self="bottom middle"
-        :offset="[10, 10]"
-        class="bg-accent text-white"
+    <div class="q-pa-lg full-width sticky-bottom">
+      <q-btn
+        @click="handleSubmit"
+        no-caps
+        class="fit text-h6"
+        color="accent"
+        label="Sök"
+        v-if="$route.path !== '/tools/speeches'"
+        :disabled="
+          wtStore.wordHitsSelected.length < 1 ||
+          ($route.path === '/tools/wordtrends' &&
+            wtStore.wordHitsSelected.some(
+              (word) => word.includes(' ') || word.includes('*')
+            ))
+        "
       >
-        Please enter at least 1 characters
-      </q-tooltip>
-    </q-btn>
-    <q-btn
-      @click="handleSubmit"
-      no-caps
-      class="fit q-py-sm"
-      color="accent"
-      v-else-if="$route.path === '/tools/speeches'"
-    >
-      Submit
-    </q-btn>
+        <q-tooltip
+          v-if="wtStore.wordHitsSelected.length < 1"
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+        >
+          Lägg till ett eller flera sökord
+        </q-tooltip>
+        <q-tooltip
+          v-if="
+            $route.path === '/tools/wordtrends' &&
+            wtStore.wordHitsSelected.some(
+              (word) => word.includes(' ') || word.includes('*')
+            )
+          "
+          anchor="top middle"
+          self="bottom middle"
+          :offset="[10, 10]"
+        >
+          I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
+          dessa för att genomföra söknngen <br /><br />
+          <code>{{
+            wtStore.wordHitsSelected.filter(
+              (word) => word.includes(" ") || word.includes("*")
+            )
+          }}</code>
+        </q-tooltip>
+      </q-btn>
+      <q-btn
+        @click="handleSubmit"
+        no-caps
+        class="fit q-py-sm"
+        color="accent"
+        v-else-if="$route.path === '/tools/speeches'"
+      >
+        Sök
+      </q-btn>
+    </div>
   </q-card>
 </template>
 
@@ -98,10 +126,12 @@ import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
-const showing = ref(true);
+const kwicStore = kwicDataStore();
+const showing = ref(false);
 
 const handleSubmit = async () => {
   store.submitEvent = true;
@@ -115,13 +145,23 @@ const hasSelections = computed(() => {
     gender.length > 0 ||
     office.length > 0 ||
     subOffice.length > 0 ||
-    speakers.length > 0
+    speakers.length > 0 ||
+    store.selected.yearRange.min !== store.options.yearRange.min ||
+    store.selected.yearRange.max !== store.options.yearRange.max
   );
 });
 </script>
 
-<style scoped>
-.buttonStyle {
-  text-decoration: underline;
+<style lang="scss" scoped>
+.sticky-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, #eeeeee, rgb(238, 238, 238, 0.5));
+}
+
+.padding-bot {
+  padding-bottom: 80px;
 }
 </style>

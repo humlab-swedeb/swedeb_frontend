@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="q-pa-md">
+  <q-card flat class="q-pa-md background">
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
   <div v-show="showData">
@@ -30,7 +30,8 @@ const showData = ref(false);
 
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
-    await kwicStore.getKwicResult(wtStore.searchText);
+    const textString = wtStore.generateStringOfSelected();
+    await kwicStore.getKwicResult(textString);
     showData.value = true;
   }
 });
