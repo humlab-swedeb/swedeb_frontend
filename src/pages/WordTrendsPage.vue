@@ -14,25 +14,32 @@
     active-color="accent"
     align="justify"
   >
-    <q-tab name="diagram" icon="show_chart" label="Diagram" />
+    <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
     <q-tab name="table" icon="table_view" label="Tabell" />
     <q-tab name="speech" icon="groups" label="Anföranden" />
   </q-tabs>
 
   <q-tab-panels v-model="tabs" class="background">
     <q-tab-panel name="diagram">
-      <div>diagram</div>
+      <div class="q-py-md text-grey-8">
+        Här visas esultatet i en <b>trendlinje</b> för de ord och metadata som
+        valts.
+      </div>
 
       <lineChart v-show="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
-      <div>tabell</div>
+      <div class="q-py-md text-grey-8">
+        Här visas resultatet i en <b>tabell</b> för de ord och metadata som
+        valts.
+      </div>
       <wordTrendsCountTable v-show="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="speech">
-      <div>anföranden</div>
-      <!-- <wordTrendsSpeechTable v-show="showData" /> -->
-
+      <div class="q-py-md text-grey-8">
+        Här visas alla <b>anföranden</b> i en tabell kopplat till de ord och
+        metadata som valts.
+      </div>
       <speechDataTable
         type="wordTrends"
         v-show="showData"

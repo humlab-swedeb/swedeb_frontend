@@ -8,7 +8,7 @@
       row-key="year"
       style="width: fit-content"
       separator="vertical"
-      class="bg-grey-2"
+      class="bg-grey-2 sticky-column"
       :rows-per-page-options="[10, 20, 50]"
     >
       <template v-slot:body="props">
@@ -18,6 +18,7 @@
             :key="col.name"
             :props="props"
             class="bg-white"
+            :class="col.name === 'Year' ? 'bg-grey-1' : ''"
           >
             {{ col.value }}
           </q-td>
@@ -31,13 +32,9 @@
       color="secondary"
       label="Ladda ner resultat"
       @click="downloadWTCounts"
-      ></q-btn>
+    ></q-btn>
   </div>
 </template>
-
-
-
-
 
 <script setup>
 import { ref, watchEffect } from "vue";
@@ -95,4 +92,17 @@ function downloadWTCounts() {
 }
 </script>
 
-<style></style>
+<style>
+.sticky-column {
+  max-width: 100%;
+}
+
+.sticky-column th:first-child,
+.sticky-column td:first-child {
+  border-right: 1px solid #e2e2e2;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: #f5f5f5;
+}
+</style>
