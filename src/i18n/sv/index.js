@@ -52,7 +52,7 @@ export default {
 
   toolsFilterTitle: "Verktygsspecifika Filter",
   "/tools/wordtrends": "Ordtrender",
-  "/tools/kwic": "Key word in context",
+  "/tools/kwic": "Key words in context",
   "/tools/speeches": "Anföranden",
   "/tools/ngram": "N-grams",
 
