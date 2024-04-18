@@ -3,9 +3,13 @@
     v-if="$route.path !== '/tools/speeches'"
     class="text-center text-h6 q-pt-lg"
   >
-    <q-item-label>{{ $t("toolsFilterTitle") }}</q-item-label>
+<!--     <q-item-label>{{ $t("toolsFilterTitle") }}</q-item-label>
     <q-item-label caption class="text-bold q-pt-sm">{{
       $t($route.path)
+    }}</q-item-label> -->
+    <q-item-label class="text-bold">{{ $t($route.path) }}</q-item-label>
+    <q-item-label caption class="text-bold q-pb-sm">{{
+      $t("toolsFilterTitle")
     }}</q-item-label>
   </div>
   <q-card-section

@@ -6,6 +6,7 @@
 
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { metaDataStore } from "src/stores/metaDataStore";
 import { reactive, watchEffect, ref } from "vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
@@ -15,13 +16,40 @@ exporting(Highcharts);
 
 const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
+const metaStore = metaDataStore();
 let categories = [];
 
 const chartOptions = reactive({
   chart: {
     type: "line",
-    fontFamily: "Open-Sans, sans-serif",
+    style: {
+      fontFamily: '"Open Sans", sans-serif',
+    },
     backgroundColor: "#fcfcfc",
+    zooming: {
+      type: "xy",
+      resetButton: {
+        position: {
+          x: -40,
+          y: 5,
+        },
+        theme: {
+          fill: "white",
+          style: {
+            color: "#333333",
+          },
+          states: {
+            hover: {
+              fill: "#727198",
+              style: {
+                color: "white",
+                fontWeight: "bold",
+              },
+            },
+          },
+        },
+      },
+    },
   },
 
   title: {
@@ -48,15 +76,26 @@ const chartOptions = reactive({
   plotOptions: {
     line: {
       lineWidth: 3,
-      dashStyle: "Solid", // Default dash style
     },
   },
+  colors: [
+    "#a6cee3",
+    "#1f78b4",
+    "#b2df8a",
+    "#33a02c",
+    "#fb9a99",
+    "#e31a1c",
+    "#fdbf6f",
+    "#ff7f00",
+    "#cab2d6",
+    "#6a3d9a",
+  ],
 
   tooltip: {
     shared: false,
     style: {
       fontSize: "12px",
-      fontFamily: "Open-Sans, sans-serif",
+      fontFamily: '"Open Sans", sans-serif',
       maxHeight: "100px",
     },
     marker: {
@@ -71,7 +110,7 @@ const chartOptions = reactive({
     itemStyle: {
       fontSize: "14px",
       color: "#333333",
-      fontFamily: "Open-Sans, sans-serif",
+      fontFamily: '"Open Sans", sans-serif',
     },
     symbolWidth: 50,
     symbolHeight: 20,
@@ -79,6 +118,20 @@ const chartOptions = reactive({
       enabled: true,
       activeColor: "#727198",
       inactiveColor: "#E4E4EB",
+    },
+    labelFormatter: function () {
+      const parts = this.name.split(" ");
+      const keyword = parts[0];
+      const party = parts[1];
+      if (this.name.includes(" ")) {
+        const keyword = parts[0];
+        const party = parts[1];
+        return `${keyword}, <span style="font-weight: bold; color: ${metaStore.getPartyColor(
+          party
+        )}">${party}</span>`;
+      } else {
+        return `${keyword}`;
+      }
     },
   },
 
@@ -121,6 +174,7 @@ const chartOptions = reactive({
     ],
   },
   exporting: {
+    filename: "word-trends",
     sourceWidth: 1080,
     menuItemDefinitions: {
       downloadPNG: {
@@ -148,10 +202,12 @@ watchEffect(() => {
 
   if (wordTrends && wordTrends.length > 0) {
     categories = wordTrends.map((entry) => parseInt(entry.year));
-    const seriesData = Object.keys(wordTrends[0].count).map((word) => ({
-      name: word,
-      data: wordTrends.map((entry) => entry.count[word]),
-    }));
+    const seriesData = Object.keys(wordTrends[0].count)
+      .map((word) => ({
+        name: word,
+        data: wordTrends.map((entry) => entry.count[word]),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     if (chartContainer.value && chartContainer.value.parentElement) {
       renderChart(chartContainer.value, categories, seriesData);

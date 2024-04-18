@@ -14,28 +14,22 @@
       <q-icon name="query_stats" color="accent" />
     </template>
     <template v-slot:after>
-      <q-btn
-        round
-        color="accent"
-        @click="addSearchWord"
-        icon="add"
-      />
+      <q-btn round color="accent" @click="addSearchWord" icon="add" />
     </template>
   </q-input>
-  <div class="row fit q-py-md">
-    <q-card-section class="col q-pa-none">
-      <q-btn
-        v-if="wtStore.wordHitsSelected.length > 0"
-        no-caps
-        flat
-        label="Ta bort alla ord"
-        color="grey-7"
-        class="resetStyle"
-        @click="(wtStore.wordHitsSelected = []) && (wtStore.wordHits = [])"
-      />
-    </q-card-section>
+  <div class="row justify-end">
+    <q-btn
+      v-if="wtStore.wordHitsSelected.length > 0"
+      no-caps
+      flat
+      label="Ta bort alla ord"
+      color="grey-7"
+      class="resetStyle q-my-sm"
+      @click="(wtStore.wordHitsSelected = []) && (wtStore.wordHits = [])"
+    />
   </div>
-  <div v-show="wtStore.wordHitsSelected.length > 0">
+  <loadingIcon v-if="loading" size="50" />
+  <div v-else v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">Valda ord:</q-item-label>
     <q-select
       v-if="wtStore.wordHitsSelected.length > 0"
@@ -65,26 +59,31 @@
 </template>
 
 <script setup>
-import { watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import loadingIcon from "src/components/loadingIcon.vue";
 
 const wtStore = wordTrendsDataStore();
 const route = useRoute();
+const loading = ref(false);
 
 const removeSelectedWord = (wordToRemove) => {
   wtStore.wordHits = wtStore.wordHits.filter((word) => word !== wordToRemove);
 };
 
-const addSearchWord =() => {
-
+const addSearchWord = () => {
+  loading.value = true;
   if (route.path === "/tools/kwic") {
     wtStore.addKWICChip();
-  }else{
-    wtStore.searchText.includes('*')
-        ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
-        : wtStore.addChip()
+  } else {
+    wtStore.searchText.includes("*")
+      ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
+      : wtStore.addChip();
   }
+  setTimeout(() => {
+    loading.value = false; // Set loading to false after adding words
+  }, 400); // Adjust the delay time as needed
 };
 
 watchEffect(() => {
