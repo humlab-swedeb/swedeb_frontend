@@ -13,10 +13,13 @@
               >{{ props.props.row.speaker }}, ({{ props.props.row.party }}),
               {{ props.props.row.gender }}
             </q-item-label>
-            <q-item-label>{{ props.props.row.protocol }}</q-item-label>
-          </q-card-section>
-          <q-card-section class="col q-pa-none">
-            <q-item-label>{{ props.props.row.node_word }}</q-item-label>
+            <q-item-label caption class="text-bold">{{
+              props.props.row.protocol
+            }}</q-item-label>
+            <q-item-label class="q-pt-xs" v-if="props.props.row.node_word">
+              Sökord:
+              <b>{{ props.props.row.node_word }}</b>
+            </q-item-label>
           </q-card-section>
         </q-card-section>
         <q-card-section class="row">
@@ -77,30 +80,26 @@ const speechText = ref("");
 const originalSpeechText = ref("");
 
 const replaceNewLine = (str) => {
- return str.replace(/\n/g, "<br><br>");
+  return str.replace(/\n/g, "<br><br>");
 };
 
 const replaceWordWithBoldTags = (str, word) => {
   // add bold tags to word hits. Only matches whole words
- // which might not be ideal for lemmatized matches
+  // which might not be ideal for lemmatized matches
   const regex = new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "giu");
   return str.replace(regex, `<b>${word}</b>`);
 };
 
 const downloadCurrentSpeech = () => {
-
   downloadStore.downloadCurrentSpeechText(
     originalSpeechText.value,
     props.props.row
   );
-}
-
+};
 
 watchEffect(() => {
   if (props.props.expand) {
     (async () => {
-
-
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
