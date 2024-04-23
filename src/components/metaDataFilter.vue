@@ -98,7 +98,7 @@
           :offset="[10, 10]"
         >
           I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
-          dessa för att genomföra söknngen <br /><br />
+          dessa för att genomföra sökningen <br /><br />
           <code>{{
             wtStore.wordHitsSelected.filter(
               (word) => word.includes(" ") || word.includes("*")

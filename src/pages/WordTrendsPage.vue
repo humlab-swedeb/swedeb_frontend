@@ -1,5 +1,6 @@
 <template>
-  <q-card flat class="q-pa-md background">
+  <q-card flat class="q-px-md background text-grey-8 q-pt-sm q-pb-md">
+    <q-item-label class="text-h6 q-pb-sm q-pt-none">{{ $t("wordTrendsIntroTitle") }}</q-item-label>
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
 

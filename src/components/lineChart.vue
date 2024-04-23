@@ -119,20 +119,13 @@ const chartOptions = reactive({
       activeColor: "#727198",
       inactiveColor: "#E4E4EB",
     },
-    labelFormatter: function () {
+    /*     labelFormatter: function () {
       const parts = this.name.split(" ");
-      const keyword = parts[0];
-      const party = parts[1];
-      if (this.name.includes(" ")) {
-        const keyword = parts[0];
-        const party = parts[1];
-        return `${keyword}, <span style="font-weight: bold; color: ${metaStore.getPartyColor(
-          party
-        )}">${party}</span>`;
-      } else {
-        return `${keyword}`;
-      }
-    },
+      let keyword = parts[0];
+      let partyIndex = -1;
+      console.log(parts);
+      console.log(this.name);
+    }, */
   },
 
   credits: {
@@ -208,6 +201,11 @@ watchEffect(() => {
         data: wordTrends.map((entry) => entry.count[word]),
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
+
+    seriesData.forEach((series) => {
+      console.log(series.name);
+    });
+    console.log(Object.keys(wordTrends[0].count));
 
     if (chartContainer.value && chartContainer.value.parentElement) {
       renderChart(chartContainer.value, categories, seriesData);

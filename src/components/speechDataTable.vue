@@ -15,6 +15,14 @@
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
             {{ col.label }}
+            <q-icon
+              v-if="col.label === 'Anförande'"
+              name="info_outline"
+              color="accent"
+              class="q-mb-md q-ml-xs"
+            >
+              <q-tooltip> Här ska det vara en beskrivning av hur anförande-ID beskrivs </q-tooltip>
+            </q-icon>
           </q-th>
         </q-tr>
       </template>
@@ -34,7 +42,10 @@
             >
               {{ col.value }}
             </q-item-label>
-            <q-item-label v-else-if="col.name === 'node_word'" class="text-bold">
+            <q-item-label
+              v-else-if="col.name === 'node_word'"
+              class="text-bold"
+            >
               {{ col.value }}
             </q-item-label>
             <q-item-label v-else>

@@ -28,7 +28,7 @@
           </q-menu>
         </q-btn>
       </q-toolbar>
-      <q-toolbar class="bg-white">
+      <q-toolbar class="background">
         <q-tabs no-caps active-color="accent" class="text-bold text-black">
           <q-route-tab to="/tools/wordtrends" label="Ordtrender" />
           <q-route-tab to="/tools/kwic" label="KWIC" />

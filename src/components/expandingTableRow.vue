@@ -5,14 +5,22 @@
       <q-card flat class="bg-transparent">
         <q-card-section class="q-px-md row">
           <q-card-section class="col q-pa-none">
-            <q-item-label
-              class="text-h6"
+            <div
+              class="text-h6 row"
               :style="{
                 color: metaStore.getPartyColor(props.props.row.party),
               }"
-              >{{ props.props.row.speaker }}, ({{ props.props.row.party }}),
-              {{ props.props.row.gender }}
-            </q-item-label>
+            >
+              <q-item-label class="q-mt-xs" v-if="props.props.row.speaker">
+                {{ props.props.row.speaker }},&nbsp;
+              </q-item-label>
+              <q-item-label class="q-mt-xs" v-if="props.props.row.party">
+                ({{ props.props.row.party }}),&nbsp;
+              </q-item-label>
+              <q-item-label class="q-mt-xs" v-if="props.props.row.gender">
+                {{ props.props.row.gender }}
+              </q-item-label>
+            </div>
             <q-item-label caption class="text-bold">{{
               props.props.row.protocol
             }}</q-item-label>
