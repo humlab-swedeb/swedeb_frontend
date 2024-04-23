@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 
-
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
     data: null,
@@ -56,11 +55,11 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     async fetchAllMetaData() {
       // to load all metadata on mount
-      this.getYearOptions()
-      this.getPartyOptions()
-      this.getOfficeOptions()
-      this.getGenderOptions()
-      this.getSpeakersOptions()
+      this.getYearOptions();
+      this.getPartyOptions();
+      this.getOfficeOptions();
+      this.getGenderOptions();
+      this.getSpeakersOptions();
     },
 
     addParamArray(current_key, api_key, query_params) {
@@ -107,7 +106,6 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${speaker.name}, ${speaker.party_abbrev}, ${speaker.year_of_birth} - ${year_of_death}`;
     },
 
-
     selectedMetadataToText() {
       // String representation of selected metadata to be included in downloads
       const selected_years_start = this.selected.yearRange.min;
@@ -136,7 +134,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     getSelectedParams(additional_params = {}) {
       const searchParams = new URLSearchParams();
-
 
       for (const key in additional_params) {
         searchParams.append(key, additional_params[key]);
@@ -169,25 +166,22 @@ export const metaDataStore = defineStore("metaDataStore", {
       return searchParams.toString();
     },
 
-    async getYearOptions(){
+    async getYearOptions() {
       try {
-
         const start_path = "/metadata/start_year";
         const end_path = "/metadata/end_year";
 
         const start_response = await api.get(start_path);
         const end_response = await api.get(end_path);
 
-        this.options.yearRange.min =  parseInt(start_response.data);
-        this.options.yearRange.max =  parseInt(end_response.data);
-        this.selected.yearRange.min =  parseInt(start_response.data);
-        this.selected.yearRange.max =  parseInt(end_response.data);
-
+        this.options.yearRange.min = parseInt(start_response.data);
+        this.options.yearRange.max = parseInt(end_response.data);
+        this.selected.yearRange.min = parseInt(start_response.data);
+        this.selected.yearRange.max = parseInt(end_response.data);
       } catch (error) {
         console.error(error);
       }
     },
-
 
     getPartyColor(party_abbreviation) {
       return this.options.party[party_abbreviation].party_color || "#808080";
@@ -197,14 +191,16 @@ export const metaDataStore = defineStore("metaDataStore", {
       const path = "/metadata/parties";
       const response = await api.get(path);
 
-      this.options.party = response.data.party_list.reduce((acc, party) => {
-        acc[party.party_abbrev] = {
-          party_id: party.party_id,
-          party_name: party.party,
-          party_color: party.party_color,
-        };
-        return acc;
-      }, {});
+      this.options.party = response.data.party_list
+        .sort((a, b) => a.party_abbrev.localeCompare(b.party_abbrev))
+        .reduce((acc, party) => {
+          acc[party.party_abbrev] = {
+            party_id: party.party_id,
+            party_name: party.party,
+            party_color: party.party_color,
+          };
+          return acc;
+        }, {});
     },
 
     async getOfficeOptions() {
@@ -241,7 +237,9 @@ export const metaDataStore = defineStore("metaDataStore", {
         const queryString = this.getSelectedParamsForSpeakerList();
         const response = await api.get(`${path}?${queryString}`);
 
-        this.options.speakers = response.data.speaker_list;
+        this.options.speakers = response.data.speaker_list.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -64,9 +64,9 @@ export default {
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
   // Introduction to tool
+  wordTrendsIntroTitle: "Ordtrender — Sök på ett eller flera ord för att se hur de har använts över tid.",
   wordTrendsIntro: `
-  Sök på ett eller flera ord för att se hur de har använts över tid. För att
-  söka på flera ord, separera dem med kommatecken, till exempel:
+  För att söka på flera ord, separera dem med kommatecken, till exempel:
   <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
   <code>exempeltext*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år. Observera att denna
