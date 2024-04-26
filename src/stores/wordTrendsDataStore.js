@@ -58,7 +58,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const newHits = response.data.hit_list.filter(
           (hit) => !this.wordHits.includes(hit)
         );
-        console.log(newHits);
         this.wordHits = [...this.wordHits, ...newHits].sort();
         this.wordHitsSelected = [
           ...new Set([...this.wordHitsSelected, ...newHits.slice(0, 10)]),

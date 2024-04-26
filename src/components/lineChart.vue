@@ -202,11 +202,6 @@ watchEffect(() => {
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    seriesData.forEach((series) => {
-      console.log(series.name);
-    });
-    console.log(Object.keys(wordTrends[0].count));
-
     if (chartContainer.value && chartContainer.value.parentElement) {
       renderChart(chartContainer.value, categories, seriesData);
       //addAnnotations();
