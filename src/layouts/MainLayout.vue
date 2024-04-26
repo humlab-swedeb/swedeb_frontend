@@ -33,18 +33,14 @@
               class="q-px-xl q-pt-md text-left"
               style="font-size: 12px"
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur officiis molestiae quam odio, quasi voluptatum dolorum
-              inventore cumque dolore nobis laboriosam sunt in debitis vitae
-              nemo quos quo iusto deserunt.
+              {{ $t("indexPageIntroText") }}
             </q-item-label>
             <q-btn
               no-caps
               color="accent"
-              label="swedeb@swedeb.com"
+              label="Kontakta SweDeb-Teamet"
               class="q-my-md q-px-lg"
               icon="alternate_email"
-              href="mailto:example@example.com"
             />
           </q-card-section>
         </q-card>
@@ -69,7 +65,7 @@
 
 <style lang="scss" scoped>
 .transparentColor {
-  background-color: rgba($secondary, 0.4); /* Adjust transparency */
+  background-color: rgba($secondary, 0.6);
 }
 .custom-footer {
   &:before,
