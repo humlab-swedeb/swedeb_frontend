@@ -1,122 +1,129 @@
 <template>
-  <q-card class="q-mx-sm bg-grey-2">
-    <q-card-section
-      horizontal
-      @click="showing = !showing"
-      class="items-center cursor-pointer q-pr-sm bg-white"
-    >
-      <q-card-section class="text-subtitle1">
-        <q-icon name="o_filter_alt" color="accent" size="sm" class="q-pr-sm" />
-        {{ $t("metaDataFilter") }}</q-card-section
+  <div style="max-width: 400px">
+    <q-card class="q-mx-sm bg-grey-2">
+      <q-card-section
+        horizontal
+        @click="showing = !showing"
+        class="items-center cursor-pointer q-pr-sm bg-white"
       >
+        <q-card-section class="text-subtitle1">
+          <q-icon
+            name="o_filter_alt"
+            color="accent"
+            size="sm"
+            class="q-pr-sm"
+          />
+          {{ $t("metaDataFilter") }}</q-card-section
+        >
 
-      <q-space />
-      <q-btn
-        color="accent"
-        round
-        flat
-        dense
-        size="lg"
-        :icon="showing ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-      />
-    </q-card-section>
-
-    <!-- <q-slide-transition v-show="showing"> -->
-    <q-slide-transition
-      v-if="$route.path === '/tools/speeches' ? !showing : showing"
-    >
-      <q-card-section class="q-px-md q-pt-none">
-        <q-separator />
-        <q-card-section class="q-px-none q-pb-none">
-          <!-- PLACE METADATA FILTER COMPONENTS HERE -->
-          <yearRange />
-          <dropdownSelection type="party" />
-          <q-card-section horizontal class="q-px-none">
-            <q-card-section class="q-py-none">
-              <genderOfficeCheckbox type="gender" />
-            </q-card-section>
-            <q-card-section class="q-py-none">
-              <!-- <genderOfficeCheckbox type="office" /> -->
-            </q-card-section>
-          </q-card-section>
-          <!-- Do not show sub office type as of now -->
-          <!-- <dropdownSelection type="subOffice" /> -->
-          <dropdownSelection type="speakers" />
-          <div class="column items-end q-">
-            <q-btn
-              v-if="hasSelections"
-              @click="store.resetSelectedState"
-              class="resetStyle col"
-              flat
-              no-caps
-              label="Rensa filter"
-              color="grey-7"
-            >
-            </q-btn>
-          </div>
-        </q-card-section>
+        <q-space />
+        <q-btn
+          color="accent"
+          round
+          flat
+          dense
+          size="lg"
+          :icon="showing ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+        />
       </q-card-section>
-      <!--       </q-scroll-area>
+
+      <!-- <q-slide-transition v-show="showing"> -->
+      <q-slide-transition
+        v-if="$route.path === '/tools/speeches' ? !showing : showing"
+      >
+        <q-card-section class="q-px-md q-pt-none">
+          <q-separator />
+          <q-card-section class="q-px-none q-pb-none">
+            <!-- PLACE METADATA FILTER COMPONENTS HERE -->
+            <yearRange />
+            <dropdownSelection type="party" />
+            <q-card-section horizontal class="q-px-none">
+              <q-card-section class="q-py-none">
+                <genderOfficeCheckbox type="gender" />
+              </q-card-section>
+              <q-card-section class="q-py-none">
+                <!-- <genderOfficeCheckbox type="office" /> -->
+              </q-card-section>
+            </q-card-section>
+            <!-- Do not show sub office type as of now -->
+            <!-- <dropdownSelection type="subOffice" /> -->
+            <dropdownSelection type="speakers" />
+            <div class="column items-end q-">
+              <q-btn
+                v-if="hasSelections"
+                @click="store.resetSelectedState"
+                class="resetStyle col"
+                flat
+                no-caps
+                label="Rensa filter"
+                color="grey-7"
+              >
+              </q-btn>
+            </div>
+          </q-card-section>
+        </q-card-section>
+        <!--       </q-scroll-area>
       -->
-    </q-slide-transition>
-  </q-card>
-  <q-card flat class="q-ma-md bg-transparent padding-bot">
-    <toolsFilters />
-    <div class="q-pa-lg full-width sticky-bottom">
-      <q-btn
-        @click="handleSubmit"
-        no-caps
-        class="fit text-h6"
-        color="accent"
-        label="Sök"
-        v-if="$route.path !== '/tools/speeches'"
-        :disabled="
-          wtStore.wordHitsSelected.length < 1 ||
-          ($route.path === '/tools/wordtrends' &&
-            wtStore.wordHitsSelected.some(
-              (word) => word.includes(' ') || word.includes('*')
-            ))
-        "
-      >
-        <q-tooltip
-          v-if="wtStore.wordHitsSelected.length < 1"
-          anchor="top middle"
-          self="bottom middle"
-          :offset="[10, 10]"
-        >
-          Lägg till ett eller flera sökord
-        </q-tooltip>
-        <q-tooltip
-          v-if="
-            $route.path === '/tools/wordtrends' &&
-            wtStore.wordHitsSelected.some(
-              (word) => word.includes(' ') || word.includes('*')
-            )
+      </q-slide-transition>
+    </q-card>
+    <q-card flat class="q-ma-md bg-transparent padding-bot">
+      <toolsFilters />
+      <div class="q-pa-lg full-width sticky-bottom">
+        <q-btn
+          @click="handleSubmit"
+          no-caps
+          class="fit text-h6"
+          color="accent"
+          label="Sök"
+          v-if="$route.path !== '/tools/speeches'"
+          :disabled="
+            wtStore.wordHitsSelected.length < 1 ||
+            ($route.path === '/tools/wordtrends' &&
+              wtStore.wordHitsSelected.some(
+                (word) => word.includes(' ') || word.includes('*')
+              ))
           "
-          anchor="top middle"
-          self="bottom middle"
-          :offset="[10, 10]"
         >
-          I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
-          dessa för att genomföra sökningen <br /><br />
-          <code>{{
-            wtStore.wordHitsSelected.filter(
-              (word) => word.includes(" ") || word.includes("*")
-            )
-          }}</code>
-        </q-tooltip>
-      </q-btn>
-      <q-btn
-        @click="handleSubmit"
-        no-caps
-        class="fit q-py-sm"
-        color="accent"
-        v-else-if="$route.path === '/tools/speeches'"
-      >
-        Sök
-      </q-btn>
-    </div>
-  </q-card>
+          <q-tooltip
+            v-if="wtStore.wordHitsSelected.length < 1"
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            Lägg till ett eller flera sökord
+          </q-tooltip>
+          <q-tooltip
+            v-if="
+              $route.path === '/tools/wordtrends' &&
+              wtStore.wordHitsSelected.some(
+                (word) => word.includes(' ') || word.includes('*')
+              )
+            "
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
+            dessa för att genomföra sökningen <br /><br />
+            <code>{{
+              wtStore.wordHitsSelected.filter(
+                (word) => word.includes(" ") || word.includes("*")
+              )
+            }}</code>
+          </q-tooltip>
+        </q-btn>
+        <q-btn
+          @click="handleSubmit"
+          no-caps
+          class="fit q-py-sm"
+          color="accent"
+          v-else-if="$route.path === '/tools/speeches'"
+        >
+          Sök
+        </q-btn>
+      </div>
+    </q-card>
+  </div>
 </template>
 
 <script setup>

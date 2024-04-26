@@ -10,6 +10,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     wordHits: [],
     wordHitsSelected: [],
     searchString: [],
+    ifAsterisk: false,
   }),
 
   actions: {
@@ -47,19 +48,23 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         }
       }
       try {
-
-        const n_hits = 15;
+        const n_hits = -1;
 
         const path = `/tools/word_trend_hits/${searchTerm}`;
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(
           `${path}?${queryString}&n_hits=${n_hits}`
         );
-        this.wordHits = [...this.wordHits, ...response.data.hit_list].sort();
+        const newHits = response.data.hit_list.filter(
+          (hit) => !this.wordHits.includes(hit)
+        );
+        console.log(newHits);
+        this.wordHits = [...this.wordHits, ...newHits].sort();
         this.wordHitsSelected = [
-          ...new Set([...this.wordHitsSelected, ...this.wordHits]),
+          ...new Set([...this.wordHitsSelected, ...newHits.slice(0, 10)]),
         ].sort();
         this.searchText = "";
+        this.ifAsterisk = true;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -87,10 +92,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       let text = this.searchText.trim();
 
       if (text !== "") {
-
-            this.wordHitsSelected.push(text);
-            this.wordHits.push(text);
-
+        this.wordHitsSelected.push(text);
+        this.wordHits.push(text);
 
         this.searchText = ""; // Reset the search field
       }
