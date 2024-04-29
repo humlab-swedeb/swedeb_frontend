@@ -130,6 +130,7 @@ watchEffect(async () => {
       party: speech.party_abbrev,
       source: speech.speech_link,
       year: speech.year,
+      link: speech.link,
     }));
 
     columns.value = [
