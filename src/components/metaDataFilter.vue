@@ -103,7 +103,8 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Key words in context (KWIC) kan endast användas med ett sökord eller sökfras år gången.
+            Key words in context (KWIC) kan endast användas med ett sökord eller
+            sökfras år gången.
           </q-tooltip>
           <q-tooltip
             v-if="
@@ -128,11 +129,11 @@
         <q-btn
           @click="handleSubmit"
           no-caps
-          class="fit q-py-sm"
+          class="fit text-h6"
           color="accent"
+          label="Sök"
           v-else-if="$route.path === '/tools/speeches'"
         >
-          Sök
         </q-btn>
       </div>
     </q-card>

@@ -1,68 +1,96 @@
 <template>
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
-  <q-table
-    :rows="rows"
-    :columns="columns"
-    row-key="id"
-    :rows-per-page-options="[10, 20, 50]"
-    :pagination="pagination"
-  >
-    <template v-slot:header="props">
-      <q-tr :props="props">
-        <q-th v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.label }}
-        </q-th>
-      </q-tr>
-    </template>
-    <template v-slot:body="props">
-      <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-        <q-td
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props"
-          class="bg-white"
-          :class="props.expand ? 'bg-grey-3' : ''"
-        >
-          <q-item-label
-            v-if="col.name === 'party'"
-            class="text-bold"
-            :style="{ color: metaStore.getPartyColor(col.value) }"
+    <div class=""></div>
+    <q-table
+      :rows="rows"
+      :columns="columns"
+      row-key="id"
+      :rows-per-page-options="[10, 20, 50]"
+      :pagination="pagination"
+      class="bg-grey-2"
+    >
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            {{ col.label }}
+            <q-icon
+              v-if="col.label === 'Anförande'"
+              name="info_outline"
+              color="accent"
+              class="q-mb-md q-ml-xs"
+            >
+              <q-tooltip> Här ska det vara en beskrivning av hur anförande-ID beskrivs </q-tooltip>
+            </q-icon>
+          </q-th>
+        </q-tr>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            class="bg-white"
+            :class="props.expand ? 'bg-grey-3' : ''"
+            :style="{
+              'max-width':
+                col.name === 'left_word' || col.name === 'right_word'
+                  ? '200px'
+                  : 'none',
+              'white-space':
+                col.name === 'left_word' || col.name === 'right_word'
+                  ? 'normal'
+                  : 'nowrap',
+              'word-wrap':
+                col.name === 'left_word' || col.name === 'right_word'
+                  ? 'break-word'
+                  : 'normal',
+            }"
           >
-            {{ col.value }}
-          </q-item-label>
-          <q-item-label v-else-if="col.name === 'node_word'" class="text-bold">
-            {{ col.value }}
-          </q-item-label>
-          <q-item-label v-else>
-            {{ col.value }}
-          </q-item-label>
-        </q-td>
-        <q-td
-          auto-width
-          class="bg-white"
-          :class="props.expand ? 'bg-grey-3' : ''"
-        >
-          <q-btn
-            size="sm"
-            color="accent"
-            round
-            dense
-            flat
-            :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-          />
-        </q-td>
-      </q-tr>
-      <!-- If row in table is clicked, EXPAND -->
-      <expandingTableRow :props="props" />
-    </template>
-  </q-table>
-</template>
-<template v-else>
-      <!-- Show a message when there's no data -->
-      <div class="no-data-message">
-        Inga resultat för sökningen. Försök med ett annat sökord, eller andra filtreringsalternativ.
-      </div>
-</template>
+            <q-item-label
+              v-if="col.name === 'party'"
+              class="text-bold"
+              :style="{ color: metaStore.getPartyColor(col.value) }"
+            >
+              {{ col.value }}
+            </q-item-label>
+            <q-item-label
+              v-else-if="col.name === 'node_word'"
+              class="text-bold"
+            >
+              {{ col.value }}
+            </q-item-label>
+            <q-item-label v-else>
+              {{ col.value }}
+            </q-item-label>
+          </q-td>
+          <q-td
+            auto-width
+            class="bg-white"
+            :class="props.expand ? 'bg-grey-3' : ''"
+          >
+            <q-btn
+              size="sm"
+              color="accent"
+              round
+              dense
+              flat
+              :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+            />
+          </q-td>
+        </q-tr>
+        <!-- If row in table is clicked, EXPAND -->
+        <expandingTableRow :props="props" />
+      </template>
+    </q-table>
+  </template>
+  <template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
 </template>
 
 <script setup>
@@ -74,10 +102,8 @@ import expandingTableRow from "src/components/expandingTableRow.vue";
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 
-
 const rows = ref([]);
 const columns = ref([]);
-
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
@@ -85,7 +111,6 @@ const expandRow = async (props) => {
 
 watchEffect(() => {
   if (metaStore.submitEvent) {
-
     rows.value = kwicStore.kwicData.map((entry) => ({
       id: entry.speech_title,
       left_word: entry.left_word,
@@ -98,7 +123,6 @@ watchEffect(() => {
       person_id: entry.person_id,
       link: entry.link,
       protocol: entry.formatted_speech_id,
-
     }));
 
     columns.value = [
@@ -169,3 +193,5 @@ const pagination = ref({
   rowsPerPage: 10,
 });
 </script>
+
+<style></style>

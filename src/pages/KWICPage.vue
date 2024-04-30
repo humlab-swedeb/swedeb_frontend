@@ -6,13 +6,13 @@
     <div class="q-pb-md">
       <ShowData />
     </div>
-    <kwicDataTabel />
+    <kwicDataTable />
   </div>
 </template>
 
 <script setup>
 import ShowData from "src/components/ShowData.vue";
-import kwicDataTabel from "src/components/kwicDataTable.vue";
+import kwicDataTable from "src/components/kwicDataTable.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";

@@ -68,7 +68,6 @@
           </q-td>
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
-
         <expandingTableRow :props="props" />
       </template>
     </q-table>

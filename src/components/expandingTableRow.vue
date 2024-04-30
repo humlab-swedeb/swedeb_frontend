@@ -5,6 +5,7 @@
       <q-card flat class="bg-transparent">
         <q-card-section class="q-px-md row">
           <q-card-section class="col q-pa-none">
+            {{ props.props }}
             <div
               class="text-h6 row"
               :style="{

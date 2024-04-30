@@ -68,11 +68,10 @@ export default {
   wordTrendsIntro: `
   För att söka på flera ord, separera dem med kommatecken, till exempel:
   <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
-  <code>exempeltext*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år. Observera att denna
   test-korpus är lemmatiserad, vilket innebär att sökresultaten baseras på
-  ordets grammatiska rot.
-`,
+  ordets grammatiska rot.`,
 
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
   t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
@@ -82,8 +81,7 @@ export default {
   lemmatiserad, dvs sökresultateten baseras på ordets grammatiska rot.`,
 
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
-  till vissa partier, talare eller år. Observera att du i dagsläget endast kan ladda ner en lista med
-  metadata om anföranden och inte talen i sig (men det kommer man kunna göra i den färdiga versionen).`,
+  till vissa partier, talare eller år.`,
 
   ngramIntro: `Under utveckling.`,
 
