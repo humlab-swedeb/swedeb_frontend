@@ -184,6 +184,10 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getPartyColor(party_abbreviation) {
+
+      if (!this.options.party.hasOwnProperty(party_abbreviation)){
+        return "#808080";
+      }
       return this.options.party[party_abbreviation].party_color || "#808080";
     },
 
