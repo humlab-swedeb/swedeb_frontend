@@ -4,8 +4,6 @@
     label="Lemmatiserad sökning"
     color="accent"
     keep-color
-    checked-icon="check"
-    unchecked-icon="clear"
   />
 </template>
 
