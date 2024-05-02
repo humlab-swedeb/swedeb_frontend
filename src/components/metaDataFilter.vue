@@ -81,7 +81,9 @@
             ($route.path === '/tools/wordtrends' &&
               wtStore.wordHitsSelected.some(
                 (word) => word.includes(' ') || word.includes('*')
-              ))
+              )) ||
+            ($route.path === '/tools/kwic' &&
+              wtStore.wordHitsSelected.length > 1)
           "
         >
           <q-tooltip
@@ -90,7 +92,19 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Lägg till ett eller flera sökord
+            Lägg till sökord
+          </q-tooltip>
+          <q-tooltip
+            v-if="
+              $route.path === '/tools/kwic' &&
+              wtStore.wordHitsSelected.length > 1
+            "
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            Key words in context (KWIC) kan endast användas med ett sökord eller
+            sökfras år gången.
           </q-tooltip>
           <q-tooltip
             v-if="
@@ -115,11 +129,11 @@
         <q-btn
           @click="handleSubmit"
           no-caps
-          class="fit q-py-sm"
+          class="fit text-h6"
           color="accent"
+          label="Sök"
           v-else-if="$route.path === '/tools/speeches'"
         >
-          Sök
         </q-btn>
       </div>
     </q-card>

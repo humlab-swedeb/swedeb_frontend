@@ -16,6 +16,7 @@
     v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic'"
   >
     <searchBar />
+    <toggleSwitch />
   </q-card-section>
   <q-card-section
     v-if="$route.path === '/tools/kwic'"
@@ -31,4 +32,5 @@
 <script setup>
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
+import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
 </script>

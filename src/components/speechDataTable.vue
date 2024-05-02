@@ -68,7 +68,6 @@
           </q-td>
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
-
         <expandingTableRow :props="props" />
       </template>
     </q-table>
@@ -130,6 +129,7 @@ watchEffect(async () => {
       party: speech.party_abbrev,
       source: speech.speech_link,
       year: speech.year,
+      link: speech.link,
     }));
 
     columns.value = [

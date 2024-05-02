@@ -5,6 +5,7 @@
       <q-card flat class="bg-transparent">
         <q-card-section class="q-px-md row">
           <q-card-section class="col q-pa-none">
+            {{ props.props }}
             <div
               class="text-h6 row"
               :style="{
@@ -43,8 +44,20 @@
           <q-card-section class="col-2 q-pa-none">
             <div class="column q-gutter-y-md">
               <q-btn
+                v-if="props.props.row.link !== 'Okänd'"
+                no-caps
+                :href="props.props.row.link"
+                target="_blank"
+                class="full-width items-start text-grey-8"
+                color="secondary"
+              >
+                <q-icon left name="person_search" color="accent" />
+                <q-item-label>Wikidata</q-item-label>
+              </q-btn>
+              <q-btn
                 no-caps
                 :href="props.props.row.source"
+                target="_blank"
                 class="full-width items-start text-grey-8"
                 color="white"
               >
@@ -94,8 +107,13 @@ const replaceNewLine = (str) => {
 const replaceWordWithBoldTags = (str, word) => {
   // add bold tags to word hits. Only matches whole words
   // which might not be ideal for lemmatized matches
-  const regex = new RegExp(`(?<!\\p{L})${word}(?!\\p{L})`, "giu");
-  return str.replace(regex, `<b>${word}</b>`);
+  const words = word.split(",").map((w) => w.trim());
+
+  words.forEach((w) => {
+    const regex = new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "giu");
+    str = str.replace(regex, `<b>${w}</b>`);
+  });
+  return str;
 };
 
 const downloadCurrentSpeech = () => {

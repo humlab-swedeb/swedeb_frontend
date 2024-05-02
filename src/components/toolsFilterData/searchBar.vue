@@ -34,7 +34,9 @@
   </div>
   <loadingIcon v-if="loading" size="50" />
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
-    <q-item-label class="text-bold">Valda sökord:</q-item-label>
+    <q-item-label class="text-bold" v-if="$route.path === '/tools/kwic'"
+      >Valt sökord eller fras:</q-item-label
+    ><q-item-label class="text-bold" v-else>Valda sökord:</q-item-label>
     <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
       >Här visas de 10 vanligaste orden relaterade till söktermen med
       <b class="text-subtitle2">*</b>. Det finns ytterligare
@@ -121,6 +123,7 @@ watchEffect(() => {
   if (route.path === "/tools/kwic") {
     wtStore.wordHits = [];
     wtStore.wordHitsSelected = [];
+    wtStore.ifAsterisk = false;
   }
 });
 </script>
