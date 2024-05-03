@@ -16,7 +16,7 @@
     v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic'"
   >
     <searchBar />
-    <toggleSwitch />
+    <toggleSwitch label="Normalisera resultatet" @click="handleToggle"/>
   </q-card-section>
   <q-card-section
     v-if="$route.path === '/tools/kwic'"
@@ -33,4 +33,11 @@
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
+
+
+const handleToggle = (value) => {
+
+  console.log('Toggle event emitted with value:', value);
+};
+
 </script>
