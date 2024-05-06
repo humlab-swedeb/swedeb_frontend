@@ -1,6 +1,7 @@
 <template>
   <q-card
-    class="grid-item shadow-5 text-center cursor-pointer bg-primary onHover"
+    class="shadow-5 text-center cursor-pointer bg-primary onHover"
+    :style="$q.screen.lt.sm ? 'width: 90vw;' : 'width: 500px'"
   >
     <q-card-section>
       <q-icon :name="icon" color="accent" size="md"></q-icon>
@@ -21,9 +22,7 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-.grid-item {
-  min-width: 100%;
-}
+
 
 .onHover:hover {
   background-color: darken($primary, 7%) !important;

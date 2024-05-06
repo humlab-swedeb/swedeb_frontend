@@ -6,15 +6,30 @@
         {{ $t("indexPageIntroText") }}
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-card flat bordered class="q-my-md column justify-center size bg-primary">
-          <q-item-label class="text-accent text-bold">Finansiär</q-item-label>
-          <p class="q-mb-none">Umeå Universitet, 2 år osv osv osv, logo?</p>
+        <q-card
+          flat
+          class="q-my-md column justify-center size bg-secondary q-py-lg">
+          <div>
+            <q-item-label class="text-accent text-h6">
+              Finansiär
+            </q-item-label>
+            <q-item-label class="q-py-sm">
+              SweDeb är finansierade av Umeå Universitet
+              under två års tid 2022-2024.
+            </q-item-label>
+            <q-img
+              src="../../public/images/umu-logo-SE.png"
+              alt="Umeå Universitets logotyp."
+              style="width: 200px"
+              class="q-my-md"
+            />
+          </div>
         </q-card>
       </q-card-section>
 
-      <q-card-section class="row justify-center q-mb-lg content-align">
-        <q-card-section class="full-width">
-          <q-item-label class="text-h5 text-center q-pb-lg">Team</q-item-label>
+      <q-card-section class="column content-center">
+        <q-item-label class="text-h5 text-center q-pb-lg">Team</q-item-label>
+        <q-card-section class="row fit justify-center">
           <div class="grid-container text-left">
             <peopleCard
               v-for="(person, index) in peopleDev"
@@ -25,10 +40,12 @@
             />
           </div>
         </q-card-section>
-        <q-card-section class="full-width">
-          <q-item-label class="text-h5 text-center q-pb-lg"
-            >Referensgrupp</q-item-label
-          >
+      </q-card-section>
+      <q-card-section>
+        <q-item-label class="text-h5 text-center q-pb-lg">
+          Referensgrupp
+        </q-item-label>
+        <q-card-section class="row fit justify-center">
           <div class="grid-container text-left">
             <peopleCard
               v-for="(person, index) in peopleRef"
@@ -58,9 +75,14 @@ const peopleRef = i18n.peopleReference;
   grid-gap: 20px;
 }
 
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 .size {
-  width: 500px;
-  height: 100px;
+  width: 50vw;
 }
 
 .content-align {

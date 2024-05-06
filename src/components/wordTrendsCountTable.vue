@@ -25,14 +25,6 @@
         </q-tr>
       </template>
     </q-table>
-    <q-btn
-      no-caps
-      icon="download"
-      class="q-my-md text-grey-8"
-      color="secondary"
-      label="Ladda ner resultat"
-      @click="downloadWTCounts"
-    ></q-btn>
   </div>
 </template>
 
@@ -87,9 +79,7 @@ watchEffect(() => {
     }
   }
 });
-function downloadWTCounts() {
-  wtStore.downloadCSV();
-}
+
 </script>
 
 <style>

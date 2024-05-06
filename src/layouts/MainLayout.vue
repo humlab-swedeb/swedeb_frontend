@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lff">
     <q-header class="row no-wrap">
-      <q-toolbar class="bg-secondary text-grey-8">
+      <q-toolbar class="bg-secondary text-grey-9">
         <q-toolbar-title class="text-bold">{{ $t("swedeb") }}</q-toolbar-title>
         <q-tabs no-caps color="black" class="gt-sm">
           <q-route-tab to="/" :label="$t('home')" />
@@ -16,7 +16,10 @@
     </q-page-container>
     <q-footer class="bg-secondary text-black">
       <div class="custom-footer"></div>
-      <q-toolbar class="row justify-center q-px-xl q-py-md">
+      <q-toolbar
+        v-if="$q.screen.gt.sm"
+        class="row justify-center q-px-xl q-py-md"
+      >
         <q-card
           bordered
           class="col-5 text-center q-mr-lg transparentColor"
@@ -57,6 +60,44 @@
           </q-card-section>
         </q-card>
       </q-toolbar>
+
+      <!-- IF small screen -->
+      <q-toolbar v-else class="column justify-center q-px-md q-py-md">
+        <q-card flat class="bg-transparent row">
+          <q-card-section>
+            <router-link to="/about" class="link-deco">{{
+              $t("about")
+            }}</router-link>
+          </q-card-section>
+          <q-card-section>
+            <router-link to="/faq" class="link-deco">{{
+              $t("faq")
+            }}</router-link>
+          </q-card-section>
+        </q-card>
+        <q-card bordered class="text-center transparentColorSM" flat>
+          <q-card-section>
+            <q-item-label class="text-subtitle1">{{
+              $t("swedeb")
+            }}</q-item-label>
+            <q-item-label caption class="text-accent">{{
+              $t("contact")
+            }}</q-item-label>
+            <q-item-label
+              class="q-px-md q-pt-md text-left"
+              style="font-size: 12px"
+            >
+              {{ $t("indexPageIntroText") }}
+            </q-item-label>
+            <q-btn
+              no-caps
+              color="accent"
+              label="Kontakta SweDeb-Teamet"
+              class="q-my-md q-px-lg"
+            />
+          </q-card-section>
+        </q-card>
+      </q-toolbar>
     </q-footer>
   </q-layout>
 </template>
@@ -66,6 +107,10 @@
 <style lang="scss" scoped>
 .transparentColor {
   background-color: rgba($secondary, 0.6);
+}
+
+.transparentColorSM {
+  background-color: rgba($secondary, 0.8);
 }
 .custom-footer {
   &:before,
