@@ -8,14 +8,13 @@
       <q-card-section class="row justify-center">
         <q-card
           flat
-          class="q-my-md column justify-center size bg-secondary q-py-lg">
+          class="q-my-md column justify-center size bg-secondary q-py-lg"
+        >
           <div>
-            <q-item-label class="text-accent text-h6">
-              Finansiär
-            </q-item-label>
-            <q-item-label class="q-py-sm">
-              SweDeb är finansierade av Umeå Universitet
-              under två års tid 2022-2024.
+            <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
+            <q-item-label :class="$q.screen.lt.sm ? 'q-px-lg' : 'q-py-sm'">
+              SweDeb är finansierade av Umeå Universitet under två års tid
+              2022-2024.
             </q-item-label>
             <q-img
               src="../../public/images/umu-logo-SE.png"

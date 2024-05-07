@@ -9,6 +9,24 @@
           <q-route-tab to="/about" :label="$t('about')" />
           <q-route-tab to="/faq" :label="$t('faq')" />
         </q-tabs>
+        <q-btn flat round icon="menu" class="lt-md">
+          <q-menu>
+            <q-list>
+              <q-item to="/" clickable>
+                <q-item-section>Hem</q-item-section>
+              </q-item>
+              <q-item to="/tools/wordtrends" clickable>
+                <q-item-section>Verktyg</q-item-section>
+              </q-item>
+              <q-item to="/about" clickable>
+                <q-item-section>Om SweDeb</q-item-section>
+              </q-item>
+              <q-item to="/faq" clickable>
+                <q-item-section>FAQ</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
     </q-header>
     <q-page-container class="q-px-xl justify-center row">

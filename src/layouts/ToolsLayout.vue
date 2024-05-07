@@ -7,9 +7,9 @@
       >
         <q-toolbar-title class="text-bold">{{ $t("swedeb") }}</q-toolbar-title>
         <q-tabs no-caps color="black" class="gt-sm">
-          <q-route-tab to="/" label="Start" />
-          <q-route-tab to="/about" label="Om SweDeb" />
-          <q-route-tab to="/faq" label="FAQ" />
+          <q-route-tab to="/" :label="$t('home')" />
+          <q-route-tab to="/about" :label="$t('about')" />
+          <q-route-tab to="/faq" :label="$t('faq')" />
         </q-tabs>
 
         <q-btn flat round icon="menu" class="lt-md">
@@ -22,7 +22,7 @@
                 <q-item-section>Om SweDeb</q-item-section>
               </q-item>
               <q-item to="/faq" clickable>
-                <q-item-section>QA</q-item-section>
+                <q-item-section>FAQ</q-item-section>
               </q-item>
             </q-list>
           </q-menu>

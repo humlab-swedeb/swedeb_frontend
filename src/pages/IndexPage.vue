@@ -4,8 +4,8 @@
     <q-card-section class="text-align text-body2 q-mt-sm">
       {{ $t("indexPageIntroText") }}
     </q-card-section>
-    <q-card-section class="row justify-center full-width q-py-xl">
-      <div class="grid-container">
+    <q-card-section class="row justify-center full-width q-py-xl ">
+      <div class="grid-container q-mx-xl">
         <IndexToolCard
           @click="redirect('tools/wordtrends')"
           :title="$t('wordTrendsTitle')"
