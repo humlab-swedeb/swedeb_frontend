@@ -67,7 +67,7 @@
       </q-slide-transition>
     </q-card>
     <q-card flat class="q-ma-md bg-transparent padding-bot">
-      <toolsFilters />
+      <toolsFilters @normalize-data="handleNormalizeData"/>
       <div class="q-pa-lg full-width sticky-bottom">
         <q-btn
           @click="handleSubmit"
@@ -149,10 +149,26 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const kwicStore = kwicDataStore();
 const showing = ref(false);
+const route = useRoute();
+
+const handleNormalizeData = (newValue) => {
+
+
+  if (route.path === '/tools/wordtrends') {
+    console.log('Toggle event emitted with value: IN METADATA for WT', newValue);
+
+  } else if (route.path === '/tools/kwic') {
+    console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
+
+  } else {
+    console.log('should not happen...')
+  }
+};
 
 const handleSubmit = async () => {
   store.submitEvent = true;
