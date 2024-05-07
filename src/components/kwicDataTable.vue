@@ -4,7 +4,7 @@
     <q-table
       :rows="rows"
       :columns="columns"
-      row-key="id"
+      row-key="unique_id"
       :rows-per-page-options="[10, 20, 50]"
       :pagination="pagination"
       class="bg-grey-2"
@@ -19,7 +19,9 @@
               color="accent"
               class="q-mb-md q-ml-xs"
             >
-              <q-tooltip> Här ska det vara en beskrivning av hur anförande-ID beskrivs </q-tooltip>
+              <q-tooltip>
+                Här ska det vara en beskrivning av hur anförande-ID beskrivs
+              </q-tooltip>
             </q-icon>
           </q-th>
         </q-tr>
@@ -113,6 +115,7 @@ watchEffect(() => {
   if (metaStore.submitEvent) {
     rows.value = kwicStore.kwicData.map((entry) => ({
       id: entry.speech_title,
+      unique_id: `${entry.speech_title}_${entry.left_word}_${entry.node_word}_${entry.right_word}_${entry.person_id}`,
       left_word: entry.left_word,
       node_word: entry.node_word,
       right_word: entry.right_word,
@@ -137,7 +140,7 @@ watchEffect(() => {
       {
         name: "node_word",
         required: true,
-        label: "Nod",
+        label: "Sökord",
         field: "node_word",
         sortable: true,
         align: "center",
