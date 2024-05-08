@@ -1,11 +1,11 @@
 <!-- ExpandingRow.vue -->
 <template>
   <q-tr v-show="props.props.expand" :props="props.props">
-    <q-td colspan="7" no-hover>
-      <q-card flat class="bg-transparent">
+    <q-td :colspan="props.props.cols.length" no-hover>
+      <loadingIcon v-if="loading" size="100" />
+      <q-card v-else flat class="bg-transparent">
         <q-card-section class="q-px-md row">
           <q-card-section class="col q-pa-none">
-            {{ props.props }}
             <div
               class="text-h6 row"
               :style="{
@@ -39,7 +39,11 @@
             <q-item-label caption class="text-bold">{{
               speakerNote
             }}</q-item-label>
-            <div v-html="speechText"></div>
+            <div
+              v-if="$route.path !== '/tools/speeches'"
+              v-html="speechText"
+            ></div>
+            <div v-else>{{ originalSpeechText }}</div>
           </q-card-section>
           <q-card-section class="col-2 q-pa-none">
             <div class="column q-gutter-y-md">
@@ -84,13 +88,16 @@
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
+import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
+import loadingIcon from "src/components/loadingIcon.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
+const route = useRoute();
 
 const props = defineProps({
   props: Object,
@@ -99,6 +106,7 @@ const props = defineProps({
 const speakerNote = ref("");
 const speechText = ref("");
 const originalSpeechText = ref("");
+const loading = ref(false);
 
 const replaceNewLine = (str) => {
   return str.replace(/\n/g, "<br><br>");
@@ -125,15 +133,21 @@ const downloadCurrentSpeech = () => {
 
 watchEffect(() => {
   if (props.props.expand) {
+    loading.value = true;
     (async () => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
-      speechText.value = replaceWordWithBoldTags(
-        replaceNewLine(speechData.speech_text),
-        props.props.row.node_word
-      );
+      if (route.path !== "/tools/speeches") {
+        speechText.value = replaceWordWithBoldTags(
+          replaceNewLine(speechData.speech_text),
+          props.props.row.node_word
+        );
+      }
     })();
+    setTimeout(() => {
+      loading.value = false;
+    }, 400);
   }
 });
 </script>

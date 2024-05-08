@@ -115,8 +115,8 @@ const addSearchWord = () => {
       : wtStore.addChip();
   }
   setTimeout(() => {
-    loading.value = false; // Set loading to false after adding words
-  }, 400); // Adjust the delay time as needed
+    loading.value = false;
+  }, 400);
 };
 
 watchEffect(() => {

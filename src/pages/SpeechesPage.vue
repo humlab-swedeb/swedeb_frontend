@@ -3,12 +3,12 @@
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
   <div v-show="showData">
-    <SpeechDataTable type="speeches" />
+    <speechDataTable type="speeches" />
   </div>
 </template>
 
 <script setup>
-import SpeechDataTable from "src/components/speechDataTable.vue";
+import speechDataTable from "src/components/speechDataTable.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { ref, watchEffect } from "vue";
 import i18n from "src/i18n/sv";

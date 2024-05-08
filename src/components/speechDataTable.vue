@@ -1,5 +1,45 @@
 <template>
   <div>
+    <div class="row q-py-md justify-between">
+      <q-item-label
+        class="col-9 q-mt-md"
+        v-if="wtStore.wordTrendsSpeeches.length > 0"
+      >
+        Sökningen resulterade i
+        <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
+      </q-item-label>
+      <!--       <q-btn
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        label="Ladda ner tal"
+        @click="downloadSpeeches"
+        style="width: fit-content"
+      ></q-btn> -->
+      <q-btn-dropdown
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        label="Ladda ner tal"
+        style="width: fit-content"
+      >
+        <q-list>
+          <q-item clickable v-close-popup @click="downloadSpeeches">
+            <q-item-section>
+              <q-item-label>CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadSpeeches">
+            <q-item-section>
+              <q-item-label>Excel</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+    </div>
+
     <q-table
       ref="SpeechTable"
       bordered
@@ -22,7 +62,9 @@
               color="accent"
               class="q-mb-md q-ml-xs"
             >
-              <q-tooltip> Här ska det vara en beskrivning av hur anförande-ID beskrivs </q-tooltip>
+              <q-tooltip>
+                Här ska det vara en beskrivning av hur anförande-ID beskrivs
+              </q-tooltip>
             </q-icon>
           </q-th>
         </q-tr>
@@ -73,14 +115,6 @@
         <expandingTableRow :props="props" />
       </template>
     </q-table>
-    <q-btn
-      no-caps
-      icon="download"
-      class="q-my-md text-grey-8"
-      color="secondary"
-      label="Ladda ner tal"
-      @click="downloadSpeeches"
-    ></q-btn>
   </div>
 </template>
 
@@ -100,6 +134,7 @@ const downloadStore = downloadDataStore();
 const props = defineProps({
   dataLoaded: Boolean,
   type: String,
+  download: Function,
 });
 
 const displayedData = ref({});
@@ -210,13 +245,15 @@ watchEffect(async () => {
 });
 const pagination = ref({});
 
+
 function downloadSpeeches() {
+
 
   visibleRows.value = SpeechTable.value.computedRows.map(row => row.id)
   const paramString = metaStore.selectedMetadataToText();
   downloadStore.getSpeechesZip(visibleRows.value, paramString);
-}
 
+};
 
 </script>
 

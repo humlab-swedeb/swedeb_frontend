@@ -1,11 +1,11 @@
 <template>
-  <q-card flat class="background row justify-center max-width q-pa-lg q-px-xl">
+  <q-card flat class="background row justify-center max-width q-ma-lg q-mx-xl">
     <q-item-label class="text-h3">SweDeb</q-item-label>
     <q-card-section class="text-align text-body2 q-mt-sm">
       {{ $t("indexPageIntroText") }}
     </q-card-section>
-    <q-card-section class="full-width q-py-xl">
-      <div class="grid-container">
+    <q-card-section class="row justify-center full-width q-py-xl ">
+      <div class="grid-container q-mx-xl">
         <IndexToolCard
           @click="redirect('tools/wordtrends')"
           :title="$t('wordTrendsTitle')"
@@ -51,6 +51,11 @@ const redirect = (route) => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 30px;
-  padding: 0 100px;
+}
+
+@media (max-width: 785px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

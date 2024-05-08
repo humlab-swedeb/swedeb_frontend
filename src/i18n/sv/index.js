@@ -58,7 +58,7 @@ export default {
 
   // NRofWORDS
   nrOfWordsIntro:
-    "Välj hur många ord som ska visas till vänster och höger om sökorden",
+    "Välj hur många ord som ska visas till vänster och höger om sökorden:",
   nrOfWordsSearch: "Sökord",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",

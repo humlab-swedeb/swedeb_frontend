@@ -20,7 +20,6 @@
   </q-card-section>
   <q-card-section
     v-if="$route.path === '/tools/kwic'"
-    class="q-pt-none row justify-center"
   >
     <inputNrOfWords />
   </q-card-section>

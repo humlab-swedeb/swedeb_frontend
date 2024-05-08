@@ -5,24 +5,24 @@
         class="bg-secondary text-grey-9"
         style="max-width: 400px; min-width: 400px"
       >
-        <q-toolbar-title>SweDeb</q-toolbar-title>
+        <q-toolbar-title class="text-bold">{{ $t("swedeb") }}</q-toolbar-title>
         <q-tabs no-caps color="black" class="gt-sm">
-          <q-route-tab to="/" label="Start" />
-          <q-route-tab to="/about" label="Om SweDeb" />
-          <q-route-tab to="/faq" label="FAQ" />
+          <q-route-tab to="/" :label="$t('home')" />
+          <q-route-tab to="/about" :label="$t('about')" />
+          <q-route-tab to="/faq" :label="$t('faq')" />
         </q-tabs>
 
         <q-btn flat round icon="menu" class="lt-md">
           <q-menu>
             <q-list>
               <q-item to="/" clickable>
-                <q-item-section>Start</q-item-section>
+                <q-item-section>Hem</q-item-section>
               </q-item>
               <q-item to="/about" clickable>
                 <q-item-section>Om SweDeb</q-item-section>
               </q-item>
               <q-item to="/faq" clickable>
-                <q-item-section>QA</q-item-section>
+                <q-item-section>FAQ</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -63,7 +63,7 @@
           </q-item>
 
           <q-item>
-            <p class="metadata-filter-text">{{$t("metaDataFilterMini")}}</p>
+            <p class="metadata-filter-text">{{ $t("metaDataFilterMini") }}</p>
           </q-item>
         </div>
       </template>
@@ -98,8 +98,12 @@
     </q-page-container>
     <q-footer>
       <q-toolbar class="q-py-md q-flex justify-center">
-        <router-link to="/about" class="link-deco q-mr-md">{{ $t("about") }}</router-link>
-        <router-link to="/faq" class="link-deco q-mr-md">{{ $t("faq") }}</router-link>
+        <router-link to="/about" class="link-deco q-mr-md">{{
+          $t("about")
+        }}</router-link>
+        <router-link to="/faq" class="link-deco q-mr-md">{{
+          $t("faq")
+        }}</router-link>
       </q-toolbar>
     </q-footer>
   </q-layout>

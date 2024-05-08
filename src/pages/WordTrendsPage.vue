@@ -1,6 +1,8 @@
 <template>
   <q-card flat class="q-px-md background text-grey-8 q-pt-sm q-pb-md">
-    <q-item-label class="text-h6 q-pb-sm q-pt-none">{{ $t("wordTrendsIntroTitle") }}</q-item-label>
+    <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
+      $t("wordTrendsIntroTitle")
+    }}</q-item-label>
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
   </q-card>
 
@@ -35,7 +37,19 @@
         valts.
       </div>
       <loadingIcon v-if="loading" size="100" />
-      <wordTrendsCountTable v-else v-show="showDataTable" />
+      <div v-else v-show="showDataTable">
+        <div class="column items-end">
+          <q-btn
+            no-caps
+            icon="download"
+            class="q-my-md text-grey-8"
+            color="secondary"
+            label="Ladda ner resultat"
+            @click="downloadWTCounts"
+          ></q-btn>
+        </div>
+        <wordTrendsCountTable />
+      </div>
     </q-tab-panel>
     <q-tab-panel name="speech">
       <div class="q-py-md text-grey-8">
@@ -43,12 +57,12 @@
         metadata som valts.
       </div>
       <loadingIcon v-if="loading" size="100" />
-      <speechDataTable
-        v-else
-        type="wordTrends"
-        v-show="showData"
-        :dataLoaded="dataLoaded"
-      />
+      <div v-else v-show="showData">
+        <speechDataTable
+          type="wordTrends"
+          :dataLoaded="dataLoaded"
+        />
+      </div>
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -72,10 +86,14 @@ const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const loading = ref(false);
 
-const tabs = ref("diagram");
+const tabs = ref("speech");
 
 const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
+
+const downloadWTCounts = () => {
+  wtStore.downloadCSV();
+};
 
 watchEffect(async () => {
   if (store.submitEvent && store.updateEvent) {
