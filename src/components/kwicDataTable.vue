@@ -114,7 +114,7 @@ const expandRow = async (props) => {
 watchEffect(() => {
   if (metaStore.submitEvent) {
     rows.value = kwicStore.kwicData.map((entry) => ({
-      id: entry.speech_title,
+      id: entry.title,
       unique_id: `${entry.speech_title}_${entry.left_word}_${entry.node_word}_${entry.right_word}_${entry.person_id}`,
       left_word: entry.left_word,
       node_word: entry.node_word,

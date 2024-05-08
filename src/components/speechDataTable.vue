@@ -41,12 +41,13 @@
     </div>
 
     <q-table
+      ref="SpeechTable"
       bordered
       flat
       :rows="rows"
       :columns="columns"
       row-key="id"
-      :rows-per-page-options="[10, 20, 50]"
+      :rows-per-page-options="[3, 10, 20, 50]"
       v-model:pagination="pagination"
       v-if="!loading"
       class="bg-grey-2"
@@ -90,6 +91,7 @@
             >
               {{ col.value }}
             </q-item-label>
+
             <q-item-label v-else>
               {{ col.value }}
             </q-item-label>
@@ -136,6 +138,9 @@ const props = defineProps({
 });
 
 const displayedData = ref({});
+const SpeechTable = ref(null);
+const visibleRows = ref([]);
+
 const rows = ref([]);
 const columns = ref([]);
 
@@ -144,6 +149,10 @@ const loading = ref(false);
 const expandRow = async (props) => {
   props.expand = !props.expand;
 };
+
+
+
+
 
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {
@@ -154,6 +163,7 @@ watchEffect(async () => {
       await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
+
 
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
@@ -235,19 +245,16 @@ watchEffect(async () => {
 });
 const pagination = ref({});
 
-const downloadSpeeches = () => {
-  // Accessing the current page from the pagination object
-  const currentPage = pagination.value.page;
 
-  const startIndex = pagination.value.rowsPerPage * (currentPage - 1);
-  const endIndex = pagination.value.rowsPerPage * currentPage;
-  const documentNames = displayedData.value
-    .slice(startIndex, endIndex)
-    .map((speech) => speech.document_name);
+function downloadSpeeches() {
 
+
+  visibleRows.value = SpeechTable.value.computedRows.map(row => row.id)
   const paramString = metaStore.selectedMetadataToText();
-  downloadStore.getSpeechesZip(documentNames, paramString);
+  downloadStore.getSpeechesZip(visibleRows.value, paramString);
+
 };
+
 </script>
 
 <style scoped></style>

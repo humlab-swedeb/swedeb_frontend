@@ -92,7 +92,7 @@ export default {
     year: "År",
     name: "Talare",
     party_abbrev: "Parti",
-    speech_title: "Taltitel",
+    title: "Taltitel",
     gender: "Kön",
     person_id: "Person ID",
     link: "Länk",
