@@ -157,10 +157,14 @@ const showing = ref(false);
 const route = useRoute();
 
 const handleNormalizeData = (newValue) => {
+  // only really for word trends right now,
+  // for KWIC this could/should be used for lemmatization instead
+  // should also be two different toggles
 
 
   if (route.path === '/tools/wordtrends') {
     console.log('Toggle event emitted with value: IN METADATA for WT', newValue);
+    wtStore.normalizeResults = newValue;
 
   } else if (route.path === '/tools/kwic') {
     console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);

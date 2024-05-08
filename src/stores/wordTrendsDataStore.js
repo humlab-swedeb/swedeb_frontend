@@ -11,13 +11,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     wordHitsSelected: [],
     searchString: [],
     ifAsterisk: false,
+    normalizeResults: false,
   }),
 
   actions: {
     async getWordTrendsResult(search) {
       try {
         const path = `/tools/word_trends/${search}`;
-        const queryString = metaDataStore().getSelectedParams();
+        const additional_params = {"normalize": this.normalizeResults};
+        const queryString  = metaDataStore().getSelectedParams(additional_params);
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrends = response.data.wt_list;
       } catch (error) {
