@@ -1,11 +1,14 @@
 <template>
   <q-card flat class="q-pa-md background">
     <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
+    <nGramsTable/>
+
   </q-card>
 </template>
 
 <script setup>
 import i18n from "src/i18n/sv";
+import nGramsTable from "src/components/nGramsTable.vue";
 
 const intro = i18n.ngramIntro;
 const formattedIntro = intro;

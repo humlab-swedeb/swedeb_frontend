@@ -13,7 +13,7 @@
     }}</q-item-label>
   </div>
   <q-card-section
-    v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic'"
+    v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic' || $route.path === '/tools/ngram'"
   >
     <searchBar />
     <toggleSwitch />
