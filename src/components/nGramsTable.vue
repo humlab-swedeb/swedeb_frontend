@@ -236,10 +236,10 @@
 import { ref, watchEffect } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from 'src/stores/metaDataStore';
-import { nGramsDataStore } from 'src/stores/nGramsDataStore';
+import { nGramDataStore } from 'src/stores/nGramDataStore';
 
 const metaStore = metaDataStore();
-const nGramsStore = nGramsDataStore();
+const nGramStore = nGramDataStore();
 
 const rows = ref([]);
 const columns = ref([]);
@@ -257,38 +257,30 @@ const expandRow = async (props) => {
 
 watchEffect(() => {
   if(metaStore.submitEvent) {
-    rows.value = nGramsStore.nGrams.map((entry) => ({
-      id: entry.id,
-      words: entry.words,
-      frequency: entry.frequency,
-
+    rows.value = nGramStore.nGrams.map((entry, index) => ({
+      id: index + 1,
+      ngram: entry.ngram,
+      count: entry.count,
     }))
   }
-  rows.value = [
+  /* rows.value = [
     { id: 1, words: "ett ord", frequency: 1 },
     { id: 2, words: "två ord", frequency: 2 },
     { id: 3, words: "tre ord", frequency: 3 },
-  ];
+  ];*/
   columns.value = [
     {
-      name: "id",
-      label: "ID",
-      align: "left",
-      field: "id",
-      sortable: true,
-    },
-    {
-      name: "words",
+      name: "ngram",
       label: "Ordfönster",
       align: "left",
-      field: "words",
+      field: "ngram",
       sortable: true,
     },
     {
-      name: "frequency",
+      name: "count",
       label: "Frekvens",
       align: "left",
-      field: "frequency",
+      field: "count",
       sortable: true,
     },
   ];
