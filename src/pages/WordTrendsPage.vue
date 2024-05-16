@@ -39,14 +39,27 @@
       <loadingIcon v-if="loading" size="100" />
       <div v-else v-show="showDataTable">
         <div class="column items-end">
-          <q-btn
-            no-caps
-            icon="download"
-            class="q-my-md text-grey-8"
-            color="secondary"
-            label="Ladda ner resultat"
-            @click="downloadWTCounts"
-          ></q-btn>
+          <q-btn-dropdown
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        label="Ladda ner tal"
+        style="width: fit-content"
+      >
+        <q-list>
+          <q-item clickable v-close-popup @click="downloadWTCountsCSV">
+            <q-item-section>
+              <q-item-label>CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadWTCountsExcel">
+            <q-item-section>
+              <q-item-label>Excel</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
         </div>
         <wordTrendsCountTable />
       </div>
@@ -88,9 +101,14 @@ const tabs = ref("speech");
 const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
 
-const downloadWTCounts = () => {
+const downloadWTCountsCSV = () => {
   const paramString = store.selectedMetadataToText();
   wtStore.downloadCSVcountsWT(paramString);
+};
+
+const downloadWTCountsExcel = () => {
+  const paramString = store.selectedMetadataToText();
+  wtStore.downloadExcelCountsWT(paramString);
 };
 
 watchEffect(async () => {

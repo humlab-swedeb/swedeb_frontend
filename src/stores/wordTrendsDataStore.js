@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import JSZip from "jszip";
+import ExcelJS from 'exceljs';
 
 export const wordTrendsDataStore = defineStore("wordTrendsData", {
   state: () => ({
@@ -145,6 +146,55 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           anchor.href = url;
           anchor.setAttribute("download", "data.zip");
           anchor.click(); // Trigger the download
+          // Revoke the temporary URL after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
+        });
+      },
+
+      async downloadExcelCountsWT(selected_metadata) {
+        // Get unique words from all word trends
+        const uniqueWords = Array.from(
+          new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
+        );
+
+        // Create an Excel workbook
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Data");
+
+        // Set the header row
+        worksheet.addRow(["year", ...uniqueWords]);
+
+        // Add data rows
+        this.wordTrends.forEach((item) => {
+          const counts = uniqueWords.map((word) => item.count[word] || 0);
+          worksheet.addRow([item.year, ...counts]);
+        });
+
+        // Create a buffer to store the workbook data
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        // Create a new instance of JSZip
+        const zip = new JSZip();
+
+        // Add the Excel file to the zip
+        zip.file("data.xlsx", buffer);
+
+        // Add the file containing the string in selected_metadata to the zip
+        zip.file("selected_metadata.txt", selected_metadata);
+
+        // Generate the zip file asynchronously
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          // Create a temporary URL for the Blob
+          const url = window.URL.createObjectURL(content);
+
+          // Create an anchor element for initiating the download
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.setAttribute("download", "data.zip");
+          anchor.click(); // Trigger the download
+
           // Revoke the temporary URL after a short delay
           setTimeout(() => {
             window.URL.revokeObjectURL(url);
