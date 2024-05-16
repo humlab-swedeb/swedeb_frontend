@@ -58,10 +58,7 @@
       </div>
       <loadingIcon v-if="loading" size="100" />
       <div v-else v-show="showData">
-        <speechDataTable
-          type="wordTrends"
-          :dataLoaded="dataLoaded"
-        />
+        <speechDataTable type="wordTrends" :dataLoaded="dataLoaded" />
       </div>
     </q-tab-panel>
   </q-tab-panels>
@@ -92,7 +89,8 @@ const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
 
 const downloadWTCounts = () => {
-  wtStore.downloadCSV();
+  const paramString = store.selectedMetadataToText();
+  wtStore.downloadCSVcountsWT(paramString);
 };
 
 watchEffect(async () => {
