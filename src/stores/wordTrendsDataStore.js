@@ -43,6 +43,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
     async getWordHits(search) {
       const terms = search.split(",");
+
+
       let searchTerm = null;
 
       for (let term of terms) {
@@ -77,7 +79,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     addChip() {
       let text = this.searchText.trim();
       if (text !== "") {
-        text = text.split(",");
+        text = text.split(",").map(word => word.trim());
         text.forEach((word) => {
           if (!this.wordHitsSelected.includes(word) && !word.includes("*")) {
             this.wordHitsSelected.push(word);

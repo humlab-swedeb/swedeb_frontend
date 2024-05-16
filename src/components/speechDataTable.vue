@@ -47,7 +47,7 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
-      :rows-per-page-options="[3, 10, 20, 50]"
+      :rows-per-page-options="[10, 20, 50]"
       v-model:pagination="pagination"
       v-if="!loading"
       class="bg-grey-2"
