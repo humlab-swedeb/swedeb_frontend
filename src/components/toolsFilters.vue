@@ -16,7 +16,7 @@
     v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic' || $route.path === '/tools/ngram'"
   >
     <searchBar />
-    <toggleSwitch />
+    <toggleSwitch label="Normalisera resultatet!" @normalize-data="handleNormalizeData"/>
   </q-card-section>
   <q-card-section
     v-if="$route.path === '/tools/kwic'"
@@ -32,4 +32,12 @@
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
+
+const emit = defineEmits(["normalize-data"]);
+
+function handleNormalizeData(newValue){
+  console.log('Toggle event emitted with value:', newValue);
+  emit('normalize-data', newValue);
+};
+
 </script>

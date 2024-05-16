@@ -142,8 +142,8 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
-      this.addParamArray("office", "office_types", searchParams);
-      this.addParamArray("subOffice", "sub_office_types", searchParams);
+      //this.addParamArray("office", "office_types", searchParams);
+      //this.addParamArray("subOffice", "sub_office_types", searchParams);
 
       const year_value = this.selected["yearRange"];
       if (year_value.min !== null) {
@@ -161,8 +161,8 @@ export const metaDataStore = defineStore("metaDataStore", {
       const searchParams = new URLSearchParams();
       this.addPartyParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
-      this.addParamArray("office", "office_types", searchParams);
-      this.addParamArray("subOffice", "sub_office_types", searchParams);
+      //this.addParamArray("office", "office_types", searchParams);
+      //this.addParamArray("subOffice", "sub_office_types", searchParams);
       return searchParams.toString();
     },
 
@@ -184,6 +184,10 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getPartyColor(party_abbreviation) {
+
+      if (!this.options.party.hasOwnProperty(party_abbreviation)){
+        return "#808080";
+      }
       return this.options.party[party_abbreviation].party_color || "#808080";
     },
 
