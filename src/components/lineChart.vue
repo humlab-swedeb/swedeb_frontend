@@ -1,7 +1,16 @@
 <template>
+  <template  v-if="wtStore.getWordTrendsResult && wtStore.getWordTrendsResult.length > 0">
   <div class="row justify-center q-mt-lg">
     <div ref="chartContainer" id="chartContainer" class="fit"></div>
   </div>
+</template>
+<template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
 </template>
 
 <script setup>

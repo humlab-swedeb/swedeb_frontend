@@ -1,9 +1,10 @@
 <template>
+  <template  v-if="wtStore.wordTrendsSpeeches && wtStore.wordTrendsSpeeches.length > 0">
   <div>
     <div class="row q-py-md justify-between">
       <q-item-label
         class="col-9 q-mt-md"
-        v-if="wtStore.wordTrendsSpeeches.length > 0"
+
       >
         Sökningen resulterade i
         <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
@@ -96,6 +97,14 @@
       </template>
     </q-table>
   </div>
+</template>
+  <template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
 </template>
 
 <script setup>

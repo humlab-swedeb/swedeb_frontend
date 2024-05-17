@@ -44,7 +44,7 @@
         icon="download"
         class="text-grey-8 col-3"
         color="secondary"
-        label="Ladda ner tal"
+        label="Ladda ner ordtrender"
         style="width: fit-content"
       >
         <q-list>
