@@ -67,7 +67,7 @@
       </q-slide-transition>
     </q-card>
     <q-card flat class="q-ma-md bg-transparent padding-bot">
-      <toolsFilters @normalize-data="handleNormalizeData"/>
+      <toolsFilters @normalize-data="handleNormalizeData" />
       <div class="q-pa-lg full-width sticky-bottom">
         <q-btn
           @click="handleSubmit"
@@ -83,6 +83,8 @@
                 (word) => word.includes(' ') || word.includes('*')
               )) ||
             ($route.path === '/tools/kwic' &&
+              wtStore.wordHitsSelected.length > 1) ||
+            ($route.path === '/tools/ngram' &&
               wtStore.wordHitsSelected.length > 1)
           "
         >
@@ -106,6 +108,19 @@
             Key words in context (KWIC) kan endast användas med ett sökord eller
             sökfras år gången.
           </q-tooltip>
+
+          <q-tooltip
+            v-if="
+              $route.path === '/tools/ngram' &&
+              wtStore.wordHitsSelected.length > 1
+            "
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            I verktyget N-gram kan endast ett sökord användad åt gången, alt. använda <code>.*</code> för wildcardsökning.
+          </q-tooltip>
+
           <q-tooltip
             v-if="
               $route.path === '/tools/wordtrends' &&
@@ -147,12 +162,10 @@ import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
-const kwicStore = kwicDataStore();
 const showing = ref(false);
 const route = useRoute();
 

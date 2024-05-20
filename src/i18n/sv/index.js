@@ -38,6 +38,7 @@ export default {
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
+  toolsFilterMini: "Verktygsspecifika Filter",
 
   // YearRange component (used in MetaDataFilter)
   year: "År",
