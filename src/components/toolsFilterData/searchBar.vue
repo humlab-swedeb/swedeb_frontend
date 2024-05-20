@@ -107,7 +107,7 @@ const removeSelectedWord = () => {
 
 const addSearchWord = () => {
   loading.value = true;
-  if (route.path === "/tools/kwic") {
+  if (route.path === "/tools/kwic" || route.path === "/tools/ngram") {
     wtStore.addKWICChip();
   } else {
     wtStore.searchText.includes("*")

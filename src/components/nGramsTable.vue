@@ -1,7 +1,8 @@
 <template>
   <div>
     <q-item-label class="q-my-md"
-      >Sökningen resulterade i 12 antar träffar</q-item-label
+      >Sökningen resulterade i <b>{{ nGramStore.nGrams.length }}</b> antar
+      träffar</q-item-label
     >
     <q-table
       bordered
@@ -48,13 +49,13 @@
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
         <!--  -->
-        <q-tr v-show="props.expand">
+        <q-tr v-show="props.expand" class="bg-grey-1">
           <q-td :colspan="props.cols.length" no-hover>
             <div>
               <div class="row q-py-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
                   Sökningen resulterade i
-                  <b>12</b> antal träffar.
+                  <b>{{ props.row.count }}</b> antal träffar.
                 </q-item-label>
                 <q-btn
                   no-caps
@@ -65,6 +66,7 @@
                   style="width: fit-content"
                 />
               </div>
+              <!-- SECOND TABLE -->
               <q-table
                 bordered
                 flat
@@ -73,7 +75,7 @@
                 row-key="id"
                 :rows-per-page-options="[10, 20, 50]"
                 v-if="!loading"
-                class="bg-grey-2 full-width"
+                class="bg-primary full-width"
               >
                 <template v-slot:header="props">
                   <q-tr :props="props">
@@ -121,6 +123,7 @@
                       />
                     </q-td>
                   </q-tr>
+                  <!-- Row expanded -->
                   <q-tr v-show="props.expand" :props="props">
                     <q-td :colspan="props.cols.length" no-hover>
                       <loadingIcon v-if="loading" size="100" />
@@ -226,6 +229,7 @@
               </q-table>
             </div>
           </q-td>
+          <q-td class="bg-grey-1" no-hover/>
         </q-tr>
       </template>
     </q-table>
@@ -235,8 +239,8 @@
 <script setup>
 import { ref, watchEffect } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import { metaDataStore } from 'src/stores/metaDataStore';
-import { nGramDataStore } from 'src/stores/nGramDataStore';
+import { metaDataStore } from "src/stores/metaDataStore";
+import { nGramDataStore } from "src/stores/nGramDataStore";
 
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
@@ -253,64 +257,27 @@ const speechText = ref(
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
-};
-
-watchEffect(() => {
-  if(metaStore.submitEvent) {
-    rows.value = nGramStore.nGrams.map((entry, index) => ({
-      id: index + 1,
-      ngram: entry.ngram,
-      count: entry.count,
-    }))
-  }
-  /* rows.value = [
-    { id: 1, words: "ett ord", frequency: 1 },
-    { id: 2, words: "två ord", frequency: 2 },
-    { id: 3, words: "tre ord", frequency: 3 },
-  ];*/
-  columns.value = [
-    {
-      name: "ngram",
-      label: "Ordfönster",
-      align: "left",
-      field: "ngram",
-      sortable: true,
-    },
-    {
-      name: "count",
-      label: "Frekvens",
-      align: "left",
-      field: "count",
-      sortable: true,
-    },
-  ];
   speechRows.value = [
     {
       id: 1,
-      left: "ett ord",
-      word: "två ord",
-      right: "tre ord",
       speaker: "Talare",
+      gender: "Kvinna",
       party: "S",
       year: "1940",
       speechID: "1",
     },
     {
       id: 2,
-      left: "ett ord",
-      word: "två ord",
-      right: "tre ord",
       speaker: "Talare",
+      gender: "Man",
       party: "M",
       year: "1930",
       speechID: "2",
     },
     {
       id: 3,
-      left: "ett ord",
-      word: "två ord",
-      right: "tre ord",
       speaker: "Talare",
+      gender: "Kvinna",
       party: "V",
       year: "1960",
       speechID: "3",
@@ -319,24 +286,10 @@ watchEffect(() => {
 
   speechColumns.value = [
     {
-      name: "left",
-      label: "Vänster",
+      name: "id",
+      label: "Anförande",
       align: "left",
-      field: "left",
-      sortable: true,
-    },
-    {
-      name: "word",
-      label: "Sökord",
-      align: "left",
-      field: "word",
-      sortable: true,
-    },
-    {
-      name: "right",
-      label: "Höger",
-      align: "left",
-      field: "right",
+      field: "speechID",
       sortable: true,
     },
     {
@@ -344,6 +297,13 @@ watchEffect(() => {
       label: "Talare",
       align: "left",
       field: "speaker",
+      sortable: true,
+    },
+    {
+      name: "gender",
+      align: "left",
+      label: "Kön",
+      field: "gender",
       sortable: true,
     },
     {
@@ -360,14 +320,38 @@ watchEffect(() => {
       field: "year",
       sortable: true,
     },
-    {
-      name: "id",
-      label: "Anförande",
-      align: "left",
-      field: "speechID",
-      sortable: true,
-    },
   ];
+};
+
+watchEffect(() => {
+  if (metaStore.submitEvent) {
+    rows.value = nGramStore.nGrams.map((entry, index) => ({
+      id: index + 1,
+      ngram: entry.ngram,
+      count: entry.count,
+    }));
+    /* rows.value = [
+      { id: 1, words: "ett ord", frequency: 1 },
+    { id: 2, words: "två ord", frequency: 2 },
+    { id: 3, words: "tre ord", frequency: 3 },
+  ];*/
+    columns.value = [
+      {
+        name: "ngram",
+        label: "Ordfönster",
+        align: "left",
+        field: "ngram",
+        sortable: true,
+      },
+      {
+        name: "count",
+        label: "Frekvens",
+        align: "left",
+        field: "count",
+        sortable: true,
+      },
+    ];
+  }
 });
 </script>
 

@@ -63,7 +63,20 @@
           </q-item>
 
           <q-item>
-            <p class="metadata-filter-text">{{ $t("metaDataFilterMini") }}</p>
+            <q-btn flat no-caps>
+              <p class="metadata-filter-text text-grey-8">
+                {{ $t("metaDataFilterMini") }}
+              </p>
+              <q-icon name="o_filter_alt" color="accent" />
+            </q-btn>
+          </q-item>
+          <q-item>
+            <q-btn flat no-caps>
+              <p class="metadata-filter-text text-grey-8">
+                {{ $t("toolsFilterMini") }}
+              </p>
+              <q-icon name="construction" color="accent" />
+            </q-btn>
           </q-item>
         </div>
       </template>
@@ -78,13 +91,13 @@
 
       <div
         class="q-mini-drawer-hide absolute"
-        style="top: 15px; right: -17px; overflow: hidden"
+        style="top: 5px; right: -20px; overflow: hidden"
       >
         <q-btn
           dense
           round
           unelevated
-          color="accent"
+          color="grey-5"
           icon="chevron_left"
           @click="miniState = true"
         />
