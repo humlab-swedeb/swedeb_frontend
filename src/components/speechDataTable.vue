@@ -1,4 +1,5 @@
 <template>
+  <template v-if="wtStore.wordTrendsSpeeches.length > 0">
   <div>
     <div class="row q-py-md justify-between">
       <q-item-label
@@ -8,6 +9,7 @@
         Sökningen resulterade i
         <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
       </q-item-label>
+
        <q-btn
         no-caps
         icon="download"
@@ -97,6 +99,15 @@
     </q-table>
   </div>
 </template>
+<template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
+</template>
+
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
