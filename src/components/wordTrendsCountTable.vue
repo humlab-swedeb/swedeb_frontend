@@ -1,4 +1,5 @@
 <template>
+  <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
   <div>
     <q-table
       flat
@@ -26,6 +27,14 @@
       </template>
     </q-table>
   </div>
+</template>
+<template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
 </template>
 
 <script setup>

@@ -52,7 +52,7 @@
             <q-item-label
               v-if="col.name === 'party'"
               class="text-bold"
-              :style="{ color: metaStore.getPartyColor(col.value) }"
+              :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
             >
               {{ col.value }}
             </q-item-label>

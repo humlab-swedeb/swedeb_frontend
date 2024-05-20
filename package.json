@@ -17,6 +17,7 @@
     "apexcharts": "^3.45.2",
     "axios": "^1.2.1",
     "core-js": "^3.6.5",
+    "exceljs": "^4.4.0",
     "highcharts": "^11.4.1",
     "highcharts-vue": "^2.0.1",
     "jszip": "^3.10.1",

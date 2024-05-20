@@ -1,4 +1,5 @@
 <template>
+  <template v-if="wtStore.wordTrendsSpeeches.length > 0">
   <div>
     <div class="row q-py-md justify-between">
       <q-item-label
@@ -8,7 +9,8 @@
         Sökningen resulterade i
         <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
       </q-item-label>
-      <!--       <q-btn
+
+       <q-btn
         no-caps
         icon="download"
         class="text-grey-8 col-3"
@@ -16,28 +18,8 @@
         label="Ladda ner tal"
         @click="downloadSpeeches"
         style="width: fit-content"
-      ></q-btn> -->
-      <q-btn-dropdown
-        no-caps
-        icon="download"
-        class="text-grey-8 col-3"
-        color="secondary"
-        label="Ladda ner tal"
-        style="width: fit-content"
-      >
-        <q-list>
-          <q-item clickable v-close-popup @click="downloadSpeeches">
-            <q-item-section>
-              <q-item-label>CSV</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="downloadSpeeches">
-            <q-item-section>
-              <q-item-label>Excel</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+      ></q-btn>
+
     </div>
 
     <q-table
@@ -47,7 +29,7 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
-      :rows-per-page-options="[3, 10, 20, 50]"
+      :rows-per-page-options="[10, 20, 50]"
       v-model:pagination="pagination"
       v-if="!loading"
       class="bg-grey-2"
@@ -81,7 +63,7 @@
             <q-item-label
               v-if="col.name === 'party'"
               class="text-bold"
-              :style="{ color: metaStore.getPartyColor(col.value) }"
+              :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
             >
               {{ col.value }}
             </q-item-label>
@@ -117,6 +99,15 @@
     </q-table>
   </div>
 </template>
+<template v-else>
+    <!-- Show a message when there's no data -->
+    <div class="no-data-message">
+      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
+      filtreringsalternativ.
+    </div>
+  </template>
+</template>
+
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
@@ -150,10 +141,6 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
-
-
-
-
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {
     loading.value = true;
@@ -163,7 +150,6 @@ watchEffect(async () => {
       await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
-
 
     rows.value = displayedData.value.map((speech) => ({
       id: speech.document_name,
@@ -183,8 +169,9 @@ watchEffect(async () => {
         required: true,
         label: "Anförande",
         align: "left",
-        field: "protocol",
+        field: (row) => row.protocol,
         sortable: true,
+        sort: (a, b) => sortSpeeches(a, b),
       },
       {
         name: "speaker",
@@ -245,16 +232,60 @@ watchEffect(async () => {
 });
 const pagination = ref({});
 
+function sortByYear(a, b) {
+  const yearRegex = /(\d{4})/;
+
+  // Extract the year from the protocol strings
+  const yearA = a.match(yearRegex)[0];
+  const yearB = b.match(yearRegex)[0];
+  if (yearA < yearB) {
+    return -1;
+  } else if (yearA > yearB) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function sortByChamber(a, b) {
+  if (a.includes("Första") && !b.includes("Första")) {
+    return -1;
+  } else if (!a.includes("Första") && b.includes("Första")) {
+    return 1;
+  } else if (a.includes("Andra") && !b.includes("Andra")) {
+    return 1;
+  } else if (!a.includes("Andra") && b.includes("Andra")) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+function sortByNumber(a, b) {
+  const numberA = parseInt(a.split(":")[1].replace(/\s/g, ""));
+  const numberB = parseInt(b.split(":")[1].replace(/\s/g, ""));
+  return numberA - numberB;
+}
+
+function sortSpeeches(a, b) {
+  // Regular expression to match the year in the protocol string
+  const yearRes = sortByYear(a, b);
+  if (yearRes !== 0) {
+    return yearRes;
+  }
+  const chamberRes = sortByChamber(a, b);
+  if (chamberRes !== 0) {
+    return chamberRes;
+  }
+
+  return sortByNumber(a, b);
+}
 
 function downloadSpeeches() {
-
-
-  visibleRows.value = SpeechTable.value.computedRows.map(row => row.id)
-  const paramString = metaStore.selectedMetadataToText();
+  visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
+  const paramString = metaStore.selectedMetadataToText(wtStore.wordHitsSelected);
   downloadStore.getSpeechesZip(visibleRows.value, paramString);
-
-};
-
+}
 </script>
 
 <style scoped></style>
