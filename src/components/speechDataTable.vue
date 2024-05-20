@@ -283,7 +283,7 @@ function sortSpeeches(a, b) {
 
 function downloadSpeeches() {
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText();
+  const paramString = metaStore.selectedMetadataToText(wtStore.wordHitsSelected);
   downloadStore.getSpeechesZip(visibleRows.value, paramString);
 }
 </script>

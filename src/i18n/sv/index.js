@@ -167,4 +167,10 @@ export default {
       a: "SweDeb syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
     },
   },
+
+  downLoadInfo: {
+    corpus_version: 'Korpusversion: v0.10.0',
+    swerik_ref: "Datakälla: https://swerik-project.github.io/",
+    swedeb_ref: "Nedladdat från: https://swedeb.se/public/index.html#/",
+  },
 };

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import i18n from "src/i18n/sv/index.js";
 
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
@@ -106,7 +107,15 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${speaker.name}, ${speaker.party_abbrev}, ${speaker.year_of_birth} - ${year_of_death}`;
     },
 
-    selectedMetadataToText() {
+    getSearchTermsAsString(searchTerms) {
+      if(searchTerms===undefined){
+        return "";
+      }else{
+        return `Sökord: ${searchTerms}`;
+      }
+    },
+
+    selectedMetadataToText(searchTerms) {
       // String representation of selected metadata to be included in downloads
       const selected_years_start = this.selected.yearRange.min;
       const selected_years_end = this.selected.yearRange.max;
@@ -128,8 +137,12 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected_genders_as_string,
         "kön"
       );
+      const selected_terms = this.getSearchTermsAsString(searchTerms);
+      const corpus_version = i18n.downLoadInfo.corpus_version;
+      const swerik_ref = i18n.downLoadInfo.swerik_ref;
+      const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      return `${year_string}\n${selected_parties}\n${selected_speakers}\n${selected_genders}`;
+      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
     },
 
     getSelectedParams(additional_params = {}) {
