@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import JSZip from "jszip";
+import ExcelJS from 'exceljs';
 
 export const wordTrendsDataStore = defineStore("wordTrendsData", {
   state: () => ({
@@ -18,8 +20,9 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     async getWordTrendsResult(search) {
       try {
         const path = `/tools/word_trends/${search}`;
-        const additional_params = {"normalize": this.normalizeResults};
-        const queryString  = metaDataStore().getSelectedParams(additional_params);
+        const additional_params = { normalize: this.normalizeResults };
+        const queryString =
+          metaDataStore().getSelectedParams(additional_params);
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrends = response.data.wt_list;
       } catch (error) {
@@ -41,6 +44,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
     async getWordHits(search) {
       const terms = search.split(",");
+
+
       let searchTerm = null;
 
       for (let term of terms) {
@@ -75,7 +80,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     addChip() {
       let text = this.searchText.trim();
       if (text !== "") {
-        text = text.split(",");
+        text = text.split(",").map(word => word.trim());
         text.forEach((word) => {
           if (!this.wordHitsSelected.includes(word) && !word.includes("*")) {
             this.wordHitsSelected.push(word);
@@ -106,37 +111,98 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       this.searchString = this.searchString.join(",");
       return this.searchString;
     },
-    downloadCSV() {
-      // Convert the array of objects into a CSV string
-      const uniqueWords = Array.from(
-        new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
-      );
 
-      // Create CSV content
-      let csvContent = `year,${uniqueWords.join(",")}\n`;
-      this.wordTrends.forEach((item) => {
-        const counts = uniqueWords
-          .map((word) => item.count[word] || 0)
-          .join(",");
-        csvContent += `${item.year},${counts}\n`;
-      });
+    downloadCSVcountsWT(selected_metadata) {
 
-      // Create a Blob containing the CSV content
-      const blob = new Blob([csvContent], { type: "text/csv" });
 
-      // Create a temporary URL for the Blob
-      const url = window.URL.createObjectURL(blob);
+        // Get unique words from all word trends
+        const uniqueWords = Array.from(
+          new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
+        );
+        // Create CSV content
+        let csvContent = `year,${uniqueWords.join(",")}\n`;
+        this.wordTrends.forEach((item) => {
+          const counts = uniqueWords
+            .map((word) => item.count[word] || 0)
+            .join(",");
+          csvContent += `${item.year},${counts}\n`;
+        });
 
-      // Create an anchor element for initiating the download
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.setAttribute("download", "data.csv");
-      anchor.click(); // Trigger the download
+        // Create a new instance of JSZip
+        const zip = new JSZip();
 
-      // Revoke the temporary URL after a short delay
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-      }, 1000);
-    },
+        // Add the CSV file to the zip
+        zip.file("data.csv", csvContent);
+
+        // Add the file containing the string in selected_metadata to the zip
+        zip.file("selected_metadata.txt", selected_metadata);
+
+        // Generate the zip file asynchronously
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          // Create a temporary URL for the Blob
+          const url = window.URL.createObjectURL(content);
+          // Create an anchor element for initiating the download
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.setAttribute("download", "data.zip");
+          anchor.click(); // Trigger the download
+          // Revoke the temporary URL after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
+        });
+      },
+
+      async downloadExcelCountsWT(selected_metadata) {
+        // Get unique words from all word trends
+        const uniqueWords = Array.from(
+          new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
+        );
+
+        // Create an Excel workbook
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Data");
+
+        // Set the header row
+        worksheet.addRow(["year", ...uniqueWords]);
+
+        // Add data rows
+        this.wordTrends.forEach((item) => {
+          const counts = uniqueWords.map((word) => item.count[word] || 0);
+          worksheet.addRow([item.year, ...counts]);
+        });
+
+        // Create a buffer to store the workbook data
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        // Create a new instance of JSZip
+        const zip = new JSZip();
+
+        // Add the Excel file to the zip
+        zip.file("data.xlsx", buffer);
+
+        // Add the file containing the string in selected_metadata to the zip
+        zip.file("selected_metadata.txt", selected_metadata);
+
+        // Generate the zip file asynchronously
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          // Create a temporary URL for the Blob
+          const url = window.URL.createObjectURL(content);
+
+          // Create an anchor element for initiating the download
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.setAttribute("download", "data.zip");
+          anchor.click(); // Trigger the download
+
+          // Revoke the temporary URL after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
+        });
+      },
+
+
+
   },
 });

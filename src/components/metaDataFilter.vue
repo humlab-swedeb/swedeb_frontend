@@ -163,14 +163,13 @@ const handleNormalizeData = (newValue) => {
 
 
   if (route.path === '/tools/wordtrends') {
-    console.log('Toggle event emitted with value: IN METADATA for WT', newValue);
     wtStore.normalizeResults = newValue;
 
   } else if (route.path === '/tools/kwic') {
-    console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
+    //console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
 
   } else {
-    console.log('should not happen...')
+    //console.log('should not happen...')
   }
 };
 
