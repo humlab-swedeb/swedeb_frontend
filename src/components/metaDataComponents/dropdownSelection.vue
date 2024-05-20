@@ -83,9 +83,9 @@ const getChipStyle = (opt) => {
   if (props.type === "party") {
     return {
       backgroundColor: "white",
-      color: store.getPartyColor(opt),
+      color: store.getPartyNameColor(opt),
       fontWeight: "bold",
-      border: `2px solid ${store.getPartyColor(opt)}`,
+      border: `2px solid ${store.getPartyNameColor(opt)}`,
     };
   } /* else if (props.type === "speakers") {
     return {

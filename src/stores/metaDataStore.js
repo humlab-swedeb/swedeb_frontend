@@ -183,12 +183,20 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
-    getPartyColor(party_abbreviation) {
-
-      if (!this.options.party.hasOwnProperty(party_abbreviation)){
+    getPartyNameColor(party_name) {
+      if (!this.options.party.hasOwnProperty(party_name)) {
         return "#808080";
       }
-      return this.options.party[party_abbreviation].party_color || "#808080";
+      return this.options.party[party_name].party_color || "#808080";
+    },
+    getPartyAbbrevColor(party_abbrev) {
+      for (const party in this.options.party) {
+        if (this.options.party[party].party_abbrev === party_abbrev) {
+          return this.options.party[party].party_color || "#808080";
+        }
+      }
+      return "#808080";
+
     },
 
     async getPartyOptions() {
@@ -196,11 +204,11 @@ export const metaDataStore = defineStore("metaDataStore", {
       const response = await api.get(path);
 
       this.options.party = response.data.party_list
-        .sort((a, b) => a.party_abbrev.localeCompare(b.party_abbrev))
+        .sort((a, b) => a.party_abbrev.localeCompare(b.party))
         .reduce((acc, party) => {
-          acc[party.party_abbrev] = {
+          acc[party.party] = {
             party_id: party.party_id,
-            party_name: party.party,
+            party_abbrev: party.party_abbrev,
             party_color: party.party_color,
           };
           return acc;

@@ -8,7 +8,7 @@
         Sökningen resulterade i
         <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
       </q-item-label>
-      <!--       <q-btn
+       <q-btn
         no-caps
         icon="download"
         class="text-grey-8 col-3"
@@ -16,28 +16,8 @@
         label="Ladda ner tal"
         @click="downloadSpeeches"
         style="width: fit-content"
-      ></q-btn> -->
-      <q-btn-dropdown
-        no-caps
-        icon="download"
-        class="text-grey-8 col-3"
-        color="secondary"
-        label="Ladda ner tal"
-        style="width: fit-content"
-      >
-        <q-list>
-          <q-item clickable v-close-popup @click="downloadSpeeches">
-            <q-item-section>
-              <q-item-label>CSV</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="downloadSpeeches">
-            <q-item-section>
-              <q-item-label>Excel</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+      ></q-btn>
+
     </div>
 
     <q-table
@@ -81,7 +61,7 @@
             <q-item-label
               v-if="col.name === 'party'"
               class="text-bold"
-              :style="{ color: metaStore.getPartyColor(col.value) }"
+              :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
             >
               {{ col.value }}
             </q-item-label>

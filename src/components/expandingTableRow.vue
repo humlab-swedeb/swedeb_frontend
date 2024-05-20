@@ -9,7 +9,7 @@
             <div
               class="text-h6 row"
               :style="{
-                color: metaStore.getPartyColor(props.props.row.party),
+                color: metaStore.getPartyNameColor(props.props.row.party),
               }"
             >
               <q-item-label class="q-mt-xs" v-if="props.props.row.speaker">

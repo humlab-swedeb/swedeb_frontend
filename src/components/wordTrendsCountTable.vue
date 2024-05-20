@@ -1,7 +1,5 @@
 <template>
-  <template  v-if="wtStore.getWordTrendsResult && wtStore.getWordTrendsResult.length > 0">
-
-
+  <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
   <div>
     <q-table
       flat
