@@ -17,7 +17,6 @@ export const downloadDataStore = defineStore("downloadData", {
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-
       // gender, source, protocol
 
       return `${speaker}\n${party}\n${gender}\n${year}\n${id}\n${hit}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}\n\n`;
@@ -54,7 +53,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
     },
 
-    async getSpeechesZip(speech_list, selected_metadata) {
+    async downloadSpeechesZip(speech_list, selected_metadata) {
       try {
         const path = "tools/speech_download/";
         const json_payload = JSON.stringify(speech_list);
@@ -85,7 +84,7 @@ export const downloadDataStore = defineStore("downloadData", {
         // Create an anchor element for initiating the download
         const anchor = document.createElement("a");
         anchor.href = url;
-        anchor.setAttribute("download", "new_speeches.zip");
+        anchor.setAttribute("download", "tal.zip");
         anchor.click(); // Trigger the download
 
         // Revoke the temporary URL after a short delay

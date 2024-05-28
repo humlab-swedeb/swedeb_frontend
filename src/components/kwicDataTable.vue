@@ -1,7 +1,34 @@
 <template>
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class=""></div>
+    <q-btn-dropdown
+      no-caps
+      icon="download"
+      class="text-grey-8 col-3"
+      color="secondary"
+      label="Ladda ner KWIC"
+      style="width: fit-content"
+    >
+      <q-list>
+        <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
+          <q-item-section>
+            <q-item-label>Tabell som CSV</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
+          <q-item-section>
+            <q-item-label>Tabell som Excel</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
+          <q-item-section>
+            <q-item-label>Tal</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <q-table
+      ref="KWICTable"
       :rows="rows"
       :columns="columns"
       row-key="unique_id"
@@ -99,16 +126,36 @@
 import { ref, watchEffect } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
+const downloadStore = downloadDataStore();
 
 const rows = ref([]);
 const columns = ref([]);
+const KWICTable = ref(null);
+const visibleRows = ref([]);
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
+};
+
+const downloadKWICTableAsExcel = () => {
+  const paramString = metaStore.selectedMetadataToText();
+  kwicStore.downloadKWICTableExcel(paramString);
+};
+
+const downloadKWICTableAsCSV = () => {
+  const paramString = metaStore.selectedMetadataToText();
+  kwicStore.downloadKWICTableCSV(paramString);
+};
+
+const downloadKWICAsSpeeches = () => {
+  const paramString = metaStore.selectedMetadataToText();
+  visibleRows.value = KWICTable.value.computedRows.map((row) => row.id);
+  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 };
 
 watchEffect(() => {

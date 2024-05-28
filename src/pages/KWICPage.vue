@@ -6,7 +6,6 @@
     <div class="q-pb-md">
       <ShowData />
     </div>
-    <div>hej</div>
     <loadingIcon v-if="loading" size="100" />
 
     <div v-else class="q-pb-xl">
@@ -18,15 +17,7 @@
           Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
           träffar.
         </q-item-label>
-<!--         <q-btn
-          no-caps
-          icon="download"
-          class="text-grey-8 col-3"
-          color="secondary"
-          label="Ladda ner tal"
-          @click="downloadSpeeches"
-          style="width: fit-content"
-        ></q-btn> -->
+
       </div>
       <kwicDataTable />
     </div>
@@ -55,9 +46,9 @@ const loading = ref(false);
 
 
 
+
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
-    console.log(' should show wheel')
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
     await nextTick();
