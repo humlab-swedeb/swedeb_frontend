@@ -39,7 +39,8 @@
             <dropdownSelection type="party" />
             <q-card-section horizontal class="q-px-none">
               <q-card-section class="q-py-none">
-                <genderOfficeCheckbox type="gender" />
+                <genderOfficeToggleCheckbox type="gender" toggle_label="Filtrera på kön" />
+                <!-- <genderOfficeCheckbox type="gender" /> -->
               </q-card-section>
               <q-card-section class="q-py-none">
                 <!-- <genderOfficeCheckbox type="office" /> -->
@@ -158,6 +159,7 @@
 <script setup>
 import yearRange from "src/components/metaDataComponents/yearRange.vue";
 import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
+import genderOfficeToggleCheckbox from "src/components/metaDataComponents/genderOfficeToggleCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
