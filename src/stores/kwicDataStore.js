@@ -20,7 +20,8 @@ export const kwicDataStore = defineStore("kwicData", {
       formatted_speech_id: "Anförande",
       link: "Länk talare",
       speech_link: "Länk tal"
-    }
+    },
+    lemmatizeSearch: false,
 
   }),
 
@@ -32,7 +33,7 @@ export const kwicDataStore = defineStore("kwicData", {
         const additional_params = {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
-          lemmatized: false,
+          lemmatized: this.lemmatizeSearch,
         };
 
         const queryString =

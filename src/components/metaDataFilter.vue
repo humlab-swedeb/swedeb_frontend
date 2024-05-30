@@ -67,7 +67,7 @@
       </q-slide-transition>
     </q-card>
     <q-card flat class="q-ma-md bg-transparent padding-bot">
-      <toolsFilters @normalize-data="handleNormalizeData" />
+      <toolsFilters @normalize-data="handleNormalizeData" @lemmatize-search="lemmatizeSearch" />
       <div class="q-pa-lg full-width sticky-bottom">
         <q-btn
           @click="handleSubmit"
@@ -162,27 +162,25 @@ import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
+const kwicStore = kwicDataStore();
 const showing = ref(false);
 const route = useRoute();
 
 const handleNormalizeData = (newValue) => {
-  // only really for word trends right now,
-  // for KWIC this could/should be used for lemmatization instead
-  // should also be two different toggles
-
 
   if (route.path === '/tools/wordtrends') {
     wtStore.normalizeResults = newValue;
+  }
+};
 
-  } else if (route.path === '/tools/kwic') {
-    //console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
-
-  } else {
-    //console.log('should not happen...')
+const lemmatizeSearch = (newValue) => {
+  if (route.path === '/tools/kwic') {
+    kwicStore.lemmatizeSearch = newValue;
   }
 };
 

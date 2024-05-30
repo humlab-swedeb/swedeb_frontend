@@ -97,7 +97,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
     addKWICChip() {
       let text = this.searchText.trim();
-      console.log(text);
       if (text.endsWith("*") && !text.endsWith(".*")) {
         text = `${text.slice(0, -1)}.*`;
 
