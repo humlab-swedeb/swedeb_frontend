@@ -153,29 +153,36 @@
 
         <!-- Search button for N-Grams -->
         <q-btn
-          v-if="$route.path === '/tools/ngrams'"
+          v-if="$route.path === '/tools/ngram'"
           @click="handleSubmit"
           no-caps
           class="fit text-h6"
           color="accent"
           label="Sök"
           :disabled="
-            $route.path === '/tools/ngram' &&
-            wtStore.wordHitsSelected.length > 1
+            kwicStore.searchText.length < 1 ||
+            kwicStore.searchText.includes(',')
           "
         >
+        <q-tooltip
+            v-if="kwicStore.searchText.length < 1"
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            Skriv in ett sökord eller en fras.
+          </q-tooltip>
           <!-- Tooltip for only searching for one word at a time, or wildcard -->
           <q-tooltip
             v-if="
-              $route.path === '/tools/ngram' &&
-              wtStore.wordHitsSelected.length > 1
+            kwicStore.searchText.includes(',')
             "
             anchor="top middle"
             self="bottom middle"
             :offset="[10, 10]"
           >
             I verktyget N-gram kan endast ett sökord användad åt gången, alt.
-            använda <code>.*</code> för wildcardsökning.
+            använda <code>*</code> för wildcardsökning.
           </q-tooltip>
         </q-btn>
 

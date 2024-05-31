@@ -32,7 +32,7 @@
     />
   </q-card-section>
   <q-card-section v-if="$route.path === '/tools/ngram'">
-    <searchBarAdd />
+    <searchBar />
     <q-item-label caption class="text-bold q-mt-lg">
       Välj storlek på N-gram och var sökordet ska vara placerat
     </q-item-label>
