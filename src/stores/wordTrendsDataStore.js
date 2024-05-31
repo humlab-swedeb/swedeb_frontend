@@ -97,6 +97,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
     addKWICChip() {
       let text = this.searchText.trim();
+      if (text.endsWith("*") && !text.endsWith(".*")) {
+        text = `${text.slice(0, -1)}.*`;
+
+      }
 
       if (text !== "") {
         this.wordHitsSelected.push(text);
@@ -132,10 +136,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const zip = new JSZip();
 
         // Add the CSV file to the zip
-        zip.file("data.csv", csvContent);
+        zip.file("ordtrender.csv", csvContent);
 
         // Add the file containing the string in selected_metadata to the zip
-        zip.file("selected_metadata.txt", selected_metadata);
+        zip.file("metadata.txt", selected_metadata);
 
         // Generate the zip file asynchronously
         zip.generateAsync({ type: "blob" }).then((content) => {
@@ -144,7 +148,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           // Create an anchor element for initiating the download
           const anchor = document.createElement("a");
           anchor.href = url;
-          anchor.setAttribute("download", "data.zip");
+          anchor.setAttribute("download", "ordtrender.zip");
           anchor.click(); // Trigger the download
           // Revoke the temporary URL after a short delay
           setTimeout(() => {
@@ -182,7 +186,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         zip.file("data.xlsx", buffer);
 
         // Add the file containing the string in selected_metadata to the zip
-        zip.file("selected_metadata.txt", selected_metadata);
+        zip.file("metadata.txt", selected_metadata);
 
         // Generate the zip file asynchronously
         zip.generateAsync({ type: "blob" }).then((content) => {
@@ -192,7 +196,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           // Create an anchor element for initiating the download
           const anchor = document.createElement("a");
           anchor.href = url;
-          anchor.setAttribute("download", "data.zip");
+          anchor.setAttribute("download", "wordtrends.zip");
           anchor.click(); // Trigger the download
 
           // Revoke the temporary URL after a short delay

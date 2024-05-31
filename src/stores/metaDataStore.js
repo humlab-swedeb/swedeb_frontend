@@ -21,6 +21,7 @@ export const metaDataStore = defineStore("metaDataStore", {
     selected: {
       party: [],
       gender: [],
+      genderList: [],
       office: [],
       subOffice: [],
       speakers: [],
@@ -32,6 +33,9 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     genderAllSelect: false,
     officeAllSelect: false,
+
+    genderFilter: false,
+    partyFilter: false,
 
     submitEvent: false,
     updateEvent: false,
@@ -52,6 +56,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       };
       this.genderAllSelect = false;
       this.officeAllSelect = false;
+      this.selected.gender = Object.keys(this.options.gender);
+      this.genderFilter = false;
+
     },
 
     async fetchAllMetaData() {
@@ -243,6 +250,8 @@ export const metaDataStore = defineStore("metaDataStore", {
         acc[gender.gender_id] = gender.swedish_gender;
         return acc;
       }, {});
+      this.selected.gender = Object.keys(this.options.gender);
+
     },
 
     async getSubOfficeOptions() {
@@ -286,5 +295,5 @@ export const metaDataStore = defineStore("metaDataStore", {
         this[`${type}AllSelect`] = false;
       }
     },
-  },
-});
+
+}});
