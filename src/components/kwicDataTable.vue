@@ -88,10 +88,7 @@
   </template>
   <template v-else>
     <!-- Show a message when there's no data -->
-    <div class="no-data-message">
-      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
-      filtreringsalternativ.
-    </div>
+    <noResults />
   </template>
 </template>
 
@@ -100,6 +97,7 @@ import { ref, watchEffect } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
+import noResults from "src/components/noResults.vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();

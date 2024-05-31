@@ -6,16 +6,14 @@
   </template>
   <template v-else>
     <!-- Show a message when there's no data -->
-    <div class="no-data-message">
-      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
-      filtreringsalternativ.
-    </div>
+    <noResults />
   </template>
 </template>
 
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { reactive, watchEffect, ref } from "vue";
+import noResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
 annotations(Highcharts);

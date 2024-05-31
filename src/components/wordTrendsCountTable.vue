@@ -53,10 +53,7 @@
   </template>
   <template v-else>
     <!-- Show a message when there's no data -->
-    <div class="no-data-message">
-      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
-      filtreringsalternativ.
-    </div>
+    <noResults />
   </template>
 </template>
 
@@ -64,6 +61,8 @@
 import { ref, watchEffect } from "vue";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
+import noResults from "src/components/noResults.vue";
+
 const metaStore = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const rows = ref([]);
@@ -99,14 +98,16 @@ watchEffect(() => {
           field: "year",
           sortable: true,
         },
-        ...Array.from(uniqueWords).sort().map((word) => ({
-          name: word,
-          required: true,
-          label: word,
-          field: word,
-          sortable: true,
-          align: "left",
-        })),
+        ...Array.from(uniqueWords)
+          .sort()
+          .map((word) => ({
+            name: word,
+            required: true,
+            label: word,
+            field: word,
+            sortable: true,
+            align: "left",
+          })),
       ];
       columns.value = allColumns;
 
