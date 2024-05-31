@@ -1,10 +1,10 @@
 <template>
   <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
-  <div class="row justify-center q-mt-lg">
-    <div ref="chartContainer" id="chartContainer" class="fit"></div>
-  </div>
-</template>
-<template v-else>
+    <div class="row justify-center q-mt-lg">
+      <div ref="chartContainer" id="chartContainer" class="fit"></div>
+    </div>
+  </template>
+  <template v-else>
     <!-- Show a message when there's no data -->
     <div class="no-data-message">
       Inga resultat för sökningen. Försök med ett annat sökord, eller andra
@@ -15,7 +15,6 @@
 
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { metaDataStore } from "src/stores/metaDataStore";
 import { reactive, watchEffect, ref } from "vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
@@ -25,7 +24,6 @@ exporting(Highcharts);
 
 const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
-const metaStore = metaDataStore();
 let categories = [];
 
 const chartOptions = reactive({
@@ -120,6 +118,7 @@ const chartOptions = reactive({
       fontSize: "14px",
       color: "#333333",
       fontFamily: '"Open Sans", sans-serif',
+      fontWeight: "normal",
     },
     symbolWidth: 50,
     symbolHeight: 20,
@@ -209,7 +208,14 @@ watchEffect(() => {
         name: word,
         data: wordTrends.map((entry) => entry.count[word]),
       }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+
+    //Move "Totalt" to the end of the series
+    const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");
+    if (totalIndex !== -1) {
+      const totalEntry = seriesData.splice(totalIndex, 1)[0];
+      seriesData.push(totalEntry);
+    }
 
     if (chartContainer.value && chartContainer.value.parentElement) {
       renderChart(chartContainer.value, categories, seriesData);
@@ -227,7 +233,9 @@ const getDashStyle = (seriesIndex) => {
 function renderChart(container, categories, seriesData) {
   const seriesWithDashStyles = seriesData.map((series, index) => ({
     ...series,
-    dashStyle: getDashStyle(index),
+    color: index === seriesData.length - 1 ? "#333333" : null, // Give "Totalt" a different color
+    dashStyle: index === seriesData.length - 1 ? "Solid" : getDashStyle(index), // Give "Totalt" a solid line
+    legendIndex: series.name === "Totalt" ? -1 : index, // Move "Totalt" to the beginning of the legend
   }));
 
   Highcharts.chart(container, {

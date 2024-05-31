@@ -1,34 +1,57 @@
 <template>
   <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
-  <div>
-    <q-table
-      flat
-      bordered
-      :rows="rows"
-      :columns="columns"
-      row-key="year"
-      style="width: fit-content"
-      separator="vertical"
-      class="bg-grey-2 sticky-column"
-      :rows-per-page-options="[10, 20, 50]"
-    >
-      <template v-slot:body="props">
-        <q-tr :props="props" class="bg-white">
-          <q-td
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-            class="bg-white"
-            :class="col.name === 'Year' ? 'bg-grey-1' : ''"
-          >
-            {{ col.value }}
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
-  </div>
-</template>
-<template v-else>
+    <div class="column items-end">
+      <q-btn-dropdown
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        label="Ladda ner ordtrender"
+        style="width: fit-content"
+      >
+        <q-list>
+          <q-item clickable v-close-popup @click="downloadWTCountsCSV">
+            <q-item-section>
+              <q-item-label>CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadWTCountsExcel">
+            <q-item-section>
+              <q-item-label>Excel</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+    </div>
+    <div>
+      <q-table
+        flat
+        bordered
+        :rows="rows"
+        :columns="columns"
+        row-key="year"
+        style="width: fit-content"
+        separator="vertical"
+        class="bg-grey-2 sticky-column"
+        :rows-per-page-options="[10, 20, 50]"
+      >
+        <template v-slot:body="props">
+          <q-tr :props="props" class="bg-white">
+            <q-td
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+              class="bg-white"
+              :class="col.name === 'Year' ? 'bg-grey-1' : ''"
+            >
+              {{ col.value }}
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+  </template>
+  <template v-else>
     <!-- Show a message when there's no data -->
     <div class="no-data-message">
       Inga resultat för sökningen. Försök med ett annat sökord, eller andra
@@ -45,6 +68,16 @@ const metaStore = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const rows = ref([]);
 const columns = ref([]);
+
+const downloadWTCountsCSV = () => {
+  const paramString = metaStore.selectedMetadataToText();
+  wtStore.downloadCSVcountsWT(paramString);
+};
+
+const downloadWTCountsExcel = () => {
+  const paramString = metaStore.selectedMetadataToText();
+  wtStore.downloadExcelCountsWT(paramString);
+};
 
 watchEffect(() => {
   const wordTrends = wtStore.wordTrends;
@@ -66,7 +99,7 @@ watchEffect(() => {
           field: "year",
           sortable: true,
         },
-        ...Array.from(uniqueWords).map((word) => ({
+        ...Array.from(uniqueWords).sort().map((word) => ({
           name: word,
           required: true,
           label: word,
@@ -75,7 +108,6 @@ watchEffect(() => {
           align: "left",
         })),
       ];
-
       columns.value = allColumns;
 
       rows.value = wordTrends.map((entry) => {
@@ -88,7 +120,6 @@ watchEffect(() => {
     }
   }
 });
-
 </script>
 
 <style>
