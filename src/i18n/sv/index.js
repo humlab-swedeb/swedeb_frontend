@@ -70,9 +70,7 @@ export default {
   För att söka på flera ord, separera dem med kommatecken, till exempel:
   <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
   <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till vissa partier, talare eller år. Observera att denna
-  test-korpus är lemmatiserad, vilket innebär att sökresultaten baseras på
-  ordets grammatiska rot.`,
+  anförandena till vissa partier, talare eller år.`,
 
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
   t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
