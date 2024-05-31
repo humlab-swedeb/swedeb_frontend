@@ -27,11 +27,6 @@
       @toggle-event="handleLemmatizedSearch"
     />
     <inputNrOfWords />
-    <toggleSwitch
-      class="q-mt-md"
-      label="Normalisera resultatet"
-      @normalize-data="handleNormalizeData"
-    />
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
