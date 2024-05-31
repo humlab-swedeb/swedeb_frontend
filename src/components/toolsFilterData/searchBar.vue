@@ -9,6 +9,7 @@
     bg-color="white"
     color="accent"
     @clear="kwicStore.searchText = ''"
+    @keydown.enter="handleEnter"
   >
     <template v-slot:prepend>
       <q-icon name="search" color="accent" />
@@ -18,8 +19,15 @@
 
 <script setup>
 import { kwicDataStore } from "src/stores/kwicDataStore";
+import { metaDataStore } from "src/stores/metaDataStore";
 
 const kwicStore = kwicDataStore();
+const metaStore = metaDataStore();
+
+const handleEnter = () => {
+  metaStore.submitEvent = true;
+  metaStore.updateEvent = true;
+};
 </script>
 
 <style lang="scss" scoped>
