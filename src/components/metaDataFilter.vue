@@ -39,7 +39,8 @@
             <dropdownSelection type="party" />
             <q-card-section horizontal class="q-px-none">
               <q-card-section class="q-py-none">
-                <genderOfficeCheckbox type="gender" />
+                <genderOfficeToggleCheckbox type="gender" toggle_label="Filtrera på kön" />
+                <!-- <genderOfficeCheckbox type="gender" /> -->
               </q-card-section>
               <q-card-section class="q-py-none">
                 <!-- <genderOfficeCheckbox type="office" /> -->
@@ -67,7 +68,7 @@
       </q-slide-transition>
     </q-card>
     <q-card flat class="q-ma-md bg-transparent padding-bot">
-      <toolsFilters @normalize-data="handleNormalizeData" />
+      <toolsFilters @normalize-data="handleNormalizeData" @lemmatize-search="lemmatizeSearch" />
       <div class="q-pa-lg full-width sticky-bottom">
         <!-- Search button for wordtrends -->
         <q-btn
@@ -204,6 +205,7 @@
 <script setup>
 import yearRange from "src/components/metaDataComponents/yearRange.vue";
 import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
+import genderOfficeToggleCheckbox from "src/components/metaDataComponents/genderOfficeToggleCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
@@ -218,16 +220,17 @@ const showing = ref(false);
 const route = useRoute();
 
 const handleNormalizeData = (newValue) => {
-  // only really for word trends right now,
-  // for KWIC this could/should be used for lemmatization instead
-  // should also be two different toggles
 
-  if (route.path === "/tools/wordtrends") {
+
+  if (route.path === '/tools/wordtrends') {
     wtStore.normalizeResults = newValue;
-  } else if (route.path === "/tools/kwic") {
-    //console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
-  } else {
-    //console.log('should not happen...')
+  }
+};
+
+const lemmatizeSearch = (newValue) => {
+  if (route.path === '/tools/kwic') {
+    kwicStore.lemmatizeSearch = newValue;
+
   }
 };
 

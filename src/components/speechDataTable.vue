@@ -1,110 +1,110 @@
 <template>
   <template v-if="wtStore.wordTrendsSpeeches.length > 0">
-  <div>
-    <div class="row q-py-md justify-between">
-      <q-item-label
-        class="col-9 q-mt-md"
-        v-if="wtStore.wordTrendsSpeeches.length > 0"
+    <div>
+      <div class="row q-py-md justify-between">
+        <q-item-label
+          class="col-9 q-mt-md"
+          v-if="wtStore.wordTrendsSpeeches.length > 0"
+        >
+          Sökningen resulterade i
+          <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
+        </q-item-label>
+
+        <q-btn
+          no-caps
+          icon="download"
+          class="text-grey-8 col-3"
+          color="secondary"
+          label="Ladda ner tal"
+          @click="downloadSpeeches"
+          style="width: fit-content"
+        ></q-btn>
+      </div>
+
+      <q-table
+        ref="SpeechTable"
+        bordered
+        flat
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+        :rows-per-page-options="[10, 20, 50]"
+        v-model:pagination="pagination"
+        v-if="!loading"
+        class="bg-grey-2"
       >
-        Sökningen resulterade i
-        <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
-      </q-item-label>
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.label }}
+              <q-icon
+                v-if="col.label === 'Anförande'"
+                name="info_outline"
+                color="accent"
+                class="q-mb-md q-ml-xs"
+              >
+                <q-tooltip>
+                  Här ska det vara en beskrivning av hur anförande-ID beskrivs
+                </q-tooltip>
+              </q-icon>
+            </q-th>
+          </q-tr>
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+            <q-td
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+              class="bg-white"
+              :class="props.expand ? 'bg-grey-3' : ''"
+            >
+              <q-item-label
+                v-if="col.name === 'party'"
+                class="text-bold"
+                :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
+              >
+                {{ col.value }}
+              </q-item-label>
+              <q-item-label
+                v-else-if="col.name === 'node_word'"
+                class="text-bold"
+              >
+                {{ col.value }}
+              </q-item-label>
 
-       <q-btn
-        no-caps
-        icon="download"
-        class="text-grey-8 col-3"
-        color="secondary"
-        label="Ladda ner tal"
-        @click="downloadSpeeches"
-        style="width: fit-content"
-      ></q-btn>
-
+              <q-item-label v-else>
+                {{ col.value }}
+              </q-item-label>
+            </q-td>
+            <q-td
+              auto-width
+              class="bg-white"
+              :class="props.expand ? 'bg-grey-3' : ''"
+            >
+              <q-btn
+                size="sm"
+                color="accent"
+                round
+                dense
+                flat
+                :icon="
+                  props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                "
+              />
+            </q-td>
+          </q-tr>
+          <!-- If row in table is clicked, EXPAND -->
+          <expandingTableRow :props="props" />
+        </template>
+      </q-table>
     </div>
-
-    <q-table
-      ref="SpeechTable"
-      bordered
-      flat
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-      :rows-per-page-options="[10, 20, 50]"
-      v-model:pagination="pagination"
-      v-if="!loading"
-      class="bg-grey-2"
-    >
-      <template v-slot:header="props">
-        <q-tr :props="props">
-          <q-th v-for="col in props.cols" :key="col.name" :props="props">
-            {{ col.label }}
-            <q-icon
-              v-if="col.label === 'Anförande'"
-              name="info_outline"
-              color="accent"
-              class="q-mb-md q-ml-xs"
-            >
-              <q-tooltip>
-                Här ska det vara en beskrivning av hur anförande-ID beskrivs
-              </q-tooltip>
-            </q-icon>
-          </q-th>
-        </q-tr>
-      </template>
-      <template v-slot:body="props">
-        <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-          <q-td
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-            class="bg-white"
-            :class="props.expand ? 'bg-grey-3' : ''"
-          >
-            <q-item-label
-              v-if="col.name === 'party'"
-              class="text-bold"
-              :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
-            >
-              {{ col.value }}
-            </q-item-label>
-            <q-item-label
-              v-else-if="col.name === 'node_word'"
-              class="text-bold"
-            >
-              {{ col.value }}
-            </q-item-label>
-
-            <q-item-label v-else>
-              {{ col.value }}
-            </q-item-label>
-          </q-td>
-          <q-td
-            auto-width
-            class="bg-white"
-            :class="props.expand ? 'bg-grey-3' : ''"
-          >
-            <q-btn
-              size="sm"
-              color="accent"
-              round
-              dense
-              flat
-              :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-            />
-          </q-td>
-        </q-tr>
-        <!-- If row in table is clicked, EXPAND -->
-        <expandingTableRow :props="props" />
-      </template>
-    </q-table>
-  </div>
-</template>
-<template v-else>
+  </template>
+  <template v-else>
     <!-- Show a message when there's no data -->
     <noResults />
   </template>
 </template>
-
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
@@ -282,8 +282,10 @@ function sortSpeeches(a, b) {
 
 function downloadSpeeches() {
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(wtStore.wordHitsSelected);
-  downloadStore.getSpeechesZip(visibleRows.value, paramString);
+  const paramString = metaStore.selectedMetadataToText(
+    wtStore.wordHitsSelected
+  );
+  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 }
 </script>
 

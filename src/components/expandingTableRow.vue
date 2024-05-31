@@ -113,14 +113,13 @@ const replaceNewLine = (str) => {
 };
 
 const replaceWordWithBoldTags = (str, word) => {
-  // add bold tags to word hits. Only matches whole words
-  // which might not be ideal for lemmatized matches
   const words = word.split(",").map((w) => w.trim());
 
   words.forEach((w) => {
     const regex = new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "giu");
-    str = str.replace(regex, `<b>${w}</b>`);
+    str = str.replace(regex, (match) => `<b>${match}</b>`);
   });
+
   return str;
 };
 

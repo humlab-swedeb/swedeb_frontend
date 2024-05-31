@@ -7,6 +7,7 @@
       <ShowData />
     </div>
     <loadingIcon v-if="loading" size="100" />
+
     <div v-else class="q-pb-xl">
       <div class="row q-py-md justify-between">
         <q-item-label
@@ -16,15 +17,6 @@
           Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
           träffar.
         </q-item-label>
-        <!--         <q-btn
-          no-caps
-          icon="download"
-          class="text-grey-8 col-3"
-          color="secondary"
-          label="Ladda ner tal"
-          @click="downloadSpeeches"
-          style="width: fit-content"
-        ></q-btn> -->
       </div>
       <kwicDataTable />
     </div>
@@ -39,7 +31,7 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, nextTick } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
@@ -51,11 +43,15 @@ const formattedIntro = intro;
 const showData = ref(false);
 const loading = ref(false);
 
+
+
+
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
     loading.value = true;
+    showData.value = true; // Otherwise the loading icon does not show until second search/after pending
+    await nextTick();
     await kwicStore.getKwicResult(kwicStore.searchText);
-    showData.value = true;
     setTimeout(() => {
       loading.value = false;
     }, 400);
