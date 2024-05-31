@@ -16,7 +16,7 @@
           Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
           träffar.
         </q-item-label>
-<!--         <q-btn
+        <!--         <q-btn
           no-caps
           icon="download"
           class="text-grey-8 col-3"
@@ -54,8 +54,7 @@ const loading = ref(false);
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
     loading.value = true;
-    const textString = wtStore.generateStringOfSelected();
-    await kwicStore.getKwicResult(textString);
+    await kwicStore.getKwicResult(kwicStore.searchText);
     showData.value = true;
     setTimeout(() => {
       loading.value = false;

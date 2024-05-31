@@ -69,25 +69,23 @@
     <q-card flat class="q-ma-md bg-transparent padding-bot">
       <toolsFilters @normalize-data="handleNormalizeData" />
       <div class="q-pa-lg full-width sticky-bottom">
+        <!-- Search button for wordtrends -->
         <q-btn
+          v-if="$route.path === '/tools/wordtrends'"
           @click="handleSubmit"
           no-caps
           class="fit text-h6"
           color="accent"
           label="Sök"
-          v-if="$route.path !== '/tools/speeches'"
           :disabled="
             wtStore.wordHitsSelected.length < 1 ||
             ($route.path === '/tools/wordtrends' &&
               wtStore.wordHitsSelected.some(
                 (word) => word.includes(' ') || word.includes('*')
-              )) ||
-            ($route.path === '/tools/kwic' &&
-              wtStore.wordHitsSelected.length > 1) ||
-            ($route.path === '/tools/ngram' &&
-              wtStore.wordHitsSelected.length > 1)
+              ))
           "
         >
+          <!-- tooltip to put in search words -->
           <q-tooltip
             v-if="wtStore.wordHitsSelected.length < 1"
             anchor="top middle"
@@ -96,31 +94,7 @@
           >
             Lägg till sökord
           </q-tooltip>
-          <q-tooltip
-            v-if="
-              $route.path === '/tools/kwic' &&
-              wtStore.wordHitsSelected.length > 1
-            "
-            anchor="top middle"
-            self="bottom middle"
-            :offset="[10, 10]"
-          >
-            Key words in context (KWIC) kan endast användas med ett sökord eller
-            sökfras år gången.
-          </q-tooltip>
-
-          <q-tooltip
-            v-if="
-              $route.path === '/tools/ngram' &&
-              wtStore.wordHitsSelected.length > 1
-            "
-            anchor="top middle"
-            self="bottom middle"
-            :offset="[10, 10]"
-          >
-            I verktyget N-gram kan endast ett sökord användad åt gången, alt. använda <code>.*</code> för wildcardsökning.
-          </q-tooltip>
-
+          <!-- Tooltip if user puts in sentence -->
           <q-tooltip
             v-if="
               $route.path === '/tools/wordtrends' &&
@@ -141,6 +115,71 @@
             }}</code>
           </q-tooltip>
         </q-btn>
+
+        <!-- Search button for KWIC -->
+        <q-btn
+          v-if="$route.path === '/tools/kwic'"
+          @click="handleSubmit"
+          no-caps
+          class="fit text-h6"
+          color="accent"
+          label="Sök"
+          :disabled="
+            kwicStore.searchText.length < 1 ||
+            kwicStore.searchText.includes(',')
+          "
+        >
+          <!-- Tooltip for search for words or sentences -->
+          <q-tooltip
+            v-if="kwicStore.searchText.length < 1"
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            Skriv in ett sökord eller en fras.
+          </q-tooltip>
+
+          <!-- Tooltip for only searching on one word or sentence at a time -->
+          <q-tooltip
+            v-if="kwicStore.searchText.includes(',')"
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i
+            taget
+          </q-tooltip>
+        </q-btn>
+
+        <!-- Search button for N-Grams -->
+        <q-btn
+          v-if="$route.path === '/tools/ngrams'"
+          @click="handleSubmit"
+          no-caps
+          class="fit text-h6"
+          color="accent"
+          label="Sök"
+          :disabled="
+            $route.path === '/tools/ngram' &&
+            wtStore.wordHitsSelected.length > 1
+          "
+        >
+          <!-- Tooltip for only searching for one word at a time, or wildcard -->
+          <q-tooltip
+            v-if="
+              $route.path === '/tools/ngram' &&
+              wtStore.wordHitsSelected.length > 1
+            "
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+          >
+            I verktyget N-gram kan endast ett sökord användad åt gången, alt.
+            använda <code>.*</code> för wildcardsökning.
+          </q-tooltip>
+        </q-btn>
+
+        <!-- Search button for speeches -->
         <q-btn
           @click="handleSubmit"
           no-caps
@@ -162,10 +201,12 @@ import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
+const kwicStore = kwicDataStore();
 const showing = ref(false);
 const route = useRoute();
 
@@ -174,13 +215,10 @@ const handleNormalizeData = (newValue) => {
   // for KWIC this could/should be used for lemmatization instead
   // should also be two different toggles
 
-
-  if (route.path === '/tools/wordtrends') {
+  if (route.path === "/tools/wordtrends") {
     wtStore.normalizeResults = newValue;
-
-  } else if (route.path === '/tools/kwic') {
+  } else if (route.path === "/tools/kwic") {
     //console.log('Toggle event emitted with value: IN METADATA for KWIC', newValue);
-
   } else {
     //console.log('should not happen...')
   }

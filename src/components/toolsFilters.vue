@@ -13,9 +13,9 @@
     }}</q-item-label>
   </div>
   <q-card-section
-    v-if="$route.path === '/tools/wordtrends' || $route.path === '/tools/kwic'"
+    v-if="$route.path === '/tools/wordtrends'"
   >
-    <searchBar />
+    <searchBarAdd />
     <toggleSwitch
       class="q-mt-md"
       label="Normalisera resultatet"
@@ -23,10 +23,16 @@
     />
   </q-card-section>
   <q-card-section v-if="$route.path === '/tools/kwic'">
+    <searchBar />
     <inputNrOfWords />
+    <toggleSwitch
+      class="q-mt-md"
+      label="Normalisera resultatet"
+      @normalize-data="handleNormalizeData"
+    />
   </q-card-section>
   <q-card-section v-if="$route.path === '/tools/ngram'">
-    <searchBar />
+    <searchBarAdd />
     <q-item-label caption class="text-bold q-mt-lg">
       Välj storlek på N-gram och var sökordet ska vara placerat
     </q-item-label>
@@ -45,6 +51,7 @@
 </template>
 
 <script setup>
+import searchBarAdd from "src/components/toolsFilterData/searchBarAdd.vue";
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";

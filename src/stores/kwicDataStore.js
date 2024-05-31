@@ -8,6 +8,7 @@ export const kwicDataStore = defineStore("kwicData", {
     wordsLeft: 5,
     wordsRight: 5,
     kwicData: [],
+    searchText: "",
   }),
 
   actions: {
