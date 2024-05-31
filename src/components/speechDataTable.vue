@@ -101,10 +101,7 @@
 </template>
 <template v-else>
     <!-- Show a message when there's no data -->
-    <div class="no-data-message">
-      Inga resultat för sökningen. Försök med ett annat sökord, eller andra
-      filtreringsalternativ.
-    </div>
+    <noResults />
   </template>
 </template>
 
@@ -116,6 +113,8 @@ import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
+import noResults from "src/components/noResults.vue";
+
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();

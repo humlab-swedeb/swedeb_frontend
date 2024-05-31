@@ -329,6 +329,7 @@ watchEffect(() => {
       id: index + 1,
       ngram: entry.ngram,
       count: entry.count,
+      speeches: entry.count + 1,
     }));
     /* rows.value = [
       { id: 1, words: "ett ord", frequency: 1 },
@@ -348,6 +349,13 @@ watchEffect(() => {
         label: "Frekvens",
         align: "left",
         field: "count",
+        sortable: true,
+      },
+      {
+        name: "speeches",
+        label: "Antal anföranden",
+        align: "left",
+        field: "speeches",
         sortable: true,
       },
     ];

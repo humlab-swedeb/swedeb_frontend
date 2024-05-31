@@ -29,7 +29,7 @@
         valts.
       </div>
       <loadingIcon v-if="loading" size="100" />
-      <lineChart v-else v-show="showDataTable" />
+      <lineChart v-else-if="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">
@@ -37,30 +37,7 @@
         valts.
       </div>
       <loadingIcon v-if="loading" size="100" />
-      <div v-else v-show="showDataTable">
-        <div class="column items-end">
-          <q-btn-dropdown
-        no-caps
-        icon="download"
-        class="text-grey-8 col-3"
-        color="secondary"
-        label="Ladda ner ordtrender"
-        style="width: fit-content"
-      >
-        <q-list>
-          <q-item clickable v-close-popup @click="downloadWTCountsCSV">
-            <q-item-section>
-              <q-item-label>CSV</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="downloadWTCountsExcel">
-            <q-item-section>
-              <q-item-label>Excel</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
-        </div>
+      <div v-else-if="showDataTable">
         <wordTrendsCountTable />
       </div>
     </q-tab-panel>
@@ -96,32 +73,22 @@ const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const loading = ref(false);
 
-const tabs = ref("speech");
+const tabs = ref("diagram");
 
 const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
 
-const downloadWTCountsCSV = () => {
-  const paramString = store.selectedMetadataToText();
-  wtStore.downloadCSVcountsWT(paramString);
-};
-
-const downloadWTCountsExcel = () => {
-  const paramString = store.selectedMetadataToText();
-  wtStore.downloadExcelCountsWT(paramString);
-};
-
 watchEffect(async () => {
   if (store.submitEvent && store.updateEvent) {
-    const textString = wtStore.generateStringOfSelected();
     loading.value = true;
+    const textString = wtStore.generateStringOfSelected();
     await wtStore.getWordTrendsResult(textString);
     showDataTable.value = true;
     dataLoadedTable.value = true;
-    loading.value = false;
     await wtStore.getWordTrendsSpeeches(textString);
     showData.value = true;
     dataLoaded.value = true;
+    loading.value = false;
   }
 });
 </script>
