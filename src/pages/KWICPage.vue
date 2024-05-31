@@ -17,7 +17,6 @@
           Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
           träffar.
         </q-item-label>
-
       </div>
       <kwicDataTable />
     </div>
@@ -52,8 +51,7 @@ watchEffect(async () => {
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
     await nextTick();
-    const textString = wtStore.generateStringOfSelected();
-    await kwicStore.getKwicResult(textString);
+    await kwicStore.getKwicResult(kwicStore.searchText);
     setTimeout(() => {
       loading.value = false;
     }, 400);

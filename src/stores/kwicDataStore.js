@@ -10,6 +10,7 @@ export const kwicDataStore = defineStore("kwicData", {
     wordsLeft: 5,
     wordsRight: 5,
     kwicData: [],
+    searchText: "",
     columnNames : {
       left_word: "Vänster",
       node_word: "Sökord",

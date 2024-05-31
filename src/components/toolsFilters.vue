@@ -9,7 +9,8 @@
     }}</q-item-label>
   </div>
   <q-card-section v-if="currentPath === '/tools/wordtrends'">
-    <searchBar />
+    <searchBarAdd />
+
     <toggleSwitch
       class="q-mt-md"
       label="Normalisera resultatet"
@@ -26,6 +27,11 @@
       @toggle-event="handleLemmatizedSearch"
     />
     <inputNrOfWords />
+    <toggleSwitch
+      class="q-mt-md"
+      label="Normalisera resultatet"
+      @normalize-data="handleNormalizeData"
+    />
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
@@ -43,6 +49,7 @@
 </template>
 
 <script setup>
+import searchBarAdd from "src/components/toolsFilterData/searchBarAdd.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
