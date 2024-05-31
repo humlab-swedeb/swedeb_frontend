@@ -2,7 +2,7 @@
   <q-input
     v-model="nGramStore.width"
     outlined
-    label="N-Gram bredd"
+    label="Bredd"
     type="number"
     class="bg-white full-width"
     color="accent"
