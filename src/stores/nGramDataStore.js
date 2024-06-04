@@ -7,9 +7,9 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     nGrams: [],
     nGramSpeeches: [],
     width: 3,
-    placingOptions: ["Vänster", "Mitten", "Höger"],
+    placingOptions: ["Ej specificerat", "Vänster", "Höger"],
 
-    placingSelected: "Mitten",
+    placingSelected: "Ej specificerat",
   }),
 
   actions: {

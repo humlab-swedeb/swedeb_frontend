@@ -1,32 +1,38 @@
 <template>
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
-    <div class=""></div>
-    <q-btn-dropdown
-      no-caps
-      icon="download"
-      class="text-grey-8 col-3"
-      color="secondary"
-      label="Ladda ner KWIC"
-      style="width: fit-content"
-    >
-      <q-list>
-        <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
-          <q-item-section>
-            <q-item-label>Tabell som CSV</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
-          <q-item-section>
-            <q-item-label>Tabell som Excel</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
-          <q-item-section>
-            <q-item-label>Tal</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown>
+    <div class="row q-py-md justify-between">
+      <q-item-label class="col-9 q-mt-md" v-if="kwicStore.kwicData.length > 0">
+        Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
+        träffar.
+      </q-item-label>
+
+      <q-btn-dropdown
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        label="Ladda ner KWIC"
+        style="width: fit-content"
+      >
+        <q-list>
+          <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
+            <q-item-section>
+              <q-item-label>Tabell som CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
+            <q-item-section>
+              <q-item-label>Tabell som Excel</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
+            <q-item-section>
+              <q-item-label>Tal</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+    </div>
     <q-table
       ref="KWICTable"
       :rows="rows"
