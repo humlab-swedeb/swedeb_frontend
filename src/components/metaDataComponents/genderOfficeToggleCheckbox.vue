@@ -1,12 +1,19 @@
 <template>
-  <q-item-label class="text-bold">{{ $t(`${props.type}`) + ":" }}</q-item-label>
-  <q-toggle
-    @click="setAllTrue(props.type)"
-    v-model="store[`${props.type}Filter`]"
-    :label="toggle_label"
-    color="accent"
-  />
-  <br />
+  <div class="row items-center justify-between">
+    <q-item-label class="text-bold text-grey-9">
+      {{ toggle_label + ":" }}</q-item-label
+    >
+
+    <q-toggle
+      class="q-mr-lg"
+      @click="setAllTrue(props.type)"
+      v-model="store[`${props.type}Filter`]"
+      :label="store[`${props.type}Filter`] ? 'Ja' : 'Nej'"
+      color="accent"
+      checked-icon="check"
+      unchecked-icon="close"
+    />
+  </div>
   <q-checkbox
     v-for="(value, key) in store.options[props.type]"
     :key="key"
@@ -17,7 +24,7 @@
     color="accent"
     :disable="!store[`${props.type}Filter`]"
     :modelValue="store.selected[props.type].includes(key)"
-    @update:modelValue="handleCheckboxChange($event, key);"
+    @update:modelValue="handleCheckboxChange($event, key)"
   />
 </template>
 
@@ -27,12 +34,11 @@ import { defineProps } from "vue";
 const store = metaDataStore();
 
 const props = defineProps(["type", "toggle_label"]);
-const disable = !store[`${props.type}Filter`]
+const disable = !store[`${props.type}Filter`];
 
 const setAllTrue = (type) => {
   // When toggled, all options are always selected
   store.selected[type] = Object.keys(store.options[type]);
-
 };
 
 const handleCheckboxChange = (checked, key) => {
@@ -47,5 +53,4 @@ const handleCheckboxChange = (checked, key) => {
     }
   }
 };
-
 </script>

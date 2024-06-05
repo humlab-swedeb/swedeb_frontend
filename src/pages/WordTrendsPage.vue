@@ -3,7 +3,7 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("wordTrendsIntroTitle")
     }}</q-item-label>
-    <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
+    <div class="word-trends-intro text-grey-8 lineHeight"  v-html="formattedIntro"></div>
   </q-card>
 
   <div v-show="showData">
@@ -16,6 +16,7 @@
     no-caps
     active-color="accent"
     align="justify"
+    class="q-mt-lg"
   >
     <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
     <q-tab name="table" icon="table_view" label="Tabell" />

@@ -37,15 +37,18 @@
             <!-- PLACE METADATA FILTER COMPONENTS HERE -->
             <yearRange />
             <dropdownSelection type="party" />
-            <q-card-section horizontal class="q-px-none">
-              <q-card-section class="q-py-none">
-                <genderOfficeToggleCheckbox type="gender" toggle_label="Filtrera på kön" />
+            <!-- <q-card-section horizontal class="q-px-none"> -->
+              <q-card-section class="q-py-none q-px-none">
+                <genderOfficeToggleCheckbox
+                  type="gender"
+                  toggle_label="Filtrera på kön"
+                />
                 <!-- <genderOfficeCheckbox type="gender" /> -->
               </q-card-section>
-              <q-card-section class="q-py-none">
+              <!-- <q-card-section class="q-py-none"> -->
                 <!-- <genderOfficeCheckbox type="office" /> -->
-              </q-card-section>
-            </q-card-section>
+              <!-- </q-card-section> -->
+            <!-- </q-card-section> -->
             <!-- Do not show sub office type as of now -->
             <!-- <dropdownSelection type="subOffice" /> -->
             <dropdownSelection type="speakers" />
@@ -68,7 +71,10 @@
       </q-slide-transition>
     </q-card>
     <q-card flat class="q-ma-md bg-transparent padding-bot">
-      <toolsFilters @normalize-data="handleNormalizeData" @lemmatize-search="lemmatizeSearch" />
+      <toolsFilters
+        @normalize-data="handleNormalizeData"
+        @lemmatize-search="lemmatizeSearch"
+      />
       <div class="q-pa-lg full-width sticky-bottom">
         <!-- Search button for wordtrends -->
         <q-btn
@@ -165,7 +171,7 @@
             kwicStore.searchText.includes(',')
           "
         >
-        <q-tooltip
+          <q-tooltip
             v-if="kwicStore.searchText.length < 1"
             anchor="top middle"
             self="bottom middle"
@@ -175,9 +181,7 @@
           </q-tooltip>
           <!-- Tooltip for only searching for one word at a time, or wildcard -->
           <q-tooltip
-            v-if="
-            kwicStore.searchText.includes(',')
-            "
+            v-if="kwicStore.searchText.includes(',')"
             anchor="top middle"
             self="bottom middle"
             :offset="[10, 10]"
@@ -204,7 +208,7 @@
 
 <script setup>
 import yearRange from "src/components/metaDataComponents/yearRange.vue";
-import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
+//import genderOfficeCheckbox from "src/components/metaDataComponents/genderOfficeCheckbox.vue";
 import genderOfficeToggleCheckbox from "src/components/metaDataComponents/genderOfficeToggleCheckbox.vue";
 import dropdownSelection from "./metaDataComponents/dropdownSelection.vue";
 import toolsFilters from "./toolsFilters.vue";
@@ -220,17 +224,14 @@ const showing = ref(false);
 const route = useRoute();
 
 const handleNormalizeData = (newValue) => {
-
-
-  if (route.path === '/tools/wordtrends') {
+  if (route.path === "/tools/wordtrends") {
     wtStore.normalizeResults = newValue;
   }
 };
 
 const lemmatizeSearch = (newValue) => {
-  if (route.path === '/tools/kwic') {
+  if (route.path === "/tools/kwic") {
     kwicStore.lemmatizeSearch = newValue;
-
   }
 };
 

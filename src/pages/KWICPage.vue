@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="q-pa-md background">
-    <div class="word-trends-intro text-grey-8" v-html="formattedIntro"></div>
+    <div class="word-trends-intro text-grey-8 lineHeight" v-html="formattedIntro"></div>
   </q-card>
   <div v-show="showData">
     <div class="q-pb-md">
@@ -9,15 +9,6 @@
     <loadingIcon v-if="loading" size="100" />
 
     <div v-else class="q-pb-xl">
-      <div class="row q-py-md justify-between">
-        <q-item-label
-          class="col-9 q-mt-md"
-          v-if="kwicStore.kwicData.length > 0"
-        >
-          Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
-          träffar.
-        </q-item-label>
-      </div>
       <kwicDataTable />
     </div>
   </div>
@@ -29,13 +20,11 @@ import kwicDataTable from "src/components/kwicDataTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
-import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import i18n from "src/i18n/sv";
 import { ref, watchEffect, nextTick } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
-const wtStore = wordTrendsDataStore();
 
 const intro = i18n.kwicIntro;
 const formattedIntro = intro;

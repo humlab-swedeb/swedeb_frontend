@@ -25,14 +25,11 @@ const kwicStore = kwicDataStore();
 const metaStore = metaDataStore();
 
 const handleEnter = () => {
-  metaStore.submitEvent = true;
-  metaStore.updateEvent = true;
+  if (!kwicStore.searchText.includes(",")) {
+    metaStore.submitEvent = true;
+    metaStore.updateEvent = true;
+  }
 };
 </script>
 
-<style lang="scss" scoped>
-.chip-with-blank-space {
-  color: white;
-  background-color: $accent;
-}
-</style>
+<style scoped></style>
