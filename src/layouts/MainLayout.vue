@@ -47,7 +47,7 @@
             <q-item-label class="text-subtitle1">{{
               $t("swedeb")
             }}</q-item-label>
-            <q-item-label caption class="text-accent">{{
+            <q-item-label caption class="text-grey-8">{{
               $t("contact")
             }}</q-item-label>
             <q-item-label

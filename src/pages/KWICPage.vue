@@ -1,6 +1,12 @@
 <template>
-  <q-card flat class="q-pa-md background">
-    <div class="word-trends-intro text-grey-8 lineHeight" v-html="formattedIntro"></div>
+  <q-card flat class="q-px-md background q-pt-sm q-pb-md">
+    <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
+      $t("kwicIntroTitle")
+    }}</q-item-label>
+    <div
+      class="word-trends-intro lineHeight"
+      v-html="formattedIntro"
+    ></div>
   </q-card>
   <div v-show="showData">
     <div class="q-pb-md">
@@ -32,18 +38,13 @@ const formattedIntro = intro;
 const showData = ref(false);
 const loading = ref(false);
 
-
-
-
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
     await nextTick();
     await kwicStore.getKwicResult(kwicStore.searchText);
-    setTimeout(() => {
-      loading.value = false;
-    }, 400);
+
   }
 });
 </script>

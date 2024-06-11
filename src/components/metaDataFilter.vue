@@ -18,6 +18,7 @@
 
         <q-space />
         <q-btn
+          aria-label="Fäll ut och in filter för metadata"
           color="accent"
           round
           flat
@@ -38,21 +39,19 @@
             <yearRange />
             <dropdownSelection type="party" />
             <!-- <q-card-section horizontal class="q-px-none"> -->
-              <q-card-section class="q-py-none q-px-none">
-                <genderOfficeToggleCheckbox
-                  type="gender"
-                  toggle_label="Filtrera på kön"
-                />
-                <!-- <genderOfficeCheckbox type="gender" /> -->
-              </q-card-section>
-              <!-- <q-card-section class="q-py-none"> -->
-                <!-- <genderOfficeCheckbox type="office" /> -->
-              <!-- </q-card-section> -->
+            <genderOfficeToggleCheckbox
+              type="gender"
+              toggle_label="Filtrera på kön"
+            />
+            <!-- <genderOfficeCheckbox type="gender" /> -->
+            <!-- <q-card-section class="q-py-none"> -->
+            <!-- <genderOfficeCheckbox type="office" /> -->
+            <!-- </q-card-section> -->
             <!-- </q-card-section> -->
             <!-- Do not show sub office type as of now -->
             <!-- <dropdownSelection type="subOffice" /> -->
             <dropdownSelection type="speakers" />
-            <div class="column items-end q-">
+            <div class="column items-end">
               <q-btn
                 v-if="hasSelections"
                 @click="store.resetSelectedState"
@@ -248,6 +247,7 @@ const hasSelections = computed(() => {
     office.length > 0 ||
     subOffice.length > 0 ||
     speakers.length > 0 ||
+    store.genderFilter == true ||
     store.selected.yearRange.min !== store.options.yearRange.min ||
     store.selected.yearRange.max !== store.options.yearRange.max
   );

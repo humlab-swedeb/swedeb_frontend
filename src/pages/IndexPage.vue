@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="background row justify-center max-width q-ma-lg q-mx-xl">
-    <q-item-label class="text-h3">SweDeb</q-item-label>
+    <q-item-label class="text-h1">SweDeb</q-item-label>
     <q-card-section class="text-align text-body2 q-mt-sm">
       {{ $t("indexPageIntroText") }}
     </q-card-section>

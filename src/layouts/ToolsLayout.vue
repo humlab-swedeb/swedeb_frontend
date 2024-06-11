@@ -53,6 +53,7 @@
         <div class="cursor-pointer fit">
           <q-item>
             <q-btn
+              aria-label="Fäll ut filtersektionen"
               dense
               round
               unelevated
@@ -94,6 +95,7 @@
         style="top: 5px; right: -20px; overflow: hidden"
       >
         <q-btn
+          aria-label="Fäll in filtersektionen"
           dense
           round
           unelevated

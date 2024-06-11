@@ -4,7 +4,7 @@
     class="text-center text-h6 q-pt-lg"
   >
     <q-item-label class="text-bold">{{ $t(currentPath) }}</q-item-label>
-    <q-item-label caption class="text-bold q-pb-sm">{{
+    <q-item-label caption class="text-bold q-pb-sm text-grey-8">{{
       $t("toolsFilterTitle")
     }}</q-item-label>
   </div>
@@ -30,7 +30,7 @@
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
-    <q-item-label caption class="text-bold q-mt-lg"
+    <q-item-label caption class="text-bold q-mt-lg text-grey-8"
       >Välj storlek på N-gram och var sökordet ska vara placerat</q-item-label
     >
     <q-card-section horizontal class="q-px-none">

@@ -12,7 +12,15 @@
                 color: metaStore.getPartyNameColor(props.props.row.party),
               }"
             >
-              <q-item-label class="q-mt-xs" v-if="props.props.row.speaker">
+              <q-item-label
+                class="q-mt-xs"
+                :class="
+                  props.props.row.speaker === 'Metadata saknas'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
+                v-if="props.props.row.speaker"
+              >
                 {{ props.props.row.speaker }},&nbsp;
               </q-item-label>
               <q-item-label class="q-mt-xs" v-if="props.props.row.party">
