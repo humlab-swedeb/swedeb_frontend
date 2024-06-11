@@ -12,6 +12,7 @@
       color="accent"
       checked-icon="check"
       unchecked-icon="close"
+      keep-color
     />
   </div>
   <q-checkbox
