@@ -1,15 +1,33 @@
 <template>
-  <template v-if="wtStore.wordTrendsSpeeches.length > 0">
+  <template
+    v-if="
+      (wtStore.wordTrendsSpeeches.length > 0 &&
+        $route.path === '/tools/wordtrends') ||
+      ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0)
+    "
+  >
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label
           class="col-9 q-mt-md"
-          v-if="wtStore.wordTrendsSpeeches.length > 0"
+          v-if="
+            wtStore.wordTrendsSpeeches.length > 0 &&
+            $route.path === '/tools/wordtrends'
+          "
         >
           Sökningen resulterade i
           <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
         </q-item-label>
-
+        <q-item-label
+          class="col-9 q-mt-md"
+          v-else-if="
+            $route.path === '/tools/speeches' &&
+            speechStore.speechesData.length > 0
+          "
+        >
+          Sökningen resulterade i
+          <b>{{ speechStore.speechesData.length }}</b> antal träffar.
+        </q-item-label>
         <q-btn
           no-caps
           icon="download"
@@ -30,7 +48,6 @@
         row-key="id"
         :rows-per-page-options="[10, 20, 50]"
         v-model:pagination="pagination"
-        v-if="!loading"
         class="bg-grey-2"
       >
         <template v-slot:header="props">
@@ -69,6 +86,12 @@
               <q-item-label
                 v-else-if="col.name === 'node_word'"
                 class="text-bold"
+              >
+                {{ col.value }}
+              </q-item-label>
+              <q-item-label
+                v-else-if="col.value === 'metadata saknas'"
+                class="text-italic text-grey-6"
               >
                 {{ col.value }}
               </q-item-label>
@@ -115,7 +138,6 @@ import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import noResults from "src/components/noResults.vue";
 
-
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
@@ -134,19 +156,15 @@ const visibleRows = ref([]);
 const rows = ref([]);
 const columns = ref([]);
 
-const loading = ref(false);
-
 const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {
-    loading.value = true;
     if (props.type === "wordTrends") {
       displayedData.value = wtStore.wordTrendsSpeeches;
     } else if (props.type === "speeches") {
-      await speechStore.getSpeechesResult();
       displayedData.value = speechStore.speechesData;
     }
 
@@ -196,14 +214,6 @@ watchEffect(async () => {
         sortable: true,
         align: "left",
       },
-      /* {
-        name: "source",
-        required: true,
-        label: "Källa",
-        field: "source",
-        sortable: true,
-        align: "left",
-      }, */
       {
         name: "year",
         required: true,
@@ -226,7 +236,6 @@ watchEffect(async () => {
     }
 
     metaStore.submitEvent = false;
-    loading.value = false;
   }
 });
 const pagination = ref({});

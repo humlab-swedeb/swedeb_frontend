@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-center justify-between">
+  <div class="row items-center justify-between q-py-none q-px-none">
     <q-item-label class="text-bold text-grey-9">
       {{ toggle_label + ":" }}</q-item-label
     >
@@ -12,6 +12,7 @@
       color="accent"
       checked-icon="check"
       unchecked-icon="close"
+      keep-color
     />
   </div>
   <q-checkbox
@@ -21,7 +22,7 @@
     :label="value"
     class="q-ml-md"
     size="sm"
-    color="accent"
+    :color="!store[`${props.type}Filter`] ? 'grey' : 'accent'"
     :disable="!store[`${props.type}Filter`]"
     :modelValue="store.selected[props.type].includes(key)"
     @update:modelValue="handleCheckboxChange($event, key)"

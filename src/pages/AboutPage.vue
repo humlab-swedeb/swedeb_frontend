@@ -1,7 +1,7 @@
 <template>
   <q-page class="max-width background q-pa-lg q-px-xl">
     <q-card flat class="text-center background">
-      <q-item-label class="text-h3">{{ $t("aboutPageTitle") }}</q-item-label>
+      <q-item-label class="text-h1">{{ $t("aboutPageTitle") }}</q-item-label>
       <q-card-section class="text-align text-left text-body2 q-mt-sm">
         {{ $t("indexPageIntroText") }}
       </q-card-section>

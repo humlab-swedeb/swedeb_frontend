@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="background row justify-center max-width q-pa-lg q-px-xl">
-    <q-item-label class="text-h3">{{ $t("faqPageTitle") }}</q-item-label>
+    <q-item-label class="text-h1">{{ $t("faqPageTitle") }}</q-item-label>
     <q-card-section class="text-align text-body2 q-mt-sm">
       {{ $t("indexPageIntroText") }}
     </q-card-section>

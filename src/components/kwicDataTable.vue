@@ -95,6 +95,14 @@
             >
               {{ col.value }}
             </q-item-label>
+            <q-item-label
+              v-else-if="
+                col.value === 'Metadata saknas'
+              "
+              class="text-italic text-grey-6"
+            >
+              {{ col.value }}
+            </q-item-label>
             <q-item-label v-else>
               {{ col.value }}
             </q-item-label>
@@ -177,6 +185,7 @@ watchEffect(() => {
       person_id: entry.person_id,
       link: entry.link,
       protocol: entry.formatted_speech_id,
+      source: entry.speech_link,
     }));
 
     columns.value = [

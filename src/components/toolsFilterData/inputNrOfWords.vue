@@ -1,5 +1,5 @@
 <template>
-  <q-item-label caption class="text-bold q-mb-sm q-mt-lg">
+  <q-item-label caption class="text-bold q-mb-sm q-mt-lg text-grey-8">
     {{ $t("nrOfWordsIntro") }}
   </q-item-label>
   <q-card-section horizontal class="row justify-between q-pa-none">

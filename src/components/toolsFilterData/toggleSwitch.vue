@@ -2,7 +2,7 @@
   <div class="q-mt-lg">
     <div class="row items-center justify-between">
       <div class="row">
-        <q-item-label caption class="q-my-sm text-bold"
+        <q-item-label caption class="q-my-sm text-bold text-grey-8"
           >{{ label }}:
         </q-item-label>
         <q-icon name="info_outline" color="accent" class="q-mb-md q-ml-xs">

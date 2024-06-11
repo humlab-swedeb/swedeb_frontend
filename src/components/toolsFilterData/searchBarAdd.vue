@@ -14,7 +14,13 @@
       <q-icon name="query_stats" color="accent" />
     </template>
     <template v-slot:after>
-      <q-btn round color="accent" @click="addSearchWord" icon="add" />
+      <q-btn
+        round
+        color="accent"
+        @click="addSearchWord"
+        icon="add"
+        aria-label="Lägg till sökord"
+      />
     </template>
   </q-input>
   <div class="row justify-end">

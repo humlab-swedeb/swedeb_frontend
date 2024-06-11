@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="q-pa-md background">
-    <div class="word-trends-intro text-grey-8 lineHeight" v-html="formattedIntro"></div>
+    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
     <div v-show="showData">
       <ShowData />
     </div>
