@@ -44,7 +44,7 @@ watchEffect(async () => {
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
     await nextTick();
     await kwicStore.getKwicResult(kwicStore.searchText);
-
+    loading.value = false;
   }
 });
 </script>
