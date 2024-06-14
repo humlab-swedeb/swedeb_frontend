@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import axios from 'axios';
 import { metaDataStore } from "./metaDataStore";
 import JSZip from "jszip";
 import ExcelJS from 'exceljs';
 
 export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
-    /* selected: metaDataStore().selected, */
     wordsLeft: 5,
     wordsRight: 5,
     kwicData: [],
@@ -23,12 +23,24 @@ export const kwicDataStore = defineStore("kwicData", {
       speech_link: "Länk tal"
     },
     lemmatizeSearch: false,
+    cancelTokenSource: null,
 
   }),
 
   actions: {
 
+
+
+    cancelFetch() {
+      if (this.cancelTokenSource) {
+        this.cancelTokenSource.cancel('Sökning avbruten');
+      }
+
+    },
+
     async getKwicResult(search) {
+
+      this.cancelTokenSource = axios.CancelToken.source();
       try {
         const path = `/tools/kwic/${search}`;
         const additional_params = {
@@ -39,9 +51,14 @@ export const kwicDataStore = defineStore("kwicData", {
 
         const queryString =
           metaDataStore().getSelectedParams(additional_params);
-        const response = await api.get(`${path}?${queryString}`);
+        const response = await api.get(`${path}?${queryString}`, {
+          cancelToken: this.cancelTokenSource.token,
+        });
         this.kwicData = response.data.kwic_list;
       } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("Request canceled", error.message);
+        }else
         console.error("Error fetching data:", error);
       }
     },

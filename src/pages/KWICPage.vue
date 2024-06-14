@@ -3,10 +3,7 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("kwicIntroTitle")
     }}</q-item-label>
-    <div
-      class="word-trends-intro lineHeight"
-      v-html="formattedIntro"
-    ></div>
+    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
   <div v-show="showData">
     <div class="q-pb-md">
@@ -16,6 +13,12 @@
 
     <div v-else class="q-pb-xl">
       <kwicDataTable />
+    </div>
+
+    <div>
+      <q-btn @click="cancelFetch" :disable="!loading "
+        >Cancel Fetch</q-btn
+      >
     </div>
   </div>
 </template>
@@ -38,13 +41,20 @@ const formattedIntro = intro;
 const showData = ref(false);
 const loading = ref(false);
 
+
 watchEffect(async () => {
   if (metaStore.submitEvent && metaStore.updateEvent) {
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
+
     await nextTick();
+
     await kwicStore.getKwicResult(kwicStore.searchText);
     loading.value = false;
   }
 });
+
+const cancelFetch = () => {
+  kwicStore.cancelFetch();
+};
 </script>
