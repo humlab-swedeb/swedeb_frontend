@@ -17,7 +17,7 @@
 
     <div>
       <q-btn @click="cancelFetch" :disable="!loading "
-        >Cancel Fetch</q-btn
+        >Avbryt sökning</q-btn
       >
     </div>
   </div>
