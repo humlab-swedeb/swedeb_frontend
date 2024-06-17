@@ -276,7 +276,6 @@ function sortByNumber(a, b) {
 }
 
 function sortSpeeches(a, b) {
-  // Regular expression to match the year in the protocol string
   const yearRes = sortByYear(a, b);
   if (yearRes !== 0) {
     return yearRes;

@@ -80,7 +80,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     addPartyParam(selected_params) {
       if (this.selected.party.length > 0) {
-        // add the value from this.party.options for each selected party in this.party.selected
         this.selected.party.forEach((party) =>
           selected_params.append("party_id", this.options.party[party].party_id)
         );
@@ -161,7 +160,9 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
-      this.addParamArray("gender", "gender_id", searchParams);
+      if (this.genderFilter) {
+        this.addParamArray("gender", "gender_id", searchParams);
+      }
       //this.addParamArray("office", "office_types", searchParams);
       //this.addParamArray("subOffice", "sub_office_types", searchParams);
 
@@ -279,21 +280,5 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
-    selectAll(type) {
-      this.selected[type] = this.options[type];
-      //if click again unselect all
-      if (!this[`${type}AllSelect`]) {
-        this.selected[type] = [];
-      }
-    },
-
-    // If all genders are selected, select "Select All"
-    ifAllSelected(type) {
-      if (this.selected[type].length === this.options[type].length) {
-        this[`${type}AllSelect`] = true;
-      } else {
-        this[`${type}AllSelect`] = false;
-      }
-    },
 
 }});
