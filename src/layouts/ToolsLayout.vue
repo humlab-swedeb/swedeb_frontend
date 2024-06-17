@@ -16,13 +16,13 @@
           <q-menu>
             <q-list>
               <q-item to="/" clickable>
-                <q-item-section>Hem</q-item-section>
+                <q-item-section>{{$t('home')}}</q-item-section>
               </q-item>
               <q-item to="/about" clickable>
-                <q-item-section>Om SweDeb</q-item-section>
+                <q-item-section>{{$t('about')}}</q-item-section>
               </q-item>
               <q-item to="/faq" clickable>
-                <q-item-section>FAQ</q-item-section>
+                <q-item-section>{{$t('faq')}}</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -30,10 +30,10 @@
       </q-toolbar>
       <q-toolbar class="background">
         <q-tabs no-caps active-color="accent" class="text-bold text-black">
-          <q-route-tab to="/tools/wordtrends" label="Ordtrender" />
-          <q-route-tab to="/tools/kwic" label="KWIC" />
-          <q-route-tab to="/tools/speeches" label="Anföranden" />
-          <q-route-tab to="/tools/ngram" label="N-Grams" />
+          <q-route-tab to="/tools/wordtrends" :label="$t('wordTrendsTitle')" />
+          <q-route-tab to="/tools/kwic" :label="$t('kwicTitle')" />
+          <q-route-tab to="/tools/speeches" :label="$t('speechesTitle')" />
+          <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" />
         </q-tabs>
       </q-toolbar>
     </q-header>
@@ -53,7 +53,7 @@
         <div class="cursor-pointer fit">
           <q-item>
             <q-btn
-              aria-label="Fäll ut filtersektionen"
+              :aria-label="$t('accessibility.filtersectionOut')"
               dense
               round
               unelevated
@@ -95,7 +95,7 @@
         style="top: 5px; right: -20px; overflow: hidden"
       >
         <q-btn
-          aria-label="Fäll in filtersektionen"
+          :aria-label="$t('accessibility.filtersectionIn')"
           dense
           round
           unelevated

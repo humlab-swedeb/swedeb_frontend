@@ -7,7 +7,7 @@
       <q-input
         v-model="kwicStore.wordsLeft"
         outlined
-        label="Vänster"
+        :label="$t('nrOfWordsLeft')"
         type="number"
         class="bg-white"
         color="accent"
@@ -23,7 +23,7 @@
       <q-input
         v-model="kwicStore.wordsRight"
         outlined
-        label="Höger"
+        :label="$t('nrOfWordsRight')"
         type="number"
         class="bg-white"
         color="accent"
