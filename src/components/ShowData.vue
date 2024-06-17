@@ -48,9 +48,6 @@ const customKeys = {
 };
 const customKey = (key) => customKeys[key] || key;
 
-const getJoinedGender = () => {
-  return store.selected.gender.map(gender => store.options.gender[gender]).join(", ");
-};
 
 watchEffect(() => {
   // When the submitEvent is triggered in the store, update the displayedData and showData values
