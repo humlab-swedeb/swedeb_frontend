@@ -55,6 +55,6 @@ watchEffect(() => {
     showData.value = true;
     displayedData.value = { ...store.selected };
   }
-  store.updateEvent = false;
+  store.cancelUpdateEvent(' ShowData ')
 });
 </script>

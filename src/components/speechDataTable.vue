@@ -144,7 +144,6 @@ const wtStore = wordTrendsDataStore();
 const downloadStore = downloadDataStore();
 
 const props = defineProps({
-  dataLoaded: Boolean,
   type: String,
   download: Function,
 });
@@ -161,7 +160,7 @@ const expandRow = async (props) => {
 };
 
 watchEffect(async () => {
-  if (metaStore.submitEvent || props.dataLoaded) {
+  if (metaStore.submitEvent ) { //|| props.dataLoaded
     if (props.type === "wordTrends") {
       displayedData.value = wtStore.wordTrendsSpeeches; // detta kan sättas som en prop
     } else if (props.type === "speeches") {
@@ -235,7 +234,7 @@ watchEffect(async () => {
       });
     }
 
-    metaStore.submitEvent = false;  //TODO borde sättas i Pagen för de olika verktygen
+    metaStore.cancelSubmitEvent(' speech data table ');  //TODO borde sättas i Pagen för de olika verktygen
   }
 });
 const pagination = ref({});

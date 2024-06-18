@@ -49,7 +49,7 @@
       </div>
       <loadingIcon v-if="loading" size="100" />
       <div v-else v-show="showData">
-        <speechDataTable type="wordTrends" :dataLoaded="dataLoaded" />
+        <speechDataTable type="wordTrends" />
       </div>
     </q-tab-panel>
   </q-tab-panels>
