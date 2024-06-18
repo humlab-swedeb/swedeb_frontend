@@ -126,7 +126,7 @@ export default {
   t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år.`,
 
-  searchResult1: "Sökningen resulterade i",
+  searchResult1: "Sökningen resulterade i ",
   searchResult2: "antal träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",

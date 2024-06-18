@@ -30,7 +30,7 @@
         {{ $t("wordtrendsResult2") }}
       </div>
       <loadingIcon v-if="loading" size="100" />
-      <lineChart v-else-if="showDataTable" />
+      <lineChart v-else-if="showDataTable" :toolDataType="wtStore.wordTrends" />
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">

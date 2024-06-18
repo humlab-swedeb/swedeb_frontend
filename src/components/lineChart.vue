@@ -1,5 +1,5 @@
 <template>
-  <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
+  <template v-if="props.toolDataType && props.toolDataType.length > 0">
     <div class="row justify-center q-mt-lg">
       <div ref="chartContainer" id="chartContainer" class="fit"></div>
     </div>
@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { reactive, watchEffect, ref } from "vue";
 import noResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
@@ -21,8 +20,11 @@ import exporting from "highcharts/modules/exporting";
 exporting(Highcharts);
 
 const chartContainer = ref(null);
-const wtStore = wordTrendsDataStore();
 let categories = [];
+
+const props = defineProps({
+  toolDataType: Object,
+});
 
 const chartOptions = reactive({
   chart: {
@@ -197,14 +199,14 @@ const chartOptions = reactive({
 const dataLoaded = ref(false);
 
 watchEffect(() => {
-  const wordTrends = wtStore.wordTrends;
+  const toolDataType = props.toolDataType;
 
-  if (wordTrends && wordTrends.length > 0) {
-    categories = wordTrends.map((entry) => parseInt(entry.year));
-    const seriesData = Object.keys(wordTrends[0].count)
+  if (toolDataType && toolDataType.length > 0) {
+    categories = toolDataType.map((entry) => parseInt(entry.year));
+    const seriesData = Object.keys(toolDataType[0].count)
       .map((word) => ({
         name: word,
-        data: wordTrends.map((entry) => entry.count[word]),
+        data: toolDataType.map((entry) => entry.count[word]),
       }))
       .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
 
