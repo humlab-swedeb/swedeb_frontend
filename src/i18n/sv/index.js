@@ -2,10 +2,7 @@
 // so you can safely delete all default props below
 
 export default {
-  failed: "Misslyckades",
-  success: "Lyckades",
-
-  // MAIN LAYOUT
+  // MAIN LAYOUT ------------------------------------------------
   swedeb: "SweDeb",
   home: "Hem",
   tools: "Verktyg",
@@ -36,7 +33,7 @@ export default {
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
 
-  // MetaDataFilter component ------------------------------------------------
+  // MetaDataFilter component -------------------------------------------
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
@@ -84,9 +81,11 @@ export default {
   searchDropdownOfHits2: "*",
   searchDropdownOfHits3: "Det finns ytterligare",
   searchDropdownOfHits4: "ord att lägga till för att förfina sökningen.",
+
   normalizeResultTooltip:
     "Antalet träffar på sökordet delas med det totala antalet ord per år",
   normalizeResultLabel: "Normalisera resultat",
+
   lemmaResultTooltip:
     "Sökningen tolkas som ett lemma och böjningsformer av sökningen inkluderas i resultatet.",
   lemmaResultLabel: "Lemmatiserad sökning",
@@ -100,6 +99,8 @@ export default {
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
   // Introduction to tool
+
+  // WORDTRENDS PAGE & COMPONENTS ----------------------------------------
   wordTrendsIntroTitle:
     "Ordtrender — Sök på ett eller flera ord för att se hur de har använts över tid.",
   wordTrendsIntro: `
@@ -108,18 +109,6 @@ export default {
   <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år.`,
 
-  kwicIntroTitle:
-    "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
-  kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
-  t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
-  höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
-  t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till vissa partier, talare eller år.`,
-
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
-  till vissa partier, talare eller år.`,
-
-  // WORDTRENDS
   wordtrendsResult1: "Här visas resultatet i en",
   wordtrendsResult2: "för de ord och metadata som valts.",
   wordtrendsResult3: "Här visas alla",
@@ -128,7 +117,15 @@ export default {
   wordtrendsResultTable: "tabell",
   wordtrendsResultSpeech: "anföranden",
 
-  // KWIC
+  // KWIC PAGE & COMPONENTS ------------------------------------------------
+  kwicIntroTitle:
+    "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
+  kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
+  t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
+  höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
+  t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  anförandena till vissa partier, talare eller år.`,
+
   searchResult1: "Sökningen resulterade i",
   searchResult2: "antal träffar.",
   downloadKWIC: "Ladda ner KWIC",
@@ -149,7 +146,11 @@ export default {
     link: "Länk",
   },
 
-  // ABOUT PAGE
+  // SPEECHES PAGE & COMPONENTS ------------------------------------------
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
+  till vissa partier, talare eller år.`,
+
+  // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om SweDeb",
   aboutFinance:
     "SweDeb är finansierade av Umeå Universitet under två års tid 2022-2024.",
@@ -210,7 +211,7 @@ export default {
     },
   },
 
-  // FAQ PAGE
+  // FAQ PAGE ------------------------------------------------
   faqPageTitle: "FAQ: Vanliga frågor och svar",
   faqContent: {
     0: {
@@ -223,7 +224,7 @@ export default {
     },
   },
 
-  // Expanded table row
+  // Expanded table row & DOWNLOAAD------------------------------------------
   searchWordLabel: "Sökord:",
   wikidata: "Wikidata",
   openSource: "Öppen källa",
@@ -232,23 +233,28 @@ export default {
   downloadSpeech: "Ladda ner tal",
   downloadWordtrends: "Ladda ner ordtrender",
 
+  //Download metadata ------------------------------------------------
   downLoadInfo: {
     corpus_version: "Korpusversion: v0.10.0",
     swerik_ref: "Datakälla: https://swerik-project.github.io/",
     swedeb_ref: "Nedladdat från: https://swedeb.se/public/index.html#/",
   },
 
+  //ACCessibility ------------------------------------------------
   accessibility: {
     filtersectionOut: "Fäll ut filtersektionen",
     filtersectionIn: "Fäll in filtersektionen",
     metadataFilter: "Fäll ut och in filter för metadata",
+
     searchAdd: "Lägg till sökord",
     tooltipSpeechID:
       "Här ska det vara en beskrivning av hur anförande-ID beskrivs",
     loadingResults: "Resultat hämtas, vänligen vänta...",
+
     noResults: "Inga resultat för sökningen.",
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",
   },
