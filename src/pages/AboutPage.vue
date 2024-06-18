@@ -13,8 +13,7 @@
           <div>
             <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
             <q-item-label :class="$q.screen.lt.sm ? 'q-px-lg' : 'q-py-sm'">
-              SweDeb är finansierade av Umeå Universitet under två års tid
-              2022-2024.
+              {{ $t("aboutFinance") }}
             </q-item-label>
             <q-img
               src="../../public/images/umu-logo-SE.png"
@@ -27,7 +26,9 @@
       </q-card-section>
 
       <q-card-section class="column content-center">
-        <q-item-label class="text-h5 text-center q-pb-lg">Team</q-item-label>
+        <q-item-label class="text-h5 text-center q-pb-lg">
+          {{ $t("aboutTeam") }}
+        </q-item-label>
         <q-card-section class="row fit justify-center">
           <div class="grid-container text-left">
             <peopleCard
@@ -42,7 +43,7 @@
       </q-card-section>
       <q-card-section>
         <q-item-label class="text-h5 text-center q-pb-lg">
-          Referensgrupp
+          {{ $t("aboutReference") }}
         </q-item-label>
         <q-card-section class="row fit justify-center">
           <div class="grid-container text-left">

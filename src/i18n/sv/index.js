@@ -119,6 +119,15 @@ export default {
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
 
+  // WORDTRENDS
+  wordtrendsResult1: "Här visas resultatet i en",
+  wordtrendsResult2: "för de ord och metadata som valts.",
+  wordtrendsResult3: "Här visas alla",
+  wordtrendsResult4: "i en tabell kopplat till de ord och metadata som valts.",
+  wordtrendsResultLine: "trendlinje",
+  wordtrendsResultTable: "tabell",
+  wordtrendsResultSpeech: "anföranden",
+
   // KWIC
   searchResult1: "Sökningen resulterade i",
   searchResult2: "antal träffar.",
@@ -142,36 +151,40 @@ export default {
 
   // ABOUT PAGE
   aboutPageTitle: "Om SweDeb",
+  aboutFinance:
+    "SweDeb är finansierade av Umeå Universitet under två års tid 2022-2024.",
+  aboutTeam: "Teamet bakom SweDeb",
+  aboutReference: "Referensgrupp",
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
-      title: "Projektledare",
-      description: "Fredrik är projektledare för SweDeb.",
+      title: "Projektledare, Forskare",
+      description: "",
     },
     1: {
       name: "Johan Jarlbrink",
       title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     2: {
       name: "Rebecka Weegar",
       title: "Systemutvecklare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     3: {
       name: "Roger Mähler",
       title: "Systemutvecklare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     4: {
       name: "Marita Nilsson",
       title: "Krav och test",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     5: {
       name: "Kajsa Palm",
       title: "Systemutvecklare, UX/UI",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
   },
   peopleReference: {
@@ -236,5 +249,7 @@ export default {
     noResults: "Inga resultat för sökningen.",
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+    errorMessage404: "Hoppsan, här fanns inget!",
+    errorMessageButton: "Tillbaka till startsidan",
   },
 };
