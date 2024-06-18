@@ -32,8 +32,7 @@ import { ref, watchEffect, nextTick } from "vue";
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 
-const intro = i18n.kwicIntro;
-const formattedIntro = intro;
+const formattedIntro = i18n.kwicIntro;
 
 const showData = ref(false);
 const loading = ref(false);

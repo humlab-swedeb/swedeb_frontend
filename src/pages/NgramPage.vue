@@ -19,8 +19,7 @@ import { nGramDataStore } from "src/stores/nGramDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
 
-const intro = i18n.ngramIntro;
-const formattedIntro = intro;
+const formattedIntro = i18n.ngramIntro;
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
 const kwicStore = kwicDataStore();

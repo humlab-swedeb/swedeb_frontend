@@ -14,7 +14,7 @@
         class="q-mr-lg"
         v-model="toggleValue"
         color="accent"
-        :label="toggleValue ? 'Ja' : 'Nej'"
+        :label="toggleValue ? $t('toggleYes') : $t('toggleNo')"
         keep-color
         @click="handleToggle"
         checked-icon="check"

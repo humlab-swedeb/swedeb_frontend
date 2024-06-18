@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-item-label class="q-my-md"
-      >Sökningen resulterade i <b>{{ nGramStore.nGrams.length }}</b> antar
-      träffar</q-item-label
+      >{{ $t("searchResult1") }}<b>{{ nGramStore.nGrams.length }}</b>
+      {{ $t("searchResult2") }}</q-item-label
     >
     <q-table
       bordered
@@ -54,15 +54,15 @@
             <div>
               <div class="row q-py-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
-                  Sökningen resulterade i
-                  <b>{{ props.row.count }}</b> antal träffar.
+                  {{ $t('searchResult1') }}
+                  <b>{{ props.row.count }}</b> {{ $t('searchResult2') }}
                 </q-item-label>
                 <q-btn
                   no-caps
                   icon="download"
                   class="text-grey-8 col-3"
                   color="secondary"
-                  label="Ladda ner alla"
+                  :label="$t('downloadAll')"
                   style="width: fit-content"
                 />
               </div>
@@ -157,7 +157,7 @@
                               class="q-pt-xs"
                               v-if="props.row.node_word"
                             >
-                              Sökord:
+                              {{ $t('searchWordLabel') }}
                               <b>{{ props.row.node_word }}</b>
                             </q-item-label>
                           </q-card-section>
@@ -229,7 +229,7 @@
               </q-table>
             </div>
           </q-td>
-          <q-td class="bg-grey-1" no-hover/>
+          <q-td class="bg-grey-1" no-hover />
         </q-tr>
       </template>
     </q-table>

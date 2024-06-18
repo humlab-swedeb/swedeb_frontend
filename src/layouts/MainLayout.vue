@@ -13,16 +13,16 @@
           <q-menu>
             <q-list>
               <q-item to="/" clickable>
-                <q-item-section>Hem</q-item-section>
+                <q-item-section>{{ $t("home") }}</q-item-section>
               </q-item>
               <q-item to="/tools/wordtrends" clickable>
-                <q-item-section>Verktyg</q-item-section>
+                <q-item-section>{{ $t("tools") }}</q-item-section>
               </q-item>
               <q-item to="/about" clickable>
-                <q-item-section>Om SweDeb</q-item-section>
+                <q-item-section>{{ $t("about") }}</q-item-section>
               </q-item>
               <q-item to="/faq" clickable>
-                <q-item-section>FAQ</q-item-section>
+                <q-item-section>{{ $t("faq") }}</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -59,7 +59,7 @@
             <q-btn
               no-caps
               color="accent"
-              label="Kontakta SweDeb-Teamet"
+              :label="$t('contactLabelButton')"
               class="q-my-md q-px-lg"
               icon="alternate_email"
             />
@@ -110,7 +110,7 @@
             <q-btn
               no-caps
               color="accent"
-              label="Kontakta SweDeb-Teamet"
+              :label="$t('contactLabelButton')"
               class="q-my-md q-px-lg"
             />
           </q-card-section>

@@ -15,8 +15,9 @@
             $route.path === '/tools/wordtrends'
           "
         >
-          Sökningen resulterade i
-          <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
+          {{ $t("searchResult1") }}
+          <b>{{ wtStore.wordTrendsSpeeches.length }}</b>
+          {{ $t("searchResult2") }}
         </q-item-label>
         <q-item-label
           class="col-9 q-mt-md"
@@ -25,15 +26,15 @@
             speechStore.speechesData.length > 0
           "
         >
-          Sökningen resulterade i
-          <b>{{ speechStore.speechesData.length }}</b> antal träffar.
+          {{ $t("searchResult1") }}
+          <b>{{ speechStore.speechesData.length }}</b> {{ $t("searchResult2") }}
         </q-item-label>
         <q-btn
           no-caps
           icon="download"
           class="text-grey-8 col-3"
           color="secondary"
-          label="Ladda ner tal"
+          :label="$t('downloadSpeech')"
           @click="downloadSpeeches"
           style="width: fit-content"
         ></q-btn>
@@ -61,7 +62,7 @@
                 class="q-mb-md q-ml-xs"
               >
                 <q-tooltip>
-                  Här ska det vara en beskrivning av hur anförande-ID beskrivs
+                  {{ $t("accessibility.tooltipSpeechID") }}
                 </q-tooltip>
               </q-icon>
             </q-th>
