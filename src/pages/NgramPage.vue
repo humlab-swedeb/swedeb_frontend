@@ -34,6 +34,8 @@ watchEffect(async () => {
     await nGramStore.getNGramsResult(kwicStore.searchText);
     showData.value = true;
     loading.value = false;
+    metaStore.cancelSubmitEvent(" NgramPage ");
+    metaStore.cancelUpdateEvent(" NgramPage ");
   }
 });
 </script>

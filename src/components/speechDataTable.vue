@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, defineProps } from "vue";
+import { ref,  defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";

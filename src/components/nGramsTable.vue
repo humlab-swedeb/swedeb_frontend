@@ -237,7 +237,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
@@ -323,9 +323,7 @@ const expandRow = async (props) => {
   ];
 };
 
-watchEffect(() => {
-  if (metaStore.submitEvent) {
-    rows.value = nGramStore.nGrams.map((entry, index) => ({
+rows.value = nGramStore.nGrams.map((entry, index) => ({
       id: index + 1,
       ngram: entry.ngram,
       count: entry.count,
@@ -359,8 +357,6 @@ watchEffect(() => {
         sortable: true,
       },
     ];
-  }
-});
 </script>
 
 <style scoped></style>
