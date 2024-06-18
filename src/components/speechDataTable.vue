@@ -159,84 +159,81 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
-watchEffect(async () => {
-  if (metaStore.submitEvent ) { //|| props.dataLoaded
-    if (props.type === "wordTrends") {
-      displayedData.value = wtStore.wordTrendsSpeeches; // detta kan sättas som en prop
-    } else if (props.type === "speeches") {
-      displayedData.value = speechStore.speechesData;
-    }
+if (props.type === "wordTrends") {
+  displayedData.value = wtStore.wordTrendsSpeeches; // detta kan sättas som en prop
+} else if (props.type === "speeches") {
+  displayedData.value = speechStore.speechesData;
+}
 
-    rows.value = displayedData.value.map((speech) => ({
-      id: speech.document_name,
-      protocol: speech.formatted_speech_id,
-      node_word: speech.node_word,
-      speaker: speech.name,
-      gender: speech.gender,
-      party: speech.party_abbrev,
-      source: speech.speech_link,
-      year: speech.year,
-      link: speech.link,
-    }));
+rows.value = displayedData.value.map((speech) => ({
+  id: speech.document_name,
+  protocol: speech.formatted_speech_id,
+  node_word: speech.node_word,
+  speaker: speech.name,
+  gender: speech.gender,
+  party: speech.party_abbrev,
+  source: speech.speech_link,
+  year: speech.year,
+  link: speech.link,
+}));
 
-    columns.value = [
-      {
-        name: "protocol",
-        required: true,
-        label: "Anförande",
-        align: "left",
-        field: (row) => row.protocol,
-        sortable: true,
-        sort: (a, b) => sortSpeeches(a, b),
-      },
-      {
-        name: "speaker",
-        required: true,
-        label: "Talare",
-        field: "speaker",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "gender",
-        required: true,
-        label: "Kön",
-        field: "gender",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "party",
-        required: true,
-        label: "Parti",
-        field: "party",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "year",
-        required: true,
-        label: "År",
-        field: "year",
-        sortable: true,
-        align: "left",
-      },
-    ];
+columns.value = [
+  {
+    name: "protocol",
+    required: true,
+    label: "Anförande",
+    align: "left",
+    field: (row) => row.protocol,
+    sortable: true,
+    sort: (a, b) => sortSpeeches(a, b),
+  },
+  {
+    name: "speaker",
+    required: true,
+    label: "Talare",
+    field: "speaker",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "gender",
+    required: true,
+    label: "Kön",
+    field: "gender",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "party",
+    required: true,
+    label: "Parti",
+    field: "party",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "year",
+    required: true,
+    label: "År",
+    field: "year",
+    sortable: true,
+    align: "left",
+  },
+];
 
-    if (props.type === "wordTrends") {
-      columns.value.splice(1, 0, {
-        name: "node_word",
-        required: true,
-        label: "Sökord",
-        field: "node_word",
-        sortable: true,
-        align: "left",
-      });
-    }
+if (props.type === "wordTrends") {
+  columns.value.splice(1, 0, {
+    name: "node_word",
+    required: true,
+    label: "Sökord",
+    field: "node_word",
+    sortable: true,
+    align: "left",
+  });
+}
 
-    metaStore.cancelSubmitEvent(' speech data table ');  //TODO borde sättas i Pagen för de olika verktygen
-  }
-});
+//metaStore.cancelSubmitEvent(' speech data table ');  //TODO borde sättas i Pagen för de olika verktygen
+
 const pagination = ref({});
 
 function sortByYear(a, b) {

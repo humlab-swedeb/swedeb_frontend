@@ -45,7 +45,7 @@ const showData = ref(false);
 
 
 watchEffect(async () => {
-  if (metaStore.submitEvent) {
+  if (metaStore.submitEvent && metaStore.updateEvent) {
     loading.value = true;
     await speechStore.getSpeechesResult();
     showData.value = true;

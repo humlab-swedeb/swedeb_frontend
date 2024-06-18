@@ -101,6 +101,8 @@ watchEffect(async () => {
     showData.value = true;
     dataLoaded.value = true;
     loading.value = false;
+    store.cancelSubmitEvent(' WordTrendsPage ')
+    store.cancelUpdateEvent(' WordTrendsPage ')
   }
 });
 </script>
