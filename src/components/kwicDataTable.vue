@@ -170,9 +170,7 @@ const downloadKWICAsSpeeches = () => {
   downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 };
 
-watchEffect(() => {
-  if (metaStore.submitEvent) {
-    rows.value = kwicStore.kwicData.map((entry, index) => ({
+rows.value = kwicStore.kwicData.map((entry, index) => ({
       id: entry.title,
       unique_id: index,
       left_word: entry.left_word,
@@ -246,8 +244,6 @@ watchEffect(() => {
         align: "left",
       },
     ];
-  }
-});
 
 const pagination = ref({
   sortBy: "id",

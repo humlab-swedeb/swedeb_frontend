@@ -163,7 +163,7 @@ const expandRow = async (props) => {
 watchEffect(async () => {
   if (metaStore.submitEvent || props.dataLoaded) {
     if (props.type === "wordTrends") {
-      displayedData.value = wtStore.wordTrendsSpeeches;
+      displayedData.value = wtStore.wordTrendsSpeeches; // detta kan sättas som en prop
     } else if (props.type === "speeches") {
       displayedData.value = speechStore.speechesData;
     }
@@ -235,7 +235,7 @@ watchEffect(async () => {
       });
     }
 
-    metaStore.submitEvent = false;
+    metaStore.submitEvent = false;  //TODO borde sättas i Pagen för de olika verktygen
   }
 });
 const pagination = ref({});

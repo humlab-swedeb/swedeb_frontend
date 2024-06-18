@@ -30,7 +30,7 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watchEffect, nextTick } from "vue";
+import { ref, watchEffect, nextTick, onMounted } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
@@ -40,6 +40,15 @@ const formattedIntro = intro;
 
 const showData = ref(false);
 const loading = ref(false);
+
+
+onMounted(() => {
+  if(kwicStore.kwicData && kwicStore.kwicData.length > 0) {
+    showData.value = true;
+    loading.value = false;
+  }
+
+});
 
 
 watchEffect(async () => {

@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+import { store } from "quasar/wrappers";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 
@@ -26,8 +27,9 @@ const metaStore = metaDataStore();
 
 const handleEnter = () => {
   if (!kwicStore.searchText.includes(",")) {
-    metaStore.submitEvent = true;
-    metaStore.updateEvent = true;
+
+    metaStore.setSubmitEvent("searchBar kwic");
+    metaStore.setUpdateEvent("searchBar kwic");
   }
 };
 </script>

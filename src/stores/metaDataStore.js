@@ -42,6 +42,28 @@ export const metaDataStore = defineStore("metaDataStore", {
   }),
 
   actions: {
+
+    setSubmitEvent(message) {
+      console.log("setSubmitEvent "+ message)
+      this.submitEvent = true;
+    },
+
+    setUpdateEvent(message) {
+      console.log("setUpdateEvent " + message)
+      this.updateEvent = true;
+    },
+
+    cancelSubmitEvent(message) {
+      console.log("cancelSubmitEvent " + message)
+      this.submitEvent = false;
+    },
+
+    cancelUpdateEvent(message) {
+      console.log("cancelUpdateEvent " + message)
+      this.updateEvent = false;
+    },
+
+
     async resetSelectedState() {
       this.selected = {
         party: [],

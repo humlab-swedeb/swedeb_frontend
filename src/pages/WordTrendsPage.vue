@@ -62,7 +62,7 @@ import speechDataTable from "src/components/speechDataTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import i18n from "src/i18n/sv";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
@@ -78,6 +78,17 @@ const tabs = ref("diagram");
 
 const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
+
+onMounted(() => {
+  if(wtStore.wordTrends && wtStore.wordTrends.length > 0) {
+    showDataTable.value = true;
+    dataLoadedTable.value = true;
+  }
+  if(wtStore.wordTrendsSpeeches && wtStore.wordTrendsSpeeches.length > 0) {
+    showData.value = true;
+    dataLoaded.value = true;
+  }
+});
 
 watchEffect(async () => {
   if (store.submitEvent && store.updateEvent) {

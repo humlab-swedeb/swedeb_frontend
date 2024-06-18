@@ -51,7 +51,7 @@ const customKey = (key) => customKeys[key] || key;
 
 watchEffect(() => {
   // When the submitEvent is triggered in the store, update the displayedData and showData values
-  if (store.submitEvent && store.updateEvent) {
+  if (store.submitEvent) {
     showData.value = true;
     displayedData.value = { ...store.selected };
   }

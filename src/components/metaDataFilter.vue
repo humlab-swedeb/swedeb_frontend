@@ -235,8 +235,10 @@ const lemmatizeSearch = (newValue) => {
 };
 
 const handleSubmit = async () => {
-  store.submitEvent = true;
-  store.updateEvent = true;
+  store.setSubmitEvent('metaDataFilter')
+  store.setUpdateEvent('metaDataFilter')
+  //store.submitEvent = true;
+  //store.updateEvent = true;
 };
 
 const hasSelections = computed(() => {

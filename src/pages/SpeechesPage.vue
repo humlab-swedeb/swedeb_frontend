@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import speechDataTable from "src/components/speechDataTable.vue";
@@ -30,6 +30,19 @@ const intro = i18n.speechesIntro;
 const formattedIntro = intro;
 const loading = ref(false);
 const showData = ref(false);
+
+
+ onMounted(() => {
+   if(speechStore.speechesData && speechStore.speechesData.length > 0) {
+     showData.value = true;
+     loading.value = false;
+
+    }
+
+  });
+
+
+
 
 watchEffect(async () => {
   if (metaStore.submitEvent) {
