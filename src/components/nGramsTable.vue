@@ -248,7 +248,9 @@
               </q-tab-panel>
             </q-tab-panels>
           </q-td>
-          <q-td class="bg-grey-1" no-hover />
+          <q-tr>
+            <q-td class="bg-grey-1" no-hover />
+          </q-tr>
         </q-tr>
       </template>
     </q-table>

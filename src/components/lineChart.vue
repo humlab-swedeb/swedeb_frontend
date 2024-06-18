@@ -5,8 +5,7 @@
     </div>
   </template>
   <template v-else>
-    <!-- Show a message when there's no data -->
-    <noResults />
+    <noResults /> <!-- Show a message when there's no data -->
   </template>
 </template>
 
