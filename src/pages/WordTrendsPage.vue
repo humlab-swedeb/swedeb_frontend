@@ -80,11 +80,11 @@ const intro = i18n.wordTrendsIntro;
 const formattedIntro = intro;
 
 onMounted(() => {
-  if(wtStore.wordTrends && wtStore.wordTrends.length > 0) {
+  if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
     showDataTable.value = true;
     dataLoadedTable.value = true;
   }
-  if(wtStore.wordTrendsSpeeches && wtStore.wordTrendsSpeeches.length > 0) {
+  if (wtStore.speechesData && wtStore.speechesData.length > 0) {
     showData.value = true;
     dataLoaded.value = true;
   }
@@ -101,8 +101,8 @@ watchEffect(async () => {
     showData.value = true;
     dataLoaded.value = true;
     loading.value = false;
-    store.cancelSubmitEvent(' WordTrendsPage ')
-    store.cancelUpdateEvent(' WordTrendsPage ')
+    store.cancelSubmitEvent(" WordTrendsPage ");
+    store.cancelUpdateEvent;
   }
 });
 </script>

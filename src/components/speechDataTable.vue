@@ -1,7 +1,7 @@
 <template>
   <template
     v-if="
-      (wtStore.wordTrendsSpeeches.length > 0 &&
+      (wtStore.speechesData.length > 0 &&
         $route.path === '/tools/wordtrends') ||
       ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0)
     "
@@ -11,12 +11,12 @@
         <q-item-label
           class="col-9 q-mt-md"
           v-if="
-            wtStore.wordTrendsSpeeches.length > 0 &&
+            wtStore.speechesData.length > 0 &&
             $route.path === '/tools/wordtrends'
           "
         >
           Sökningen resulterade i
-          <b>{{ wtStore.wordTrendsSpeeches.length }}</b> antal träffar.
+          <b>{{ wtStore.speechesData.length }}</b> antal träffar.
         </q-item-label>
         <q-item-label
           class="col-9 q-mt-md"
@@ -148,7 +148,7 @@ const props = defineProps({
   download: Function,
 });
 
-const displayedData = ref({});
+const displayedData = ref([]);
 const SpeechTable = ref(null);
 const visibleRows = ref([]);
 
@@ -160,7 +160,7 @@ const expandRow = async (props) => {
 };
 
 if (props.type === "wordTrends") {
-  displayedData.value = wtStore.wordTrendsSpeeches; // detta kan sättas som en prop
+  displayedData.value = wtStore.speechesData; // detta kan sättas som en prop?
 } else if (props.type === "speeches") {
   displayedData.value = speechStore.speechesData;
 }
