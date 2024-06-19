@@ -31,8 +31,6 @@ export const metaDataStore = defineStore("metaDataStore", {
       },
     },
 
-    genderAllSelect: false,
-    officeAllSelect: false,
 
     genderFilter: false,
     partyFilter: false,
@@ -76,8 +74,7 @@ export const metaDataStore = defineStore("metaDataStore", {
           max: this.options.yearRange.max,
         },
       };
-      this.genderAllSelect = false;
-      this.officeAllSelect = false;
+
       this.selected.gender = Object.keys(this.options.gender);
       this.genderFilter = false;
 
