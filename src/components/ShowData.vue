@@ -34,6 +34,7 @@
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { ref, watchEffect } from "vue";
 import i18n from "src/i18n/sv/index.js";
+import { onMounted } from "vue";
 const store = metaDataStore();
 const displayedData = ref({});
 const showData = ref(false);
@@ -48,13 +49,23 @@ const customKeys = {
 };
 const customKey = (key) => customKeys[key] || key;
 
-
-watchEffect(() => {
-  // When the submitEvent is triggered in the store, update the displayedData and showData values
-  if (store.submitEvent) {
+onMounted(() => {
+  console.log('show data mounted')
+  if (store.selected !== undefined){
     showData.value = true;
     displayedData.value = { ...store.selected };
   }
-  store.cancelUpdateEvent(' ShowData ')
 });
+
+/*
+watchEffect(() => {
+  // When the submitEvent is triggered in the store, update the displayedData and showData values
+  if (store.submitEvent && store.updateEvent) {
+    showData.value = true;
+    displayedData.value = { ...store.selected };
+  }
+  store.cancelUpdateEvent(' show data ')
+});
+*/
+
 </script>

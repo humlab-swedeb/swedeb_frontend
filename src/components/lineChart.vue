@@ -195,12 +195,20 @@ const chartOptions = reactive({
 });
 
 const dataLoaded = ref(false);
+const wordTrends = wtStore.wordTrends;
 
-watchEffect(() => {
-  const wordTrends = wtStore.wordTrends;
+ watchEffect(() => {
 
-  if (wordTrends && wordTrends.length > 0) {
-    categories = wordTrends.map((entry) => parseInt(entry.year));
+   if (wordTrends && wordTrends.length > 0) {
+
+     prepareDataForLineChart();
+  }
+});
+
+
+
+function prepareDataForLineChart(){
+  categories = wordTrends.map((entry) => parseInt(entry.year));
     const seriesData = Object.keys(wordTrends[0].count)
       .map((word) => ({
         name: word,
@@ -220,8 +228,10 @@ watchEffect(() => {
       //addAnnotations();
       dataLoaded.value = true;
     }
-  }
-});
+
+}
+
+
 const getDashStyle = (seriesIndex) => {
   const styles = ["Solid", "Dash", "Dot", "LongDash", "DashDot"];
   const styleIndex = Math.floor(seriesIndex / 5) % styles.length;

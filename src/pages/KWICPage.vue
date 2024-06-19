@@ -43,9 +43,12 @@ const loading = ref(false);
 
 
 onMounted(() => {
+  console.log('mounting kwic page')
   if(kwicStore.kwicData && kwicStore.kwicData.length > 0) {
+    console.log('kwic page has data')
     showData.value = true;
     loading.value = false;
+    console.log('showData.value i onmounted i kwic', showData.value)
   }
 
 });
@@ -60,7 +63,10 @@ watchEffect(async () => {
 
     await kwicStore.getKwicResult(kwicStore.searchText);
     loading.value = false;
+
   }
+  metaStore.cancelSubmitEvent(" KWICPage ");
+  metaStore.cancelUpdateEvent(" KWICPage ");
 });
 
 const cancelFetch = () => {
