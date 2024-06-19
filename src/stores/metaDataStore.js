@@ -37,9 +37,20 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     submitEvent: false,
     updateEvent: false,
+    submitKwicEvent: false,
+
   }),
 
   actions: {
+
+    setSubmitKwicEvent(message) {
+      console.log("setSubmitKwicEvent "+ message)
+      this.submitKwicEvent = true;
+    },
+    cancelSubmitKwicEvent(message) {
+      console.log("setSubmitKwicEvent "+ message)
+      this.submitKwicEvent = false;
+    },
 
     setSubmitEvent(message) {
       console.log("setSubmitEvent "+ message)

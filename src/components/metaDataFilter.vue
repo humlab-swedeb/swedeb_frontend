@@ -235,9 +235,14 @@ const lemmatizeSearch = (newValue) => {
 };
 
 const handleSubmit = async () => {
-  store.setSubmitEvent('metaDataFilter')
-  store.setUpdateEvent('metaDataFilter')
-  //store.submitEvent = true;
+  if (route.path === "/tools/kwic") {
+    store.setSubmitKwicEvent(" metaDataFilter ");
+  }else{
+
+    store.setSubmitEvent('metaDataFilter')
+    store.setUpdateEvent('metaDataFilter')
+  }
+//store.submitEvent = true;
   //store.updateEvent = true;
 };
 

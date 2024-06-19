@@ -55,7 +55,7 @@ onMounted(() => {
 
 
 watchEffect(async () => {
-  if (metaStore.submitEvent && metaStore.updateEvent) {
+  if (metaStore.submitKwicEvent) {
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
 
@@ -65,8 +65,9 @@ watchEffect(async () => {
     loading.value = false;
 
   }
-  metaStore.cancelSubmitEvent(" KWICPage ");
-  metaStore.cancelUpdateEvent(" KWICPage ");
+  //metaStore.cancelSubmitEvent(" KWICPage ");
+  //metaStore.cancelUpdateEvent(" KWICPage ");
+  metaStore.cancelSubmitKwicEvent(" KWICPage ");
 });
 
 const cancelFetch = () => {
