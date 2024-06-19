@@ -4,7 +4,7 @@
   </q-card>
   <div v-show="showData">
     <div class="q-pb-md">
-      <ShowData />
+      <ShowData :filterSelections="'Speeches'"/>
     </div>
     <loadingIcon v-if="loading" size="100" />
 

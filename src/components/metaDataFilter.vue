@@ -236,18 +236,23 @@ const lemmatizeSearch = (newValue) => {
 
 const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
+    store.saveKwicFilterData();
+    console.log('här sattes kwicfilterdatagrejs då var store.selected: ', store.selected, store.filterAtSearchKWIC)
     store.setSubmitKwicEvent(" metaDataFilter ");
   } else if (route.path === "/tools/wordtrends") {
+    store.filterAtSearchWT = { ...store.selected };
     store.setSubmitWTEvent(" metaDataFilter ");
+
   } else if (route.path === "/tools/speeches") {
+    store.filterAtSearchSpeeches = { ...store.selected };
     store.setSubmitSpeechesEvent(" metaDataFilter ");
+  } else if (route.path === "/tools/ngram") {
+    store.filterAtSearchNgrams = { ...store.selected };
+    store.setSubmitNgramsEvent(" metaDataFilter ");
   }else{
 
-    store.setSubmitEvent('metaDataFilter')
-    store.setUpdateEvent('metaDataFilter')
+    console.log('unknown route in handleSubmit, metadatafilter.vue')
   }
-//store.submitEvent = true;
-  //store.updateEvent = true;
 };
 
 const hasSelections = computed(() => {

@@ -7,7 +7,7 @@
   </q-card>
 
   <div v-show="showData">
-    <ShowData />
+    <ShowData :filterSelections="'WordTrends'"/>
     <br />
   </div>
   <q-tabs
