@@ -38,6 +38,7 @@ export const metaDataStore = defineStore("metaDataStore", {
     submitEvent: false,
     updateEvent: false,
     submitKwicEvent: false,
+    submitEventWT: false,
 
   }),
 
@@ -50,6 +51,15 @@ export const metaDataStore = defineStore("metaDataStore", {
     cancelSubmitKwicEvent(message) {
       console.log("setSubmitKwicEvent "+ message)
       this.submitKwicEvent = false;
+    },
+
+    setSubmitWTEvent(message) {
+      console.log("setSubmitWTEvent "+ message)
+      this.submitEventWT = true;
+    },
+    cancelSubmitWTEvent(message) {
+      console.log("setSubmitWTEvent "+ message)
+      this.submitEventWT = false;
     },
 
     setSubmitEvent(message) {

@@ -237,6 +237,8 @@ const lemmatizeSearch = (newValue) => {
 const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
     store.setSubmitKwicEvent(" metaDataFilter ");
+  } else if (route.path === "/tools/wordtrends") {
+    store.setSubmitWTEvent(" metaDataFilter ");
   }else{
 
     store.setSubmitEvent('metaDataFilter')

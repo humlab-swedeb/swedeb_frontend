@@ -91,7 +91,7 @@ onMounted(() => {
 });
 
 watchEffect(async () => {
-  if (store.submitEvent && store.updateEvent) {
+  if (store.submitEventWT) {
     loading.value = true;
     const textString = wtStore.generateStringOfSelected();
     await wtStore.getWordTrendsResult(textString);
@@ -101,8 +101,9 @@ watchEffect(async () => {
     showData.value = true;
     dataLoaded.value = true;
     loading.value = false;
-    store.cancelSubmitEvent(" WordTrendsPage ");
-    store.cancelUpdateEvent(" WordTrendsPage ");
+    store.cancelSubmitWTEvent(" WordTrendsPage ");
+    //store.cancelSubmitEvent(" WordTrendsPage ");
+    //store.cancelUpdateEvent(" WordTrendsPage ");
   }
 });
 </script>
