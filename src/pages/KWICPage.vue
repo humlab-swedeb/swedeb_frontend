@@ -16,9 +16,7 @@
     </div>
 
     <div>
-      <q-btn @click="cancelFetch" :disable="!loading "
-        >Avbryt sökning</q-btn
-      >
+      <q-btn @click="cancelFetch" :disable="!loading">Avbryt sökning</q-btn>
     </div>
   </div>
 </template>
@@ -41,21 +39,18 @@ const formattedIntro = intro;
 const showData = ref(false);
 const loading = ref(false);
 
-
 onMounted(() => {
-  console.log('mounting kwic page')
-  if(kwicStore.kwicData && kwicStore.kwicData.length > 0) {
-    console.log('kwic page has data')
+  console.log("mounting kwic page");
+  if (kwicStore.kwicData && kwicStore.kwicData.length > 0) {
+    console.log("kwic page has data");
     showData.value = true;
     loading.value = false;
-    console.log('showData.value i onmounted i kwic', showData.value)
+    console.log("showData.value i onmounted i kwic", showData.value);
   }
-
 });
 
-
 watchEffect(async () => {
-  if (metaStore.submitKwicEvent) {
+  if (metaStore.submitEventKWIC) {
     loading.value = true;
     showData.value = true; // Otherwise the loading icon does not show until second search/after pending
 
@@ -63,7 +58,6 @@ watchEffect(async () => {
 
     await kwicStore.getKwicResult(kwicStore.searchText);
     loading.value = false;
-
   }
   //metaStore.cancelSubmitEvent(" KWICPage ");
   //metaStore.cancelUpdateEvent(" KWICPage ");

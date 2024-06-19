@@ -31,57 +31,64 @@ export const metaDataStore = defineStore("metaDataStore", {
       },
     },
 
-
     genderFilter: false,
     partyFilter: false,
 
     submitEvent: false,
     updateEvent: false,
-    submitKwicEvent: false,
+    submitEventKWIC: false,
     submitEventWT: false,
-
+    submitEventSpeeches: false,
   }),
 
   actions: {
 
+    setSubmitSpeechesEvent(message) {
+      console.log("setSubmitSpeechesEvent " + message);
+      this.submitEventSpeeches = true;
+    },
+    cancelSubmitSpeechesEvent(message) {
+      console.log("setSubmitSpeechesEvent " + message);
+      this.submitEventSpeeches = false;
+    },
+
     setSubmitKwicEvent(message) {
-      console.log("setSubmitKwicEvent "+ message)
-      this.submitKwicEvent = true;
+      console.log("setSubmitKwicEvent " + message);
+      this.submitEventKWIC = true;
     },
     cancelSubmitKwicEvent(message) {
-      console.log("setSubmitKwicEvent "+ message)
-      this.submitKwicEvent = false;
+      console.log("setSubmitKwicEvent " + message);
+      this.submitEventKWIC = false;
     },
 
     setSubmitWTEvent(message) {
-      console.log("setSubmitWTEvent "+ message)
+      console.log("setSubmitWTEvent " + message);
       this.submitEventWT = true;
     },
     cancelSubmitWTEvent(message) {
-      console.log("setSubmitWTEvent "+ message)
+      console.log("setSubmitWTEvent " + message);
       this.submitEventWT = false;
     },
 
     setSubmitEvent(message) {
-      console.log("setSubmitEvent "+ message)
+      console.log("setSubmitEvent " + message);
       this.submitEvent = true;
     },
 
     setUpdateEvent(message) {
-      console.log("setUpdateEvent " + message)
+      console.log("setUpdateEvent " + message);
       this.updateEvent = true;
     },
 
     cancelSubmitEvent(message) {
-      console.log("cancelSubmitEvent " + message)
+      console.log("cancelSubmitEvent " + message);
       this.submitEvent = false;
     },
 
     cancelUpdateEvent(message) {
-      console.log("cancelUpdateEvent " + message)
+      console.log("cancelUpdateEvent " + message);
       this.updateEvent = false;
     },
-
 
     async resetSelectedState() {
       this.selected = {
@@ -98,7 +105,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       this.selected.gender = Object.keys(this.options.gender);
       this.genderFilter = false;
-
     },
 
     async fetchAllMetaData() {
@@ -154,9 +160,9 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getSearchTermsAsString(searchTerms) {
-      if(searchTerms===undefined){
+      if (searchTerms === undefined) {
         return "";
-      }else{
+      } else {
         return `Sökord: ${searchTerms}`;
       }
     },
@@ -257,7 +263,6 @@ export const metaDataStore = defineStore("metaDataStore", {
         }
       }
       return "#808080";
-
     },
 
     async getPartyOptions() {
@@ -292,7 +297,6 @@ export const metaDataStore = defineStore("metaDataStore", {
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
-
     },
 
     async getSubOfficeOptions() {
@@ -319,6 +323,5 @@ export const metaDataStore = defineStore("metaDataStore", {
         console.error("Error fetching data:", error);
       }
     },
-
-
-}});
+  },
+});

@@ -239,6 +239,8 @@ const handleSubmit = async () => {
     store.setSubmitKwicEvent(" metaDataFilter ");
   } else if (route.path === "/tools/wordtrends") {
     store.setSubmitWTEvent(" metaDataFilter ");
+  } else if (route.path === "/tools/speeches") {
+    store.setSubmitSpeechesEvent(" metaDataFilter ");
   }else{
 
     store.setSubmitEvent('metaDataFilter')

@@ -45,15 +45,16 @@ const showData = ref(false);
 
 
 watchEffect(async () => {
-  if (metaStore.submitEvent && metaStore.updateEvent) {
+  if (metaStore.submitEventSpeeches) {
     loading.value = true;
     await speechStore.getSpeechesResult();
     showData.value = true;
     setTimeout(() => {
       loading.value = false;
     }, 400);
-    metaStore.cancelSubmitEvent(' SpeechesPage ')
-    metaStore.cancelUpdateEvent(' SpeechesPage ')
+    metaStore.cancelSubmitSpeechesEvent(' SpeechesPage ')
+    //metaStore.cancelSubmitEvent(' SpeechesPage ')
+    //metaStore.cancelUpdateEvent(' SpeechesPage ')
   }
 });
 </script>
