@@ -41,7 +41,7 @@
 
 <script setup>
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import i18n from "src/i18n/sv/index.js";
 import { onMounted } from "vue";
 import { watch } from "vue";
@@ -91,17 +91,18 @@ onMounted(() => {
 
 watch(
   () => {
-    if (props.filterSelections === "WordTrends") {
-      return store.filterAtSearchWT;
-    } else if (props.filterSelections === "Speeches") {
-      return store.filterAtSearchSpeeches;
-    } else if (props.filterSelections === "Ngrams") {
-      return store.filterAtSearchNgrams;
-    } else if (props.filterSelections === "KWIC") {
-      return store.filterAtSearchKWIC;
-    } else {
-      return {};
-    }
+   switch (props.filterSelections) {
+        case 'WordTrends':
+          return store.filterAtSearchWT;
+        case 'Speeches':
+          return store.filterAtSearchSpeeches;
+        case 'Ngrams':
+          return store.filterAtSearchNgrams;
+        case 'KWIC':
+          return store.filterAtSearchKWIC;
+        default:
+          selectedData = {};
+      }
   },
   (newValue) => {
     displayedData.value = newValue;

@@ -237,7 +237,6 @@ const lemmatizeSearch = (newValue) => {
 const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
     store.saveKwicFilterData();
-    console.log('här sattes kwicfilterdatagrejs då var store.selected: ', store.selected, store.filterAtSearchKWIC)
     store.setSubmitKwicEvent(" metaDataFilter ");
   } else if (route.path === "/tools/wordtrends") {
     store.filterAtSearchWT = { ...store.selected };
