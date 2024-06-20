@@ -41,6 +41,7 @@ export const kwicDataStore = defineStore("kwicData", {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
           lemmatized: this.lemmatizeSearch,
+          cut_off: 10000,
         };
 
         const queryString =
@@ -122,7 +123,7 @@ export const kwicDataStore = defineStore("kwicData", {
           )
           .join("\n");
 
-        
+
         const csvContent = headerRow + "\n" + dataRows;
 
         const zip = new JSZip();

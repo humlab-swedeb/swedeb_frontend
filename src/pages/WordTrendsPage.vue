@@ -93,6 +93,8 @@ onMounted(() => {
 watchEffect(async () => {
   if (store.submitEventWT) {
     loading.value = true;
+    showData.value = false;
+    showDataTable.value = false;
     const textString = wtStore.generateStringOfSelected();
     await wtStore.getWordTrendsResult(textString);
     showDataTable.value = true;

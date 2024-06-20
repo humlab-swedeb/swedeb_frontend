@@ -30,6 +30,7 @@ const showData = ref(false);
 
 watchEffect(async () => {
   if (metaStore.submitEventNgrams) {
+    showData.value = false;
     loading.value = true;
     await nGramStore.getNGramsResult(kwicStore.searchText);
     showData.value = true;

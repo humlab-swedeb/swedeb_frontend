@@ -48,10 +48,8 @@ onMounted(() => {
 
 watchEffect(async () => {
   if (metaStore.submitEventKWIC) {
+    showData.value = false;
     loading.value = true;
-
-    //showData.value = true; // Otherwise the loading icon does not show until second search/after pending
-    //await nextTick();
     await kwicStore.getKwicResult(kwicStore.searchText);
     showData.value = true;
     loading.value = false;
