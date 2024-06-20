@@ -52,9 +52,8 @@ watchEffect(async () => {
     setTimeout(() => {
       loading.value = false;
     }, 400);
-    metaStore.cancelSubmitSpeechesEvent(' SpeechesPage ')
-    //metaStore.cancelSubmitEvent(' SpeechesPage ')
-    //metaStore.cancelUpdateEvent(' SpeechesPage ')
+    metaStore.cancelSubmitSpeechesEvent()
+
   }
 });
 </script>

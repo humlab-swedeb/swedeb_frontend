@@ -26,8 +26,9 @@ const metaStore = metaDataStore();
 
 const handleEnter = () => {
   if (!kwicStore.searchText.includes(",")) {
-    metaStore.saveKwicFilterData();
-    metaStore.setSubmitKwicEvent("searchBar kwic");
+
+    metaStore.saveKwicFilterData(kwicStore.searchText);
+    metaStore.setSubmitKwicEvent();
   }
 };
 </script>

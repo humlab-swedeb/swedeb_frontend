@@ -236,17 +236,18 @@ const lemmatizeSearch = (newValue) => {
 
 const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
-    store.saveKwicFilterData();
-    store.setSubmitKwicEvent(" metaDataFilter ");
+    store.saveKwicFilterData(kwicStore.searchText);
+    store.setSubmitKwicEvent();
   } else if (route.path === "/tools/wordtrends") {
-    store.saveWTFilterData();
-    store.setSubmitWTEvent(" metaDataFilter ");
+    store.saveWTFilterData(wtStore.wordHitsSelected);
+
+    store.setSubmitWTEvent();
   } else if (route.path === "/tools/speeches") {
     store.saveSpeechesFilterData();
-    store.setSubmitSpeechesEvent(" metaDataFilter ");
+    store.setSubmitSpeechesEvent();
   } else if (route.path === "/tools/ngram") {
     store.saveNgramsFilterData();
-    store.setSubmitNgramsEvent(" metaDataFilter ");
+    store.setSubmitNgramsEvent();
   } else {
     console.log("unknown route in handleSubmit, metadatafilter.vue");
   }

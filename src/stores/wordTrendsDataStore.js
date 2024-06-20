@@ -26,6 +26,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrends = response.data.wt_list;
       } catch (error) {
+        this.wordTrends = [];
         console.error("Error fetching data:", error);
       }
     },
@@ -36,8 +37,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
         this.speechesData = response.data.speech_list;
-        //return this.wordTrendsSpeeches;
       } catch (error) {
+        this.speechesData = [];
         console.error("Error fetching data:", error);
       }
     },

@@ -47,12 +47,14 @@ export const metaDataStore = defineStore("metaDataStore", {
 
   actions: {
 
-    saveKwicFilterData(){
+    saveKwicFilterData(search){
       this.filterAtSearchKWIC = {...this.selected}
+      this.filterAtSearchKWIC['search'] = search
     },
 
-    saveWTFilterData(){
+    saveWTFilterData(search){
       this.filterAtSearchWT = {...this.selected}
+      this.filterAtSearchWT['search'] = search
     },
 
     saveSpeechesFilterData(){
@@ -64,31 +66,31 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
 
-    setSubmitNgramsEvent(message) {
+    setSubmitNgramsEvent() {
       this.submitEventNgrams = true;
     },
-    cancelSubmitNgramsEvent(message) {
+    cancelSubmitNgramsEvent() {
       this.submitEventNgrams = false;
     },
 
-    setSubmitSpeechesEvent(message) {
+    setSubmitSpeechesEvent() {
       this.submitEventSpeeches = true;
     },
-    cancelSubmitSpeechesEvent(message) {
+    cancelSubmitSpeechesEvent() {
       this.submitEventSpeeches = false;
     },
 
-    setSubmitKwicEvent(message) {
+    setSubmitKwicEvent() {
       this.submitEventKWIC = true;
     },
-    cancelSubmitKwicEvent(message) {
+    cancelSubmitKwicEvent() {
       this.submitEventKWIC = false;
     },
 
-    setSubmitWTEvent(message) {
+    setSubmitWTEvent() {
       this.submitEventWT = true;
     },
-    cancelSubmitWTEvent(message) {
+    cancelSubmitWTEvent() {
       this.submitEventWT = false;
     },
 
@@ -188,7 +190,9 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     selectedMetadataToText(searchTerms, tool_type) {
 
+
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
+
 
       // String representation of selected metadata to be included in downloads
       const selected_years_start = selected_metadata.yearRange.min;
@@ -211,7 +215,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected_genders_as_string,
         "kön"
       );
-      const selected_terms = this.getSearchTermsAsString(searchTerms);
+      const selected_terms = this.getSearchTermsAsString(selected_metadata.search);
       const corpus_version = i18n.downLoadInfo.corpus_version;
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;

@@ -57,7 +57,7 @@ watchEffect(async () => {
     loading.value = false;
   }
 
-  metaStore.cancelSubmitKwicEvent(" KWICPage ");
+  metaStore.cancelSubmitKwicEvent();
 });
 
 const cancelFetch = () => {
