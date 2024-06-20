@@ -188,7 +188,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     },
 
-    selectedMetadataToText(searchTerms, tool_type) {
+    selectedMetadataToText(tool_type) {
 
 
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
