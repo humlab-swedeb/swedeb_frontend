@@ -58,7 +58,6 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
     async downloadKWICTableExcel(selectedMetadata) {
-      console.log("Downloading KWIC table as Excel");
 
       if (this.kwicData.length > 0) {
         // Map each object in kwicData to an array of objects with new column names
@@ -108,7 +107,6 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     downloadKWICTableCSV(selectedMetadata) {
-      console.log("Downloading KWIC table as CSV");
 
       if (this.kwicData.length > 0) {
         // Get the keys from columnNames to create the header row

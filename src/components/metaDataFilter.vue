@@ -239,9 +239,10 @@ const handleSubmit = async () => {
     store.saveKwicFilterData(kwicStore.searchText);
     store.setSubmitKwicEvent();
   } else if (route.path === "/tools/wordtrends") {
-    store.saveWTFilterData(wtStore.wordHitsSelected);
-
+    const wordHitsString = wtStore.wordHitsSelected.join(", ");
+    store.saveWTFilterData(wordHitsString);
     store.setSubmitWTEvent();
+
   } else if (route.path === "/tools/speeches") {
     store.saveSpeechesFilterData();
     store.setSubmitSpeechesEvent();

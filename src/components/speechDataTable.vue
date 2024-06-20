@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref,  defineProps } from "vue";
+import { ref, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -232,8 +232,6 @@ if (props.type === "wordTrends") {
   });
 }
 
-
-
 const pagination = ref({});
 
 function sortByYear(a, b) {
@@ -284,21 +282,10 @@ function sortSpeeches(a, b) {
   return sortByNumber(a, b);
 }
 
-function get_searh_terms() {
-  if (props.type === "wordTrends") {
-    return wtStore.searchText;
-  } else if (props.type === "speeches"){
-    return "";
-  }
-}
 
 function downloadSpeeches() {
-
-
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(
-    get_searh_terms(), props.type
-  );
+  const paramString = metaStore.selectedMetadataToText(props.type);
   downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 }
 </script>
