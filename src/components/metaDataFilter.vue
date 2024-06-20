@@ -239,18 +239,16 @@ const handleSubmit = async () => {
     store.saveKwicFilterData();
     store.setSubmitKwicEvent(" metaDataFilter ");
   } else if (route.path === "/tools/wordtrends") {
-    store.filterAtSearchWT = { ...store.selected };
+    store.saveWTFilterData();
     store.setSubmitWTEvent(" metaDataFilter ");
-
   } else if (route.path === "/tools/speeches") {
-    store.filterAtSearchSpeeches = { ...store.selected };
+    store.saveSpeechesFilterData();
     store.setSubmitSpeechesEvent(" metaDataFilter ");
   } else if (route.path === "/tools/ngram") {
-    store.filterAtSearchNgrams = { ...store.selected };
+    store.saveNgramsFilterData();
     store.setSubmitNgramsEvent(" metaDataFilter ");
-  }else{
-
-    console.log('unknown route in handleSubmit, metadatafilter.vue')
+  } else {
+    console.log("unknown route in handleSubmit, metadatafilter.vue");
   }
 };
 

@@ -49,7 +49,18 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     saveKwicFilterData(){
       this.filterAtSearchKWIC = {...this.selected}
-      console.log('i meta '+ this.filterAtSearchKWIC)
+    },
+
+    saveWTFilterData(){
+      this.filterAtSearchWT = {...this.selected}
+    },
+
+    saveSpeechesFilterData(){
+      this.filterAtSearchSpeeches = {...this.selected}
+    },
+
+    saveNgramsFilterData(){
+      this.filterAtSearchNgrams = {...this.selected}
     },
 
 
