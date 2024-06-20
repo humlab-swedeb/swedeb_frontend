@@ -162,28 +162,48 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getSearchTermsAsString(searchTerms) {
-      if (searchTerms === undefined) {
+      if (searchTerms === undefined || searchTerms === "") {
         return "";
       } else {
         return `Sökord: ${searchTerms}`;
       }
     },
 
-    selectedMetadataToText(searchTerms) {
+    getSelectedAtSearchMetadata(tool_type) {
+      switch (tool_type) {
+        case "kwic":
+          return this.filterAtSearchKWIC;
+        case "wordTrends":
+          return this.filterAtSearchWT;
+        case "speeches":
+          return this.filterAtSearchSpeeches;
+        case "ngrams":
+          return this.filterAtSearchNgrams;
+        default:
+          return this.selected;
+      }
+
+
+    },
+
+    selectedMetadataToText(searchTerms, tool_type) {
+
+      const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
+
       // String representation of selected metadata to be included in downloads
-      const selected_years_start = this.selected.yearRange.min;
-      const selected_years_end = this.selected.yearRange.max;
+      const selected_years_start = selected_metadata.yearRange.min;
+      const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
-      const selected_parties = this.getMetarRow(this.selected.party, "partier");
-      const selected_speakers_as_string = this.selected.speakers.map(
+      const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+      const selected_speakers_as_string = selected_metadata.speakers.map(
         (speaker) => this.getSpeakerAsString(speaker)
       );
       const selected_speakers = this.getMetarRow(
         selected_speakers_as_string,
         "talare"
       );
-      const selected_genders_as_string = this.selected.gender.map(
+      const selected_genders_as_string = selected_metadata.gender.map(
         (gender) => this.options.gender[gender]
       );
 

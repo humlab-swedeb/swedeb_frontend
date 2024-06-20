@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 import noResults from "src/components/noResults.vue";
@@ -68,14 +68,18 @@ const wtStore = wordTrendsDataStore();
 const rows = ref([]);
 const columns = ref([]);
 
+
+const get_paramString = () => {
+  const tool_type = "wordTrends";
+  return metaStore.selectedMetadataToText(wtStore.searchText, tool_type);
+};
+
 const downloadWTCountsCSV = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  wtStore.downloadCSVcountsWT(paramString);
+  wtStore.downloadCSVcountsWT(get_paramString());
 };
 
 const downloadWTCountsExcel = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  wtStore.downloadExcelCountsWT(paramString);
+  wtStore.downloadExcelCountsWT(get_paramString());
 };
 
 const wordTrends = wtStore.wordTrends;

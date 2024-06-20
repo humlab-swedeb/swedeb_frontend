@@ -154,18 +154,20 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
+const tool_type = 'kwic';
+
 const downloadKWICTableAsExcel = () => {
-  const paramString = metaStore.selectedMetadataToText();
+  const paramString = metaStore.selectedMetadataToText([kwicStore.searchText], tool_type);
   kwicStore.downloadKWICTableExcel(paramString);
 };
 
 const downloadKWICTableAsCSV = () => {
-  const paramString = metaStore.selectedMetadataToText();
+  const paramString = metaStore.selectedMetadataToText([kwicStore.searchText], tool_type);
   kwicStore.downloadKWICTableCSV(paramString);
 };
 
 const downloadKWICAsSpeeches = () => {
-  const paramString = metaStore.selectedMetadataToText();
+  const paramString = metaStore.selectedMetadataToText([kwicStore.searchText], tool_type);
   visibleRows.value = KWICTable.value.computedRows.map((row) => row.id);
   downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 };

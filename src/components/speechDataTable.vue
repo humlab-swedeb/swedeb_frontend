@@ -232,7 +232,7 @@ if (props.type === "wordTrends") {
   });
 }
 
-//metaStore.cancelSubmitEvent(' speech data table ');  //TODO borde sättas i Pagen för de olika verktygen
+
 
 const pagination = ref({});
 
@@ -284,10 +284,20 @@ function sortSpeeches(a, b) {
   return sortByNumber(a, b);
 }
 
+function get_searh_terms() {
+  if (props.type === "wordTrends") {
+    return wtStore.searchText;
+  } else if (props.type === "speeches"){
+    return "";
+  }
+}
+
 function downloadSpeeches() {
+
+
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
   const paramString = metaStore.selectedMetadataToText(
-    wtStore.wordHitsSelected
+    get_searh_terms(), props.type
   );
   downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 }
