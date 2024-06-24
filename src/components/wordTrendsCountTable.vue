@@ -69,17 +69,17 @@ const rows = ref([]);
 const columns = ref([]);
 
 
-const get_paramString = () => {
+const getParamString = () => {
   const tool_type = "wordTrends";
-  return metaStore.selectedMetadataToText(wtStore.searchText, tool_type);
+  return metaStore.selectedMetadataToText(tool_type);
 };
 
 const downloadWTCountsCSV = () => {
-  wtStore.downloadCSVcountsWT(get_paramString());
+  wtStore.downloadCSVcountsWT(getParamString());
 };
 
 const downloadWTCountsExcel = () => {
-  wtStore.downloadExcelCountsWT(get_paramString());
+  wtStore.downloadExcelCountsWT(getParamString());
 };
 
 const wordTrends = wtStore.wordTrends;
