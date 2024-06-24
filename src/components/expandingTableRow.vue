@@ -34,7 +34,7 @@
               props.props.row.protocol
             }}</q-item-label>
             <q-item-label class="q-pt-xs" v-if="props.props.row.node_word">
-              Sökord:
+              {{ $t("searchWordLabel") }}
               <b>{{ props.props.row.node_word }}</b>
             </q-item-label>
           </q-card-section>
@@ -64,7 +64,7 @@
                 color="secondary"
               >
                 <q-icon left name="person_search" color="accent" />
-                <q-item-label>Wikidata</q-item-label>
+                <q-item-label>{{ $t("wikidata") }}</q-item-label>
               </q-btn>
               <q-btn
                 no-caps
@@ -74,7 +74,7 @@
                 color="white"
               >
                 <q-icon left name="open_in_new" color="accent" />
-                <q-item-label>Öppna källa</q-item-label>
+                <q-item-label>{{ $t("openSource") }}</q-item-label>
               </q-btn>
               <q-btn
                 outline
@@ -84,7 +84,7 @@
                 @click="downloadCurrentSpeech"
               >
                 <q-icon left name="download" color="accent" />
-                <q-item-label>Ladda ned</q-item-label>
+                <q-item-label>{{ $t("download") }}</q-item-label>
               </q-btn>
             </div>
           </q-card-section>

@@ -13,8 +13,8 @@
 
     <toggleSwitch
       class="q-mt-md"
-      label="Normalisera resultatet"
-      tooltip="Antalet träffar på sökordet delas med det totala antalet ord per år"
+      :label="$t('normalizeResultLabel')"
+      :tooltip="$t('normalizeResultTooltip')"
       @toggle-event="handleNormalizeData"
     />
   </q-card-section>
@@ -22,17 +22,17 @@
     <searchBar />
     <toggleSwitch
       class="q-mt-md"
-      label="Lemmatiserad sökning"
-      tooltip="Sökningen tolkas som ett lemma och böjningsformer av sökningen inkluderas i resultatet."
+      :label="$t('lemmaResultLabel')"
+      :tooltip="$t('lemmaResultTooltip')"
       @toggle-event="handleLemmatizedSearch"
     />
     <inputNrOfWords />
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
-    <q-item-label caption class="text-bold q-mt-lg text-grey-8"
-      >Välj storlek på N-gram och var sökordet ska vara placerat</q-item-label
-    >
+    <q-item-label caption class="text-bold q-mt-lg text-grey-8">
+      {{ $t("ngramSizePlaceLabel") }}
+    </q-item-label>
     <q-card-section horizontal class="q-px-none">
       <q-card-section class="col-6"><nGramWidth /></q-card-section>
       <q-card-section class="col-6"><nGramPlacingRadio /></q-card-section>

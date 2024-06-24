@@ -6,18 +6,18 @@
         icon="download"
         class="text-grey-8 col-3"
         color="secondary"
-        label="Ladda ner ordtrender"
+        :label="$t(downloadWordtrends)"
         style="width: fit-content"
       >
         <q-list>
           <q-item clickable v-close-popup @click="downloadWTCountsCSV">
             <q-item-section>
-              <q-item-label>CSV</q-item-label>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="downloadWTCountsExcel">
             <q-item-section>
-              <q-item-label>Excel</q-item-label>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>

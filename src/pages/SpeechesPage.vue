@@ -26,8 +26,7 @@ import i18n from "src/i18n/sv";
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 
-const intro = i18n.speechesIntro;
-const formattedIntro = intro;
+const formattedIntro = i18n.speechesIntro;
 const loading = ref(false);
 const showData = ref(false);
 

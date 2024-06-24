@@ -2,8 +2,8 @@
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="kwicStore.kwicData.length > 0">
-        Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
-        träffar.
+        {{ $t("searchResult1") }} <b>{{ kwicStore.kwicData.length }}</b>
+        {{ $t("searchResult2") }}
       </q-item-label>
 
       <q-btn-dropdown
@@ -11,23 +11,23 @@
         icon="download"
         class="text-grey-8 col-3"
         color="secondary"
-        label="Ladda ner KWIC"
+        :label="$t('downloadKWIC')"
         style="width: fit-content"
       >
         <q-list>
           <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
             <q-item-section>
-              <q-item-label>Tabell som CSV</q-item-label>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
             <q-item-section>
-              <q-item-label>Tabell som Excel</q-item-label>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
             <q-item-section>
-              <q-item-label>Tal</q-item-label>
+              <q-item-label>{{ $("downloadSpeech") }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -53,7 +53,7 @@
               class="q-mb-md q-ml-xs"
             >
               <q-tooltip>
-                Här ska det vara en beskrivning av hur anförande-ID beskrivs
+                {{ $t('accessibility.tooltipSpeechID') }}
               </q-tooltip>
             </q-icon>
           </q-th>

@@ -18,7 +18,7 @@
 
         <q-space />
         <q-btn
-          aria-label="Fäll ut och in filter för metadata"
+          :aria-label="$t('accessibility.metadataFilter')"
           color="accent"
           round
           flat
@@ -41,7 +41,7 @@
             <!-- <q-card-section horizontal class="q-px-none"> -->
             <genderOfficeToggleCheckbox
               type="gender"
-              toggle_label="Filtrera på kön"
+              :toggle_label="$t('toggleGenderLabel')"
             />
             <!-- <genderOfficeCheckbox type="gender" /> -->
             <!-- <q-card-section class="q-py-none"> -->
@@ -58,7 +58,7 @@
                 class="resetStyle col"
                 flat
                 no-caps
-                label="Rensa filter"
+                :label="$t('clearFilter')"
                 color="grey-7"
               >
               </q-btn>
@@ -82,7 +82,7 @@
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             wtStore.wordHitsSelected.length < 1 ||
             ($route.path === '/tools/wordtrends' &&
@@ -98,7 +98,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Lägg till sökord
+            {{ $t("searchTooltipWordtrends") }}
           </q-tooltip>
           <!-- Tooltip if user puts in sentence -->
           <q-tooltip
@@ -112,8 +112,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
-            dessa för att genomföra sökningen <br /><br />
+            {{ $t("searchTooltipWordtrendsError") }}<br /><br />
             <code>{{
               wtStore.wordHitsSelected.filter(
                 (word) => word.includes(" ") || word.includes("*")
@@ -129,7 +128,7 @@
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             kwicStore.searchText.length < 1 ||
             kwicStore.searchText.includes(',')
@@ -142,7 +141,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Skriv in ett sökord eller en fras.
+            {{ $t("searchTooltipKWIC_Ngram") }}
           </q-tooltip>
 
           <!-- Tooltip for only searching on one word or sentence at a time -->
@@ -152,8 +151,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i
-            taget
+            {{ $t("searchTooltipKWICError") }}
           </q-tooltip>
         </q-btn>
 
@@ -164,7 +162,7 @@
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             kwicStore.searchText.length < 1 ||
             kwicStore.searchText.includes(',')
@@ -176,7 +174,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Skriv in ett sökord eller en fras.
+            {{ $t("searchTooltipKWIC_Ngram") }}
           </q-tooltip>
           <!-- Tooltip for only searching for one word at a time, or wildcard -->
           <q-tooltip
@@ -185,8 +183,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            I verktyget N-gram kan endast ett sökord användad åt gången, alt.
-            använda <code>*</code> för wildcardsökning.
+            {{ $t("searchTooltipNgramError") }}
           </q-tooltip>
         </q-btn>
 
@@ -196,7 +193,7 @@
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           v-else-if="$route.path === '/tools/speeches'"
         >
         </q-btn>

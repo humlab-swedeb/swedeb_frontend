@@ -5,7 +5,7 @@
     outlined
     clearable
     placeholder="T.ex klimat eller skola"
-    label="Sök på ett ord"
+    :label="$t('searchInput')"
     bg-color="white"
     color="accent"
     @clear="kwicStore.searchText = ''"

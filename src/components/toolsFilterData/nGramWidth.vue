@@ -2,7 +2,7 @@
   <q-input
     v-model="nGramStore.width"
     outlined
-    label="Bredd"
+    :label="$t('ngramWidth')"
     type="number"
     class="bg-white full-width"
     color="accent"
