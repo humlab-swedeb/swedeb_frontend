@@ -17,7 +17,7 @@ export const downloadDataStore = defineStore("downloadData", {
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      // gender, source, protocol
+      //speaker, party, gender,
 
       return `${speaker}\n${party}\n${gender}\n${year}\n${id}\n${hit}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}\n\n`;
     },

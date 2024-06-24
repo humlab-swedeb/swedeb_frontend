@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 import noResults from "src/components/noResults.vue";
@@ -68,20 +68,24 @@ const wtStore = wordTrendsDataStore();
 const rows = ref([]);
 const columns = ref([]);
 
+
+const getParamString = () => {
+  const tool_type = "wordTrends";
+  return metaStore.selectedMetadataToText(tool_type);
+};
+
 const downloadWTCountsCSV = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  wtStore.downloadCSVcountsWT(paramString);
+  wtStore.downloadCSVcountsWT(getParamString());
 };
 
 const downloadWTCountsExcel = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  wtStore.downloadExcelCountsWT(paramString);
+  wtStore.downloadExcelCountsWT(getParamString());
 };
 
-watchEffect(() => {
-  const wordTrends = wtStore.wordTrends;
-  if (metaStore.submitEvent || wordTrends.length > 0) {
-    if (Array.isArray(wordTrends) && wordTrends.length > 0) {
+const wordTrends = wtStore.wordTrends;
+
+
+if (Array.isArray(wordTrends) && wordTrends.length > 0) {
       const uniqueWords = new Set();
       wordTrends.forEach((entry) => {
         Object.keys(entry.count).forEach((word) => {
@@ -119,8 +123,8 @@ watchEffect(() => {
         return rowData;
       });
     }
-  }
-});
+
+
 </script>
 
 <style>

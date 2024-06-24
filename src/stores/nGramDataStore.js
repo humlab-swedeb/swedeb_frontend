@@ -24,6 +24,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           (a, b) => b.count - a.count
         );
       } catch (error) {
+        this.nGrams = [];
         console.error("Error fetching data:", error);
       }
     },

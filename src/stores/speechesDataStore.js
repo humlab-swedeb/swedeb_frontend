@@ -16,6 +16,7 @@ export const speechesDataStore = defineStore("speechesData", {
         const response = await api.get(`${path}?${queryString}`);
         this.speechesData = response.data.speech_list;
       } catch (error) {
+        this.speechesData = [];
         console.error("Error fetching data:", error);
       }
     },
