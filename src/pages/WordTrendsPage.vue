@@ -77,9 +77,6 @@ const dataLoadedTable = ref(false);
 const tabs = ref("diagram");
 
 
-const intro = i18n.wordTrendsIntro;
-const formattedIntro = intro;
-
 onMounted(() => {
   if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
     showDataTable.value = true;
