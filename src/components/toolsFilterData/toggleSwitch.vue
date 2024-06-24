@@ -14,15 +14,11 @@
         class="q-mr-lg"
         v-model="toggleValue"
         color="accent"
-        :label="toggleValue ? $t('toggleYes') : $t('toggleNo')"
         keep-color
         @click="handleToggle"
         checked-icon="check"
         unchecked-icon="close"
       >
-        <template #label>
-          {{ toggleValue ? "Ja" : "Nej" }}
-        </template>
       </q-toggle>
     </div>
   </div>
