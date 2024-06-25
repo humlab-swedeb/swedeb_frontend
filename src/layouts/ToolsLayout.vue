@@ -1,11 +1,13 @@
 <template>
   <q-layout view="hHh Lpr lff">
-    <q-header class="row no-wrap">
+    <q-header class="row" :class="$q.screen.lt.sm ? '' : 'no-wrap'">
       <q-toolbar
         class="bg-secondary text-grey-9"
-        style="max-width: 400px; min-width: 400px"
+        :style="$q.screen.lt.sm ? '' : 'max-width: 400px; min-width: 400px'"
       >
-        <q-toolbar-title class="text-bold">{{ $t("swedeb") }}</q-toolbar-title>
+        <q-toolbar-title class="text-bold q-pa-none">{{
+          $t("swedeb")
+        }}</q-toolbar-title>
         <q-tabs no-caps color="black" class="gt-sm">
           <q-route-tab to="/" :label="$t('home')" />
           <q-route-tab to="/about" :label="$t('about')" />
@@ -16,29 +18,62 @@
           <q-menu>
             <q-list>
               <q-item to="/" clickable>
-                <q-item-section>{{$t('home')}}</q-item-section>
+                <q-item-section>{{ $t("home") }}</q-item-section>
               </q-item>
               <q-item to="/about" clickable>
-                <q-item-section>{{$t('about')}}</q-item-section>
+                <q-item-section>{{ $t("about") }}</q-item-section>
               </q-item>
               <q-item to="/faq" clickable>
-                <q-item-section>{{$t('faq')}}</q-item-section>
+                <q-item-section>{{ $t("faq") }}</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
         </q-btn>
       </q-toolbar>
-      <q-toolbar class="background">
-        <q-tabs no-caps active-color="accent" class="text-bold text-black">
-          <q-route-tab to="/tools/wordtrends" :label="$t('wordTrendsTitle')" />
-          <q-route-tab to="/tools/kwic" :label="$t('kwicTitle')" />
-          <q-route-tab to="/tools/speeches" :label="$t('speechesTitle')" />
-          <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" />
-        </q-tabs>
+      <q-toolbar :class="$q.screen.lt.sm ? 'bg-primary' : 'background'">
+        <div style="max-width: 95vw">
+          <q-tabs
+            no-caps
+            inline-label
+            outside-arrows
+            mobile-arrows
+            active-color="accent"
+            class="text-bold text-black"
+          >
+            <q-route-tab
+              to="/tools/wordtrends"
+              :label="$t('wordTrendsTitle')"
+            />
+            <q-route-tab to="/tools/kwic" :label="$t('kwicTitle')" />
+            <q-route-tab to="/tools/speeches" :label="$t('speechesTitle')" />
+            <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" />
+          </q-tabs>
+        </div>
+      </q-toolbar>
+      <q-toolbar class="lt-sm bg-white">
+        <q-btn
+          class="text-white full-width q-my-md q-py-sm"
+          @click="popup = true"
+          label="Filtrera och Sök"
+          no-caps
+          color="accent"
+        />
+        <q-dialog v-model="popup" class="fit">
+          <q-card class="fit full-width bg-grey-2">
+            <q-card-section class="row items-center justify-between">
+              <q-item-label class="text-body1 text-bold">
+                Filtrera och Sök
+              </q-item-label>
+              <q-btn flat icon="close" color="black" class="item-end" @click="popup = false" />
+            </q-card-section>
+            <metaDataFilter />
+          </q-card>
+        </q-dialog>
       </q-toolbar>
     </q-header>
 
     <q-drawer
+      v-if="$q.screen.gt.sm || $q.screen.sm"
       v-model="drawer"
       show-if-above
       :mini="!drawer || miniState"
@@ -107,7 +142,7 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="q-px-lg q-py-md">
+      <q-page :class="$q.screen.lt.sm ? '' : 'q-px-lg q-py-md'">
         <router-view />
       </q-page>
     </q-page-container>
@@ -129,6 +164,7 @@ import metaDataFilter from "src/components/metaDataFilter.vue";
 import { ref } from "vue";
 
 const miniState = ref(false);
+const popup = ref(false);
 
 const drawer = ref(false);
 
@@ -148,5 +184,8 @@ const drawerClick = (e) => {
   rotate: 180deg;
   padding: 0 0 20px 0;
   font-weight: bold;
+}
+.button-container {
+  margin-top: 130px; /* Adjust as needed */
 }
 </style>

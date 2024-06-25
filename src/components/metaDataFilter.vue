@@ -69,7 +69,11 @@
       -->
       </q-slide-transition>
     </q-card>
-    <q-card flat class="q-ma-md bg-transparent padding-bot">
+    <q-card
+      flat
+      class="bg-transparent padding-bot"
+      :class="$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'"
+    >
       <toolsFilters
         @normalize-data="handleNormalizeData"
         @lemmatize-search="lemmatizeSearch"

@@ -1,11 +1,13 @@
 <template>
-  <q-card flat class="background row justify-center max-width q-pa-lg q-px-xl">
-    <q-item-label class="text-h1">{{ $t("faqPageTitle") }}</q-item-label>
-    <q-card-section class="text-align text-body2 q-mt-sm">
+  <q-card flat class="background row justify-center max-width q-mt-lg">
+    <q-item-label class="text-h1 q-px-md">{{ $t("faqPageTitle") }}</q-item-label>
+    <q-card-section
+      class="text-body2 q-mt-sm"
+      :class="$q.screen.lt.sm ? '' : 'text-align'"
+    >
       {{ $t("indexPageIntroText") }}
-    </q-card-section>
-    <q-card-section class="full-width text-align q-my-lg">
-      <div v-for="(faq, index) in faq" :key="index" class='q-pb-md'>
+
+      <div v-for="(faq, index) in faq" :key="index" class="q-pt-md">
         <q-item-label class="text-h6 q-mb-sm">{{ faq.q }}</q-item-label>
         <p class="text-body2">{{ faq.a }}</p>
       </div>
