@@ -1,7 +1,7 @@
 <template>
   <template
     v-if="
-      (wtStore.wordTrendsSpeeches.length > 0 &&
+      (wtStore.speechesData.length > 0 &&
         $route.path === '/tools/wordtrends') ||
       ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0)
     "
@@ -11,13 +11,16 @@
         <q-item-label
           class="col-9 q-mt-md"
           v-if="
-            wtStore.wordTrendsSpeeches.length > 0 &&
+            wtStore.speechesData.length > 0 &&
             $route.path === '/tools/wordtrends'
           "
         >
+
+          Sökningen resulterade i
           {{ $t("searchResult1") }}
           <b>{{ wtStore.wordTrendsSpeeches.length }}</b>
           {{ $t("searchResult2") }}
+
         </q-item-label>
         <q-item-label
           class="col-9 q-mt-md"
@@ -131,7 +134,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, defineProps } from "vue";
+import { ref, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -145,12 +148,11 @@ const wtStore = wordTrendsDataStore();
 const downloadStore = downloadDataStore();
 
 const props = defineProps({
-  dataLoaded: Boolean,
   type: String,
   download: Function,
 });
 
-const displayedData = ref({});
+const displayedData = ref([]);
 const SpeechTable = ref(null);
 const visibleRows = ref([]);
 
@@ -161,84 +163,79 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
-watchEffect(async () => {
-  if (metaStore.submitEvent || props.dataLoaded) {
-    if (props.type === "wordTrends") {
-      displayedData.value = wtStore.wordTrendsSpeeches;
-    } else if (props.type === "speeches") {
-      displayedData.value = speechStore.speechesData;
-    }
+if (props.type === "wordTrends") {
+  displayedData.value = wtStore.speechesData; // detta kan sättas som en prop?
+} else if (props.type === "speeches") {
+  displayedData.value = speechStore.speechesData;
+}
 
-    rows.value = displayedData.value.map((speech) => ({
-      id: speech.document_name,
-      protocol: speech.formatted_speech_id,
-      node_word: speech.node_word,
-      speaker: speech.name,
-      gender: speech.gender,
-      party: speech.party_abbrev,
-      source: speech.speech_link,
-      year: speech.year,
-      link: speech.link,
-    }));
+rows.value = displayedData.value.map((speech) => ({
+  id: speech.document_name,
+  protocol: speech.formatted_speech_id,
+  node_word: speech.node_word,
+  speaker: speech.name,
+  gender: speech.gender,
+  party: speech.party_abbrev,
+  source: speech.speech_link,
+  year: speech.year,
+  link: speech.link,
+}));
 
-    columns.value = [
-      {
-        name: "protocol",
-        required: true,
-        label: "Anförande",
-        align: "left",
-        field: (row) => row.protocol,
-        sortable: true,
-        sort: (a, b) => sortSpeeches(a, b),
-      },
-      {
-        name: "speaker",
-        required: true,
-        label: "Talare",
-        field: "speaker",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "gender",
-        required: true,
-        label: "Kön",
-        field: "gender",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "party",
-        required: true,
-        label: "Parti",
-        field: "party",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "year",
-        required: true,
-        label: "År",
-        field: "year",
-        sortable: true,
-        align: "left",
-      },
-    ];
+columns.value = [
+  {
+    name: "protocol",
+    required: true,
+    label: "Anförande",
+    align: "left",
+    field: (row) => row.protocol,
+    sortable: true,
+    sort: (a, b) => sortSpeeches(a, b),
+  },
+  {
+    name: "speaker",
+    required: true,
+    label: "Talare",
+    field: "speaker",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "gender",
+    required: true,
+    label: "Kön",
+    field: "gender",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "party",
+    required: true,
+    label: "Parti",
+    field: "party",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "year",
+    required: true,
+    label: "År",
+    field: "year",
+    sortable: true,
+    align: "left",
+  },
+];
 
-    if (props.type === "wordTrends") {
-      columns.value.splice(1, 0, {
-        name: "node_word",
-        required: true,
-        label: "Sökord",
-        field: "node_word",
-        sortable: true,
-        align: "left",
-      });
-    }
+if (props.type === "wordTrends") {
+  columns.value.splice(1, 0, {
+    name: "node_word",
+    required: true,
+    label: "Sökord",
+    field: "node_word",
+    sortable: true,
+    align: "left",
+  });
+}
 
-    metaStore.submitEvent = false;
-  }
-});
 const pagination = ref({});
 
 function sortByYear(a, b) {
@@ -277,7 +274,6 @@ function sortByNumber(a, b) {
 }
 
 function sortSpeeches(a, b) {
-  // Regular expression to match the year in the protocol string
   const yearRes = sortByYear(a, b);
   if (yearRes !== 0) {
     return yearRes;
@@ -290,11 +286,10 @@ function sortSpeeches(a, b) {
   return sortByNumber(a, b);
 }
 
+
 function downloadSpeeches() {
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(
-    wtStore.wordHitsSelected
-  );
+  const paramString = metaStore.selectedMetadataToText(props.type);
   downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
 }
 </script>

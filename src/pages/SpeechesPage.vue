@@ -1,21 +1,21 @@
+
 <template>
   <q-card flat class="q-pa-md background">
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
+  <loadingIcon v-if="loading" size="100" />
   <div v-show="showData">
     <div class="q-pb-md">
-      <ShowData />
+      <ShowData :filterSelections="'Speeches'"/>
     </div>
-    <loadingIcon v-if="loading" size="100" />
-
-    <div v-else class="q-pb-xl">
+    <div v-if="!loading" class="q-pb-xl">
       <speechDataTable type="speeches" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import speechDataTable from "src/components/speechDataTable.vue";
@@ -30,14 +30,30 @@ const formattedIntro = i18n.speechesIntro;
 const loading = ref(false);
 const showData = ref(false);
 
+
+ onMounted(() => {
+   if(speechStore.speechesData && speechStore.speechesData.length > 0) {
+     showData.value = true;
+     loading.value = false;
+
+    }
+
+  });
+
+
+
+
 watchEffect(async () => {
-  if (metaStore.submitEvent) {
+  if (metaStore.submitEventSpeeches) {
+    showData.value = false;
     loading.value = true;
     await speechStore.getSpeechesResult();
-    showData.value = true;
     setTimeout(() => {
       loading.value = false;
-    }, 400);
+      showData.value = true;
+      }, 400);
+    metaStore.cancelSubmitSpeechesEvent()
+
   }
 });
 </script>

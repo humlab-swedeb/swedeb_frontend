@@ -2,12 +2,12 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import JSZip from "jszip";
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
 
 export const wordTrendsDataStore = defineStore("wordTrendsData", {
   state: () => ({
     wordTrends: [],
-    wordTrendsSpeeches: [],
+    speechesData: [],
     searchText: "",
     wordHits: [],
     wordHitsSelected: [],
@@ -26,6 +26,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrends = response.data.wt_list;
       } catch (error) {
+        this.wordTrends = [];
         console.error("Error fetching data:", error);
       }
     },
@@ -35,16 +36,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const path = `/tools/word_trend_speeches/${search}`;
         const queryString = metaDataStore().getSelectedParams();
         const response = await api.get(`${path}?${queryString}`);
-        this.wordTrendsSpeeches = response.data.speech_list;
-        //return this.wordTrendsSpeeches;
+        this.speechesData = response.data.speech_list;
       } catch (error) {
+        this.speechesData = [];
         console.error("Error fetching data:", error);
       }
     },
 
     async getWordHits(search) {
       const terms = search.split(",");
-
 
       let searchTerm = null;
 
@@ -80,7 +80,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     addChip() {
       let text = this.searchText.trim();
       if (text !== "") {
-        text = text.split(",").map(word => word.trim());
+        text = text.split(",").map((word) => word.trim());
         text.forEach((word) => {
           if (!this.wordHitsSelected.includes(word) && !word.includes("*")) {
             this.wordHitsSelected.push(word);
@@ -99,7 +99,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       let text = this.searchText.trim();
       if (text.endsWith("*") && !text.endsWith(".*")) {
         text = `${text.slice(0, -1)}.*`;
-
       }
 
       if (text !== "") {
@@ -117,96 +116,91 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     },
 
     downloadCSVcountsWT(selected_metadata) {
+      // Get unique words from all word trends
+      const uniqueWords = Array.from(
+        new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
+      );
+      // Create CSV content
+      let csvContent = `year,${uniqueWords.join(",")}\n`;
+      this.wordTrends.forEach((item) => {
+        const counts = uniqueWords
+          .map((word) => item.count[word] || 0)
+          .join(",");
+        csvContent += `${item.year},${counts}\n`;
+      });
 
+      // Create a new instance of JSZip
+      const zip = new JSZip();
 
-        // Get unique words from all word trends
-        const uniqueWords = Array.from(
-          new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
-        );
-        // Create CSV content
-        let csvContent = `year,${uniqueWords.join(",")}\n`;
-        this.wordTrends.forEach((item) => {
-          const counts = uniqueWords
-            .map((word) => item.count[word] || 0)
-            .join(",");
-          csvContent += `${item.year},${counts}\n`;
-        });
+      // Add the CSV file to the zip
+      zip.file("ordtrender.csv", csvContent);
 
-        // Create a new instance of JSZip
-        const zip = new JSZip();
+      // Add the file containing the string in selected_metadata to the zip
+      zip.file("metadata.txt", selected_metadata);
 
-        // Add the CSV file to the zip
-        zip.file("ordtrender.csv", csvContent);
+      // Generate the zip file asynchronously
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        // Create a temporary URL for the Blob
+        const url = window.URL.createObjectURL(content);
+        // Create an anchor element for initiating the download
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.setAttribute("download", "ordtrender.zip");
+        anchor.click(); // Trigger the download
+        // Revoke the temporary URL after a short delay
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 1000);
+      });
+    },
 
-        // Add the file containing the string in selected_metadata to the zip
-        zip.file("metadata.txt", selected_metadata);
+    async downloadExcelCountsWT(selected_metadata) {
+      // Get unique words from all word trends
+      const uniqueWords = Array.from(
+        new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
+      );
 
-        // Generate the zip file asynchronously
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "ordtrender.zip");
-          anchor.click(); // Trigger the download
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
-        });
-      },
+      // Create an Excel workbook
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Data");
 
-      async downloadExcelCountsWT(selected_metadata) {
-        // Get unique words from all word trends
-        const uniqueWords = Array.from(
-          new Set(this.wordTrends.flatMap((item) => Object.keys(item.count)))
-        );
+      // Set the header row
+      worksheet.addRow(["year", ...uniqueWords]);
 
-        // Create an Excel workbook
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Data");
+      // Add data rows
+      this.wordTrends.forEach((item) => {
+        const counts = uniqueWords.map((word) => item.count[word] || 0);
+        worksheet.addRow([item.year, ...counts]);
+      });
 
-        // Set the header row
-        worksheet.addRow(["year", ...uniqueWords]);
+      // Create a buffer to store the workbook data
+      const buffer = await workbook.xlsx.writeBuffer();
 
-        // Add data rows
-        this.wordTrends.forEach((item) => {
-          const counts = uniqueWords.map((word) => item.count[word] || 0);
-          worksheet.addRow([item.year, ...counts]);
-        });
+      // Create a new instance of JSZip
+      const zip = new JSZip();
 
-        // Create a buffer to store the workbook data
-        const buffer = await workbook.xlsx.writeBuffer();
+      // Add the Excel file to the zip
+      zip.file("data.xlsx", buffer);
 
-        // Create a new instance of JSZip
-        const zip = new JSZip();
+      // Add the file containing the string in selected_metadata to the zip
+      zip.file("metadata.txt", selected_metadata);
 
-        // Add the Excel file to the zip
-        zip.file("data.xlsx", buffer);
+      // Generate the zip file asynchronously
+      zip.generateAsync({ type: "blob" }).then((content) => {
+        // Create a temporary URL for the Blob
+        const url = window.URL.createObjectURL(content);
 
-        // Add the file containing the string in selected_metadata to the zip
-        zip.file("metadata.txt", selected_metadata);
+        // Create an anchor element for initiating the download
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.setAttribute("download", "wordtrends.zip");
+        anchor.click(); // Trigger the download
 
-        // Generate the zip file asynchronously
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "wordtrends.zip");
-          anchor.click(); // Trigger the download
-
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
-        });
-      },
-
-
-
+        // Revoke the temporary URL after a short delay
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 1000);
+      });
+    },
   },
 });

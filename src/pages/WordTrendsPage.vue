@@ -7,7 +7,7 @@
   </q-card>
 
   <div v-show="showData">
-    <ShowData />
+    <ShowData :filterSelections="'WordTrends'"/>
     <br />
   </div>
   <q-tabs
@@ -49,7 +49,7 @@
       </div>
       <loadingIcon v-if="loading" size="100" />
       <div v-else v-show="showData">
-        <speechDataTable type="wordTrends" :dataLoaded="dataLoaded" />
+        <speechDataTable type="wordTrends" />
       </div>
     </q-tab-panel>
   </q-tab-panels>
@@ -62,7 +62,7 @@ import speechDataTable from "src/components/speechDataTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import i18n from "src/i18n/sv";
 
 const store = metaDataStore();
@@ -76,9 +76,24 @@ const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const tabs = ref("diagram");
 
+
+onMounted(() => {
+  if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
+    showDataTable.value = true;
+    dataLoadedTable.value = true;
+  }
+  if (wtStore.speechesData && wtStore.speechesData.length > 0) {
+    showData.value = true;
+    dataLoaded.value = true;
+  }
+});
+
+
 watchEffect(async () => {
-  if (store.submitEvent && store.updateEvent) {
+  if (store.submitEventWT) {
     loading.value = true;
+    showData.value = false;
+    showDataTable.value = false;
     const textString = wtStore.generateStringOfSelected();
     await wtStore.getWordTrendsResult(textString);
     showDataTable.value = true;
@@ -87,6 +102,8 @@ watchEffect(async () => {
     showData.value = true;
     dataLoaded.value = true;
     loading.value = false;
+    store.cancelSubmitWTEvent();
+
   }
 });
 </script>

@@ -31,17 +31,69 @@ export const metaDataStore = defineStore("metaDataStore", {
       },
     },
 
-    genderAllSelect: false,
-    officeAllSelect: false,
-
     genderFilter: false,
     partyFilter: false,
 
-    submitEvent: false,
-    updateEvent: false,
+    submitEventKWIC: false,
+    submitEventWT: false,
+    submitEventSpeeches: false,
+    submitEventNgrams: false,
+
+    filterAtSearchKWIC: undefined,
+    filterAtSearchWT: undefined,
+    filterAtSearchSpeeches: undefined,
+    filterAtSearchNgrams: undefined,
   }),
 
   actions: {
+
+    saveKwicFilterData(search){
+      this.filterAtSearchKWIC = {...this.selected}
+      this.filterAtSearchKWIC['search'] = search
+    },
+
+    saveWTFilterData(search){
+      this.filterAtSearchWT = {...this.selected}
+      this.filterAtSearchWT['search'] = search
+    },
+
+    saveSpeechesFilterData(){
+      this.filterAtSearchSpeeches = {...this.selected}
+    },
+
+    saveNgramsFilterData(){
+      this.filterAtSearchNgrams = {...this.selected}
+    },
+
+
+    setSubmitNgramsEvent() {
+      this.submitEventNgrams = true;
+    },
+    cancelSubmitNgramsEvent() {
+      this.submitEventNgrams = false;
+    },
+
+    setSubmitSpeechesEvent() {
+      this.submitEventSpeeches = true;
+    },
+    cancelSubmitSpeechesEvent() {
+      this.submitEventSpeeches = false;
+    },
+
+    setSubmitKwicEvent() {
+      this.submitEventKWIC = true;
+    },
+    cancelSubmitKwicEvent() {
+      this.submitEventKWIC = false;
+    },
+
+    setSubmitWTEvent() {
+      this.submitEventWT = true;
+    },
+    cancelSubmitWTEvent() {
+      this.submitEventWT = false;
+    },
+
     async resetSelectedState() {
       this.selected = {
         party: [],
@@ -54,11 +106,9 @@ export const metaDataStore = defineStore("metaDataStore", {
           max: this.options.yearRange.max,
         },
       };
-      this.genderAllSelect = false;
-      this.officeAllSelect = false;
+
       this.selected.gender = Object.keys(this.options.gender);
       this.genderFilter = false;
-
     },
 
     async fetchAllMetaData() {
@@ -80,7 +130,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     addPartyParam(selected_params) {
       if (this.selected.party.length > 0) {
-        // add the value from this.party.options for each selected party in this.party.selected
         this.selected.party.forEach((party) =>
           selected_params.append("party_id", this.options.party[party].party_id)
         );
@@ -115,28 +164,48 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     getSearchTermsAsString(searchTerms) {
-      if(searchTerms===undefined){
+      if (searchTerms === undefined || searchTerms === "") {
         return "";
-      }else{
+      } else {
         return `Sökord: ${searchTerms}`;
       }
     },
 
-    selectedMetadataToText(searchTerms) {
+    getSelectedAtSearchMetadata(tool_type) {
+      switch (tool_type) {
+        case "kwic":
+          return this.filterAtSearchKWIC;
+        case "wordTrends":
+          return this.filterAtSearchWT;
+        case "speeches":
+          return this.filterAtSearchSpeeches;
+        case "ngrams":
+          return this.filterAtSearchNgrams;
+        default:
+          return this.selected;
+      }
+
+
+    },
+
+    selectedMetadataToText(tool_type) {
+
       // String representation of selected metadata to be included in downloads
-      const selected_years_start = this.selected.yearRange.min;
-      const selected_years_end = this.selected.yearRange.max;
+
+      const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
+      const selected_years_start = selected_metadata.yearRange.min;
+      const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
-      const selected_parties = this.getMetarRow(this.selected.party, "partier");
-      const selected_speakers_as_string = this.selected.speakers.map(
+      const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+      const selected_speakers_as_string = selected_metadata.speakers.map(
         (speaker) => this.getSpeakerAsString(speaker)
       );
       const selected_speakers = this.getMetarRow(
         selected_speakers_as_string,
         "talare"
       );
-      const selected_genders_as_string = this.selected.gender.map(
+      const selected_genders_as_string = selected_metadata.gender.map(
         (gender) => this.options.gender[gender]
       );
 
@@ -144,7 +213,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected_genders_as_string,
         "kön"
       );
-      const selected_terms = this.getSearchTermsAsString(searchTerms);
+      const selected_terms = this.getSearchTermsAsString(selected_metadata.search);
       const corpus_version = i18n.downLoadInfo.corpus_version;
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
@@ -161,7 +230,9 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
-      this.addParamArray("gender", "gender_id", searchParams);
+      if (this.genderFilter) {
+        this.addParamArray("gender", "gender_id", searchParams);
+      }
       //this.addParamArray("office", "office_types", searchParams);
       //this.addParamArray("subOffice", "sub_office_types", searchParams);
 
@@ -216,7 +287,6 @@ export const metaDataStore = defineStore("metaDataStore", {
         }
       }
       return "#808080";
-
     },
 
     async getPartyOptions() {
@@ -251,7 +321,6 @@ export const metaDataStore = defineStore("metaDataStore", {
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
-
     },
 
     async getSubOfficeOptions() {
@@ -278,22 +347,5 @@ export const metaDataStore = defineStore("metaDataStore", {
         console.error("Error fetching data:", error);
       }
     },
-
-    selectAll(type) {
-      this.selected[type] = this.options[type];
-      //if click again unselect all
-      if (!this[`${type}AllSelect`]) {
-        this.selected[type] = [];
-      }
-    },
-
-    // If all genders are selected, select "Select All"
-    ifAllSelected(type) {
-      if (this.selected[type].length === this.options[type].length) {
-        this[`${type}AllSelect`] = true;
-      } else {
-        this[`${type}AllSelect`] = false;
-      }
-    },
-
-}});
+  },
+});

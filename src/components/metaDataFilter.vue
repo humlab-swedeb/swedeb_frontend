@@ -236,8 +236,23 @@ const lemmatizeSearch = (newValue) => {
 };
 
 const handleSubmit = async () => {
-  store.submitEvent = true;
-  store.updateEvent = true;
+  if (route.path === "/tools/kwic") {
+    store.saveKwicFilterData(kwicStore.searchText);
+    store.setSubmitKwicEvent();
+  } else if (route.path === "/tools/wordtrends") {
+    const wordHitsString = wtStore.wordHitsSelected.join(", ");
+    store.saveWTFilterData(wordHitsString);
+    store.setSubmitWTEvent();
+
+  } else if (route.path === "/tools/speeches") {
+    store.saveSpeechesFilterData();
+    store.setSubmitSpeechesEvent();
+  } else if (route.path === "/tools/ngram") {
+    store.saveNgramsFilterData();
+    store.setSubmitNgramsEvent();
+  } else {
+    console.log("unknown route in handleSubmit, metadatafilter.vue");
+  }
 };
 
 const hasSelections = computed(() => {

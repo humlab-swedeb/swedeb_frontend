@@ -35,7 +35,6 @@ import { defineProps } from "vue";
 const store = metaDataStore();
 
 const props = defineProps(["type", "toggle_label"]);
-const disable = !store[`${props.type}Filter`];
 
 const setAllTrue = (type) => {
   // When toggled, all options are always selected
