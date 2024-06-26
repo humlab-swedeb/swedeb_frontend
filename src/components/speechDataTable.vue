@@ -15,12 +15,9 @@
             $route.path === '/tools/wordtrends'
           "
         >
-
-          Sökningen resulterade i
           {{ $t("searchResult1") }}
-          <b>{{ wtStore.wordTrendsSpeeches.length }}</b>
+          <b>{{ wtStore.speechesData.length }}</b>
           {{ $t("searchResult2") }}
-
         </q-item-label>
         <q-item-label
           class="col-9 q-mt-md"
@@ -285,7 +282,6 @@ function sortSpeeches(a, b) {
 
   return sortByNumber(a, b);
 }
-
 
 function downloadSpeeches() {
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);

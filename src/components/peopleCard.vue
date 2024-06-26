@@ -1,10 +1,10 @@
 <template>
   <q-card
-    class="row"
-    :class="$q.screen.lt.sm ? 'q-px-xs' : 'q-px-md'"
-    :style="$q.screen.lt.sm ? 'width: 90vw;' : 'width: 400px;'"
+    style="width: 40vw; max-width: 400px"
+    :style="$q.screen.lt.sm ? 'width: 90vw' : ' '"
+    class="q-mb-sm q-px-md"
   >
-<!--     <q-card-section>
+    <!--     <q-card-section>
       <q-avatar>
         <img src="https://cdn.quasar.dev/img/avatar.png" />
       </q-avatar>

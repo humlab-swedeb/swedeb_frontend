@@ -26,7 +26,6 @@ const metaStore = metaDataStore();
 
 const handleEnter = () => {
   if (!kwicStore.searchText.includes(",")) {
-
     metaStore.saveKwicFilterData(kwicStore.searchText);
     metaStore.setSubmitKwicEvent();
   }

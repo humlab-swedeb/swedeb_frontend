@@ -7,16 +7,23 @@
   </q-card>
   <div v-show="showData">
     <div class="q-pb-md">
-      <ShowData :filterSelections="'KWIC'"/>
+      <ShowData :filterSelections="'KWIC'" />
     </div>
     <loadingIcon v-if="loading" size="100" />
 
-    <div v-else class="q-pb-xl">
+    <div v-else class="q-pb-xl q-px-md">
       <kwicDataTable />
     </div>
 
     <div>
-      <q-btn @click="cancelFetch" :disable="!loading">Avbryt sökning</q-btn>
+      <q-btn
+        no-caps
+        v-show="loading"
+        @click="cancelFetch"
+        color="primary"
+        :label="$t('searchCancel')"
+      />
+      >
     </div>
   </div>
 </template>
@@ -28,7 +35,7 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watchEffect, nextTick, onMounted } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();

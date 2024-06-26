@@ -8,7 +8,7 @@
     <div class="q-pb-md">
       <ShowData :filterSelections="'Speeches'"/>
     </div>
-    <div v-if="!loading" class="q-pb-xl">
+    <div v-if="!loading" class="q-pb-xl q-px-md">
       <speechDataTable type="speeches" />
     </div>
   </div>

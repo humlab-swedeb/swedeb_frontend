@@ -13,6 +13,7 @@
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { reactive, watchEffect, ref } from "vue";
+import { useQuasar } from "quasar";
 import noResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
@@ -22,6 +23,7 @@ exporting(Highcharts);
 
 const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
+const $q = useQuasar();
 let categories = [];
 
 const chartOptions = reactive({
@@ -109,8 +111,8 @@ const chartOptions = reactive({
   },
 
   legend: {
-    layout: "vertical",
-    align: "left",
+    layout: $q.screen.lt.sm ? "horizontal" : "vertical",
+    align: $q.screen.lt.sm ? "center" : "left",
     verticalAlign: "top",
     itemStyle: {
       fontSize: "14px",
@@ -166,7 +168,7 @@ const chartOptions = reactive({
         },
         chartOptions: {
           chart: {
-            height: 400,
+            height: $q.screen.lt.sm ? "600" : "400",
           },
         },
       },
@@ -197,40 +199,34 @@ const chartOptions = reactive({
 const dataLoaded = ref(false);
 const wordTrends = wtStore.wordTrends;
 
- watchEffect(() => {
-
-   if (wordTrends && wordTrends.length > 0) {
-
-     prepareDataForLineChart();
+watchEffect(() => {
+  if (wordTrends && wordTrends.length > 0) {
+    prepareDataForLineChart();
   }
 });
 
-
-
-function prepareDataForLineChart(){
+function prepareDataForLineChart() {
   categories = wordTrends.map((entry) => parseInt(entry.year));
-    const seriesData = Object.keys(wordTrends[0].count)
-      .map((word) => ({
-        name: word,
-        data: wordTrends.map((entry) => entry.count[word]),
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+  const seriesData = Object.keys(wordTrends[0].count)
+    .map((word) => ({
+      name: word,
+      data: wordTrends.map((entry) => entry.count[word]),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
 
-    //Move "Totalt" to the end of the series
-    const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");
-    if (totalIndex !== -1) {
-      const totalEntry = seriesData.splice(totalIndex, 1)[0];
-      seriesData.push(totalEntry);
-    }
+  //Move "Totalt" to the end of the series
+  const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");
+  if (totalIndex !== -1) {
+    const totalEntry = seriesData.splice(totalIndex, 1)[0];
+    seriesData.push(totalEntry);
+  }
 
-    if (chartContainer.value && chartContainer.value.parentElement) {
-      renderChart(chartContainer.value, categories, seriesData);
-      //addAnnotations();
-      dataLoaded.value = true;
-    }
-
+  if (chartContainer.value && chartContainer.value.parentElement) {
+    renderChart(chartContainer.value, categories, seriesData);
+    //addAnnotations();
+    dataLoaded.value = true;
+  }
 }
-
 
 const getDashStyle = (seriesIndex) => {
   const styles = ["Solid", "Dash", "Dot", "LongDash", "DashDot"];

@@ -10,18 +10,18 @@
           <q-route-tab to="/faq" :label="$t('faq')" />
         </q-tabs>
         <q-btn flat round icon="menu" class="lt-md">
-          <q-menu>
+          <q-menu class="bg-primary shadow-7">
             <q-list>
-              <q-item to="/" clickable>
+              <q-item to="/" clickable class="text-black">
                 <q-item-section>{{ $t("home") }}</q-item-section>
               </q-item>
-              <q-item to="/tools/wordtrends" clickable>
+              <q-item to="/tools/wordtrends" clickable class="text-black">
                 <q-item-section>{{ $t("tools") }}</q-item-section>
               </q-item>
-              <q-item to="/about" clickable>
+              <q-item to="/about" clickable class="text-black">
                 <q-item-section>{{ $t("about") }}</q-item-section>
               </q-item>
-              <q-item to="/faq" clickable>
+              <q-item to="/faq" clickable class="text-black">
                 <q-item-section>{{ $t("faq") }}</q-item-section>
               </q-item>
             </q-list>
@@ -29,7 +29,7 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-page-container class="q-px-xl justify-center row">
+    <q-page-container class="">
       <router-view />
     </q-page-container>
     <q-footer class="bg-secondary text-black">
