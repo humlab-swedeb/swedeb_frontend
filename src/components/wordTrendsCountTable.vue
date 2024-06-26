@@ -4,9 +4,9 @@
       <q-btn-dropdown
         no-caps
         icon="download"
-        class="text-grey-8 col-3"
+        class="text-grey-8 col-3 q-mb-md"
         color="secondary"
-        :label="$t(downloadWordtrends)"
+        :label="$t('downloadWordtrends')"
         style="width: fit-content"
       >
         <q-list>

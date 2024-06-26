@@ -53,18 +53,27 @@
       <q-toolbar class="lt-sm bg-white">
         <q-btn
           class="text-white full-width q-my-md q-py-sm"
-          @click="popup = true"
-          label="Filtrera och Sök"
+          @click="metaStore.mobilePopup = true"
+          :label="$t('filterAndSearch')"
           no-caps
           color="accent"
         />
-        <q-dialog v-model="popup" class="fit">
+        <q-dialog
+          v-model="metaStore.mobilePopup"
+          class="fit"
+        >
           <q-card class="fit full-width bg-grey-2">
             <q-card-section class="row items-center justify-between">
               <q-item-label class="text-body1 text-bold">
-                Filtrera och Sök
+                {{ $t("filterAndSearch") }}
               </q-item-label>
-              <q-btn flat icon="close" color="black" class="item-end" @click="popup = false" />
+              <q-btn
+                flat
+                icon="close"
+                color="black"
+                class="item-end"
+                @click="metaStore.mobilePopup = false"
+              />
             </q-card-section>
             <metaDataFilter />
           </q-card>
@@ -162,10 +171,11 @@
 <script setup>
 import metaDataFilter from "src/components/metaDataFilter.vue";
 import { ref } from "vue";
+import { metaDataStore } from "src/stores/metaDataStore";
+
+const metaStore = metaDataStore();
 
 const miniState = ref(false);
-const popup = ref(false);
-
 const drawer = ref(false);
 
 const drawerClick = (e) => {
