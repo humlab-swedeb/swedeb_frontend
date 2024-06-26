@@ -28,7 +28,7 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watchEffect, nextTick, onMounted } from "vue";
+import { ref, watchEffect,  onMounted } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();

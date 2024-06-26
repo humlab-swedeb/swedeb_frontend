@@ -27,7 +27,7 @@
           </q-item>
           <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
             <q-item-section>
-              <q-item-label>{{ $("downloadSpeech") }}</q-item-label>
+              <q-item-label>{{ $t("downloadSpeech") }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>

@@ -18,7 +18,7 @@
 
           Sökningen resulterade i
           {{ $t("searchResult1") }}
-          <b>{{ wtStore.wordTrendsSpeeches.length }}</b>
+          <b>{{ wtStore.speechesData.length }}</b>
           {{ $t("searchResult2") }}
 
         </q-item-label>
