@@ -37,15 +37,15 @@ export const kwicDataStore = defineStore("kwicData", {
       this.cancelTokenSource = axios.CancelToken.source();
       try {
         const path = `/tools/kwic/${search}`;
-        const additional_params = {
+        const additionalParams = {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
           lemmatized: this.lemmatizeSearch,
-          cut_off: 10000,
+          cut_off: 100000,
         };
 
         const queryString =
-          metaDataStore().getSelectedParams(additional_params);
+          metaDataStore().getSelectedParams(additionalParams);
         const response = await api.get(`${path}?${queryString}`, {
           cancelToken: this.cancelTokenSource.token,
         });
