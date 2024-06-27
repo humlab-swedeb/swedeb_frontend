@@ -15,7 +15,6 @@
           />
           {{ $t("metaDataFilter") }}</q-card-section
         >
-
         <q-space />
         <q-btn
           :aria-label="$t('accessibility.metadataFilter')"
@@ -282,7 +281,7 @@ const hasSelections = computed(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, #eeeeee, rgb(238, 238, 238, 0.5));
+  background: linear-gradient(to top, #E4E4EB, rgba(238, 238, 238, 0.5));
 }
 
 .padding-bot {

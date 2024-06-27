@@ -10,7 +10,7 @@
           : props.props.cols.length
       "
       no-hover
-      :style="$q.screen.lt.sm ? 'width: 40vw':''"
+      :style="$q.screen.lt.sm ? 'width: 40vw' : ''"
     >
       <loadingIcon v-if="loading" size="100" />
       <q-card v-else flat class="bg-transparent">
@@ -98,11 +98,14 @@
             <q-item-label caption class="text-bold">{{
               speakerNote
             }}</q-item-label>
-            <div
-              v-if="$route.path !== '/tools/speeches'"
-              v-html="speechText"
-            ></div>
-            <div v-else>{{ originalSpeechText }}</div>
+            <loadingIcon v-if="loading" size="100" />
+            <div v-else>
+              <div
+                v-if="$route.path !== '/tools/speeches'"
+                v-html="speechText"
+              ></div>
+              <div v-else>{{ originalSpeechText }}</div>
+            </div>
           </q-card-section>
           <!-- IF LARGE SCREEN -->
           <q-card-section v-show="!$q.screen.lt.sm" class="q-pa-none col-2">

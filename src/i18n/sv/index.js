@@ -149,7 +149,8 @@ export default {
   },
 
   // SPEECHES PAGE & COMPONENTS ------------------------------------------
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
+  speechesIntroTitle: "Anföranden — Sök på Riksdagsanföranden.",
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
 
   // ABOUT PAGE ------------------------------------------------

@@ -96,7 +96,7 @@
               {{ col.value }}
             </q-item-label>
             <q-item-label
-              v-else-if="col.value === 'Metadata saknas'"
+              v-else-if="col.value === 'metadata saknas'"
               class="text-italic text-grey-6"
             >
               {{ col.value }}
