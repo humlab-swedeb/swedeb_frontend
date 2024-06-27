@@ -1,41 +1,37 @@
 <template>
-  <p caption>
+  <q-item-label caption class="text-bold q-mb-sm q-mt-lg text-grey-8">
     {{ $t("nrOfWordsIntro") }}
-  </p>
-  <q-card-section horizontal class="">
-    <q-input
-      v-model="kwicStore.wordsLeft"
-      outlined
-      label="Vänster"
-      type="number"
-      class="bg-white"
-      color="accent"
-      max="10"
-      min="0"
-    >
-      <template v-slot:prepend>
-        <q-icon name="chevron_left" color="accent" size="sm" />
-      </template>
-    </q-input>
-
-    <q-item-label class="q-ma-none q-pa-md text-bold">{{
-      $t("nrOfWordsSearch")
-    }}</q-item-label>
-
-    <q-input
-      v-model="kwicStore.wordsRight"
-      outlined
-      label="Höger"
-      type="number"
-      class="bg-white"
-      color="accent"
-      max="10"
-      min="0"
-    >
-      <template v-slot:append>
-        <q-icon name="chevron_right" color="accent" size="sm" />
-      </template>
-    </q-input>
+  </q-item-label>
+  <q-card-section horizontal class="row justify-between q-pa-none">
+    <div class="col">
+      <q-input
+        v-model="kwicStore.wordsLeft"
+        outlined
+        :label="$t('nrOfWordsLeft')"
+        type="number"
+        class="bg-white"
+        color="accent"
+        max="20"
+        min="0"
+      >
+      </q-input>
+    </div>
+      <q-item-label class="q-ma-none q-pa-md text-bold">{{
+        $t("nrOfWordsSearch")
+      }}</q-item-label>
+    <div class="col">
+      <q-input
+        v-model="kwicStore.wordsRight"
+        outlined
+        :label="$t('nrOfWordsRight')"
+        type="number"
+        class="bg-white"
+        color="accent"
+        max="20"
+        min="0"
+      >
+      </q-input>
+    </div>
   </q-card-section>
 </template>
 

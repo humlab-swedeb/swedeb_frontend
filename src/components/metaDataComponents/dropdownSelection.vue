@@ -23,6 +23,24 @@
     :use-input="props.type === 'speakers'"
     @clear="handleClear"
   >
+    <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+      <q-item v-bind="itemProps" dense>
+        <q-item-section>
+          <q-item-label v-if="props.type === 'speakers'">
+            {{ customOptionLabel(opt) }}
+          </q-item-label>
+
+          <q-item-label v-else>{{ opt }}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-checkbox
+            color="accent"
+            :model-value="selected"
+            @update:model-value="toggleOption(opt)"
+          />
+        </q-item-section>
+      </q-item>
+    </template>
     <template v-slot:selected-item="select">
       <q-chip
         v-if="store.selected[props.type]"
@@ -30,10 +48,10 @@
         removable
         :style="getChipStyle(select.opt)"
         @remove="select.removeAtIndex(select.index)"
+        class="overflow-chip"
       >
         <q-item-label v-if="props.type === 'speakers'">
-          {{ select.opt.name }},
-          {{ getPartyLabel(select.opt.party_abbrev) }}
+          {{ customOptionLabel(select.opt) }}
           <!--       <span
             :style="{
               backgroundColor: store.getPartyColor(select.opt.speaker_party[0]),
@@ -43,9 +61,7 @@
             }"
           >
             {{ select.opt.speaker_party[0] }} </span
-          > -->({{
-            select.opt.year_of_birth ? select.opt.year_of_birth : ""
-          }}-{{ select.opt.year_of_death ? select.opt.year_of_death : " " }})
+          > -->
         </q-item-label>
 
         <q-item-label v-else>{{ select.opt }}</q-item-label>
@@ -67,9 +83,9 @@ const getChipStyle = (opt) => {
   if (props.type === "party") {
     return {
       backgroundColor: "white",
-      color: store.getPartyColor(opt),
+      color: store.getPartyNameColor(opt),
       fontWeight: "bold",
-      border: `2px solid ${store.getPartyColor(opt)}`,
+      border: `2px solid ${store.getPartyNameColor(opt)}`,
     };
   } /* else if (props.type === "speakers") {
     return {
@@ -83,20 +99,20 @@ const getChipStyle = (opt) => {
   }
 };
 watchEffect(async () => {
-	  try {
-	    if (props.type === "party") {
-	      options.value = Object.keys(store.options.party) || [];
-	    } else if (props.type === "subOffice") {
-	      options.value = store.options.subOffice || [];
-	    } else if (props.type === "speakers") {
-	      // speaker list always updated (also on clear)
-	      await store.getSpeakersOptions();
-	      options.value = store.options.speakers || [];
-	    }
-	  } catch (error) {
-	    console.error("Error updating options:", error);
-	  }
-	});
+  try {
+    if (props.type === "party") {
+      options.value = Object.keys(store.options.party) || [];
+    } else if (props.type === "subOffice") {
+      options.value = store.options.subOffice || [];
+    } else if (props.type === "speakers") {
+      // speaker list always updated (also on clear)
+      await store.getSpeakersOptions();
+      options.value = store.options.speakers || [];
+    }
+  } catch (error) {
+    console.error("Error updating options:", error);
+  }
+});
 
 const filterHandler = (searchTerm, updateOptions) => {
   if (props.type === "speakers") {

@@ -1,31 +1,28 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div class="text-center q-pa-xl q-mt-xl">
     <div>
-      <div style="font-size: 30vh">
-        404
-      </div>
-
-      <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
-      </div>
-
+      <q-icon
+        name="sentiment_dissatisfied"
+        size="xl"
+        color="accent"
+        class="q-ma-none"
+      />
+      <q-item-label class="text-h4 text-grey-8 q-mt-md">
+        {{ $t("errorMessage404") }}
+      </q-item-label>
       <q-btn
-        class="q-mt-xl"
-        color="white"
-        text-color="blue"
+        class="q-mt-xl q-px-lg"
+        color="accent"
+        text-color="white"
         unelevated
         to="/"
-        label="Go Home"
+        :label="$t('errorMessageButton')"
         no-caps
       />
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup></script>
 
-export default defineComponent({
-  name: 'ErrorNotFound'
-})
-</script>
+<style lang="scss" scoped></style>

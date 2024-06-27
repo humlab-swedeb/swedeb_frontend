@@ -1,18 +1,25 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import JSZip from "jszip";
+import i18n from "src/i18n/sv/index.js";
 
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
     formatProps(currentProps) {
-      const speaker = currentProps.speaker;
-      const hit = currentProps.node_word;
-      const id = currentProps.id;
-      const party = currentProps.party;
-      const year = currentProps.year;
-      // gender, source, protocol
+      const speaker = `Talare: ${currentProps.speaker}`;
+      const hit = `Sökord ${currentProps.node_word}`;
+      const id = `Anförande-ID: ${currentProps.protocol}`;
+      const party = `Parti: ${currentProps.party}`;
+      const year = `År: ${currentProps.year}`;
+      const gender = `Kön: ${currentProps.gender}`;
 
-      return `Talare: ${speaker}\nSökord: ${hit}\nProtokoll-ID: ${id}\nParti: ${party}\nÅr: ${year}\n\n`;
+      const corpus_version = i18n.downLoadInfo.corpus_version;
+      const swerik_ref = i18n.downLoadInfo.swerik_ref;
+      const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
+
+      //speaker, party, gender,
+
+      return `${speaker}\n${party}\n${gender}\n${year}\n${id}\n${hit}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}\n\n`;
     },
 
     formatFileName(currentProps) {
@@ -46,7 +53,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
     },
 
-    async getSpeechesZip(speech_list, selected_metadata) {
+    async downloadSpeechesZip(speech_list, selected_metadata) {
       try {
         const path = "tools/speech_download/";
         const json_payload = JSON.stringify(speech_list);
@@ -77,7 +84,7 @@ export const downloadDataStore = defineStore("downloadData", {
         // Create an anchor element for initiating the download
         const anchor = document.createElement("a");
         anchor.href = url;
-        anchor.setAttribute("download", "new_speeches.zip");
+        anchor.setAttribute("download", "tal.zip");
         anchor.click(); // Trigger the download
 
         // Revoke the temporary URL after a short delay

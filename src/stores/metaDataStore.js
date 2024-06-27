@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-
+import i18n from "src/i18n/sv/index.js";
 
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
     data: null,
+    mobilePopup: false,
 
     options: {
       party: {},
@@ -21,6 +22,7 @@ export const metaDataStore = defineStore("metaDataStore", {
     selected: {
       party: [],
       gender: [],
+      genderList: [],
       office: [],
       subOffice: [],
       speakers: [],
@@ -30,14 +32,67 @@ export const metaDataStore = defineStore("metaDataStore", {
       },
     },
 
-    genderAllSelect: false,
-    officeAllSelect: false,
+    genderFilter: false,
+    partyFilter: false,
 
-    submitEvent: false,
-    updateEvent: false,
+    submitEventKWIC: false,
+    submitEventWT: false,
+    submitEventSpeeches: false,
+    submitEventNgrams: false,
+
+    filterAtSearchKWIC: undefined,
+    filterAtSearchWT: undefined,
+    filterAtSearchSpeeches: undefined,
+    filterAtSearchNgrams: undefined,
   }),
 
   actions: {
+    saveKwicFilterData(search) {
+      this.filterAtSearchKWIC = { ...this.selected };
+      this.filterAtSearchKWIC["search"] = search;
+    },
+
+    saveWTFilterData(search) {
+      this.filterAtSearchWT = { ...this.selected };
+      this.filterAtSearchWT["search"] = search;
+    },
+
+    saveSpeechesFilterData() {
+      this.filterAtSearchSpeeches = { ...this.selected };
+    },
+
+    saveNgramsFilterData() {
+      this.filterAtSearchNgrams = { ...this.selected };
+    },
+
+    setSubmitNgramsEvent() {
+      this.submitEventNgrams = true;
+    },
+    cancelSubmitNgramsEvent() {
+      this.submitEventNgrams = false;
+    },
+
+    setSubmitSpeechesEvent() {
+      this.submitEventSpeeches = true;
+    },
+    cancelSubmitSpeechesEvent() {
+      this.submitEventSpeeches = false;
+    },
+
+    setSubmitKwicEvent() {
+      this.submitEventKWIC = true;
+    },
+    cancelSubmitKwicEvent() {
+      this.submitEventKWIC = false;
+    },
+
+    setSubmitWTEvent() {
+      this.submitEventWT = true;
+    },
+    cancelSubmitWTEvent() {
+      this.submitEventWT = false;
+    },
+
     async resetSelectedState() {
       this.selected = {
         party: [],
@@ -50,17 +105,18 @@ export const metaDataStore = defineStore("metaDataStore", {
           max: this.options.yearRange.max,
         },
       };
-      this.genderAllSelect = false;
-      this.officeAllSelect = false;
+
+      this.selected.gender = Object.keys(this.options.gender);
+      this.genderFilter = false;
     },
 
     async fetchAllMetaData() {
       // to load all metadata on mount
-      this.getYearOptions()
-      this.getPartyOptions()
-      this.getOfficeOptions()
-      this.getGenderOptions()
-      this.getSpeakersOptions()
+      this.getYearOptions();
+      this.getPartyOptions();
+      this.getOfficeOptions();
+      this.getGenderOptions();
+      this.getSpeakersOptions();
     },
 
     addParamArray(current_key, api_key, query_params) {
@@ -73,7 +129,6 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     addPartyParam(selected_params) {
       if (this.selected.party.length > 0) {
-        // add the value from this.party.options for each selected party in this.party.selected
         this.selected.party.forEach((party) =>
           selected_params.append("party_id", this.options.party[party].party_id)
         );
@@ -107,22 +162,49 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${speaker.name}, ${speaker.party_abbrev}, ${speaker.year_of_birth} - ${year_of_death}`;
     },
 
+    getSearchTermsAsString(searchTerms) {
+      if (searchTerms === undefined || searchTerms === "") {
+        return "";
+      } else {
+        return `Sökord: ${searchTerms}`;
+      }
+    },
 
-    selectedMetadataToText() {
+    getSelectedAtSearchMetadata(tool_type) {
+      switch (tool_type) {
+        case "kwic":
+          return this.filterAtSearchKWIC;
+        case "wordTrends":
+          return this.filterAtSearchWT;
+        case "speeches":
+          return this.filterAtSearchSpeeches;
+        case "ngrams":
+          return this.filterAtSearchNgrams;
+        default:
+          return this.selected;
+      }
+    },
+
+    selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
-      const selected_years_start = this.selected.yearRange.min;
-      const selected_years_end = this.selected.yearRange.max;
+
+      const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
+      const selected_years_start = selected_metadata.yearRange.min;
+      const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
-      const selected_parties = this.getMetarRow(this.selected.party, "partier");
-      const selected_speakers_as_string = this.selected.speakers.map(
+
+      const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+
+
+      const selected_speakers_as_string = selected_metadata.speakers.map(
         (speaker) => this.getSpeakerAsString(speaker)
       );
       const selected_speakers = this.getMetarRow(
         selected_speakers_as_string,
         "talare"
       );
-      const selected_genders_as_string = this.selected.gender.map(
+      const selected_genders_as_string = selected_metadata.gender.map(
         (gender) => this.options.gender[gender]
       );
 
@@ -130,13 +212,18 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected_genders_as_string,
         "kön"
       );
+      const selected_terms = this.getSearchTermsAsString(
+        selected_metadata.search
+      );
+      const corpus_version = i18n.downLoadInfo.corpus_version;
+      const swerik_ref = i18n.downLoadInfo.swerik_ref;
+      const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      return `${year_string}\n${selected_parties}\n${selected_speakers}\n${selected_genders}`;
+      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
     },
 
     getSelectedParams(additional_params = {}) {
       const searchParams = new URLSearchParams();
-
 
       for (const key in additional_params) {
         searchParams.append(key, additional_params[key]);
@@ -144,9 +231,11 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       this.addPartyParam(searchParams);
       this.addSpeakerParam(searchParams);
-      this.addParamArray("gender", "gender_id", searchParams);
-      this.addParamArray("office", "office_types", searchParams);
-      this.addParamArray("subOffice", "sub_office_types", searchParams);
+      if (this.genderFilter) {
+        this.addParamArray("gender", "gender_id", searchParams);
+      }
+      //this.addParamArray("office", "office_types", searchParams);
+      //this.addParamArray("subOffice", "sub_office_types", searchParams);
 
       const year_value = this.selected["yearRange"];
       if (year_value.min !== null) {
@@ -164,47 +253,57 @@ export const metaDataStore = defineStore("metaDataStore", {
       const searchParams = new URLSearchParams();
       this.addPartyParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
-      this.addParamArray("office", "office_types", searchParams);
-      this.addParamArray("subOffice", "sub_office_types", searchParams);
+      //this.addParamArray("office", "office_types", searchParams);
+      //this.addParamArray("subOffice", "sub_office_types", searchParams);
       return searchParams.toString();
     },
 
-    async getYearOptions(){
+    async getYearOptions() {
       try {
-
         const start_path = "/metadata/start_year";
         const end_path = "/metadata/end_year";
 
         const start_response = await api.get(start_path);
         const end_response = await api.get(end_path);
 
-        this.options.yearRange.min =  parseInt(start_response.data);
-        this.options.yearRange.max =  parseInt(end_response.data);
-        this.selected.yearRange.min =  parseInt(start_response.data);
-        this.selected.yearRange.max =  parseInt(end_response.data);
-
+        this.options.yearRange.min = parseInt(start_response.data);
+        this.options.yearRange.max = parseInt(end_response.data);
+        this.selected.yearRange.min = parseInt(start_response.data);
+        this.selected.yearRange.max = parseInt(end_response.data);
       } catch (error) {
         console.error(error);
       }
     },
 
-
-    getPartyColor(party_abbreviation) {
-      return this.options.party[party_abbreviation].party_color || "#808080";
+    getPartyNameColor(party_name) {
+      if (!this.options.party.hasOwnProperty(party_name)) {
+        return "#808080";
+      }
+      return this.options.party[party_name].party_color || "#808080";
+    },
+    getPartyAbbrevColor(party_abbrev) {
+      for (const party in this.options.party) {
+        if (this.options.party[party].party_abbrev === party_abbrev) {
+          return this.options.party[party].party_color || "#808080";
+        }
+      }
+      return "#808080";
     },
 
     async getPartyOptions() {
       const path = "/metadata/parties";
       const response = await api.get(path);
 
-      this.options.party = response.data.party_list.reduce((acc, party) => {
-        acc[party.party_abbrev] = {
-          party_id: party.party_id,
-          party_name: party.party,
-          party_color: party.party_color,
-        };
-        return acc;
-      }, {});
+      this.options.party = response.data.party_list
+        .sort((a, b) => a.party_abbrev.localeCompare(b.party))
+        .reduce((acc, party) => {
+          acc[party.party] = {
+            party_id: party.party_id,
+            party_abbrev: party.party_abbrev,
+            party_color: party.party_color,
+          };
+          return acc;
+        }, {});
     },
 
     async getOfficeOptions() {
@@ -222,6 +321,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         acc[gender.gender_id] = gender.swedish_gender;
         return acc;
       }, {});
+      this.selected.gender = Object.keys(this.options.gender);
     },
 
     async getSubOfficeOptions() {
@@ -241,26 +341,11 @@ export const metaDataStore = defineStore("metaDataStore", {
         const queryString = this.getSelectedParamsForSpeakerList();
         const response = await api.get(`${path}?${queryString}`);
 
-        this.options.speakers = response.data.speaker_list;
+        this.options.speakers = response.data.speaker_list.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
-      }
-    },
-
-    selectAll(type) {
-      this.selected[type] = this.options[type];
-      //if click again unselect all
-      if (!this[`${type}AllSelect`]) {
-        this.selected[type] = [];
-      }
-    },
-
-    // If all genders are selected, select "Select All"
-    ifAllSelected(type) {
-      if (this.selected[type].length === this.options[type].length) {
-        this[`${type}AllSelect`] = true;
-      } else {
-        this[`${type}AllSelect`] = false;
       }
     },
   },

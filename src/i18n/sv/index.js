@@ -2,10 +2,7 @@
 // so you can safely delete all default props below
 
 export default {
-  failed: "Misslyckades",
-  success: "Lyckades",
-
-  // MAIN LAYOUT
+  // MAIN LAYOUT ------------------------------------------------
   swedeb: "SweDeb",
   home: "Hem",
   tools: "Verktyg",
@@ -34,58 +31,109 @@ export default {
   nGramsText: "Se hur ett ord har använts över tid",
   nGramsIcon: "show_chart",
 
-  // MetaDataFilter component
+  contactLabelButton: "Kontakta SweDeb-Teamet",
+
+  // MetaDataFilter component -------------------------------------------
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
+  toolsFilterMini: "Verktygsspecifika Filter",
+  filterAndSearch: "Filtrera och sök",
 
-  // YearRange component (used in MetaDataFilter)
   year: "År",
-  //yearRangeMin: "1920",
-  //yearRangeMax: "2022",
-
   office: "Office type",
   subOffice: "Sub office type",
   party: "Parti",
   gender: "Kön",
   speakers: "Talare",
+  toggleYes: "Ja",
+  toggleNo: "Nej",
+  toggleGenderLabel: "Filtrera på kön",
+  clearFilter: "Rensa filter",
 
   toolsFilterTitle: "Verktygsspecifika Filter",
   "/tools/wordtrends": "Ordtrender",
-  "/tools/kwic": "Key word in context",
+  "/tools/kwic": "Key words in context",
   "/tools/speeches": "Anföranden",
   "/tools/ngram": "N-grams",
 
-  // NRofWORDS
+  searchButton: "Sök",
+  searchCancel: "Avbryt sökning",
+  searchTooltipWordtrends: "Lägg till sökord",
+  searchTooltipWordtrendsError:
+    "I verktyget Ordtrender kan du inte söka på fraser: Ta bort dessa för att genomföra sökningen",
+  searchTooltipKWIC_Ngram: "Lägg till ett sökord eller en fras.",
+  searchTooltipKWICError:
+    "Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i taget",
+  searchTooltipNgramError:
+    "Sökningar i verktyget N-gram kan endast göras på ett ord eller fras i taget",
+
+  //TOOLS FILTER ------------------------------------------------
+  ngramIntro: `Under utveckling.`,
+  ngramWidth: "Bredd",
+  ngramSizePlaceLabel:
+    "Välj storlek på N-gram och var sökordet ska vara placerat",
+
+  searchInput: "Sök på ett ord eller en fras",
+  searchAdd: "Lägg till ord",
+  searchClear: "Ta bort alla ord",
+  searchAddedWords: "Valda ord:",
+  searchDropdownOfHits1:
+    "Här visas de 10 vanligaste orden relaterade till söktermen med",
+  searchDropdownOfHits2: "*",
+  searchDropdownOfHits3: "Det finns ytterligare",
+  searchDropdownOfHits4: "ord att lägga till för att förfina sökningen.",
+
+  normalizeResultTooltip:
+    "Antalet träffar på sökordet delas med det totala antalet ord per år",
+  normalizeResultLabel: "Normalisera resultat",
+
+  lemmaResultTooltip:
+    "Sökningen tolkas som ett lemma och böjningsformer av sökningen inkluderas i resultatet.",
+  lemmaResultLabel: "Lemmatiserad sökning",
+
   nrOfWordsIntro:
-    "Välj hur många ord som ska visas till vänster och höger om sökorden",
+    "Välj hur många ord som ska visas till vänster och höger om sökorden:",
   nrOfWordsSearch: "Sökord",
+  nrOfWordsLeft: "Vänster",
+  nrOfWordsRight: "Höger",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
   // Introduction to tool
-  wordTrendsIntro: `
-  Sök på ett eller flera ord för att se hur de har använts över tid. För att
-  söka på flera ord, separera dem med kommatecken, till exempel:
-  <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
-  <code>exempeltext</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till vissa partier, talare eller år. Observera att denna
-  test-korpus är lemmatiserad, vilket innebär att sökresultaten baseras på
-  ordets grammatiska rot.
-`,
 
+  // WORDTRENDS PAGE & COMPONENTS ----------------------------------------
+  wordTrendsIntroTitle:
+    "Ordtrender — Sök på ett eller flera ord för att se hur de har använts över tid.",
+  wordTrendsIntro: `
+  För att söka på flera ord, separera dem med kommatecken, till exempel:
+  <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
+  <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  anförandena till vissa partier, talare eller år.`,
+
+  wordtrendsResult1: "Här visas resultatet i en",
+  wordtrendsResult2: "för de ord och metadata som valts.",
+  wordtrendsResult3: "Här visas alla",
+  wordtrendsResult4: "i en tabell kopplat till de ord och metadata som valts.",
+  wordtrendsResultLine: "trendlinje",
+  wordtrendsResultTable: "tabell",
+  wordtrendsResultSpeech: "anföranden",
+
+  // KWIC PAGE & COMPONENTS ------------------------------------------------
+  kwicIntroTitle:
+    "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
   t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
-  höger om sökningen. För att få fler träffar kan&nbsp;<code>.*</code> användas,
-  t ex <code>information.*</code>. Under Filtrera sökresultat kan du avgränsa
-  anförandena till vissa partier, talare eller år. Observera att denna test-korpus är
-  lemmatiserad, dvs sökresultateten baseras på ordets grammatiska rot.`,
+  höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
+  t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  anförandena till vissa partier, talare eller år.`,
 
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
-  till vissa partier, talare eller år. Observera att du i dagsläget endast kan ladda ner en lista med
-  metadata om anföranden och inte talen i sig (men det kommer man kunna göra i den färdiga versionen).`,
-
-  ngramIntro: `Under utveckling.`,
+  searchResult1: "Sökningen resulterade i",
+  searchResult2: "träffar.",
+  downloadKWIC: "Ladda ner KWIC",
+  downloadCSV: "Ladda ner CSV",
+  downloadExcel: "Ladda ner Excel",
+  downloadSpeech: "Tal",
 
   kwicLable: {
     left_word: "Vänster",
@@ -94,44 +142,53 @@ export default {
     year: "År",
     name: "Talare",
     party_abbrev: "Parti",
-    speech_title: "Taltitel",
+    title: "Taltitel",
     gender: "Kön",
     person_id: "Person ID",
     link: "Länk",
   },
 
-  // ABOUT PAGE
+  // SPEECHES PAGE & COMPONENTS ------------------------------------------
+  speechesIntroTitle: "Anföranden — Sök på Riksdagsanföranden.",
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du avgränsa anförandena
+  till vissa partier, talare eller år.`,
+
+  // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om SweDeb",
+  aboutFinance:
+    "SweDeb är finansierade av Umeå Universitet under två års tid 2022-2024.",
+  aboutTeam: "Teamet bakom SweDeb",
+  aboutReference: "Referensgrupp",
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
-      title: "Projektledare",
-      description: "Fredrik är projektledare för SweDeb.",
+      title: "Projektledare, Forskare",
+      description: "",
     },
     1: {
       name: "Johan Jarlbrink",
       title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     2: {
       name: "Rebecka Weegar",
       title: "Systemutvecklare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     3: {
       name: "Roger Mähler",
       title: "Systemutvecklare",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     4: {
       name: "Marita Nilsson",
       title: "Krav och test",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
     5: {
       name: "Kajsa Palm",
       title: "Systemutvecklare, UX/UI",
-      description: "Johan är utvecklare för SweDeb.",
+      description: "",
     },
   },
   peopleReference: {
@@ -157,7 +214,7 @@ export default {
     },
   },
 
-  // FAQ PAGE
+  // FAQ PAGE ------------------------------------------------
   faqPageTitle: "FAQ: Vanliga frågor och svar",
   faqContent: {
     0: {
@@ -168,5 +225,40 @@ export default {
       q: "Vad är syftet med SweDeb?",
       a: "SweDeb syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
     },
+  },
+
+  // Expanded table row & DOWNLOAAD------------------------------------------
+  searchWordLabel: "Sökord:",
+  wikidata: "Wikidata",
+  openSource: "Öppna källa",
+  download: "Ladda ner",
+  downloadAll: "Ladda ner alla",
+  downloadSpeech: "Ladda ner tal",
+  downloadWordtrends: "Ladda ner ordtrender",
+
+  //Download metadata ------------------------------------------------
+  downLoadInfo: {
+    corpus_version: "Korpusversion: v0.10.0",
+    swerik_ref: "Datakälla: https://swerik-project.github.io/",
+    swedeb_ref: "Nedladdat från: https://swedeb.se/public/index.html#/",
+  },
+
+  //ACCessibility ------------------------------------------------
+  accessibility: {
+    filtersectionOut: "Fäll ut filtersektionen",
+    filtersectionIn: "Fäll in filtersektionen",
+    metadataFilter: "Fäll ut och in filter för metadata",
+
+    searchAdd: "Lägg till sökord",
+    tooltipSpeechID:
+      "Här ska det vara en beskrivning av hur anförande-ID beskrivs",
+    loadingResults: "Resultat hämtas, vänligen vänta...",
+
+    noResults: "Inga resultat för sökningen.",
+    noResultsTip:
+      "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+
+    errorMessage404: "Hoppsan, här fanns inget!",
+    errorMessageButton: "Tillbaka till startsidan",
   },
 };

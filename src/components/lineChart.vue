@@ -1,114 +1,282 @@
 <template>
-  <div class="row justify-center">
-    <apex-chart
-      v-if="dataLoaded"
-      :options="chartOptions"
-      :series="series"
-      type="line"
-      class="fit"
-    />
-  </div>
+  <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
+    <div class="row justify-center q-mt-lg">
+      <div ref="chartContainer" id="chartContainer" class="fit"></div>
+    </div>
+  </template>
+  <template v-else>
+    <!-- Show a message when there's no data -->
+    <noResults />
+  </template>
 </template>
 
 <script setup>
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref, watchEffect } from "vue";
-import VueApexCharts from "vue3-apexcharts";
+import { reactive, watchEffect, ref } from "vue";
+import { useQuasar } from "quasar";
+import noResults from "src/components/noResults.vue";
+import Highcharts from "highcharts";
+import annotations from "highcharts/modules/annotations";
+annotations(Highcharts);
+import exporting from "highcharts/modules/exporting";
+exporting(Highcharts);
+
+const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
-const series = ref([]);
-const chartOptions = ref({
+const $q = useQuasar();
+let categories = [];
+
+const chartOptions = reactive({
   chart: {
     type: "line",
-    height: 350,
-    fontFamily: "Open-Sans, sans-serif",
-    background: "#fcfcfc",
+    style: {
+      fontFamily: '"Open Sans", sans-serif',
+    },
+    backgroundColor: "#fcfcfc",
+    zooming: {
+      type: "xy",
+      resetButton: {
+        position: {
+          x: -40,
+          y: 5,
+        },
+        theme: {
+          fill: "white",
+          style: {
+            color: "#333333",
+          },
+          states: {
+            hover: {
+              fill: "#727198",
+              style: {
+                color: "white",
+                fontWeight: "bold",
+              },
+            },
+          },
+        },
+      },
+    },
   },
-  xaxis: {
-    categories: [],
+
+  title: {
+    text: null,
+  },
+
+  xAxis: {
+    title: {
+      text: "År",
+    },
     labels: {
       style: {
         fontSize: "14px",
       },
     },
   },
-  stroke: {
-    curve: "straight",
-    width: 3,
-    dashArray: generateDashArray(0),
 
+  yAxis: {
+    title: {
+      text: "Antal",
+    },
   },
+
+  plotOptions: {
+    line: {
+      lineWidth: 3,
+    },
+  },
+  colors: [
+    "#a6cee3",
+    "#1f78b4",
+    "#b2df8a",
+    "#33a02c",
+    "#fb9a99",
+    "#e31a1c",
+    "#fdbf6f",
+    "#ff7f00",
+    "#cab2d6",
+    "#6a3d9a",
+  ],
+
   tooltip: {
+    shared: false,
     style: {
-      fontFamily: "Open-Sans, sans-serif",
-      maxHeight: "30px",
+      fontSize: "12px",
+      fontFamily: '"Open Sans", sans-serif',
+      maxHeight: "100px",
+    },
+    marker: {
+      enabled: true,
     },
   },
+
   legend: {
-    position: "top",
-    horizontalAlign: "left",
-    labels: {
-      colors: "#000000", // Färg på legendtexten
-      fontSize: "16px", // Justera storlek på legendtexten
-    },
-  },
-  /* colors: ["#ff0000", "#00ff00", "#0000ff"] */
-
-  markers: {
-    size: 0,
-  },
-
-  title: {
-    text: "",
-    align: "center",
-    margin: 0,
-    offsetX: 0,
-    offsetY: 0,
-    floating: false,
-    style: {
+    layout: $q.screen.lt.sm ? "horizontal" : "vertical",
+    align: $q.screen.lt.sm ? "center" : "left",
+    verticalAlign: "top",
+    itemStyle: {
       fontSize: "14px",
-      fontWeight: "bold",
-      fontFamily: "Open-Sans, sans-serif",
-      color: "grey",
+      color: "#333333",
+      fontFamily: '"Open Sans", sans-serif',
+      fontWeight: "normal",
+    },
+    symbolWidth: 50,
+    symbolHeight: 20,
+    navigation: {
+      enabled: true,
+      activeColor: "#727198",
+      inactiveColor: "#E4E4EB",
+    },
+
+  },
+
+  credits: {
+    enabled: false,
+  },
+  /* annotations: [
+    {
+      draggable: false,
+      labelOptions: {
+        x: 0,
+        y: 0,
+      },
+      labels: [
+        {
+          point: {
+            x: 1,
+            y: 0,
+            xAxis: 0,
+            yAxis: 0,
+          },
+          text: "1",
+        },
+      ],
+    },
+  ],
+ */
+  responsive: {
+    rules: [
+      {
+        condition: {
+          maxWidth: 2500,
+        },
+        chartOptions: {
+          chart: {
+            height: $q.screen.lt.sm ? "600" : "400",
+          },
+        },
+      },
+    ],
+  },
+  exporting: {
+    filename: "word-trends",
+    sourceWidth: 1080,
+    menuItemDefinitions: {
+      downloadPNG: {
+        text: "Ladda ner som PNG",
+      },
+      downloadSVG: {
+        text: "Ladda ner som SVG",
+      },
+      printChart: {
+        text: "Skriv ut diagram",
+      },
+    },
+    buttons: {
+      contextButton: {
+        menuItems: ["downloadPNG", "downloadSVG", "printChart"],
+      },
     },
   },
 });
 
 const dataLoaded = ref(false);
+const wordTrends = wtStore.wordTrends;
 
 watchEffect(() => {
-  const wordTrends = wtStore.wordTrends;
-
   if (wordTrends && wordTrends.length > 0) {
-    const categories = wordTrends.map((entry) => parseInt(entry.year));
-    const seriesData = Object.keys(wordTrends[0].count).map((word) => ({
-      name: word,
-      data: wordTrends.map((entry) => entry.count[word]),
-    }));
-
-    series.value = seriesData;
-    // Uppdatera x-axel kategorier
-    chartOptions.value.xaxis.categories = categories;
-    chartOptions.value.stroke.dashArray = generateDashArray(
-      seriesData.length,
-      5
-    );
-
-    // Markera att data har laddats
-    dataLoaded.value = true;
+    prepareDataForLineChart();
   }
 });
-const ApexChart = VueApexCharts;
 
-function generateDashArray(totalLines, interval) {
-  const dashArray = [];
-  const dashValues = [0, 2, 4, 6, 8, 10]; // De olika värdena för dash
+function prepareDataForLineChart() {
+  categories = wordTrends.map((entry) => parseInt(entry.year));
+  const seriesData = Object.keys(wordTrends[0].count)
+    .map((word) => ({
+      name: word,
+      data: wordTrends.map((entry) => entry.count[word]),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
 
-  for (let i = 0; i < totalLines; i++) {
-    const dashIndex = Math.floor(i / interval) % dashValues.length;
-    dashArray.push(dashValues[dashIndex]);
+  //Move "Totalt" to the end of the series
+  const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");
+  if (totalIndex !== -1) {
+    const totalEntry = seriesData.splice(totalIndex, 1)[0];
+    seriesData.push(totalEntry);
   }
-  return dashArray;
+
+  if (chartContainer.value && chartContainer.value.parentElement) {
+    renderChart(chartContainer.value, categories, seriesData);
+    //addAnnotations();
+    dataLoaded.value = true;
+  }
 }
+
+const getDashStyle = (seriesIndex) => {
+  const styles = ["Solid", "Dash", "Dot", "LongDash", "DashDot"];
+  const styleIndex = Math.floor(seriesIndex / 5) % styles.length;
+  return styles[styleIndex];
+};
+
+function renderChart(container, categories, seriesData) {
+  const seriesWithDashStyles = seriesData.map((series, index) => ({
+    ...series,
+    color: index === seriesData.length - 1 ? "#333333" : null, // Give "Totalt" a different color
+    dashStyle: index === seriesData.length - 1 ? "Solid" : getDashStyle(index), // Give "Totalt" a solid line
+    legendIndex: series.name === "Totalt" ? -1 : index, // Move "Totalt" to the beginning of the legend
+  }));
+
+  Highcharts.chart(container, {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      categories: categories,
+    },
+    series: seriesWithDashStyles,
+  });
+}
+
+/* function addAnnotations() {
+  const chart = Highcharts.charts[Highcharts.charts.length - 1]; // Get the last created chart
+
+  const annotationYears = [1990, 2004, 2014, 2020];
+
+  annotationYears.forEach((year) => {
+    const index = categories.indexOf(year);
+    if (index !== -1) {
+      chart.addAnnotation({
+        draggable: false,
+        labelOptions: {
+          backgroundColor: "rgba(255, 0, 255, 0.5)",
+          verticalAlign: "top",
+          y: -1000,
+          x: 0,
+        },
+        labels: [
+          {
+            point: {
+              xAxis: 0,
+              yAxis: 0,
+              x: index,
+              y: 0, // Adjust the y-value as needed
+            },
+            text: `Year ${year}`,
+          },
+        ],
+      });
+    }
+  });
+} */
 </script>
 
 <style scoped></style>

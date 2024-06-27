@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-slide-transition v-show="showData">
+    <q-slide-transition>
       <q-list dense bordered class="q-pa-md rounded-borders bg-grey-2">
         <q-item-label caption class="text-black text-bold">
           {{ $t("selectedMetaDataTitle") }}
@@ -16,12 +16,21 @@
           </div>
           <div v-else-if="key === 'gender' && value.length > 0">
             <b>{{ customKey(key) }}:</b>
-            {{ value.map((gender_id) => store.options.gender[gender_id]).join(", ") }}
+            {{
+              value
+                .map((gender_id) => store.options.gender[gender_id])
+                .join(", ")
+            }}
           </div>
           <div v-else-if="key === 'party' && value.length > 0">
             <b>{{ customKey(key) }}:</b> {{ value.join(", ") }}
           </div>
-          <div v-else-if="(key === 'gender' || key === 'speakers' || key === 'party') && value.length == 0">
+          <div
+            v-else-if="
+              (key === 'gender' || key === 'speakers' || key === 'party') &&
+              value.length == 0
+            "
+          >
             <b>{{ customKey(key) }}:</b> Alla
           </div>
         </div>
@@ -32,11 +41,12 @@
 
 <script setup>
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import i18n from "src/i18n/sv/index.js";
+import { onMounted } from "vue";
+import { watch } from "vue";
 const store = metaDataStore();
 const displayedData = ref({});
-const showData = ref(false);
 
 const customKeys = {
   office: i18n.office,
@@ -48,16 +58,54 @@ const customKeys = {
 };
 const customKey = (key) => customKeys[key] || key;
 
-const getJoinedGender = () => {
-  return store.selected.gender.map(gender => store.options.gender[gender]).join(", ");
-};
-
-watchEffect(() => {
-  // When the submitEvent is triggered in the store, update the displayedData and showData values
-  if (store.submitEvent && store.updateEvent) {
-    showData.value = true;
-    displayedData.value = { ...store.selected };
-  }
-  store.updateEvent = false;
+const props = defineProps({
+  filterSelections: {
+    type: String,
+    required: true,
+  },
 });
+
+onMounted(() => {
+      let selectedData;
+      switch (props.filterSelections) {
+        case 'WordTrends':
+          selectedData = store.filterAtSearchWT;
+          break;
+        case 'Speeches':
+          selectedData = store.filterAtSearchSpeeches;
+          break;
+        case 'Ngrams':
+          selectedData = store.filterAtSearchNgrams;
+          break;
+        case 'KWIC':
+          selectedData = store.filterAtSearchKWIC;
+          break;
+        default:
+          selectedData = {};
+      }
+
+      if (selectedData !== undefined && Object.keys(selectedData).length > 0) {
+        displayedData.value = selectedData;
+      }
+    });
+
+watch(
+  () => {
+   switch (props.filterSelections) {
+        case 'WordTrends':
+          return store.filterAtSearchWT;
+        case 'Speeches':
+          return store.filterAtSearchSpeeches;
+        case 'Ngrams':
+          return store.filterAtSearchNgrams;
+        case 'KWIC':
+          return store.filterAtSearchKWIC;
+        default:
+          selectedData = {};
+      }
+  },
+  (newValue) => {
+    displayedData.value = newValue;
+  }
+);
 </script>
