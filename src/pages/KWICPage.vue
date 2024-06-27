@@ -15,9 +15,9 @@
       <kwicDataTable />
     </div>
 
-    <div>
+    <!-- <div>
       <q-btn @click="cancelFetch" :disable="!loading">Avbryt sökning</q-btn>
-    </div>
+    </div> -->
   </div>
 </template>
 
