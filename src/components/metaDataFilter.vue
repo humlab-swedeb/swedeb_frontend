@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 400px">
+  <div :style="$q.screen.lt.sm ? '90vw' : 'max-width: 400px'">
     <q-card class="q-mx-sm bg-grey-2">
       <q-card-section
         horizontal
@@ -69,13 +69,17 @@
       -->
       </q-slide-transition>
     </q-card>
-    <q-card flat class="q-ma-md bg-transparent padding-bot">
+    <q-card
+      flat
+      class="bg-transparent padding-bot"
+      :class="$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'"
+    >
       <toolsFilters
         @normalize-data="handleNormalizeData"
         @lemmatize-search="lemmatizeSearch"
       />
       <div class="q-pa-lg full-width sticky-bottom">
-        <!-- Search button for wordtrends -->
+        <!-- Search button for WORDTRENDS -->
         <q-btn
           v-if="$route.path === '/tools/wordtrends'"
           @click="handleSubmit"
@@ -155,7 +159,7 @@
           </q-tooltip>
         </q-btn>
 
-        <!-- Search button for N-Grams -->
+        <!-- Search button for NGRAMS -->
         <q-btn
           v-if="$route.path === '/tools/ngram'"
           @click="handleSubmit"
@@ -187,7 +191,7 @@
           </q-tooltip>
         </q-btn>
 
-        <!-- Search button for speeches -->
+        <!-- Search button for SPEECHES -->
         <q-btn
           @click="handleSubmit"
           no-caps
@@ -213,11 +217,15 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useQuasar } from "quasar";
+
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const kwicStore = kwicDataStore();
+
 const showing = ref(false);
 const route = useRoute();
+const $q = useQuasar();
 
 const handleNormalizeData = (newValue) => {
   if (route.path === "/tools/wordtrends") {
@@ -239,7 +247,6 @@ const handleSubmit = async () => {
     const wordHitsString = wtStore.wordHitsSelected.join(", ");
     store.saveWTFilterData(wordHitsString);
     store.setSubmitWTEvent();
-
   } else if (route.path === "/tools/speeches") {
     store.saveSpeechesFilterData();
     store.setSubmitSpeechesEvent();
@@ -248,6 +255,9 @@ const handleSubmit = async () => {
     store.setSubmitNgramsEvent();
   } else {
     console.log("unknown route in handleSubmit, metadatafilter.vue");
+  }
+  if ($q.screen.lt.sm) {
+    store.mobilePopup = false;
   }
 };
 

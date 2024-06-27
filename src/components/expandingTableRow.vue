@@ -1,7 +1,17 @@
 <!-- ExpandingRow.vue -->
 <template>
   <q-tr v-show="props.props.expand" :props="props.props">
-    <q-td :colspan="props.props.cols.length" no-hover>
+    <q-td
+      :colspan="
+        $q.screen.lt.sm
+          ? $route.path === '/tools/kwic'
+            ? '3'
+            : '2'
+          : props.props.cols.length
+      "
+      no-hover
+      :style="$q.screen.lt.sm ? 'width: 40vw':''"
+    >
       <loadingIcon v-if="loading" size="100" />
       <q-card v-else flat class="bg-transparent">
         <q-card-section class="q-px-md row">
@@ -9,7 +19,7 @@
             <div
               class="text-h6 row"
               :style="{
-                color: metaStore.getPartyNameColor(props.props.row.party),
+                color: metaStore.getPartyAbbrevColor(props.props.row.party),
               }"
             >
               <q-item-label
@@ -39,9 +49,50 @@
             </q-item-label>
           </q-card-section>
         </q-card-section>
-        <q-card-section class="row">
+        <q-card-section
+          :class="
+            $q.screen.lt.sm ? 'column q-pt-none q-px-none' : 'row q-pr-none'
+          "
+        >
+          <!-- IF SMALL SCREEN -->
+          <q-card-section v-show="$q.screen.lt.sm" class="q-pa-none q-mb-md">
+            <div class="column q-gutter-y-sm">
+              <q-btn
+                v-if="props.props.row.link !== 'Okänd'"
+                no-caps
+                :href="props.props.row.link"
+                target="_blank"
+                class="text-grey-8 fit"
+                color="secondary"
+              >
+                <q-icon left name="person_search" color="accent" />
+                <q-item-label>{{ $t("wikidata") }}</q-item-label>
+              </q-btn>
+              <q-btn
+                no-caps
+                :href="props.props.row.source"
+                target="_blank"
+                class="text-grey-8"
+                color="white"
+              >
+                <q-icon left name="open_in_new" color="accent" />
+                <q-item-label>{{ $t("openSource") }}</q-item-label>
+              </q-btn>
+              <q-btn
+                outline
+                no-caps
+                class="text-grey-8"
+                color="accent"
+                @click="downloadCurrentSpeech"
+              >
+                <q-icon left name="download" color="accent" />
+                <q-item-label>{{ $t("download") }}</q-item-label>
+              </q-btn>
+            </div>
+          </q-card-section>
           <q-card-section
-            class="q-pa-none q-pr-md col-10"
+            class="q-pa-none q-pr-md"
+            :class="$q.screen.lt.sm ? '' : 'col-10'"
             style="white-space: normal"
           >
             <q-item-label caption class="text-bold">{{
@@ -53,7 +104,8 @@
             ></div>
             <div v-else>{{ originalSpeechText }}</div>
           </q-card-section>
-          <q-card-section class="col-2 q-pa-none">
+          <!-- IF LARGE SCREEN -->
+          <q-card-section v-show="!$q.screen.lt.sm" class="q-pa-none col-2">
             <div class="column q-gutter-y-md">
               <q-btn
                 v-if="props.props.row.link !== 'Okänd'"

@@ -5,6 +5,7 @@ import i18n from "src/i18n/sv/index.js";
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
     data: null,
+    mobilePopup: false,
 
     options: {
       party: {},
@@ -46,25 +47,23 @@ export const metaDataStore = defineStore("metaDataStore", {
   }),
 
   actions: {
-
-    saveKwicFilterData(search){
-      this.filterAtSearchKWIC = {...this.selected}
-      this.filterAtSearchKWIC['search'] = search
+    saveKwicFilterData(search) {
+      this.filterAtSearchKWIC = { ...this.selected };
+      this.filterAtSearchKWIC["search"] = search;
     },
 
-    saveWTFilterData(search){
-      this.filterAtSearchWT = {...this.selected}
-      this.filterAtSearchWT['search'] = search
+    saveWTFilterData(search) {
+      this.filterAtSearchWT = { ...this.selected };
+      this.filterAtSearchWT["search"] = search;
     },
 
-    saveSpeechesFilterData(){
-      this.filterAtSearchSpeeches = {...this.selected}
+    saveSpeechesFilterData() {
+      this.filterAtSearchSpeeches = { ...this.selected };
     },
 
-    saveNgramsFilterData(){
-      this.filterAtSearchNgrams = {...this.selected}
+    saveNgramsFilterData() {
+      this.filterAtSearchNgrams = { ...this.selected };
     },
-
 
     setSubmitNgramsEvent() {
       this.submitEventNgrams = true;
@@ -184,12 +183,9 @@ export const metaDataStore = defineStore("metaDataStore", {
         default:
           return this.selected;
       }
-
-
     },
 
     selectedMetadataToText(tool_type) {
-
       // String representation of selected metadata to be included in downloads
 
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
@@ -197,7 +193,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
+
       const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+
 
       const selected_speakers_as_string = selected_metadata.speakers.map(
         (speaker) => this.getSpeakerAsString(speaker)
@@ -214,7 +212,9 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected_genders_as_string,
         "kön"
       );
-      const selected_terms = this.getSearchTermsAsString(selected_metadata.search);
+      const selected_terms = this.getSearchTermsAsString(
+        selected_metadata.search
+      );
       const corpus_version = i18n.downLoadInfo.corpus_version;
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;

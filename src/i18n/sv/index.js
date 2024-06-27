@@ -38,6 +38,7 @@ export default {
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
   toolsFilterMini: "Verktygsspecifika Filter",
+  filterAndSearch: "Filtrera och sök",
 
   year: "År",
   office: "Office type",
@@ -57,6 +58,7 @@ export default {
   "/tools/ngram": "N-grams",
 
   searchButton: "Sök",
+  searchCancel: "Avbryt sökning",
   searchTooltipWordtrends: "Lägg till sökord",
   searchTooltipWordtrendsError:
     "I verktyget Ordtrender kan du inte söka på fraser: Ta bort dessa för att genomföra sökningen",
