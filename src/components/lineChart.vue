@@ -127,13 +127,7 @@ const chartOptions = reactive({
       activeColor: "#727198",
       inactiveColor: "#E4E4EB",
     },
-    /*     labelFormatter: function () {
-      const parts = this.name.split(" ");
-      let keyword = parts[0];
-      let partyIndex = -1;
-      console.log(parts);
-      console.log(this.name);
-    }, */
+
   },
 
   credits: {

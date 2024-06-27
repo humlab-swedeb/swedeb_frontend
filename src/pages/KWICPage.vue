@@ -5,17 +5,18 @@
     }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
+  <loadingIcon v-if="loading" size="100" />
   <div v-show="showData">
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
     </div>
-    <loadingIcon v-if="loading" size="100" />
 
-    <div v-else class="q-pb-xl q-px-md">
+
+    <div v-if="!loading" class="q-pb-xl">
       <kwicDataTable />
     </div>
 
-    <div>
+    <!--     <div>
       <q-btn
         no-caps
         v-show="loading"
@@ -24,7 +25,8 @@
         :label="$t('searchCancel')"
       />
       >
-    </div>
+    </div> -->
+
   </div>
 </template>
 
@@ -36,6 +38,7 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
 import { ref, watchEffect, onMounted } from "vue";
+
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
