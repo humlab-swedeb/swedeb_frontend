@@ -7,11 +7,13 @@
     >
       {{ $t("indexPageIntroText") }}
     </q-card-section>
-    <q-card-section>
+    <q-card-section class="col-12 items-center column">
       <q-card
         flat
+        bordered
         class="bg-secondary q-py-lg column items-center"
         :class="$q.screen.lt.sm ? 'q-px-md' : 'q-px-xl'"
+        style="max-width: fit-content"
       >
         <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
         <q-item-label>
@@ -27,7 +29,7 @@
     </q-card-section>
 
     <q-card-section
-      class="justify-center q-pa-none"
+      class="q-pa-none"
       :class="$q.screen.lt.sm ? 'column' : 'row'"
     >
       <q-card-section :class="$q.screen.lt.sm ? 'column' : 'col'">

@@ -1,12 +1,14 @@
-
 <template>
-  <q-card flat class="q-pa-md background">
+  <q-card flat class="q-px-md background q-pt-sm q-pb-md">
+    <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
+      $t("speechesIntroTitle")
+    }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
   <loadingIcon v-if="loading" size="100" />
   <div v-show="showData">
     <div class="q-pb-md">
-      <ShowData :filterSelections="'Speeches'"/>
+      <ShowData :filterSelections="'Speeches'" />
     </div>
     <div v-if="!loading" class="q-pb-xl q-px-md">
       <speechDataTable type="speeches" />
@@ -30,18 +32,12 @@ const formattedIntro = i18n.speechesIntro;
 const loading = ref(false);
 const showData = ref(false);
 
-
- onMounted(() => {
-   if(speechStore.speechesData && speechStore.speechesData.length > 0) {
-     showData.value = true;
-     loading.value = false;
-
-    }
-
-  });
-
-
-
+onMounted(() => {
+  if (speechStore.speechesData && speechStore.speechesData.length > 0) {
+    showData.value = true;
+    loading.value = false;
+  }
+});
 
 watchEffect(async () => {
   if (metaStore.submitEventSpeeches) {
@@ -51,9 +47,8 @@ watchEffect(async () => {
     setTimeout(() => {
       loading.value = false;
       showData.value = true;
-      }, 400);
-    metaStore.cancelSubmitSpeechesEvent()
-
+    }, 400);
+    metaStore.cancelSubmitSpeechesEvent();
   }
 });
 </script>

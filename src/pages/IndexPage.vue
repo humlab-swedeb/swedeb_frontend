@@ -30,12 +30,12 @@
           :text="$t('speechesText')"
           :icon="$t('speechesIcon')"
         />
-        <IndexToolCard
+<!--         <IndexToolCard
           @click="redirect('tools/ngram')"
           :title="$t('nGramsTitle')"
           :text="$t('nGramsText')"
           :icon="$t('nGramsIcon')"
-        />
+        /> -->
       </div>
     </q-card-section>
   </q-card>
