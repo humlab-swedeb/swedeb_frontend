@@ -193,10 +193,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
-      const selected_parties = this.getMetarRow(
-        selected_metadata.party,
-        "partier"
-      );
+
+      const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+
+
       const selected_speakers_as_string = selected_metadata.speakers.map(
         (speaker) => this.getSpeakerAsString(speaker)
       );
