@@ -127,7 +127,7 @@ export default {
   anförandena till vissa partier, talare eller år.`,
 
   searchResult1: "Sökningen resulterade i",
-  searchResult2: "antal träffar.",
+  searchResult2: "träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
   downloadExcel: "Ladda ner Excel",
@@ -227,7 +227,7 @@ export default {
   // Expanded table row & DOWNLOAAD------------------------------------------
   searchWordLabel: "Sökord:",
   wikidata: "Wikidata",
-  openSource: "Öppen källa",
+  openSource: "Öppna källa",
   download: "Ladda ner",
   downloadAll: "Ladda ner alla",
   downloadSpeech: "Ladda ner tal",

@@ -5,13 +5,13 @@
     }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
+  <loadingIcon v-if="loading" size="100" />
   <div v-show="showData">
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'"/>
     </div>
-    <loadingIcon v-if="loading" size="100" />
 
-    <div v-else class="q-pb-xl">
+    <div v-if="!loading" class="q-pb-xl">
       <kwicDataTable />
     </div>
 

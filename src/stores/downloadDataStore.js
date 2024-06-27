@@ -8,7 +8,7 @@ export const downloadDataStore = defineStore("downloadData", {
     formatProps(currentProps) {
       const speaker = `Talare: ${currentProps.speaker}`;
       const hit = `Sökord ${currentProps.node_word}`;
-      const id = `Anförande: ${currentProps.protocol}`;
+      const id = `Anförande-ID: ${currentProps.protocol}`;
       const party = `Parti: ${currentProps.party}`;
       const year = `År: ${currentProps.year}`;
       const gender = `Kön: ${currentProps.gender}`;
