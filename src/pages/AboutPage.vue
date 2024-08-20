@@ -6,6 +6,9 @@
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
       {{ $t("indexPageIntroText") }}
+      <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+        Swerik
+      </a>
     </q-card-section>
     <q-card-section class="col-12 items-center column">
       <q-card
@@ -42,6 +45,7 @@
           :name="person.name"
           :title="person.title"
           :description="person.description"
+          :email="person.email"
         />
       </q-card-section>
       <q-card-section :class="$q.screen.lt.sm ? 'column' : 'col'">

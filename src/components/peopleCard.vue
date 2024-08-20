@@ -12,7 +12,11 @@
 
     <q-card-section class="q-pl-none">
       <q-item-label class="text-subtitle1">{{ name }}</q-item-label>
-      <q-item-label caption class="text-bold">{{ title }}</q-item-label>
+      <q-item-label caption class="text-grey-8">{{ title }}</q-item-label>
+      <q-item-label caption>
+        <a class="link-deco text-accent text-bold" :href="'mailto:' + email">{{ email }}</a>
+      </q-item-label>
+
       <!--       <q-item-label class='text-body2 text-grey-7'>{{ description }}</q-item-label> -->
     </q-card-section>
   </q-card>
@@ -26,6 +30,7 @@ const props = defineProps({
   name: String,
   title: String,
   description: String,
+  email: String,
 });
 </script>
 
