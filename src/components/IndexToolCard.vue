@@ -1,7 +1,7 @@
 <template>
   <q-card
     class="shadow-5 text-center cursor-pointer bg-primary onHover"
-    style="width: 40vw; max-width: 400px"
+    style="width: 40vw; max-width: 400px; min-height: 180px;"
     :style="$q.screen.lt.sm ? 'width: 90vw' : ' '"
   >
     <q-card-section>

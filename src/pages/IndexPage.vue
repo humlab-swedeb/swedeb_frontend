@@ -8,34 +8,19 @@
       {{ $t("indexPageIntroText") }}
     </q-card-section>
     <q-card-section
-      class="row justify-center full-width"
+      class=""
       :class="$q.screen.lt.sm ? 'q-pt-sm q-pb-xl' : 'q-py-xl'"
     >
-      <div class="grid-container row justify-center q-gutter-lg max">
+      <div class="grid-container max">
         <IndexToolCard
-          @click="redirect('tools/wordtrends')"
-          :title="$t('wordTrendsTitle')"
-          :text="$t('wordTrendsText')"
-          :icon="$t('wordTrendsIcon')"
+          v-for="(tool, index) in tools"
+          :key="index"
+          :title="$t(tool.title)"
+          :text="$t(tool.text)"
+          :icon="$t(tool.icon)"
+          @click="redirect(tool.route)"
+          class="full-width"
         />
-        <IndexToolCard
-          @click="redirect('tools/kwic')"
-          :title="$t('kwicTitle')"
-          :text="$t('kwicText')"
-          :icon="$t('kwicIcon')"
-        />
-        <IndexToolCard
-          @click="redirect('tools/speeches')"
-          :title="$t('speechesTitle')"
-          :text="$t('speechesText')"
-          :icon="$t('speechesIcon')"
-        />
-<!--         <IndexToolCard
-          @click="redirect('tools/ngram')"
-          :title="$t('nGramsTitle')"
-          :text="$t('nGramsText')"
-          :icon="$t('nGramsIcon')"
-        /> -->
       </div>
     </q-card-section>
   </q-card>
@@ -50,21 +35,54 @@ const router = useRouter();
 const redirect = (route) => {
   router.push(route);
 };
+
+const tools = [
+  {
+    route: "tools/wordtrends",
+    title: "wordTrendsTitle",
+    text: "wordTrendsText",
+    icon: "wordTrendsIcon",
+  },
+  {
+    route: "tools/kwic",
+    title: "kwicTitle",
+    text: "kwicText",
+    icon: "kwicIcon",
+  },
+  {
+    route: "tools/speeches",
+    title: "speechesTitle",
+    text: "speechesText",
+    icon: "speechesIcon",
+  },
+  {
+    route: "tools/ngram",
+    title: "nGramsTitle",
+    text: "nGramsText",
+    icon: "nGramsIcon",
+  },
+  {
+    route: "tools/topicmodeling",
+    title: "topicModelingTitle",
+    text: "topicModelingText",
+    icon: "topicModelingIcon",
+  },
+];
 </script>
 
 <style scoped>
 .max {
   max-width: 1200px;
 }
-/* .grid-container {
+.grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 400px));
   grid-gap: 30px;
-} */
+}
 
-/* @media (max-width: 785px) {
+@media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;
   }
-} */
+}
 </style>

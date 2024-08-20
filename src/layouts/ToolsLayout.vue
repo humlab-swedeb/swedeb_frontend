@@ -46,7 +46,8 @@
             />
             <q-route-tab to="/tools/kwic" :label="$t('kwicTitle')" />
             <q-route-tab to="/tools/speeches" :label="$t('speechesTitle')" />
-<!--             <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" /> -->
+            <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" />
+            <q-route-tab to="/tools/topicmodeling" :label="$t('topicModelingTitle')" />
           </q-tabs>
         </div>
       </q-toolbar>
@@ -58,10 +59,7 @@
           no-caps
           color="accent"
         />
-        <q-dialog
-          v-model="metaStore.mobilePopup"
-          class="fit"
-        >
+        <q-dialog v-model="metaStore.mobilePopup" class="fit">
           <q-card class="fit full-width bg-grey-2">
             <q-card-section class="row items-center justify-between">
               <q-item-label class="text-body1 text-bold">

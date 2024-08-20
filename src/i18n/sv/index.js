@@ -30,6 +30,9 @@ export default {
   nGramsTitle: "N-Gram",
   nGramsText: "Se hur ett ord har använts över tid",
   nGramsIcon: "show_chart",
+  topicModelingTitle: "Temamodeller",
+  topicModelingText: "Under utveckling",
+  topicModelingIcon: "bubble_chart",
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
 
@@ -56,6 +59,7 @@ export default {
   "/tools/kwic": "Key words in context",
   "/tools/speeches": "Anföranden",
   "/tools/ngram": "N-grams",
+  "/tools/topicmodeling": "Temamodeller",
 
   searchButton: "Sök",
   searchCancel: "Avbryt sökning",

@@ -19,6 +19,7 @@ const routes = [
       { path: "kwic", component: () => import("pages/KWICPage.vue") },
       { path: "speeches", component: () => import("pages/SpeechesPage.vue") },
       { path: "ngram", component: () => import("pages/NgramPage.vue") },
+      { path: "topicmodeling", component: () => import("pages/TopicModelingPage.vue") },
     ],
   },
 
