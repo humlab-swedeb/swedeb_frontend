@@ -11,11 +11,14 @@ export default {
   contact: "Kontakt",
 
   indexPageIntroText: `Detta forskningsinfrastrukturprojekt syftar till att tillgängliggöra
-  de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället,
-  från åtminstone 1920 till idag. Projektet kommer att
-  utveckla ett publikt användargränssnitt - SweDeb - som ska göra det
-  möjligt för forskare att få access, filtrera samt att utforska detta unika
-  material med hjälp av olika metoder genom detta online-verktyg`,
+  de annoterade svenska riksdagsdebatterna för det bredare forskarsamhället.
+  Projektet utvecklar ett publikt användargränssnitt - SweDeb - som gör det möjligt
+  för forskare att få access, filtrera samt att utforska detta unika material med
+  hjälp av olika verktyg. De annoterade riksdagstalen hämtas från samarbetsprojektet`,
+
+  links: {
+    swerik: "https://swerik-project.github.io/",
+  },
 
   wordTrendsTitle: "Ordtrender",
   wordTrendsText:
@@ -32,6 +35,8 @@ export default {
   nGramsIcon: "show_chart",
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
+  contactText:
+    "Har du frågor, synpunkter, eller bara vill lämna feedback till någon i SweDeb-teamet?",
 
   // MetaDataFilter component -------------------------------------------
   metaDataFilter: "Filtrera på metadata",
@@ -162,55 +167,56 @@ export default {
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
-      title: "Projektledare, Forskare",
+      title: "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+      email: "fredrik.noren@mau.se",
       description: "",
     },
     1: {
       name: "Johan Jarlbrink",
-      title: "Forskare",
+      title: "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
       description: "",
     },
     2: {
       name: "Rebecka Weegar",
-      title: "Systemutvecklare",
+      title: "Systemutvecklare, Humlab Umeå Universitet",
       description: "",
     },
     3: {
       name: "Roger Mähler",
-      title: "Systemutvecklare",
-      description: "",
-    },
-    4: {
-      name: "Marita Nilsson",
-      title: "Krav och test",
+      title: "Systemutvecklare, Humlab Umeå Universitet",
       description: "",
     },
     5: {
+      name: "Marita Nilsson",
+      title: "Krav och test, tidigare Humlab Umeå Universitet",
+      description: "",
+    },
+    4: {
       name: "Kajsa Palm",
-      title: "Systemutvecklare, UX/UI",
+      title: "Systemutvecklare, UX/UI, Humlab Umeå Universitet",
       description: "",
     },
   },
   peopleReference: {
     0: {
       name: "Hanna Bäck",
-      title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      title: "Professor, Statsvetenskapliga institutionen Lunds Universitet",
+      description: "",
     },
     1: {
       name: "Simon Lindgren",
-      title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      title: "Professor, Sociologiska institutionen Umeå Universitet",
+      description: "",
     },
     2: {
       name: "Linda Sandström",
-      title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      title: "Biträdande universitetslektor, Institutionen för språkstudier Umeå Universitet",
+      description: "",
     },
     3: {
       name: "Måns Magnusson",
-      title: "Forskare",
-      description: "Johan är utvecklare för SweDeb.",
+      title: "Universitetslektor, Statistiska institutionen Uppsala Universitet",
+      description: "",
     },
   },
 
@@ -219,11 +225,23 @@ export default {
   faqContent: {
     0: {
       q: "Vad är SweDeb?",
-      a: "SweDeb är en förkortning av Swedish Debates. SweDeb är en forskningsinfrastruktur som syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
+      a: "SweDeb är en förkortning av Swedish Debates och är ett forskningsinfrastrukturprojekt som finansieras av Umeå Universitet.",
     },
     1: {
       q: "Vad är syftet med SweDeb?",
-      a: "SweDeb syftar till att tillgängliggöra de nyligen annoterade svenska riksdagsdebatterna för det bredare forskarsamhället, från åtminstone 1920 till idag. Projektet kommer att utveckla ett publikt användargränssnitt - SweDeb - som ska göra det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder genom detta online-verktyg.",
+      a: `Syftet med SweDeb är att tillgängliggöra de annoterade svenska riksdagsdebatterna för det bredare forskarsamhället. Projektet utvecklar ett publikt användargränssnitt - SweDeb - som gör det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder.`,
+    },
+    2: {
+      q: "Varifrån kommer materialet till SweDeb?",
+      a: "De annoterade riksdagstalen hämtas från samarbetsprojektet Swerik. Talen är kopplade till riksdagsledamot med metadata för bland annat parti, kön och år.",
+      link: "https://swerik-project.github.io/",
+      linkText: "Läs mer om Swerik här.",
+    },
+    3: {
+      q: "Vilka typer av brister finns i materialet?",
+      a: "Även om kvalitén är god finns det brister i materialet. Talen har till exempel inte alltid blivit rätt segmenterade (var talet börjar och slutar) och kopplingen mellan talarintroduktion och talande ledamot är inte fullständig.",
+      link: "https://github.com/swerik-project/the-swedish-parliament-corpus",
+      linkText: "Mer information om kvalitén finns här.",
     },
   },
 

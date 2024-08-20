@@ -52,9 +52,9 @@
             }}</q-item-label>
             <q-item-label
               class="q-px-xl q-pt-md text-left"
-              style="font-size: 12px"
+              style="font-size: 14px"
             >
-              {{ $t("indexPageIntroText") }}
+              {{ $t("contactText") }}
             </q-item-label>
             <q-btn
               no-caps
@@ -62,6 +62,7 @@
               :label="$t('contactLabelButton')"
               class="q-my-md q-px-lg"
               icon="alternate_email"
+              to="about"
             />
           </q-card-section>
         </q-card>
@@ -105,7 +106,7 @@
               class="q-px-md q-pt-md text-left"
               style="font-size: 12px"
             >
-              {{ $t("indexPageIntroText") }}
+              {{ $t("contactText") }}
             </q-item-label>
             <q-btn
               no-caps
