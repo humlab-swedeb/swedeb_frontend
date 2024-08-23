@@ -29,7 +29,7 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-page-container class="">
+    <q-page-container class="row justify-center">
       <router-view />
     </q-page-container>
     <q-footer class="bg-secondary text-black">

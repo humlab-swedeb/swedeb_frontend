@@ -141,6 +141,24 @@
                 <q-icon left name="download" color="accent" />
                 <q-item-label>{{ $t("download") }}</q-item-label>
               </q-btn>
+              <div>
+                <q-btn
+                  flat=""
+                  no-caps
+                  rounded
+                  class="items-start text-grey-7"
+                  @click="popup = true"
+                >
+                  <q-icon left name="report" color="grey-7" />
+                  <q-item-label>Rapportera</q-item-label>
+                </q-btn>
+              </div>
+              <reportForm
+                :clicked="popup"
+                @close="popup = false"
+                :speechData="props"
+                :speechText="speechText"
+              />
             </div>
           </q-card-section>
         </q-card-section>
@@ -156,6 +174,7 @@ import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
+import reportForm from "src/components/reportForm.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
@@ -166,6 +185,7 @@ const props = defineProps({
   props: Object,
 });
 
+const popup = ref(false);
 const speakerNote = ref("");
 const speechText = ref("");
 const originalSpeechText = ref("");
