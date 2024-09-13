@@ -87,17 +87,27 @@ const getChipStyle = (opt) => {
       fontWeight: "bold",
       border: `2px solid ${store.getPartyNameColor(opt)}`,
     };
-  } /* else if (props.type === "speakers") {
+  } else if (props.type === "speakers") {
+
+    const nonValidSpeaker = !store.options.speakers.some(speaker => speaker.person_id === opt.person_id);
+
+    if (nonValidSpeaker) {
+
     return {
-      backgroundColor: "white",
-      color: store.getPartyColor(opt.speaker_party[0]),
+      backgroundColor:  "grey",
+      color: "white",
       fontWeight: "bold",
-      border: `2px solid ${store.getPartyColor(opt.speaker_party[0])}`,
+      textDecoration: "line-through",
+
     };
-  } */ else {
+  }
+  }  else {
     return {};
   }
 };
+
+
+
 watchEffect(async () => {
   try {
     if (props.type === "party") {
