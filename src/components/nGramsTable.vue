@@ -337,7 +337,7 @@ rows.value = nGramStore.nGrams.map((entry, index) => ({
     columns.value = [
       {
         name: "ngram",
-        label: "Ordfönster",
+        label: "N-gram",
         align: "left",
         field: "ngram",
         sortable: true,
