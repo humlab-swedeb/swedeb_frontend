@@ -5,5 +5,5 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
-  "workbench.colorTheme": "Solarized Light"
+  "workbench.colorTheme": "Material Dark Theme"
 }

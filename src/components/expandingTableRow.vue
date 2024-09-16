@@ -156,7 +156,6 @@
               <reportForm
                 :clicked="popup"
                 @close="popup = false"
-                :speechData="props"
                 :speechText="speechText"
               />
             </div>
@@ -173,17 +172,27 @@ import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
+import { feedbackDataStore } from "src/stores/feedbackDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
 import reportForm from "src/components/reportForm.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
+const feedbackStore = feedbackDataStore();
 const route = useRoute();
 
 const props = defineProps({
   props: Object,
 });
+
+const feedbackData = (myProps) => {
+  feedbackStore.data = myProps;
+};
+
+const feedbackSpeech = (speech) => {
+  feedbackStore.speech = speech;
+};
 
 const popup = ref(false);
 const speakerNote = ref("");
@@ -215,11 +224,13 @@ const downloadCurrentSpeech = () => {
 
 watchEffect(() => {
   if (props.props.expand) {
+    feedbackData({ ...props.props.row });
     loading.value = true;
     (async () => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
+      feedbackSpeech({ ...speechData });
       if (route.path !== "/tools/speeches") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
