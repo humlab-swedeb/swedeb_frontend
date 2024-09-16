@@ -334,7 +334,7 @@ export const metaDataStore = defineStore("metaDataStore", {
           return acc;
         }, {});
     },
-
+ 
     async getOfficeOptions() {
       const path = "/metadata/office_types";
       const response = await api.get(path);
