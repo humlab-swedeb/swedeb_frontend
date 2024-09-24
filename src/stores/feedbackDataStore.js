@@ -12,10 +12,6 @@ export const feedbackDataStore = defineStore("feedbackDataStore", {
       speaker: "",
       year: 0,
     },
-    speech: {
-      speaker_note: "",
-      speech_text: "",
-    },
   }),
 
   actions: {

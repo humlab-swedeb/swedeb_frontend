@@ -156,7 +156,6 @@
               <reportForm
                 :clicked="popup"
                 @close="popup = false"
-                :speechText="speechText"
               />
             </div>
           </q-card-section>
@@ -188,10 +187,6 @@ const props = defineProps({
 
 const feedbackData = (myProps) => {
   feedbackStore.data = myProps;
-};
-
-const feedbackSpeech = (speech) => {
-  feedbackStore.speech = speech;
 };
 
 const popup = ref(false);
@@ -230,7 +225,6 @@ watchEffect(() => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
-      feedbackSpeech({ ...speechData });
       if (route.path !== "/tools/speeches") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
