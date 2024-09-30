@@ -3,7 +3,7 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("speechesIntroTitle")
     }}</q-item-label>
-    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
+    <div class="word-trends-intro lineHeight" v-html="formattedIntro"/>
   </q-card>
   <loadingIcon v-if="loading" size="100" />
   <div v-show="showData">

@@ -1,15 +1,19 @@
 <template>
-  <q-card flat class="q-pa-md background">
+  <q-card flat class="q-px-md background q-pt-sm q-pb-md">
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("ngramIntroTitle")
     }}</q-item-label>
-    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
-    <div v-show="showData">
-      <ShowData :filterSelections="'Ngrams'"/>
-    </div>
-    <loadingIcon v-if="loading" size="100" />
-    <nGramsTable v-else v-show="showData" />
+    <div class="lineHeight" v-html="formattedIntro"/>
   </q-card>
+    <loadingIcon v-if="loading" size="100" />
+    <div v-show="showData">
+      <div class="q-pb-md">
+        <ShowData :filterSelections="'Ngrams'" />
+      </div>
+      <div v-if="!loading" class="q-pb-xl">
+        <nGramsTable />
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -19,13 +23,11 @@ import nGramsTable from "src/components/nGramsTable.vue";
 import ShowData from "src/components/ShowData.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
-import { kwicDataStore } from "src/stores/kwicDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
 
 const formattedIntro = i18n.ngramIntro;
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
-const kwicStore = kwicDataStore();
 
 const loading = ref(false);
 const showData = ref(false);
@@ -34,11 +36,10 @@ watchEffect(async () => {
   if (metaStore.submitEventNgrams) {
     showData.value = false;
     loading.value = true;
-    await nGramStore.getNGramsResult(kwicStore.searchText);
+    await nGramStore.getNGramsResult(nGramStore.searchText);
     showData.value = true;
     loading.value = false;
     metaStore.cancelSubmitNgramsEvent();
-
   }
 });
 </script>

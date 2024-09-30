@@ -112,13 +112,11 @@ const removeSelectedWord = () => {
 
 const addSearchWord = () => {
   loading.value = true;
-  if (route.path === "/tools/kwic" || route.path === "/tools/ngram") {
-    wtStore.addKWICChip();
-  } else {
-    wtStore.searchText.includes("*")
-      ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
-      : wtStore.addChip();
-  }
+
+  wtStore.searchText.includes("*")
+    ? wtStore.getWordHits(wtStore.searchText) && wtStore.addChip()
+    : wtStore.addChip();
+
   setTimeout(() => {
     loading.value = false;
   }, 400);

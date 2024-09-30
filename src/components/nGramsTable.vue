@@ -1,239 +1,252 @@
 <template>
-  <div>
-    <q-item-label class="q-my-md"
-      >{{ $t("searchResult1") }}<b>{{ nGramStore.nGrams.length }}</b>
-      {{ $t("searchResult2") }}</q-item-label
-    >
-    <q-table
-      bordered
-      flat
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-      :rows-per-page-options="[10, 20, 50]"
-      v-if="!loading"
-      class="bg-grey-2"
-    >
-      <template v-slot:header="props">
-        <q-tr :props="props">
-          <q-th v-for="col in props.cols" :key="col.name" :props="props">
-            {{ col.label }}
-          </q-th>
-        </q-tr>
-      </template>
-      <template v-slot:body="props">
-        <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-          <q-td
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-            class="bg-white"
-            :class="props.expand ? 'bg-grey-3' : ''"
-          >
-            {{ col.value }}
-          </q-td>
-          <q-td
-            auto-width
-            class="bg-white"
-            :class="props.expand ? 'bg-grey-3' : ''"
-          >
-            <q-btn
-              size="sm"
-              color="accent"
-              round
-              dense
-              flat
-              :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-            />
-          </q-td>
-        </q-tr>
-        <!-- If row in table is clicked, EXPAND -->
-        <!--  -->
-        <q-tr v-show="props.expand" class="bg-grey-1">
-          <q-td :colspan="props.cols.length" no-hover>
-            <div>
-              <div class="row q-py-md justify-between">
-                <q-item-label class="col-9 q-mt-md">
-                  {{ $t('searchResult1') }}
-                  <b>{{ props.row.count }}</b> {{ $t('searchResult2') }}
-                </q-item-label>
-                <q-btn
-                  no-caps
-                  icon="download"
-                  class="text-grey-8 col-3"
-                  color="secondary"
-                  :label="$t('downloadAll')"
-                  style="width: fit-content"
-                />
-              </div>
-              <!-- SECOND TABLE -->
-              <q-table
-                bordered
-                flat
-                :rows="speechRows"
-                :columns="speechColumns"
-                row-key="id"
-                :rows-per-page-options="[10, 20, 50]"
-                v-if="!loading"
-                class="bg-primary full-width"
-              >
-                <template v-slot:header="props">
-                  <q-tr :props="props">
-                    <q-th
-                      v-for="col in props.cols"
-                      :key="col.name"
-                      :props="props"
-                    >
-                      {{ col.label }}
-                    </q-th>
-                  </q-tr>
-                </template>
+  <div class="row q-py-md justify-between">
+    <q-item-label class="col-9 q-mt-md" v-if="nGramStore.nGrams.length > 0">
+      {{ $t("searchResult1") }} <b>{{ nGramStore.nGrams.length }}</b>
+      {{ $t("searchResult2") }}
+    </q-item-label>
 
-                <template v-slot:body="props">
-                  <q-tr
-                    :props="props"
-                    @click="expandRow(props)"
-                    class="cursor-pointer"
-                  >
-                    <q-td
-                      v-for="col in props.cols"
-                      :key="col.name"
-                      :props="props"
-                      class="bg-white"
-                      :class="props.expand ? 'bg-grey-3' : ''"
-                    >
-                      {{ col.value }}
-                    </q-td>
-                    <q-td
-                      auto-width
-                      class="bg-white"
-                      :class="props.expand ? 'bg-grey-3' : ''"
-                    >
-                      <q-btn
-                        size="sm"
-                        color="accent"
-                        round
-                        dense
-                        flat
-                        :icon="
-                          props.expand
-                            ? 'keyboard_arrow_up'
-                            : 'keyboard_arrow_down'
-                        "
-                      />
-                    </q-td>
-                  </q-tr>
-                  <!-- Row expanded -->
-                  <q-tr v-show="props.expand" :props="props">
-                    <q-td :colspan="props.cols.length" no-hover>
-                      <loadingIcon v-if="loading" size="100" />
-                      <q-card v-else flat class="bg-transparent">
-                        <q-card-section class="q-px-md row">
-                          <q-card-section class="col q-pa-none">
-                            <div class="text-h6 row">
-                              <q-item-label
-                                class="q-mt-xs"
-                                v-if="props.row.speaker"
-                              >
-                                {{ props.row.speaker }},&nbsp;
-                              </q-item-label>
-                              <q-item-label
-                                class="q-mt-xs"
-                                v-if="props.row.party"
-                              >
-                                ({{ props.row.party }}),&nbsp;
-                              </q-item-label>
-                              <q-item-label
-                                class="q-mt-xs"
-                                v-if="props.row.gender"
-                              >
-                                {{ props.row.gender }}
-                              </q-item-label>
-                            </div>
-                            <q-item-label caption class="text-bold">{{
-                              props.row.protocol
-                            }}</q-item-label>
-                            <q-item-label
-                              class="q-pt-xs"
-                              v-if="props.row.node_word"
-                            >
-                              {{ $t('searchWordLabel') }}
-                              <b>{{ props.row.node_word }}</b>
-                            </q-item-label>
-                          </q-card-section>
-                        </q-card-section>
-                        <q-card-section class="row q-pr-none">
-                          <q-card-section
-                            class="q-pa-none q-pr-md col-10"
-                            style="white-space: normal"
-                          >
-                            <q-item-label caption class="text-bold">{{
-                              speakerNote
-                            }}</q-item-label>
-                            <q-item-label>{{ speechText }}</q-item-label>
-                          </q-card-section>
-                          <q-card-section class="col-2 q-pa-none">
-                            <div class="column q-gutter-y-md">
-                              <q-btn
-                                v-if="props.row.link !== 'Okänd'"
-                                no-caps
-                                :href="props.row.link"
-                                target="_blank"
-                                class="full-width items-start text-grey-8"
-                                color="secondary"
-                              >
-                                <q-icon
-                                  left
-                                  name="person_search"
-                                  color="accent"
-                                  size="xs"
-                                />
-                                <q-item-label>Wikidata</q-item-label>
-                              </q-btn>
-                              <q-btn
-                                no-caps
-                                :href="props.row.source"
-                                target="_blank"
-                                class="full-width items-start text-grey-8"
-                                color="white"
-                              >
-                                <q-icon
-                                  left
-                                  name="open_in_new"
-                                  color="accent"
-                                  size="xs"
-                                />
-                                <q-item-label>Öppna källa</q-item-label>
-                              </q-btn>
-                              <q-btn
-                                outline
-                                no-caps
-                                class="full-width items-start text-grey-8"
-                                color="accent"
-                              >
-                                <q-icon
-                                  left
-                                  name="download"
-                                  color="accent"
-                                  size="xs"
-                                />
-                                <q-item-label>Ladda ned</q-item-label>
-                              </q-btn>
-                            </div>
-                          </q-card-section>
-                        </q-card-section>
-                      </q-card>
-                    </q-td>
-                  </q-tr>
-                </template>
-              </q-table>
-            </div>
-          </q-td>
-          <q-td class="bg-grey-1" no-hover />
-        </q-tr>
-      </template>
-    </q-table>
+    <q-btn
+      no-caps
+      icon="download"
+      class="text-grey-8 col-3"
+      color="secondary"
+      :label="$t('downloadNgram')"
+      style="width: fit-content"
+    >
+    </q-btn>
   </div>
+  <q-table
+    bordered
+    flat
+    :rows="rows"
+    :columns="columns"
+    row-key="id"
+    :rows-per-page-options="[10, 20, 50]"
+    v-if="!loading"
+    class="bg-grey-2"
+  >
+    <template v-slot:header="props">
+      <q-tr :props="props">
+        <q-th v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.label }}
+        </q-th>
+      </q-tr>
+    </template>
+    <template v-slot:body="props">
+      <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+        <q-td
+          v-for="col in props.cols"
+          :key="col.name"
+          :props="props"
+          class="bg-white"
+          :class="props.expand ? 'bg-grey-3' : ''"
+        >
+          {{ col.value }}
+        </q-td>
+        <q-td
+          auto-width
+          class="bg-white"
+          :class="props.expand ? 'bg-grey-3' : ''"
+        >
+          <q-btn
+            size="sm"
+            color="accent"
+            round
+            dense
+            flat
+            :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+          />
+        </q-td>
+      </q-tr>
+      <!-- If row in table is clicked, EXPAND -->
+      <!--  -->
+      <q-tr v-show="props.expand" class="bg-grey-1">
+        <q-td :colspan="props.cols.length" no-hover>
+          <div>
+            <q-item-label class="text-h6 q-mt-md text-grey-8">
+              {{ props.row.ngram }}
+            </q-item-label>
+            <div class="row q-pb-md justify-between">
+              <q-item-label class="col-9 q-mt-md">
+                {{ $t("searchResult1") }}
+                <b>{{ props.row.count }}</b> {{ $t("searchResult2") }}
+              </q-item-label>
+              <q-btn
+                no-caps
+                icon="download"
+                class="text-grey-8 col-3"
+                color="secondary"
+                :label="$t('downloadAll')"
+                style="width: fit-content"
+              />
+            </div>
+            <!-- SECOND TABLE -->
+            <q-table
+              bordered
+              flat
+              :rows="speechRows"
+              :columns="speechColumns"
+              row-key="id"
+              :rows-per-page-options="[10, 20, 50]"
+              v-if="!loading"
+              class="bg-primary full-width"
+            >
+              <template v-slot:header="props">
+                <q-tr :props="props">
+                  <q-th
+                    v-for="col in props.cols"
+                    :key="col.name"
+                    :props="props"
+                  >
+                    {{ col.label }}
+                  </q-th>
+                </q-tr>
+              </template>
+
+              <template v-slot:body="props">
+                <q-tr
+                  :props="props"
+                  @click="expandRow(props)"
+                  class="cursor-pointer"
+                >
+                  <q-td
+                    v-for="col in props.cols"
+                    :key="col.name"
+                    :props="props"
+                    class="bg-white"
+                    :class="props.expand ? 'bg-grey-3' : ''"
+                  >
+                    {{ col.value }}
+                  </q-td>
+                  <q-td
+                    auto-width
+                    class="bg-white"
+                    :class="props.expand ? 'bg-grey-3' : ''"
+                  >
+                    <q-btn
+                      size="sm"
+                      color="accent"
+                      round
+                      dense
+                      flat
+                      :icon="
+                        props.expand
+                          ? 'keyboard_arrow_up'
+                          : 'keyboard_arrow_down'
+                      "
+                    />
+                  </q-td>
+                </q-tr>
+                <!-- Row expanded -->
+                <q-tr v-show="props.expand" :props="props">
+                  <q-td :colspan="props.cols.length" no-hover>
+                    <loadingIcon v-if="loading" size="100" />
+                    <q-card v-else flat class="bg-transparent">
+                      <q-card-section class="q-px-md row">
+                        <q-card-section class="col q-pa-none">
+                          <div class="text-h6 row">
+                            <q-item-label
+                              class="q-mt-xs"
+                              v-if="props.row.speaker"
+                            >
+                              {{ props.row.speaker }},&nbsp;
+                            </q-item-label>
+                            <q-item-label
+                              class="q-mt-xs"
+                              v-if="props.row.party"
+                            >
+                              ({{ props.row.party }}),&nbsp;
+                            </q-item-label>
+                            <q-item-label
+                              class="q-mt-xs"
+                              v-if="props.row.gender"
+                            >
+                              {{ props.row.gender }}
+                            </q-item-label>
+                          </div>
+                          <q-item-label caption class="text-bold">{{
+                            props.row.protocol
+                          }}</q-item-label>
+                          <q-item-label
+                            class="q-pt-xs"
+                            v-if="props.row.node_word"
+                          >
+                            {{ $t("searchWordLabel") }}
+                            <b>{{ props.row.node_word }}</b>
+                          </q-item-label>
+                        </q-card-section>
+                      </q-card-section>
+                      <q-card-section class="row q-pr-none">
+                        <q-card-section
+                          class="q-pa-none q-pr-md col-10"
+                          style="white-space: normal"
+                        >
+                          <q-item-label caption class="text-bold">{{
+                            speakerNote
+                          }}</q-item-label>
+                          <q-item-label>{{ speechText }}</q-item-label>
+                        </q-card-section>
+                        <q-card-section class="col-2 q-pa-none">
+                          <div class="column q-gutter-y-md">
+                            <q-btn
+                              v-if="props.row.link !== 'Okänd'"
+                              no-caps
+                              :href="props.row.link"
+                              target="_blank"
+                              class="full-width items-start text-grey-8"
+                              color="secondary"
+                            >
+                              <q-icon
+                                left
+                                name="person_search"
+                                color="accent"
+                                size="xs"
+                              />
+                              <q-item-label>Wikidata</q-item-label>
+                            </q-btn>
+                            <q-btn
+                              no-caps
+                              :href="props.row.source"
+                              target="_blank"
+                              class="full-width items-start text-grey-8"
+                              color="white"
+                            >
+                              <q-icon
+                                left
+                                name="open_in_new"
+                                color="accent"
+                                size="xs"
+                              />
+                              <q-item-label>Öppna källa</q-item-label>
+                            </q-btn>
+                            <q-btn
+                              outline
+                              no-caps
+                              class="full-width items-start text-grey-8"
+                              color="accent"
+                            >
+                              <q-icon
+                                left
+                                name="download"
+                                color="accent"
+                                size="xs"
+                              />
+                              <q-item-label>Ladda ned</q-item-label>
+                            </q-btn>
+                          </div>
+                        </q-card-section>
+                      </q-card-section>
+                    </q-card>
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </div>
+        </q-td>
+        <q-td class="bg-grey-1" no-hover />
+      </q-tr>
+    </template>
+  </q-table>
 </template>
 
 <script setup>
@@ -324,39 +337,39 @@ const expandRow = async (props) => {
 };
 
 rows.value = nGramStore.nGrams.map((entry, index) => ({
-      id: index + 1,
-      ngram: entry.ngram,
-      count: entry.count,
-      speeches: entry.count + 1,
-    }));
-    /* rows.value = [
+  id: index + 1,
+  ngram: entry.ngram,
+  count: entry.count,
+  speeches: entry.count + 1,
+}));
+/* rows.value = [
       { id: 1, words: "ett ord", frequency: 1 },
     { id: 2, words: "två ord", frequency: 2 },
     { id: 3, words: "tre ord", frequency: 3 },
   ];*/
-    columns.value = [
-      {
-        name: "ngram",
-        label: "N-gram",
-        align: "left",
-        field: "ngram",
-        sortable: true,
-      },
-      {
-        name: "count",
-        label: "Frekvens",
-        align: "left",
-        field: "count",
-        sortable: true,
-      },
-      {
-        name: "speeches",
-        label: "Antal anföranden",
-        align: "left",
-        field: "speeches",
-        sortable: true,
-      },
-    ];
+columns.value = [
+  {
+    name: "ngram",
+    label: "N-gram",
+    align: "left",
+    field: "ngram",
+    sortable: true,
+  },
+  {
+    name: "count",
+    label: "Frekvens",
+    align: "left",
+    field: "count",
+    sortable: true,
+  },
+  {
+    name: "speeches",
+    label: "Antal anföranden",
+    align: "left",
+    field: "speeches",
+    sortable: true,
+  },
+];
 </script>
 
 <style scoped></style>

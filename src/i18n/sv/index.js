@@ -273,6 +273,7 @@ export default {
   downloadAll: "Ladda ner alla",
   downloadSpeech: "Ladda ner tal",
   downloadWordtrends: "Ladda ner ordtrender",
+  downloadNgram: "Ladda ner N-gram",
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
