@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 400px">
+  <div :style="$q.screen.lt.sm ? '90vw' : 'max-width: 400px'">
     <q-card class="q-mx-sm bg-grey-2">
       <q-card-section
         horizontal
@@ -15,10 +15,9 @@
           />
           {{ $t("metaDataFilter") }}</q-card-section
         >
-
         <q-space />
         <q-btn
-          aria-label="Fäll ut och in filter för metadata"
+          :aria-label="$t('accessibility.metadataFilter')"
           color="accent"
           round
           flat
@@ -41,7 +40,7 @@
             <!-- <q-card-section horizontal class="q-px-none"> -->
             <genderOfficeToggleCheckbox
               type="gender"
-              toggle_label="Filtrera på kön"
+              :toggle_label="$t('toggleGenderLabel')"
             />
             <!-- <genderOfficeCheckbox type="gender" /> -->
             <!-- <q-card-section class="q-py-none"> -->
@@ -58,7 +57,7 @@
                 class="resetStyle col"
                 flat
                 no-caps
-                label="Rensa filter"
+                :label="$t('clearFilter')"
                 color="grey-7"
               >
               </q-btn>
@@ -69,20 +68,24 @@
       -->
       </q-slide-transition>
     </q-card>
-    <q-card flat class="q-ma-md bg-transparent padding-bot">
+    <q-card
+      flat
+      class="bg-transparent padding-bot"
+      :class="$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'"
+    >
       <toolsFilters
         @normalize-data="handleNormalizeData"
         @lemmatize-search="lemmatizeSearch"
       />
       <div class="q-pa-lg full-width sticky-bottom">
-        <!-- Search button for wordtrends -->
+        <!-- Search button for WORDTRENDS -->
         <q-btn
           v-if="$route.path === '/tools/wordtrends'"
           @click="handleSubmit"
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             wtStore.wordHitsSelected.length < 1 ||
             ($route.path === '/tools/wordtrends' &&
@@ -98,7 +101,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Lägg till sökord
+            {{ $t("searchTooltipWordtrends") }}
           </q-tooltip>
           <!-- Tooltip if user puts in sentence -->
           <q-tooltip
@@ -112,8 +115,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            I verktyget <b>Ordtrender</b> kan du inte söka på fraser: Ta bort
-            dessa för att genomföra sökningen <br /><br />
+            {{ $t("searchTooltipWordtrendsError") }}<br /><br />
             <code>{{
               wtStore.wordHitsSelected.filter(
                 (word) => word.includes(" ") || word.includes("*")
@@ -129,7 +131,7 @@
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             kwicStore.searchText.length < 1 ||
             kwicStore.searchText.includes(',')
@@ -142,7 +144,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Skriv in ett sökord eller en fras.
+            {{ $t("searchTooltipKWIC_Ngram") }}
           </q-tooltip>
 
           <!-- Tooltip for only searching on one word or sentence at a time -->
@@ -152,19 +154,18 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i
-            taget
+            {{ $t("searchTooltipKWICError") }}
           </q-tooltip>
         </q-btn>
 
-        <!-- Search button for N-Grams -->
+        <!-- Search button for NGRAMS -->
         <q-btn
           v-if="$route.path === '/tools/ngram'"
           @click="handleSubmit"
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           :disabled="
             kwicStore.searchText.length < 1 ||
             kwicStore.searchText.includes(',')
@@ -176,7 +177,7 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            Skriv in ett sökord eller en fras.
+            {{ $t("searchTooltipKWIC_Ngram") }}
           </q-tooltip>
           <!-- Tooltip for only searching for one word at a time, or wildcard -->
           <q-tooltip
@@ -185,18 +186,17 @@
             self="bottom middle"
             :offset="[10, 10]"
           >
-            I verktyget N-gram kan endast ett sökord användad åt gången, alt.
-            använda <code>*</code> för wildcardsökning.
+            {{ $t("searchTooltipNgramError") }}
           </q-tooltip>
         </q-btn>
 
-        <!-- Search button for speeches -->
+        <!-- Search button for SPEECHES -->
         <q-btn
           @click="handleSubmit"
           no-caps
           class="fit text-h6"
           color="accent"
-          label="Sök"
+          :label="$t('searchButton')"
           v-else-if="$route.path === '/tools/speeches'"
         >
         </q-btn>
@@ -216,11 +216,15 @@ import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useQuasar } from "quasar";
+
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const kwicStore = kwicDataStore();
+
 const showing = ref(false);
 const route = useRoute();
+const $q = useQuasar();
 
 const handleNormalizeData = (newValue) => {
   if (route.path === "/tools/wordtrends") {
@@ -235,8 +239,25 @@ const lemmatizeSearch = (newValue) => {
 };
 
 const handleSubmit = async () => {
-  store.submitEvent = true;
-  store.updateEvent = true;
+  if (route.path === "/tools/kwic") {
+    store.saveKwicFilterData(kwicStore.searchText);
+    store.setSubmitKwicEvent();
+  } else if (route.path === "/tools/wordtrends") {
+    const wordHitsString = wtStore.wordHitsSelected.join(", ");
+    store.saveWTFilterData(wordHitsString);
+    store.setSubmitWTEvent();
+  } else if (route.path === "/tools/speeches") {
+    store.saveSpeechesFilterData();
+    store.setSubmitSpeechesEvent();
+  } else if (route.path === "/tools/ngram") {
+    store.saveNgramsFilterData();
+    store.setSubmitNgramsEvent();
+  } else {
+    console.log("unknown route in handleSubmit, metadatafilter.vue");
+  }
+  if ($q.screen.lt.sm) {
+    store.mobilePopup = false;
+  }
 };
 
 const hasSelections = computed(() => {
@@ -260,7 +281,7 @@ const hasSelections = computed(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, #eeeeee, rgb(238, 238, 238, 0.5));
+  background: linear-gradient(to top, #E4E4EB, rgba(238, 238, 238, 0.5));
 }
 
 .padding-bot {

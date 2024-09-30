@@ -1,34 +1,28 @@
 <template>
-  <q-card flat class="background row justify-center max-width q-ma-lg q-mx-xl">
+  <q-card flat class="background row justify-center max-width q-mt-lg">
     <q-item-label class="text-h1">SweDeb</q-item-label>
-    <q-card-section class="text-align text-body2 q-mt-sm">
+    <q-card-section
+      class="text-body2 q-mt-sm"
+      :class="$q.screen.lt.sm ? '' : 'text-align'"
+    >
       {{ $t("indexPageIntroText") }}
+      <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+        Swerik
+      </a>
     </q-card-section>
-    <q-card-section class="row justify-center full-width q-py-xl ">
-      <div class="grid-container q-mx-xl">
+    <q-card-section
+      class=""
+      :class="$q.screen.lt.sm ? 'q-pt-sm q-pb-xl' : 'q-py-xl'"
+    >
+      <div class="grid-container max">
         <IndexToolCard
-          @click="redirect('tools/wordtrends')"
-          :title="$t('wordTrendsTitle')"
-          :text="$t('wordTrendsText')"
-          :icon="$t('wordTrendsIcon')"
-        />
-        <IndexToolCard
-          @click="redirect('tools/kwic')"
-          :title="$t('kwicTitle')"
-          :text="$t('kwicText')"
-          :icon="$t('kwicIcon')"
-        />
-        <IndexToolCard
-          @click="redirect('tools/speeches')"
-          :title="$t('speechesTitle')"
-          :text="$t('speechesText')"
-          :icon="$t('speechesIcon')"
-        />
-        <IndexToolCard
-          @click="redirect('tools/ngram')"
-          :title="$t('nGramsTitle')"
-          :text="$t('nGramsText')"
-          :icon="$t('nGramsIcon')"
+          v-for="(tool, index) in tools"
+          :key="index"
+          :title="$t(tool.title)"
+          :text="$t(tool.text)"
+          :icon="$t(tool.icon)"
+          @click="redirect(tool.route)"
+          class="full-width"
         />
       </div>
     </q-card-section>
@@ -44,16 +38,40 @@ const router = useRouter();
 const redirect = (route) => {
   router.push(route);
 };
+
+const tools = [
+  {
+    route: "tools/wordtrends",
+    title: "wordTrendsTitle",
+    text: "wordTrendsText",
+    icon: "wordTrendsIcon",
+  },
+  {
+    route: "tools/kwic",
+    title: "kwicTitle",
+    text: "kwicText",
+    icon: "kwicIcon",
+  },
+  {
+    route: "tools/speeches",
+    title: "speechesTitle",
+    text: "speechesText",
+    icon: "speechesIcon",
+  },
+];
 </script>
 
 <style scoped>
+.max {
+  max-width: 1200px;
+}
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 400px));
   grid-gap: 30px;
 }
 
-@media (max-width: 785px) {
+@media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;
   }

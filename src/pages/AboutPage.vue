@@ -1,62 +1,66 @@
 <template>
-  <q-page class="max-width background q-pa-lg q-px-xl">
-    <q-card flat class="text-center background">
-      <q-item-label class="text-h1">{{ $t("aboutPageTitle") }}</q-item-label>
-      <q-card-section class="text-align text-left text-body2 q-mt-sm">
-        {{ $t("indexPageIntroText") }}
-      </q-card-section>
-      <q-card-section class="row justify-center">
-        <q-card
-          flat
-          class="q-my-md column justify-center size bg-secondary q-py-lg"
-        >
-          <div>
-            <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
-            <q-item-label :class="$q.screen.lt.sm ? 'q-px-lg' : 'q-py-sm'">
-              SweDeb är finansierade av Umeå Universitet under två års tid
-              2022-2024.
-            </q-item-label>
-            <q-img
-              src="../../public/images/umu-logo-SE.png"
-              alt="Umeå Universitets logotyp."
-              style="width: 200px"
-              class="q-my-md"
-            />
-          </div>
-        </q-card>
-      </q-card-section>
-
-      <q-card-section class="column content-center">
-        <q-item-label class="text-h5 text-center q-pb-lg">Team</q-item-label>
-        <q-card-section class="row fit justify-center">
-          <div class="grid-container text-left">
-            <peopleCard
-              v-for="(person, index) in peopleDev"
-              :key="index"
-              :name="person.name"
-              :title="person.title"
-              :description="person.description"
-            />
-          </div>
-        </q-card-section>
-      </q-card-section>
-      <q-card-section>
-        <q-item-label class="text-h5 text-center q-pb-lg">
-          Referensgrupp
+  <q-card flat class="background row justify-center max-width q-mt-lg">
+    <q-item-label class="text-h1">{{ $t("aboutPageTitle") }}</q-item-label>
+    <q-card-section
+      class="text-body2 q-mt-sm"
+      :class="$q.screen.lt.sm ? '' : 'text-align'"
+    >
+      {{ $t("indexPageIntroText") }}
+      <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+        Swerik
+      </a>
+    </q-card-section>
+    <q-card-section class="col-12 items-center column">
+      <q-card
+        flat
+        bordered
+        class="bg-secondary q-py-lg column items-center"
+        :class="$q.screen.lt.sm ? 'q-px-md' : 'q-px-xl'"
+        style="max-width: fit-content"
+      >
+        <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
+        <q-item-label>
+          {{ $t("aboutFinance") }}
         </q-item-label>
-        <q-card-section class="row fit justify-center">
-          <div class="grid-container text-left">
-            <peopleCard
-              v-for="(person, index) in peopleRef"
-              :key="index"
-              :name="person.name"
-              :title="person.title"
-            />
-          </div>
-        </q-card-section>
+        <q-img
+          src="../../public/images/umu-logo-SE.png"
+          alt="Umeå Universitets logotyp."
+          style="width: 200px"
+          class="q-my-md"
+        />
+      </q-card>
+    </q-card-section>
+
+    <q-card-section
+      class="q-pa-none"
+      :class="$q.screen.lt.sm ? 'column' : 'row'"
+    >
+      <q-card-section :class="$q.screen.lt.sm ? 'column' : 'col'">
+        <q-item-label class="text-h5 text-center q-pb-lg">
+          {{ $t("aboutTeam") }}
+        </q-item-label>
+        <peopleCard
+          v-for="(person, index) in peopleDev"
+          :key="index"
+          :name="person.name"
+          :title="person.title"
+          :description="person.description"
+          :email="person.email"
+        />
       </q-card-section>
-    </q-card>
-  </q-page>
+      <q-card-section :class="$q.screen.lt.sm ? 'column' : 'col'">
+        <q-item-label class="text-h5 text-center q-pb-lg">
+          {{ $t("aboutReference") }}
+        </q-item-label>
+        <peopleCard
+          v-for="(person, index) in peopleRef"
+          :key="index"
+          :name="person.name"
+          :title="person.title"
+        />
+      </q-card-section>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup>
@@ -68,7 +72,7 @@ const peopleRef = i18n.peopleReference;
 </script>
 
 <style lang="scss" scoped>
-.grid-container {
+/* .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
@@ -78,13 +82,13 @@ const peopleRef = i18n.peopleReference;
   .grid-container {
     grid-template-columns: 1fr;
   }
-}
+} */
 
-.size {
+/* .size {
   width: 50vw;
 }
 
 .content-align {
   padding: 0 300px;
-}
+} */
 </style>

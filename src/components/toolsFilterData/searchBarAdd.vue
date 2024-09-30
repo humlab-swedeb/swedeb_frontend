@@ -5,7 +5,7 @@
     outlined
     clearable
     placeholder="T.ex klimat eller skola"
-    label="Lägg till ord"
+    :label="$t('searchAdd')"
     bg-color="white"
     color="accent"
     @keydown.enter="addSearchWord"
@@ -19,7 +19,7 @@
         color="accent"
         @click="addSearchWord"
         icon="add"
-        aria-label="Lägg till sökord"
+        :aria-label="$t('accessibility.searchAdd')"
       />
     </template>
   </q-input>
@@ -28,7 +28,7 @@
       v-if="wtStore.wordHitsSelected.length > 0"
       no-caps
       flat
-      label="Ta bort alla ord"
+      :label="$t('searchClear')"
       color="grey-7"
       class="resetStyle q-my-sm"
       @click="
@@ -40,15 +40,14 @@
   </div>
   <loadingIcon v-if="loading" size="50" />
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
-    <q-item-label class="text-bold" v-if="$route.path === '/tools/kwic'"
-      >Valt sökord eller fras:</q-item-label
-    ><q-item-label class="text-bold" v-else>Valda sökord:</q-item-label>
+    <q-item-label class="text-bold">{{ $t("searchAddedWords") }}</q-item-label>
     <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
-      >Här visas de 10 vanligaste orden relaterade till söktermen med
-      <b class="text-subtitle2">*</b>. Det finns ytterligare
-      <b>{{ wtStore.wordHits.length - wtStore.wordHitsSelected.length }}</b> ord
-      att lägga till för att förfina sökningen.</q-item-label
-    >
+      >{{ $t("searchDropdownOfHits1") }}
+      <b class="text-subtitle2">{{ $t("searchDropdownOfHits2") }} </b>
+      {{ $t("searchDropdownOfHits3") }}
+      <b>{{ wtStore.wordHits.length - wtStore.wordHitsSelected.length }}</b>
+      {{ $t("searchDropdownOfHits4") }}
+    </q-item-label>
     <q-select
       v-if="wtStore.wordHitsSelected.length > 0"
       v-model="wtStore.wordHitsSelected"

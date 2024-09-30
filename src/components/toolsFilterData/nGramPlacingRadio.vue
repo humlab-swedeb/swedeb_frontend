@@ -9,8 +9,9 @@
       v-model="nGramStore.placingSelected"
       :val="option"
       color="accent"
+      @click="toggleSelected(option)"
     />
-    <!--       @click="toggleSelected(option)"
+    <!--
  -->
     <q-item-label class="q-ml-sm">{{ option }}</q-item-label>
   </div>
@@ -18,9 +19,9 @@
 
 <script setup>
 import { nGramDataStore } from "src/stores/nGramDataStore";
-/*import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 
- const lastSelected = ref("");
+const lastSelected = ref("");
 
 onMounted(() => {
   watch(
@@ -41,7 +42,7 @@ function toggleSelected(option) {
   } else {
     nGramStore.placingSelected = option;
   }
-} */
+}
 
 const nGramStore = nGramDataStore();
 </script>

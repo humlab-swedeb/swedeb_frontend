@@ -8,7 +8,7 @@
       class="q-mr-lg"
       @click="setAllTrue(props.type)"
       v-model="store[`${props.type}Filter`]"
-      :label="store[`${props.type}Filter`] ? 'Ja' : 'Nej'"
+      :label="store[`${props.type}Filter`] ? $t('toggleYes') : $t('toggleNo')"
       color="accent"
       checked-icon="check"
       unchecked-icon="close"
@@ -35,7 +35,6 @@ import { defineProps } from "vue";
 const store = metaDataStore();
 
 const props = defineProps(["type", "toggle_label"]);
-const disable = !store[`${props.type}Filter`];
 
 const setAllTrue = (type) => {
   // When toggled, all options are always selected

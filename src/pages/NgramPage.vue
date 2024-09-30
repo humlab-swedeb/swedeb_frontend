@@ -5,7 +5,7 @@
     }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
     <div v-show="showData">
-      <ShowData />
+      <ShowData :filterSelections="'Ngrams'"/>
     </div>
     <loadingIcon v-if="loading" size="100" />
     <nGramsTable v-else v-show="showData" />
@@ -31,11 +31,14 @@ const loading = ref(false);
 const showData = ref(false);
 
 watchEffect(async () => {
-  if (metaStore.submitEvent && metaStore.updateEvent) {
+  if (metaStore.submitEventNgrams) {
+    showData.value = false;
     loading.value = true;
     await nGramStore.getNGramsResult(kwicStore.searchText);
     showData.value = true;
     loading.value = false;
+    metaStore.cancelSubmitNgramsEvent();
+
   }
 });
 </script>

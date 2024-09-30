@@ -10,26 +10,26 @@
           <q-route-tab to="/faq" :label="$t('faq')" />
         </q-tabs>
         <q-btn flat round icon="menu" class="lt-md">
-          <q-menu>
+          <q-menu class="bg-primary shadow-7">
             <q-list>
-              <q-item to="/" clickable>
-                <q-item-section>Hem</q-item-section>
+              <q-item to="/" clickable class="text-black">
+                <q-item-section>{{ $t("home") }}</q-item-section>
               </q-item>
-              <q-item to="/tools/wordtrends" clickable>
-                <q-item-section>Verktyg</q-item-section>
+              <q-item to="/tools/wordtrends" clickable class="text-black">
+                <q-item-section>{{ $t("tools") }}</q-item-section>
               </q-item>
-              <q-item to="/about" clickable>
-                <q-item-section>Om SweDeb</q-item-section>
+              <q-item to="/about" clickable class="text-black">
+                <q-item-section>{{ $t("about") }}</q-item-section>
               </q-item>
-              <q-item to="/faq" clickable>
-                <q-item-section>FAQ</q-item-section>
+              <q-item to="/faq" clickable class="text-black">
+                <q-item-section>{{ $t("faq") }}</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-page-container class="q-px-xl justify-center row">
+    <q-page-container class="row justify-center">
       <router-view />
     </q-page-container>
     <q-footer class="bg-secondary text-black">
@@ -52,16 +52,17 @@
             }}</q-item-label>
             <q-item-label
               class="q-px-xl q-pt-md text-left"
-              style="font-size: 12px"
+              style="font-size: 14px"
             >
-              {{ $t("indexPageIntroText") }}
+              {{ $t("contactText") }}
             </q-item-label>
             <q-btn
               no-caps
               color="accent"
-              label="Kontakta SweDeb-Teamet"
+              :label="$t('contactLabelButton')"
               class="q-my-md q-px-lg"
               icon="alternate_email"
+              to="about"
             />
           </q-card-section>
         </q-card>
@@ -105,12 +106,12 @@
               class="q-px-md q-pt-md text-left"
               style="font-size: 12px"
             >
-              {{ $t("indexPageIntroText") }}
+              {{ $t("contactText") }}
             </q-item-label>
             <q-btn
               no-caps
               color="accent"
-              label="Kontakta SweDeb-Teamet"
+              :label="$t('contactLabelButton')"
               class="q-my-md q-px-lg"
             />
           </q-card-section>

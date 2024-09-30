@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-item-label class="q-my-md"
-      >Sökningen resulterade i <b>{{ nGramStore.nGrams.length }}</b> antar
-      träffar</q-item-label
+      >{{ $t("searchResult1") }}<b>{{ nGramStore.nGrams.length }}</b>
+      {{ $t("searchResult2") }}</q-item-label
     >
     <q-table
       bordered
@@ -54,15 +54,15 @@
             <div>
               <div class="row q-py-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
-                  Sökningen resulterade i
-                  <b>{{ props.row.count }}</b> antal träffar.
+                  {{ $t('searchResult1') }}
+                  <b>{{ props.row.count }}</b> {{ $t('searchResult2') }}
                 </q-item-label>
                 <q-btn
                   no-caps
                   icon="download"
                   class="text-grey-8 col-3"
                   color="secondary"
-                  label="Ladda ner alla"
+                  :label="$t('downloadAll')"
                   style="width: fit-content"
                 />
               </div>
@@ -157,7 +157,7 @@
                               class="q-pt-xs"
                               v-if="props.row.node_word"
                             >
-                              Sökord:
+                              {{ $t('searchWordLabel') }}
                               <b>{{ props.row.node_word }}</b>
                             </q-item-label>
                           </q-card-section>
@@ -229,7 +229,7 @@
               </q-table>
             </div>
           </q-td>
-          <q-td class="bg-grey-1" no-hover/>
+          <q-td class="bg-grey-1" no-hover />
         </q-tr>
       </template>
     </q-table>
@@ -237,7 +237,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
@@ -323,9 +323,7 @@ const expandRow = async (props) => {
   ];
 };
 
-watchEffect(() => {
-  if (metaStore.submitEvent) {
-    rows.value = nGramStore.nGrams.map((entry, index) => ({
+rows.value = nGramStore.nGrams.map((entry, index) => ({
       id: index + 1,
       ngram: entry.ngram,
       count: entry.count,
@@ -339,7 +337,7 @@ watchEffect(() => {
     columns.value = [
       {
         name: "ngram",
-        label: "Ordfönster",
+        label: "N-gram",
         align: "left",
         field: "ngram",
         sortable: true,
@@ -359,8 +357,6 @@ watchEffect(() => {
         sortable: true,
       },
     ];
-  }
-});
 </script>
 
 <style scoped></style>

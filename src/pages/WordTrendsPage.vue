@@ -7,7 +7,7 @@
   </q-card>
 
   <div v-show="showData">
-    <ShowData />
+    <ShowData :filterSelections="'WordTrends'"/>
     <br />
   </div>
   <q-tabs
@@ -26,16 +26,16 @@
   <q-tab-panels v-model="tabs" class="background">
     <q-tab-panel name="diagram">
       <div class="q-py-md text-grey-8">
-        Här visas resultatet i en <b>trendlinje</b> för de ord och metadata som
-        valts.
+        {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultLine") }}</b>
+        {{ $t("wordtrendsResult2") }}
       </div>
       <loadingIcon v-if="loading" size="100" />
       <lineChart v-else-if="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">
-        Här visas resultatet i en <b>tabell</b> för de ord och metadata som
-        valts.
+        {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultTable") }}</b>
+        {{ $t("wordtrendsResult2") }}
       </div>
       <loadingIcon v-if="loading" size="100" />
       <div v-else-if="showDataTable">
@@ -44,12 +44,12 @@
     </q-tab-panel>
     <q-tab-panel name="speech">
       <div class="q-py-md text-grey-8">
-        Här visas alla <b>anföranden</b> i en tabell kopplat till de ord och
-        metadata som valts.
+        {{ $t("wordtrendsResult3") }} <b>{{ $t("wordtrendsResultSpeech") }}</b>
+        {{ $t("wordtrendsResult4") }}
       </div>
       <loadingIcon v-if="loading" size="100" />
       <div v-else v-show="showData">
-        <speechDataTable type="wordTrends" :dataLoaded="dataLoaded" />
+        <speechDataTable type="wordTrends" />
       </div>
     </q-tab-panel>
   </q-tab-panels>
@@ -62,26 +62,38 @@ import speechDataTable from "src/components/speechDataTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import i18n from "src/i18n/sv";
+
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
+const formattedIntro = i18n.wordTrendsIntro;
 
 const showData = ref(false);
 const dataLoaded = ref(false);
-
+const loading = ref(false);
 const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
-const loading = ref(false);
-
 const tabs = ref("diagram");
 
-const intro = i18n.wordTrendsIntro;
-const formattedIntro = intro;
+
+onMounted(() => {
+  if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
+    showDataTable.value = true;
+    dataLoadedTable.value = true;
+  }
+  if (wtStore.speechesData && wtStore.speechesData.length > 0) {
+    showData.value = true;
+    dataLoaded.value = true;
+  }
+});
+
 
 watchEffect(async () => {
-  if (store.submitEvent && store.updateEvent) {
+  if (store.submitEventWT) {
     loading.value = true;
+    showData.value = false;
+    showDataTable.value = false;
     const textString = wtStore.generateStringOfSelected();
     await wtStore.getWordTrendsResult(textString);
     showDataTable.value = true;
@@ -90,6 +102,8 @@ watchEffect(async () => {
     showData.value = true;
     dataLoaded.value = true;
     loading.value = false;
+    store.cancelSubmitWTEvent();
+
   }
 });
 </script>

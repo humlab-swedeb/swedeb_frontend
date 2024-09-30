@@ -5,7 +5,7 @@
     outlined
     clearable
     placeholder="T.ex klimat eller skola"
-    label="Sök på ett ord"
+    :label="$t('searchInput')"
     bg-color="white"
     color="accent"
     @clear="kwicStore.searchText = ''"
@@ -26,8 +26,8 @@ const metaStore = metaDataStore();
 
 const handleEnter = () => {
   if (!kwicStore.searchText.includes(",")) {
-    metaStore.submitEvent = true;
-    metaStore.updateEvent = true;
+    metaStore.saveKwicFilterData(kwicStore.searchText);
+    metaStore.setSubmitKwicEvent();
   }
 };
 </script>

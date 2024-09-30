@@ -2,8 +2,8 @@
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="kwicStore.kwicData.length > 0">
-        Sökningen resulterade i <b>{{ kwicStore.kwicData.length }}</b> antal
-        träffar.
+        {{ $t("searchResult1") }} <b>{{ kwicStore.kwicData.length }}</b>
+        {{ $t("searchResult2") }}
       </q-item-label>
 
       <q-btn-dropdown
@@ -11,23 +11,23 @@
         icon="download"
         class="text-grey-8 col-3"
         color="secondary"
-        label="Ladda ner KWIC"
+        :label="$t('downloadKWIC')"
         style="width: fit-content"
       >
         <q-list>
           <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
             <q-item-section>
-              <q-item-label>Tabell som CSV</q-item-label>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
             <q-item-section>
-              <q-item-label>Tabell som Excel</q-item-label>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
             <q-item-section>
-              <q-item-label>Tal</q-item-label>
+              <q-item-label>{{ $t("downloadSpeech") }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -53,7 +53,7 @@
               class="q-mb-md q-ml-xs"
             >
               <q-tooltip>
-                Här ska det vara en beskrivning av hur anförande-ID beskrivs
+                {{ $t('accessibility.tooltipSpeechID') }}
               </q-tooltip>
             </q-icon>
           </q-th>
@@ -96,9 +96,7 @@
               {{ col.value }}
             </q-item-label>
             <q-item-label
-              v-else-if="
-                col.value === 'Metadata saknas'
-              "
+              v-else-if="col.value === 'metadata saknas'"
               class="text-italic text-grey-6"
             >
               {{ col.value }}
@@ -134,7 +132,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -154,100 +152,97 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
+const getParamString = () => {
+  return metaStore.selectedMetadataToText("kwic");
+};
+
 const downloadKWICTableAsExcel = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  kwicStore.downloadKWICTableExcel(paramString);
+  kwicStore.downloadKWICTableExcel(getParamString());
 };
 
 const downloadKWICTableAsCSV = () => {
-  const paramString = metaStore.selectedMetadataToText();
-  kwicStore.downloadKWICTableCSV(paramString);
+  kwicStore.downloadKWICTableCSV(getParamString());
 };
 
 const downloadKWICAsSpeeches = () => {
-  const paramString = metaStore.selectedMetadataToText();
   visibleRows.value = KWICTable.value.computedRows.map((row) => row.id);
-  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
+  downloadStore.downloadSpeechesZip(visibleRows.value, getParamString());
 };
 
-watchEffect(() => {
-  if (metaStore.submitEvent) {
-    rows.value = kwicStore.kwicData.map((entry, index) => ({
-      id: entry.title,
-      unique_id: index,
-      left_word: entry.left_word,
-      node_word: entry.node_word,
-      right_word: entry.right_word,
-      year: entry.year,
-      speaker: entry.name,
-      party: entry.party_abbrev,
-      gender: entry.gender,
-      person_id: entry.person_id,
-      link: entry.link,
-      protocol: entry.formatted_speech_id,
-      source: entry.speech_link,
-    }));
+rows.value = kwicStore.kwicData.map((entry, index) => ({
+  id: entry.title,
+  unique_id: index,
+  left_word: entry.left_word,
+  node_word: entry.node_word,
+  right_word: entry.right_word,
+  year: entry.year,
+  speaker: entry.name,
+  party: entry.party_abbrev,
+  gender: entry.gender,
+  person_id: entry.person_id,
+  link: entry.link,
+  protocol: entry.formatted_speech_id,
+  source: entry.speech_link,
+}));
 
-    columns.value = [
-      {
-        name: "left_word",
-        required: true,
-        label: "Väster",
-        align: "right",
-        field: "left_word",
-        sortable: true,
-      },
-      {
-        name: "node_word",
-        required: true,
-        label: "Sökord",
-        field: "node_word",
-        sortable: true,
-        align: "center",
-      },
-      {
-        name: "right_word",
-        required: true,
-        label: "Höger",
-        field: "right_word",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "speaker",
-        required: true,
-        label: "Talare",
-        field: "speaker",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "party",
-        required: true,
-        label: "Parti",
-        field: "party",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "year",
-        required: true,
-        label: "År",
-        field: "year",
-        sortable: true,
-        align: "left",
-      },
-      {
-        name: "id",
-        required: true,
-        label: "Anförande",
-        field: "protocol",
-        sortable: true,
-        align: "left",
-      },
-    ];
-  }
-});
+columns.value = [
+  {
+    name: "left_word",
+    required: true,
+    label: "Väster",
+    align: "right",
+    field: "left_word",
+    sortable: true,
+  },
+  {
+    name: "node_word",
+    required: true,
+    label: "Sökord",
+    field: "node_word",
+    sortable: true,
+    align: "center",
+  },
+  {
+    name: "right_word",
+    required: true,
+    label: "Höger",
+    field: "right_word",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "speaker",
+    required: true,
+    label: "Talare",
+    field: "speaker",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "party",
+    required: true,
+    label: "Parti",
+    field: "party",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "year",
+    required: true,
+    label: "År",
+    field: "year",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "id",
+    required: true,
+    label: "Anförande",
+    field: "protocol",
+    sortable: true,
+    align: "left",
+  },
+];
 
 const pagination = ref({
   sortBy: "id",

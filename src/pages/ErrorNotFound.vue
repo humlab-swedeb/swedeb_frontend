@@ -8,7 +8,7 @@
         class="q-ma-none"
       />
       <q-item-label class="text-h4 text-grey-8 q-mt-md">
-        Hoppsan, här fanns inget!
+        {{ $t("errorMessage404") }}
       </q-item-label>
       <q-btn
         class="q-mt-xl q-px-lg"
@@ -16,7 +16,7 @@
         text-color="white"
         unelevated
         to="/"
-        label="Till startsidan"
+        :label="$t('errorMessageButton')"
         no-caps
       />
     </div>
