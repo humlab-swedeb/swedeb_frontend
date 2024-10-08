@@ -116,7 +116,20 @@
                     class="bg-white"
                     :class="props.expand ? 'bg-grey-3' : ''"
                   >
-                    {{ col.value }}
+                    <q-item-label
+                      v-if="col.name === 'party'"
+                      :class="
+                        col.value === 'metadata saknas'
+                          ? 'text-italic text-grey-6'
+                          : 'text-bold'
+                      "
+                      :style="{
+                        color: metaStore.getPartyAbbrevColor(col.value),
+                      }"
+                    >
+                      {{ col.value }}
+                    </q-item-label>
+                    <q-item-label v-else>{{ col.value }}</q-item-label>
                   </q-td>
                   <q-td
                     auto-width

@@ -144,7 +144,7 @@ export default {
   vanligast förekommande orden före och/eller efter sökordet. Till exempel <code>information</code>:
   <i>dålig information, bra information; inte dålig information, mycket bra information;
   information om, information för; information om politik, information för barn, osv.</i>
-  Du kan välja hur stort ordfönster dina n-gram ska vara (1–5). För att få fler
+  Du kan välja hur stort ordfönster dina n-gram ska vara (1–20). För att få fler
   träffar kan <code>.*</code> användas, t ex <code>information.*</code>. Under <b>"Filtrera på metadata"</b>
   kan du avgränsa anförandena till vissa partier, talare eller år.
   Observera att denna test-korpus är lemmatiserad, dvs sökresultateten baseras på
