@@ -47,22 +47,29 @@ export const metaDataStore = defineStore("metaDataStore", {
   }),
 
   actions: {
+    selectedWithOnlyValidSpeakers() {
+      return {
+        ...this.selected,
+        speakers: this.filterSelectedSpeakers(this.selected.speakers),
+      };
+    },
+
     saveKwicFilterData(search) {
-      this.filterAtSearchKWIC = { ...this.selected };
+      this.filterAtSearchKWIC = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchKWIC["search"] = search;
     },
 
     saveWTFilterData(search) {
-      this.filterAtSearchWT = { ...this.selected };
+      this.filterAtSearchWT = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchWT["search"] = search;
     },
 
     saveSpeechesFilterData() {
-      this.filterAtSearchSpeeches = { ...this.selected };
+      this.filterAtSearchSpeeches = { ...this.selectedWithOnlyValidSpeakers() };
     },
 
     saveNgramsFilterData() {
-      this.filterAtSearchNgrams = { ...this.selected };
+      this.filterAtSearchNgrams = { ...this.selectedWithOnlyValidSpeakers() };
     },
 
     setSubmitNgramsEvent() {
@@ -134,12 +141,19 @@ export const metaDataStore = defineStore("metaDataStore", {
         );
       }
     },
-
     addSpeakerParam(selected_params) {
       if (this.selected.speakers.length > 0) {
-        this.selected.speakers.forEach((speaker) =>
-          selected_params.append("who", speaker.person_id)
+        // Get the list of valid speaker IDs from options.speakers
+        const validSpeakerIds = this.options.speakers.map(
+          (speaker) => speaker.person_id
         );
+
+        // Filter the selected speakers to include only those with valid IDs
+        this.selected.speakers
+          .filter((speaker) => validSpeakerIds.includes(speaker.person_id))
+          .forEach((speaker) =>
+            selected_params.append("who", speaker.person_id)
+          );
       }
     },
 
@@ -185,6 +199,16 @@ export const metaDataStore = defineStore("metaDataStore", {
       }
     },
 
+    getValidSpeakerIds() {
+      return this.options.speakers.map((speaker) => speaker.person_id);
+    },
+
+    filterSelectedSpeakers(selectedSpeakers) {
+      return selectedSpeakers.filter((speaker) =>
+        this.getValidSpeakerIds().includes(speaker.person_id)
+      );
+    },
+
     selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
 
@@ -193,12 +217,17 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
+      const selected_parties = this.getMetarRow(
+        selected_metadata.party,
+        "partier"
+      );
 
-      const selected_parties = this.getMetarRow(selected_metadata.party, "partier");
+      const selectedValidSpeakers = this.filterSelectedSpeakers(
+        selected_metadata.speakers
+      );
 
-
-      const selected_speakers_as_string = selected_metadata.speakers.map(
-        (speaker) => this.getSpeakerAsString(speaker)
+      const selected_speakers_as_string = selectedValidSpeakers.map((speaker) =>
+        this.getSpeakerAsString(speaker)
       );
       const selected_speakers = this.getMetarRow(
         selected_speakers_as_string,
@@ -318,7 +347,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const path = "/metadata/genders";
       const response = await api.get(path);
       this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = gender.swedish_gender;
+        acc[gender.gender_id] = gender.gender;
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);

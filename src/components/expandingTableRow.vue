@@ -141,6 +141,22 @@
                 <q-icon left name="download" color="accent" />
                 <q-item-label>{{ $t("download") }}</q-item-label>
               </q-btn>
+              <div>
+                <q-btn
+                  flat=""
+                  no-caps
+                  rounded
+                  class="items-start text-grey-7"
+                  @click="popup = true"
+                >
+                  <q-icon left name="report" color="grey-7" />
+                  <q-item-label>Rapportera</q-item-label>
+                </q-btn>
+              </div>
+              <reportForm
+                :clicked="popup"
+                @close="popup = false"
+              />
             </div>
           </q-card-section>
         </q-card-section>
@@ -155,17 +171,25 @@ import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
+import { feedbackDataStore } from "src/stores/feedbackDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
+import reportForm from "src/components/reportForm.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
+const feedbackStore = feedbackDataStore();
 const route = useRoute();
 
 const props = defineProps({
   props: Object,
 });
 
+const feedbackData = (myProps) => {
+  feedbackStore.data = myProps;
+};
+
+const popup = ref(false);
 const speakerNote = ref("");
 const speechText = ref("");
 const originalSpeechText = ref("");
@@ -195,6 +219,7 @@ const downloadCurrentSpeech = () => {
 
 watchEffect(() => {
   if (props.props.expand) {
+    feedbackData({ ...props.props.row });
     loading.value = true;
     (async () => {
       const speechData = await speechStore.getSpeech(props.props.row.id);

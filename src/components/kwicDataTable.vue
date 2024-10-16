@@ -181,7 +181,7 @@ rows.value = kwicStore.kwicData.map((entry, index) => ({
   gender: entry.gender,
   person_id: entry.person_id,
   link: entry.link,
-  protocol: entry.formatted_speech_id,
+  protocol: entry.speech_name,
   source: entry.speech_link,
 }));
 

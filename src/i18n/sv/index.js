@@ -167,13 +167,15 @@ export default {
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
-      title: "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+      title:
+        "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
       email: "fredrik.noren@mau.se",
       description: "",
     },
     1: {
       name: "Johan Jarlbrink",
-      title: "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
+      title:
+        "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
       description: "",
     },
     2: {
@@ -210,12 +212,14 @@ export default {
     },
     2: {
       name: "Linda Sandström",
-      title: "Biträdande universitetslektor, Institutionen för språkstudier Umeå Universitet",
+      title:
+        "Biträdande universitetslektor, Institutionen för språkstudier Umeå Universitet",
       description: "",
     },
     3: {
       name: "Måns Magnusson",
-      title: "Universitetslektor, Statistiska institutionen Uppsala Universitet",
+      title:
+        "Universitetslektor, Statistiska institutionen Uppsala Universitet",
       description: "",
     },
   },
@@ -279,4 +283,10 @@ export default {
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",
   },
+
+  //REPORT BUGS/ FEEDBACK ----------------------------------------------
+  meta: "Metadata",
+  reportTitle: "Rapportera fel i anföranden, dess metadata, eller ge feedback",
+  reportText:
+    "För att lämna feedback eller rapportera fel, vänligen kopiera metadatan nedan och gå sedan vidare till SweRik:s GitHub-sida för att skapa en diskussion. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
 };

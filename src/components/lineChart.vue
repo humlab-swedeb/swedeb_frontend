@@ -199,14 +199,43 @@ watchEffect(() => {
   }
 });
 
+function addDataPointsForMissingYears(categories){
+  //when there is no data for a year, the line graph will not include that year
+  //this function adds a data point for each missing year with a count of 0
+  //this was added to mitigate the issues with fill_gap in the backend
+  const minCategory = Math.min(...categories);
+  const maxCategory = Math.max(...categories);
+  const categoryRange = Array.from({ length: maxCategory - minCategory + 1 }, (_, i) => minCategory + i);
+  const missingYears = categoryRange.filter(year => !categories.includes(year));
+
+  missingYears.forEach((year) => {
+    const newEntry = {
+      year: year.toString(),
+      count: {},
+    };
+
+    Object.keys(wordTrends[0].count).forEach((key) => {
+      newEntry.count[key] = 0;
+    });
+    wordTrends.push(newEntry);
+  });
+  wordTrends.sort((a, b) => parseInt(a.year) - parseInt(b.year));
+
+}
+
+
 function prepareDataForLineChart() {
   categories = wordTrends.map((entry) => parseInt(entry.year));
+
+  addDataPointsForMissingYears(categories);
+
   const seriesData = Object.keys(wordTrends[0].count)
     .map((word) => ({
       name: word,
       data: wordTrends.map((entry) => entry.count[word]),
     }))
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+
 
   //Move "Totalt" to the end of the series
   const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");

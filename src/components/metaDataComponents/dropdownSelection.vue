@@ -52,16 +52,6 @@
       >
         <q-item-label v-if="props.type === 'speakers'">
           {{ customOptionLabel(select.opt) }}
-          <!--       <span
-            :style="{
-              backgroundColor: store.getPartyColor(select.opt.speaker_party[0]),
-              color: 'white',
-              padding: '0.2rem 0.5rem',
-              borderRadius: '0.2rem',
-            }"
-          >
-            {{ select.opt.speaker_party[0] }} </span
-          > -->
         </q-item-label>
 
         <q-item-label v-else>{{ select.opt }}</q-item-label>
@@ -87,14 +77,23 @@ const getChipStyle = (opt) => {
       fontWeight: "bold",
       border: `2px solid ${store.getPartyNameColor(opt)}`,
     };
-  } /* else if (props.type === "speakers") {
-    return {
-      backgroundColor: "white",
-      color: store.getPartyColor(opt.speaker_party[0]),
-      fontWeight: "bold",
-      border: `2px solid ${store.getPartyColor(opt.speaker_party[0])}`,
-    };
-  } */ else {
+  } else if (props.type === "speakers") {
+    const nonValidSpeaker = !store.options.speakers.some(
+      (speaker) => speaker.person_id === opt.person_id
+    );
+
+    if (nonValidSpeaker) {
+      return {
+        color: "#808080",
+        textDecoration: "line-through",
+      };
+    } else {
+      return {
+        border: `1px solid ${store.getPartyAbbrevColor(opt.party_abbrev)}`,
+        backgroundColor: `${store.getPartyAbbrevColor(opt.party_abbrev)}20`,
+      };
+    }
+  } else {
     return {};
   }
 };
