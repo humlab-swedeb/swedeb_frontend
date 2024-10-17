@@ -251,49 +251,44 @@ const loading = ref(false);
 const speechRows = ref([]);
 const speechColumns = ref([]);
 const speakerNote = ref("Hello");
+const displayedData = ref([]);
 const speechText = ref(
   "Fru talman! Jag utgår från att alla som köper en hund eller en häst tänker efter noga innan de gör det och sörjer på bästa sätt för dessa djurs välbefinnande. Vad det handlar om här är saker som man inte har lyckats få fram genom en undersökningsplikt och vem som ska stå för kostnaderna om man har anlitat en veterinär för tillstånd som var okända. Då är idén från regeringens sida att sådana fullständigt oförutsedda kostnader bättre bärs av den som borde känna till dem, nämligen näringsidkaren, än den som har köpt djuret. Här gör vi uppenbarligen olika bedömningar. Jag tror inte att det är entydigt så att köplagen innebär ett bättre djurskydd. Köplagen är en mycket gammal lag som faktiskt inte särskilt har anpassats för detta ändamål. Men det blir kanske inte med nödvändighet sämre. Och det är nog inte detta som det handlar om, utan det handlar om hur man reglerar intressena mellan näringsidkare och konsumenter. Där är skiljelinjen tydlig. Sverigedemokraterna väger än en gång över på näringsidkarnas sida. Det har man gjort tidigare när det gäller sjysta villkor vid upphandling och när det gäller friskoleföretag, och nu handlar det om djuruppfödning. Det får väl föras till protokollet vilken sida Sverigedemokraterna står på, nämligen den som möter vanligt folk, och att Socialdemokraterna står på vanligt folks sida. Om detta lär väl diskussionen fortsätta."
 );
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
-  speechRows.value = [
-    {
-      id: 1,
-      speaker: "Talare",
-      gender: "Kvinna",
-      party: "S",
-      year: "1940",
-      speechID: "1",
-    },
-    {
-      id: 2,
-      speaker: "Talare",
-      gender: "Man",
-      party: "M",
-      year: "1930",
-      speechID: "2",
-    },
-    {
-      id: 3,
-      speaker: "Talare",
-      gender: "Kvinna",
-      party: "V",
-      year: "1960",
-      speechID: "3",
-    },
-  ];
+
+  nGramStore.getNGramSpeeches(props.key-1);
+
+  displayedData.value = nGramStore.nGramSpeeches; // detta kan sättas som en prop?
+
+
+  speechRows.value = displayedData.value.map((speech) => ({
+  id: speech.document_name,
+  protocol: speech.speech_name,
+  node_word: speech.node_word,
+  speaker: speech.name,
+  gender: speech.gender,
+  party: speech.party_abbrev,
+  source: speech.speech_link,
+  year: speech.year,
+  link: speech.link,
+}));
+
+
+
 
   speechColumns.value = [
     {
       name: "id",
       label: "Anförande",
       align: "left",
-      field: "speechID",
+      field: "protocol",
       sortable: true,
     },
     {
-      name: "speaker",
+      name: "name",
       label: "Talare",
       align: "left",
       field: "speaker",
@@ -307,7 +302,7 @@ const expandRow = async (props) => {
       sortable: true,
     },
     {
-      name: "party",
+      name: "party_abbrev",
       label: "Parti",
       align: "left",
       field: "party",
