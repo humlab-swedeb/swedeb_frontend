@@ -225,11 +225,16 @@ watchEffect(() => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
-      if (route.path !== "/tools/speeches") {
+
+      if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
+
+
+      }else{
+        speechText.value = speechData.speech_text;
       }
     })();
     setTimeout(() => {
