@@ -69,9 +69,12 @@
               <!-- SECOND TABLE -->
 
 
-                <div>
-                  <speechDataTable type="ngram" />
-               </div>
+              <div v-if="innerLoading[props.row.id]">
+                <loadingIcon />
+              </div>
+              <div v-else>
+                <speechDataTable type="ngram" />
+              </div>
 
 
 
@@ -97,17 +100,23 @@ const nGramStore = nGramDataStore();
 const rows = ref([]);
 const columns = ref([]);
 const loading = ref(false);
+const innerLoading = ref({});
 
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
 
-  nGramStore.getNGramSpeeches(props.key-1);
-
-
-
+  if (props.expand) {
+    innerLoading.value[props.row.id] = true;
+    try {
+      await nGramStore.getNGramSpeeches(props.row.id - 1);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      innerLoading.value[props.row.id] = false;
+    }
+  }
 };
-
 rows.value = nGramStore.nGrams.map((entry, index) => ({
       id: index + 1,
       ngram: entry.ngram,

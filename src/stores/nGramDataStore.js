@@ -4,6 +4,7 @@ import { metaDataStore } from "./metaDataStore";
 
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
+    searchText: "",
     nGrams: [],
     nGramSpeeches: [],
     width: 3,
