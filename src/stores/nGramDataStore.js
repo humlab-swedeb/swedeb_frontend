@@ -36,7 +36,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         }
     },
 
-    async getNGramSpeeches(row_nr) {
+    async getNGramSpeeches(row_nr, ngram) {
       const speech_ids = this.getSpeechIdsForRow(row_nr);
       const path = "/tools/ngram_speeches"; // Full URL
       const json_payload = JSON.stringify(speech_ids);
@@ -49,7 +49,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           },
           responseType: 'json',
         });
+
         this.nGramSpeeches = response.data.speech_list;
+        this.nGramSpeeches.forEach(speech => {
+          speech.node_word = ngram;
+        });
       } catch (error) {
         console.error('Error fetching data:', error);
       }

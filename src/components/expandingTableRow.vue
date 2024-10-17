@@ -172,6 +172,8 @@ import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
+import { nGramDataStore } from "src/stores/nGramDataStore";
+
 import loadingIcon from "src/components/loadingIcon.vue";
 import reportForm from "src/components/reportForm.vue";
 
@@ -179,6 +181,7 @@ const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
 const feedbackStore = feedbackDataStore();
+const nGramStore = nGramDataStore();
 const route = useRoute();
 
 const props = defineProps({
@@ -200,7 +203,7 @@ const replaceNewLine = (str) => {
 };
 
 const replaceWordWithBoldTags = (str, word) => {
-  const words = word.split(",").map((w) => w.trim());
+  const words = word.includes(",") ? word.split(",").map((w) => w.trim()) : [word.trim()];
 
   words.forEach((w) => {
     const regex = new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "giu");
@@ -209,6 +212,14 @@ const replaceWordWithBoldTags = (str, word) => {
 
   return str;
 };
+
+const replaceNgramWithBoldTags = (str, ngram) => {
+
+  const fixed_spaces = ngram.replace(" .", ".").replace(" ,", ",").replace(" :", ":");
+  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>"`);
+
+};
+
 
 const downloadCurrentSpeech = () => {
   downloadStore.downloadCurrentSpeechText(
@@ -226,15 +237,21 @@ watchEffect(() => {
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
 
+
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
+      } else if (route.path === "/tools/ngram") {
 
+        speechText.value = replaceNgramWithBoldTags(
+          replaceNewLine(speechData.speech_text),
+          props.props.row.node_word
+        );
 
       }else{
-        speechText.value = speechData.speech_text;
+        speechText.value = replaceNewLine(speechData.speech_text);
       }
     })();
     setTimeout(() => {

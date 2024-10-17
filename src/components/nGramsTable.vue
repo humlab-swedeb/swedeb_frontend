@@ -107,9 +107,10 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 
   if (props.expand) {
+    console.log(props.row)
     innerLoading.value[props.row.id] = true;
     try {
-      await nGramStore.getNGramSpeeches(props.row.id - 1);
+      await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
