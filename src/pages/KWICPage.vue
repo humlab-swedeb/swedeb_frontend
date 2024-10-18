@@ -10,8 +10,6 @@
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
     </div>
-
-
     <div v-if="!loading" class="q-pb-xl">
       <kwicDataTable />
     </div>

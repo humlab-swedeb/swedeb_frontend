@@ -34,8 +34,12 @@
       {{ $t("ngramSizePlaceLabel") }}
     </q-item-label>
     <q-card-section horizontal class="q-px-none">
-      <q-card-section class="col-6"><nGramWidth /></q-card-section>
-      <q-card-section class="col-6"><nGramPlacingRadio /></q-card-section>
+      <q-card-section class="col-6">
+        <nGramWidth />
+      </q-card-section>
+      <q-card-section class="col-6">
+        <nGramPlacingRadio />
+      </q-card-section>
     </q-card-section>
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/speeches'">
