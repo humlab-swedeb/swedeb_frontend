@@ -18,11 +18,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {
-        return "left";
+        return "left-aligned";
       } else if (placement === "Höger") {
-        return "right";
+        return "right-aligned";
       } else {
-        return "any";
+        return "sliding";
       }
     },
 
@@ -66,7 +66,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         const response = await api.get(
           `${path}?${queryString}&width=${
             this.width
-          }&position=${this.getPosition()}`
+          }&mode=${this.getPosition()}`
         );
         this.nGrams = response.data.ngram_list.sort(
           (a, b) => b.count - a.count
