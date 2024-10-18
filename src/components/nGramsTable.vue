@@ -57,14 +57,7 @@
                   {{ $t('searchResult1') }}
                   <b>{{ props.row.count }}</b> {{ $t('searchResult2') }}
                 </q-item-label>
-                <q-btn
-                  no-caps
-                  icon="download"
-                  class="text-grey-8 col-3"
-                  color="secondary"
-                  :label="$t('downloadAll')"
-                  style="width: fit-content"
-                />
+
               </div>
               <!-- SECOND TABLE -->
 
@@ -90,7 +83,6 @@
 <script setup>
 import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import { metaDataStore } from "src/stores/metaDataStore";
 import speechDataTable  from "src/components/speechDataTable.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 
