@@ -334,7 +334,7 @@ export const metaDataStore = defineStore("metaDataStore", {
           return acc;
         }, {});
     },
- 
+
     async getOfficeOptions() {
       const path = "/metadata/office_types";
       const response = await api.get(path);
@@ -347,7 +347,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const path = "/metadata/genders";
       const response = await api.get(path);
       this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = gender.swedish_gender;
+        acc[gender.gender_id] = gender.gender;
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);

@@ -134,6 +134,7 @@ export default {
   t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år.`,
 
+
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
 
@@ -149,7 +150,9 @@ export default {
   kan du avgränsa anförandena till vissa partier, talare eller år.
   Observera att denna test-korpus är lemmatiserad, dvs sökresultateten baseras på
   ordets grammatiska rot.`,
-  searchResult1: "Sökningen resulterade i",
+
+  searchResult1: "Sökningen resulterade i ",
+
   searchResult2: "träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
