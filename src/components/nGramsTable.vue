@@ -71,35 +71,28 @@
                 {{ $t("searchResult1") }}
                 <b>{{ props.row.count }}</b> {{ $t("searchResult2") }}
               </q-item-label>
- </div>
-              <!-- SECOND TABLE -->
-
-
-              <div v-if="innerLoading[props.row.id]">
-                <loadingIcon />
-              </div>
-              <div v-else>
-                <speechDataTable type="ngram" />
-              </div>
-
-
-
             </div>
-          </q-td>
-          <q-td class="bg-grey-1" no-hover />
-        </q-tr>
-      </template>
-    </q-table>
-  </div>
+            <!-- SECOND TABLE -->
+
+            <div v-if="innerLoading[props.row.id]">
+              <loadingIcon />
+            </div>
+            <div v-else>
+              <speechDataTable type="ngram" />
+            </div>
+          </div>
+        </q-td>
+        <q-td class="bg-grey-1" no-hover />
+      </q-tr>
+    </template>
+  </q-table>
 </template>
-            
 
 <script setup>
 import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import speechDataTable  from "src/components/speechDataTable.vue";
+import speechDataTable from "src/components/speechDataTable.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
-
 
 const nGramStore = nGramDataStore();
 
@@ -108,12 +101,11 @@ const columns = ref([]);
 const loading = ref(false);
 const innerLoading = ref({});
 
-
 const expandRow = async (props) => {
   props.expand = !props.expand;
 
   if (props.expand) {
-    console.log(props.row)
+    console.log(props.row);
     innerLoading.value[props.row.id] = true;
     try {
       await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram);

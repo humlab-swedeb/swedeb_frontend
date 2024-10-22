@@ -32,7 +32,7 @@ export default {
   speechesIcon: "o_campaign",
   nGramsTitle: "N-Gram",
   nGramsText:
-    "Se vilka ord som använts mest frekvent före och efter ett sökord",
+    "Se vilka ord som använts mest frekvent före och efter ett sökord eller fras",
   nGramsIcon: "show_chart",
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
