@@ -170,7 +170,7 @@ const downloadKWICAsSpeeches = () => {
 };
 
 rows.value = kwicStore.kwicData.map((entry, index) => ({
-  id: entry.title,
+  id: entry.document_name,
   unique_id: index,
   left_word: entry.left_word,
   node_word: entry.node_word,
@@ -181,7 +181,7 @@ rows.value = kwicStore.kwicData.map((entry, index) => ({
   gender: entry.gender,
   person_id: entry.person_id,
   link: entry.link,
-  protocol: entry.formatted_speech_id,
+  protocol: entry.speech_name,
   source: entry.speech_link,
 }));
 

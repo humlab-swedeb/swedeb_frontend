@@ -3,7 +3,8 @@
     v-if="
       (wtStore.speechesData.length > 0 &&
         $route.path === '/tools/wordtrends') ||
-      ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0)
+      ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0) ||
+      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length  > 0)
     "
   >
     <div>
@@ -139,6 +140,7 @@ import { ref, defineProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { nGramDataStore } from "src/stores/nGramDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import noResults from "src/components/noResults.vue";
@@ -146,6 +148,7 @@ import noResults from "src/components/noResults.vue";
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const wtStore = wordTrendsDataStore();
+const nGramStore = nGramDataStore();
 const downloadStore = downloadDataStore();
 
 const props = defineProps({
@@ -168,11 +171,13 @@ if (props.type === "wordTrends") {
   displayedData.value = wtStore.speechesData; // detta kan sättas som en prop?
 } else if (props.type === "speeches") {
   displayedData.value = speechStore.speechesData;
+}else if (props.type === "ngram") {
+  displayedData.value = nGramStore.nGramSpeeches;
 }
 
 rows.value = displayedData.value.map((speech) => ({
   id: speech.document_name,
-  protocol: speech.formatted_speech_id,
+  protocol: speech.speech_name,
   node_word: speech.node_word,
   speaker: speech.name,
   gender: speech.gender,
