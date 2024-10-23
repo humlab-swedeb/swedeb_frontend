@@ -25,19 +25,47 @@
               <q-item-label
                 class="q-mt-xs"
                 :class="
-                  props.props.row.speaker === 'Metadata saknas'
+                  props.props.row.speaker === 'Okänd'
                     ? 'text-italic text-grey-6'
                     : ''
                 "
                 v-if="props.props.row.speaker"
               >
-                {{ props.props.row.speaker }},&nbsp;
+                {{
+                  props.props.row.speaker === "Okänd"
+                    ? $t("accessibility.speakerMissing")
+                    : props.props.row.speaker
+                }},&nbsp;
               </q-item-label>
-              <q-item-label class="q-mt-xs" v-if="props.props.row.party">
-                ({{ props.props.row.party }}),&nbsp;
+              <q-item-label
+                class="q-mt-xs"
+                :class="
+                  props.props.row.party === '[-]'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
+                v-if="props.props.row.party"
+              >
+                ({{
+                  props.props.row.party === "[-]"
+                    ? $t("accessibility.partyMissing")
+                    : props.props.row.party
+                }}),&nbsp;
               </q-item-label>
-              <q-item-label class="q-mt-xs" v-if="props.props.row.gender">
-                {{ props.props.row.gender }}
+              <q-item-label
+                class="q-mt-xs"
+                :class="
+                  props.props.row.gender === 'Okänt'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
+                v-if="props.props.row.gender"
+              >
+                {{
+                  props.props.row.gender === "Okänt"
+                    ? $t("accessibility.genderMissing")
+                    : props.props.row.gender
+                }}
               </q-item-label>
             </div>
             <q-item-label caption class="text-bold">{{
@@ -153,10 +181,7 @@
                   <q-item-label>Rapportera</q-item-label>
                 </q-btn>
               </div>
-              <reportForm
-                :clicked="popup"
-                @close="popup = false"
-              />
+              <reportForm :clicked="popup" @close="popup = false" />
             </div>
           </q-card-section>
         </q-card-section>
