@@ -283,6 +283,9 @@ export default {
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",
     metadataMissing: "metadata saknas",
+    speakerMissing: "talardata saknas",
+    genderMissing: "köndata saknas",
+    partyMissing: "partidata saknas",
   },
 
   //REPORT BUGS/ FEEDBACK ----------------------------------------------
