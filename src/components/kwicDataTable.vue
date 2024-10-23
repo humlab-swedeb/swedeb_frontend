@@ -176,7 +176,7 @@ const downloadKWICAsSpeeches = () => {
 };
 
 rows.value = kwicStore.kwicData.map((entry, index) => ({
-  id: entry.title,
+  id: entry.speech_id,
   unique_id: index,
   left_word: entry.left_word,
   node_word: entry.node_word,
