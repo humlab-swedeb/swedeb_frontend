@@ -46,7 +46,7 @@
             />
             <q-route-tab to="/tools/kwic" :label="$t('kwicTitle')" />
             <q-route-tab to="/tools/speeches" :label="$t('speechesTitle')" />
-<!--             <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" /> -->
+            <q-route-tab to="/tools/ngram" :label="$t('nGramsTitle')" />
           </q-tabs>
         </div>
       </q-toolbar>

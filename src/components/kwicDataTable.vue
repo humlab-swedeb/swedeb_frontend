@@ -53,7 +53,7 @@
               class="q-mb-md q-ml-xs"
             >
               <q-tooltip>
-                {{ $t('accessibility.tooltipSpeechID') }}
+                {{ $t("accessibility.tooltipSpeechID") }}
               </q-tooltip>
             </q-icon>
           </q-th>
@@ -84,7 +84,7 @@
           >
             <q-item-label
               v-if="col.name === 'party'"
-              class="text-bold"
+              :class="col.value === 'metadata saknas' ? 'text-italic text-grey-6' : 'text-bold'"
               :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
             >
               {{ col.value }}
