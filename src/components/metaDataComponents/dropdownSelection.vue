@@ -48,13 +48,13 @@
         removable
         :style="getChipStyle(select.opt)"
         @remove="select.removeAtIndex(select.index)"
-        class="overflow-chip"
+        class="chip-size q-pr-md"
       >
-        <q-item-label v-if="props.type === 'speakers'">
+        <q-item-label class="chip-wrap" v-if="props.type === 'speakers'">
           {{ customOptionLabel(select.opt) }}
         </q-item-label>
 
-        <q-item-label v-else>{{ select.opt }}</q-item-label>
+        <q-item-label class="chip-wrap" v-else>{{ select.opt }}</q-item-label>
       </q-chip>
     </template>
   </q-select>
@@ -158,5 +158,11 @@ const handleClear = () => {
 <style scoped>
 .shadow {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.11);
+}
+.chip-size {
+  min-height: max-content;
+}
+.chip-wrap {
+  white-space: normal;
 }
 </style>
