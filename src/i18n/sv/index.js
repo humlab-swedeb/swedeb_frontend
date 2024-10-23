@@ -282,6 +282,7 @@ export default {
 
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",
+    metadataMissing: "metadata saknas",
   },
 
   //REPORT BUGS/ FEEDBACK ----------------------------------------------
