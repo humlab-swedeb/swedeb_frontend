@@ -72,6 +72,33 @@ const chartOptions = reactive({
         fontSize: "14px",
       },
     },
+    tickPositioner: function () {
+      const positions = [];
+      const minYear = Math.min(...categories);
+      const maxYear = Math.max(...categories);
+
+      // Anpassa intervallet beroende på skärmbredd
+      const screenWidth = window.innerWidth; // Kolla skärmbredden
+      let interval;
+
+      if (screenWidth < 600) {
+        interval = 20;
+      } else if (screenWidth < 1024) {
+        interval = 20;
+      } else {
+        interval = 10;
+      }
+
+      // Hitta det första året som är delbart med intervallet
+      let firstTick = Math.ceil(minYear / interval) * interval;
+
+      // Skapa ticks för varje 'interval' år
+      for (let year = firstTick; year <= maxYear; year += interval) {
+        positions.push(categories.indexOf(year)); // Använd index för att placera ticks korrekt
+      }
+
+      return positions;
+    },
   },
 
   yAxis: {
@@ -111,8 +138,8 @@ const chartOptions = reactive({
   },
 
   legend: {
-    layout: $q.screen.lt.sm ? "horizontal" : "vertical",
-    align: $q.screen.lt.sm ? "center" : "left",
+    layout: $q.screen.lt.md ? "horizontal" : "vertical",
+    align: $q.screen.lt.md ? "center" : "left",
     verticalAlign: "top",
     itemStyle: {
       fontSize: "14px",
@@ -127,7 +154,6 @@ const chartOptions = reactive({
       activeColor: "#727198",
       inactiveColor: "#E4E4EB",
     },
-
   },
 
   credits: {
@@ -199,14 +225,19 @@ watchEffect(() => {
   }
 });
 
-function addDataPointsForMissingYears(categories){
+function addDataPointsForMissingYears(categories) {
   //when there is no data for a year, the line graph will not include that year
   //this function adds a data point for each missing year with a count of 0
   //this was added to mitigate the issues with fill_gap in the backend
   const minCategory = Math.min(...categories);
   const maxCategory = Math.max(...categories);
-  const categoryRange = Array.from({ length: maxCategory - minCategory + 1 }, (_, i) => minCategory + i);
-  const missingYears = categoryRange.filter(year => !categories.includes(year));
+  const categoryRange = Array.from(
+    { length: maxCategory - minCategory + 1 },
+    (_, i) => minCategory + i
+  );
+  const missingYears = categoryRange.filter(
+    (year) => !categories.includes(year)
+  );
 
   missingYears.forEach((year) => {
     const newEntry = {
@@ -220,9 +251,7 @@ function addDataPointsForMissingYears(categories){
     wordTrends.push(newEntry);
   });
   wordTrends.sort((a, b) => parseInt(a.year) - parseInt(b.year));
-
 }
-
 
 function prepareDataForLineChart() {
   categories = wordTrends.map((entry) => parseInt(entry.year));
@@ -235,7 +264,6 @@ function prepareDataForLineChart() {
       data: wordTrends.map((entry) => entry.count[word]),
     }))
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-
 
   //Move "Totalt" to the end of the series
   const totalIndex = seriesData.findIndex((entry) => entry.name === "Totalt");
