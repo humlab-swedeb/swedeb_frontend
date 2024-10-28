@@ -81,13 +81,15 @@
               <q-item-label
                 v-if="col.name === 'party'"
                 :class="
-                  col.value === 'metadata saknas'
-                    ? 'text-italic text-grey-6'
-                    : 'text-bold'
+                  col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
                 "
                 :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
               >
-                {{ col.value }}
+                {{
+                  col.value === "[-]"
+                    ? $t("accessibility.metadataMissing")
+                    : col.value
+                }}
               </q-item-label>
               <q-item-label
                 v-else-if="col.name === 'node_word'"
@@ -96,10 +98,10 @@
                 {{ col.value }}
               </q-item-label>
               <q-item-label
-                v-else-if="col.value === 'metadata saknas'"
+                v-else-if="col.value === 'Okänd' || col.value === 'Okänt'"
                 class="text-italic text-grey-6"
               >
-                {{ col.value }}
+                {{ $t("accessibility.metadataMissing") }}
               </q-item-label>
 
               <q-item-label v-else>
