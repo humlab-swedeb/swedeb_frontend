@@ -53,7 +53,7 @@
               class="q-mb-md q-ml-xs"
             >
               <q-tooltip>
-                {{ $t('accessibility.tooltipSpeechID') }}
+                {{ $t("accessibility.tooltipSpeechID") }}
               </q-tooltip>
             </q-icon>
           </q-th>
@@ -84,10 +84,16 @@
           >
             <q-item-label
               v-if="col.name === 'party'"
-              class="text-bold"
+              :class="
+                col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
+              "
               :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
             >
-              {{ col.value }}
+              {{
+                col.value === "[-]"
+                  ? $t("accessibility.metadataMissing")
+                  : col.value
+              }}
             </q-item-label>
             <q-item-label
               v-else-if="col.name === 'node_word'"
@@ -96,10 +102,10 @@
               {{ col.value }}
             </q-item-label>
             <q-item-label
-              v-else-if="col.value === 'metadata saknas'"
+              v-else-if="col.value === 'Okänd' || col.value === 'Okänt'"
               class="text-italic text-grey-6"
             >
-              {{ col.value }}
+              {{ $t("accessibility.metadataMissing") }}
             </q-item-label>
             <q-item-label v-else>
               {{ col.value }}
@@ -170,7 +176,7 @@ const downloadKWICAsSpeeches = () => {
 };
 
 rows.value = kwicStore.kwicData.map((entry, index) => ({
-  id: entry.document_name,
+  id: entry.speech_id,
   unique_id: index,
   left_word: entry.left_word,
   node_word: entry.node_word,

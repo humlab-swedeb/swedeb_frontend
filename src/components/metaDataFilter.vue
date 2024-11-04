@@ -167,12 +167,12 @@
           color="accent"
           :label="$t('searchButton')"
           :disabled="
-            kwicStore.searchText.length < 1 ||
-            kwicStore.searchText.includes(',')
+            ngramStore.searchText.length < 1 ||
+            ngramStore.searchText.includes(',')
           "
         >
           <q-tooltip
-            v-if="kwicStore.searchText.length < 1"
+            v-if="ngramStore.searchText.length < 1"
             anchor="top middle"
             self="bottom middle"
             :offset="[10, 10]"
@@ -181,7 +181,7 @@
           </q-tooltip>
           <!-- Tooltip for only searching for one word at a time, or wildcard -->
           <q-tooltip
-            v-if="kwicStore.searchText.includes(',')"
+            v-if="ngramStore.searchText.includes(',')"
             anchor="top middle"
             self="bottom middle"
             :offset="[10, 10]"
@@ -214,6 +214,7 @@ import toolsFilters from "./toolsFilters.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
+import { nGramDataStore } from "src/stores/nGramDataStore";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
@@ -221,6 +222,7 @@ import { useQuasar } from "quasar";
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
 const kwicStore = kwicDataStore();
+const ngramStore = nGramDataStore();
 
 const showing = ref(false);
 const route = useRoute();
@@ -281,7 +283,7 @@ const hasSelections = computed(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, #E4E4EB, rgba(238, 238, 238, 0.5));
+  background: linear-gradient(to top, #e4e4eb, rgba(238, 238, 238, 0.5));
 }
 
 .padding-bot {

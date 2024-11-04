@@ -11,6 +11,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     placingOptions: ["Ej specificerat", "Vänster", "Höger"],
 
     placingSelected: "Ej specificerat",
+    searchText: "",
   }),
 
   actions: {
