@@ -31,7 +31,8 @@ export default {
   speechesText: "Se vilka anföranden specifika personer gjort",
   speechesIcon: "o_campaign",
   nGramsTitle: "N-Gram",
-  nGramsText: "Se hur ett ord har använts över tid",
+  nGramsText:
+    "Se vilka ord som använts mest frekvent före och efter ett sökord eller fras",
   nGramsIcon: "show_chart",
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
@@ -133,7 +134,25 @@ export default {
   t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år.`,
 
-  searchResult1: "Sökningen resulterade i",
+
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
+  till vissa partier, talare eller år.`,
+
+  ngramIntroTitle:
+    "N-grams — Se vilka ord som förekommer mest frekvent före och efter ett sökord.",
+  ngramIntro: `
+  Med verktyget <strong>N-grams</strong> kan du söka på ett ord för att se vilket eller vilka som är de
+  vanligast förekommande orden före och/eller efter sökordet. Till exempel <code>information</code>:
+  <i>dålig information, bra information; inte dålig information, mycket bra information;
+  information om, information för; information om politik, information för barn, osv.</i>
+  Du kan välja hur stort ordfönster dina n-gram ska vara (1–20). För att få fler
+  träffar kan <code>.*</code> användas, t ex <code>information.*</code>. Under <b>"Filtrera på metadata"</b>
+  kan du avgränsa anförandena till vissa partier, talare eller år.
+  Observera att denna test-korpus är lemmatiserad, dvs sökresultateten baseras på
+  ordets grammatiska rot.`,
+
+  searchResult1: "Sökningen resulterade i ",
+
   searchResult2: "träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
@@ -257,6 +276,7 @@ export default {
   downloadAll: "Ladda ner alla",
   downloadSpeech: "Ladda ner tal",
   downloadWordtrends: "Ladda ner ordtrender",
+  downloadNgram: "Ladda ner N-gram",
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
