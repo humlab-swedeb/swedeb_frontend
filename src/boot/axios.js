@@ -10,6 +10,7 @@ import axios from "axios";
 
 const api = axios.create({ baseURL: "https://swedeb.se/v1" });
 
+
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
