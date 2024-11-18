@@ -11,11 +11,10 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     placingOptions: ["Ej specificerat", "Vänster", "Höger"],
 
     placingSelected: "Ej specificerat",
-    searchText: "",
+    searchString: "",
   }),
 
   actions: {
-
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {
@@ -27,14 +26,13 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
-
     getSpeechIdsForRow(row_nr) {
-        if (row_nr >= 0 && row_nr < this.nGrams.length) {
-            const documents = this.nGrams[row_nr].documents;
-            return documents.slice(0, 10);
-        } else {
-          return [];
-        }
+      if (row_nr >= 0 && row_nr < this.nGrams.length) {
+        const documents = this.nGrams[row_nr].documents;
+        return documents.slice(0, 10);
+      } else {
+        return [];
+      }
     },
 
     async getNGramSpeeches(row_nr, ngram) {
@@ -45,18 +43,18 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       try {
         const response = await api.post(path, json_payload, {
           headers: {
-            'Content-Type': 'application/json',
-            'accept': 'application/json'
+            "Content-Type": "application/json",
+            accept: "application/json",
           },
-          responseType: 'json',
+          responseType: "json",
         });
 
         this.nGramSpeeches = response.data.speech_list;
-        this.nGramSpeeches.forEach(speech => {
+        this.nGramSpeeches.forEach((speech) => {
           speech.node_word = ngram;
         });
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     },
 
@@ -72,14 +70,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         this.nGrams = response.data.ngram_list.sort(
           (a, b) => b.count - a.count
         );
+        this.searchString = this.searchText;
       } catch (error) {
         this.nGrams = [];
         console.error("Error fetching data:", error);
       }
     },
   },
-
-
-
-
 });
