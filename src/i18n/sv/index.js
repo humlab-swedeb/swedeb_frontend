@@ -2,37 +2,42 @@
 // so you can safely delete all default props below
 
 export default {
+  links: {
+    swerik: "https://swerik-project.github.io/",
+    humlab: "https://umu.se/humlab",
+    huminfra: "https://www.huminfra.se/",
+  },
   // MAIN LAYOUT ------------------------------------------------
-  swedeb: "SweDeb",
+  swedeb: "Riksdagsdebatter.se",
   home: "Hem",
   tools: "Verktyg",
-  about: "Om SweDeb",
+  about: "Om Riksdagsdebatter",
   faq: "FAQ",
   contact: "Kontakt",
 
-  indexPageIntroText: `Detta forskningsinfrastrukturprojekt syftar till att tillgängliggöra
-  de annoterade svenska riksdagsdebatterna för det bredare forskarsamhället.
-  Projektet utvecklar ett publikt användargränssnitt - SweDeb - som gör det möjligt
-  för forskare att få access, filtrera samt att utforska detta unika material med
-  hjälp av olika verktyg. De annoterade riksdagstalen hämtas från samarbetsprojektet`,
-
-  links: {
-    swerik: "https://swerik-project.github.io/",
-  },
+  // INDEX PAGE ------------------------------------------------
+  indexPageTitle: "Utforska och läs riksdagsanföranden sedan 1867",
+  indexPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
+  läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i riksdagen
+  sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med
+  finansiering av Umeå universitet och `,
+  indexPageIntroText2: `vid samma universitet. Det dataset med
+  annoterade anföranden som riksdagsdebatter.se bygger på hämtas från
+  forskningsinfrastrukturprojektet`,
 
   wordTrendsTitle: "Ordtrender",
   wordTrendsText:
     "Sök på ett eller flera ord för att se hur de har använts över tid.",
   wordTrendsIcon: "trending_up",
   kwicTitle: "KWIC",
-  kwicText: "Se hur ett ord används i olika sammanhang",
+  kwicText: "Se hur ett ord eller en fras har använts i olika sammanhang.",
   kwicIcon: "o_library_books",
   speechesTitle: "Anföranden",
-  speechesText: "Se vilka anföranden specifika personer gjort",
+  speechesText: "Filtrera fram, läs och ladda ner anföranden.",
   speechesIcon: "o_campaign",
   nGramsTitle: "N-Gram",
   nGramsText:
-    "Se vilka ord som använts mest frekvent före och efter ett sökord eller fras",
+    "Se vilka som är de mest förekommande orden före och efter ett visst sökt ord eller en fras.",
   nGramsIcon: "show_chart",
 
   contactLabelButton: "Kontakta SweDeb-Teamet",
@@ -43,7 +48,7 @@ export default {
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
-  toolsFilterMini: "Verktygsspecifika Filter",
+  toolsFilterMini: "Verktygsspecifika filter",
   filterAndSearch: "Filtrera och sök",
 
   year: "År",
@@ -59,13 +64,13 @@ export default {
 
   toolsFilterTitle: "Verktygsspecifika Filter",
   "/tools/wordtrends": "Ordtrender",
-  "/tools/kwic": "Key words in context",
+  "/tools/kwic": "Key Words in Context",
   "/tools/speeches": "Anföranden",
-  "/tools/ngram": "N-grams",
+  "/tools/ngram": "N-gram",
 
   searchButton: "Sök",
   searchCancel: "Avbryt sökning",
-  searchTooltipWordtrends: "Lägg till sökord",
+  searchTooltipWordtrends: "Lägg till ord och klicka på +",
   searchTooltipWordtrendsError:
     "I verktyget Ordtrender kan du inte söka på fraser: Ta bort dessa för att genomföra sökningen",
   searchTooltipKWIC_Ngram: "Lägg till ett sökord eller en fras.",
@@ -78,10 +83,10 @@ export default {
   ngramIntro: `Under utveckling.`,
   ngramWidth: "Bredd",
   ngramSizePlaceLabel:
-    "Välj storlek på N-gram och var sökordet ska vara placerat",
+    "Välj storlek på N-gram och var sökordet ska vara placerat:",
 
   searchInput: "Sök på ett ord eller en fras",
-  searchAdd: "Lägg till ord",
+  searchAdd: "Lägg till ord och klicka på +",
   searchClear: "Ta bort alla ord",
   searchAddedWords: "Valda ord:",
   searchDropdownOfHits1:
@@ -95,7 +100,7 @@ export default {
   normalizeResultLabel: "Normalisera resultat",
 
   lemmaResultTooltip:
-    "Sökningen tolkas som ett lemma och böjningsformer av sökningen inkluderas i resultatet.",
+    "Om du aktiverar denna funktion tolkas sökorden som lemma och olika böjningsformer inkluderas i sökresultatet. Sökorden måste vara skrivna i sin grundform för att lemmatiseringen ska fungera, t ex ”frihet” och inte ”friheten”",
   lemmaResultLabel: "Lemmatiserad sökning",
 
   nrOfWordsIntro:
@@ -113,9 +118,9 @@ export default {
     "Ordtrender — Sök på ett eller flera ord för att se hur de har använts över tid.",
   wordTrendsIntro: `
   För att söka på flera ord, separera dem med kommatecken, till exempel:
-  <code>debatt,information</code>. Sök med <code>*</code> för att få fler varianter, till exempel:
-  <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till vissa partier, talare eller år.`,
+  <code>frihet, jämlikhet</code>. Sök med <code>*</code> för att få fler ordvarianter, till exempel:
+  <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  anförandena till bland annat vissa partier, talare eller år.`,
 
   wordtrendsResult1: "Här visas resultatet i en",
   wordtrendsResult2: "för de ord och metadata som valts.",
@@ -134,22 +139,18 @@ export default {
   t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till vissa partier, talare eller år.`,
 
-
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
 
   ngramIntroTitle:
-    "N-grams — Se vilka ord som förekommer mest frekvent före och efter ett sökord.",
+    "N-grams — Se hur ett ord eller en fras har använts i olika sammanhang.",
   ngramIntro: `
-  Med verktyget <strong>N-grams</strong> kan du söka på ett ord för att se vilket eller vilka som är de
-  vanligast förekommande orden före och/eller efter sökordet. Till exempel <code>information</code>:
-  <i>dålig information, bra information; inte dålig information, mycket bra information;
-  information om, information för; information om politik, information för barn, osv.</i>
-  Du kan välja hur stort ordfönster dina n-gram ska vara (1–20). För att få fler
-  träffar kan <code>.*</code> användas, t ex <code>information.*</code>. Under <b>"Filtrera på metadata"</b>
-  kan du avgränsa anförandena till vissa partier, talare eller år.
-  Observera att denna test-korpus är lemmatiserad, dvs sökresultateten baseras på
-  ordets grammatiska rot.`,
+  Med verktyget <strong>N-gram</strong> kan du söka på ord och fraser, till exempel
+  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se en lista med de mest förekommande N-grams
+  (beroende på dess storlek) före och/eller efter sökordet eller
+  sökfrasen. Här måste du söka på exakta ord och <code>*</code> kan <b>inte</b> användas.
+  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland annat vissa partier,
+  talare eller år.`,
 
   searchResult1: "Sökningen resulterade i ",
 
@@ -178,75 +179,101 @@ export default {
   till vissa partier, talare eller år.`,
 
   // ABOUT PAGE ------------------------------------------------
-  aboutPageTitle: "Om SweDeb",
+  aboutPageTitle: "Om Riksdagsdebatter.se",
   aboutFinance:
-    "SweDeb är finansierade av Umeå Universitet under två års tid 2022-2024.",
-  aboutTeam: "Teamet bakom SweDeb",
+    "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
+  financiers: {
+    0: {
+      alt: "Umeå universitet logo",
+      src: "/images/umu-logo-left-SE.png",
+      style: "width: 200px",
+    },
+    1: {
+      alt: "Humlab logo",
+      src: "/images/humlab_logo_left_SE.png",
+      style: "width: 250px",
+    },
+    2: {
+      alt: "Huminfra logo",
+      src: "/images/huminfra_3.svg",
+      style: "width: 150px",
+    },
+  },
+
+  aboutTeam: "Teamet bakom riksdagsdebatter.se",
   aboutReference: "Referensgrupp",
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
       title:
         "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
-      email: "fredrik.noren@mau.se",
-      description: "",
+      link: "https://mau.se/personer/fredrik.noren/",
     },
     1: {
       name: "Johan Jarlbrink",
       title:
         "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
-      description: "",
+      link: "https://www.umu.se/personal/johan-jarlbrink/ ",
     },
     2: {
       name: "Rebecka Weegar",
       title: "Systemutvecklare, Humlab Umeå Universitet",
-      description: "",
+      link: "https://www.umu.se/personal/rebecka-weegar/",
     },
     3: {
       name: "Roger Mähler",
       title: "Systemutvecklare, Humlab Umeå Universitet",
-      description: "",
+      link: "https://www.umu.se/personal/roger-mahler/",
     },
     5: {
       name: "Marita Nilsson",
-      title: "Krav och test, tidigare Humlab Umeå Universitet",
-      description: "",
+      title: "Krav och test, tidigare antsälld på Humlab Umeå Universitet",
+      link: "https://www.umu.se/personal/marita-nilsson/ ",
     },
     4: {
       name: "Kajsa Palm",
       title: "Systemutvecklare, UX/UI, Humlab Umeå Universitet",
-      description: "",
+      link: "https://www.umu.se/personal/kajsa-palm/",
     },
   },
   peopleReference: {
     0: {
       name: "Hanna Bäck",
       title: "Professor, Statsvetenskapliga institutionen Lunds Universitet",
-      description: "",
     },
     1: {
       name: "Simon Lindgren",
       title: "Professor, Sociologiska institutionen Umeå Universitet",
-      description: "",
     },
     2: {
-      name: "Linda Sandström",
-      title:
-        "Biträdande universitetslektor, Institutionen för språkstudier Umeå Universitet",
-      description: "",
-    },
-    3: {
       name: "Måns Magnusson",
       title:
         "Universitetslektor, Statistiska institutionen Uppsala Universitet",
-      description: "",
+    },
+    3: {
+      name: "Leif-Jöran Olsson",
+      title:
+        "Institutionen för svenska, flerspråkighet och språkteknologi, Göteborgs universitet",
+    },
+    4: {
+      name: "Josefin Hägglund",
+      title:
+        "Institutionen för samhälle, kultur och identitet, Malmö universitet",
+    },
+    5: {
+      name: "Claes Ohlsson",
+      title: "Institutionen för svenska språket, Linnéuniversitetet",
+    },
+    6: {
+      name: "Roger Mähler",
+      title: "Humlab, Umeå universitet",
     },
   },
 
   // FAQ PAGE ------------------------------------------------
   faqPageTitle: "FAQ: Vanliga frågor och svar",
   faqContent: {
-    0: {
+    /* 0: {
       q: "Vad är SweDeb?",
       a: "SweDeb är en förkortning av Swedish Debates och är ett forskningsinfrastrukturprojekt som finansieras av Umeå Universitet.",
     },
@@ -265,6 +292,145 @@ export default {
       a: "Även om kvalitén är god finns det brister i materialet. Talen har till exempel inte alltid blivit rätt segmenterade (var talet börjar och slutar) och kopplingen mellan talarintroduktion och talande ledamot är inte fullständig.",
       link: "https://github.com/swerik-project/the-swedish-parliament-corpus",
       linkText: "Mer information om kvalitén finns här.",
+    }, */
+    0: {
+      q: "Hur funkar kopplingen mellan talare och parti?",
+      a: `Partifiltreringen bygger på det annoteringsarbetet som gjorts i SWERIK-projektet.
+      SWERIK har byggt upp en databas med svenska riksdagsdagsledamöter sedan 1867 där
+      varje ledamot är kopplad till olika metadata-kategorier
+      (bl a födelsedatum, kön och parti). En katalog med alla ledamöter finns här.
+      Via ledamotsdatabasen har SWERIK kopplat ihop ledamöter –
+      liksom ministrar som inte var ledamöter men som också har rätt att tala i riksdagen
+      – med deras respektive anföranden i kammarprotokollen. Denna koppling har gjorts
+      genom att identifiera ledamoten i respektive talarintroduktion i protokollen.
+      Kopplingen mellan rätt ledamot och rätt anföranden är inte komplett och ibland är den
+      felaktig. SWERIK-projektet försöker kontinuerligt att arbeta med annoteringskvalitén
+      på anförandena.`,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+        1: {
+          link: "https://swerik-project.github.io/person-catalog/",
+          linkText: "Katalog med alla ledamöter.",
+        },
+      },
+    },
+    1: {
+      q: "Var kommer listan med partier ifrån?",
+      a: `Listan med partier som används bygger på främst Sten Carlssons partiförteckning i
+      biografbandserien <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988).</i>
+      Bilden nedan är hämtad från Carlssons kapitel i biografiböckerna.
+      Den visar utvecklingen av partibildningar, partisplittringar och partisammanslagningar
+      under hela tvåkammartiden, från 1867 till 1970. Information om senare partier som har
+      tillkommit under enkammarriksdagen (1970–) har hämtats från riksdagens register.
+      Till varje parti i riksdagsdebatter.se anges det år som partiet första gången
+      representerades i riksdagen och eventuellt till det sista året i riksdagen, enlig
+      den information som finns i Carlssons kapitel och i riksdagens register.
+</br></br>
+      I riksdagsdebatter.se kan du bara välja mellan partier som formellt har varit
+      representerade i riksdagen. Det är därför som till exempel Feministiskt initiativ
+      inte finns med. Ledamöter som aldrig tillhörde ett parti (vilket var mer vanligt
+      under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
+      ledamöter som hoppat av ett parti under mandatperioden.
+</br></br>
+      Det är viktigt att känna till att ett parti på 1800-talet inte är samma sak som
+      ett parti idag. I början av tvåkammarriksdagen hade partier en betydligt lösare
+      form än dagens partiorganisationer. Man brukar säga att Socialdemokraterna var
+      det första så kallade moderna partiet i Sverige.
+</br></br>
+      Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges i
+      biografibanden för tvåkammarriksdagen. Många av partiförkortningarna är däremot
+      konstruerade av teamet bakom riksdagsdebatter.se.
+</br></br>
+      Vissa moderna partier har haft olika namn under årens lopp. I riksdagsdebatter.se
+      har följande partinamn slagits ihop:
+      <ul>
+        <li>
+          Centerpartiet – inkluderar Bondeförbundet som senare bytte namn till Centerpartiet.
+          Utifrån denna logik startade Centerpartiet 1922.
+        </li>
+        <li>
+          Liberalerna – inkluderar Liberala samlingspartiet och Frisinnade
+          folkpartiet som sedan blev Folkpartiets riksdagsgrupp och senare bytte
+          namn till Liberalerna. Dock inkluderas inte Liberala riksdagspartiet
+          (1924–1934) som här betraktas som ett utbrytarparti. Utifrån denna
+          logik startade Liberalerna 1900.
+        </li>
+        <li>
+          Vänsterpartiet – inkluderar Socialdemokratiska vänstergruppen,
+          Kommunistiska partiets riksdagsgrupp och Vänsterpartiet kommunisternas
+          riksdagsgrupp. Utifrån denna logik startade Vänsterpartiet 1917.
+        </li>
+        <li>Moderaterna – givet den större komplexitet som råder kring
+          partierna som var knutna till Allmänna valförbundet har riksdagsdebatter.se
+          valt att enbart inkludera Högerns riksdagsgrupp som sedan bytte namn till
+          Moderaterna. Utifrån denna logik startade Moderaterna 1935.
+        </li>
+      </ul>
+`,
+    },
+    2: {
+      q: "Var står partiförkortningarna för?",
+      a: `Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges
+      i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
+      samt information från riksdagens register. Många av partiförkortningarna är
+      däremot konstruerade av teamet bakom riksdagsdebatter.se.`,
+      a: `Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges
+      i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
+      samt information från riksdagens register. Många av partiförkortningarna är
+      däremot konstruerade av teamet bakom riksdagsdebatter.se.
+</br></br>
+      <ul style="list-style-type: none; padding: 0; margin: 0;">
+        <li>AK-bd: AK:s bondeska diskussionsklubben (1897–1899)</li>
+        <li>AK-c89: AK:s center (1889–1894)</li>
+        <li>AK-ch: AK:s center-högern (1883–1886)</li>
+        <li>AK-c73: AK:s centern (1873–1882)</li>
+        <li>AK-mfg: AK:s de moderata reformvännernas grupp (1903–1905)</li>
+        <li>AK-fp: AK:s folkpartiet (1895–1899)</li>
+        <li>AK-fd: AK:s friesenska diskussionsklubben (1897–1899)</li>
+        <li>AK-frip: AK:s frihandelsparti (1887–1888)</li>
+        <li>AK-fc: AK:s frihandelsvänliga centern (1895–1897)</li>
+        <li>AK-ff: AK:s frisinnade försvarsvänner (1914)</li>
+        <li>AK-glmp: AK:s gamla lantmannapartiet (1888–1894)</li>
+        <li>AK-lb: AK:s lantmanna- och borgarepartiet (1912–1934)</li>
+        <li>AK-lmp: AK:s lantmannapartiet (1867–1887, 1895–1911)</li>
+        <li>AK-lmpf: AK:s lantmannapartiets filial (1873–1887)</li>
+        <li>AK-minip: AK:s ministeriella partiet (1867–1872)</li>
+        <li>AK-nf: AK:s nationella framstegspartiet (1906–1911)</li>
+        <li>AK-ng: AK:s nationella gruppen (1935-1936)</li>
+        <li>AK-nc83: AK:s nya centern (1883–1887)</li>
+        <li>AK-nc95: AK:s nya centern (1895–1896)</li>
+        <li>AK-nlmp: AK:s nya lantmannapartiet (1888–1894)</li>
+        <li>AK-np: AK:s nyliberala partiet (1868–1871)</li>
+        <li>AK-v: AK:s vänstern (1886)</li>
+        <li>C: Centerpartiet (1922–)</li>
+        <li>FK-c: FK:s centern (1885–1887)</li>
+        <li>FK-fh: FK:s det förenade högerpartiet (1910–1911)</li>
+        <li>FK-ep: FK:s ehrenheimska partiet (1873–1887)</li>
+        <li>FK-kg: FK:s konservativa grupp (1867–1872)</li>
+        <li>FK-mg: FK:s ministeriella grupp (1867–1872)</li>
+        <li>FK-minop: FK:s minoritetsparti (1888–1904)</li>
+        <li>FK-modp: FK:s moderata parti (1905–1911)</li>
+        <li>FK-np: FK:s nationella parti (1912–1934)</li>
+        <li>FK-pp: FK:s protektionistiska parti (1888–1909)</li>
+        <li>FK-v: FK:s vänstern (1886)</li>
+        <li>Jfg: Jordbrukarnas fria grupp (1918–1921)</li>
+        <li>Kp: Kilbomspartiet (1930–1933)</li>
+        <li>Kd: Kristdemokraterna (1985–)</li>
+        <li>Lrp: Liberala riksdagspartiet (1924–1934)</li>
+        <li>L: Liberalerna (1900–)</li>
+        <li>Ms: Medborgerlig samling (1964–1968)</li>
+        <li>Mp: Miljöpartiet (1988–)</li>
+        <li>M: Moderaterna (1935–)</li>
+        <li>Nyd: Ny demokrati (1991–1994)</li>
+        <li>S: Socialdemokraterna (1897–)</li>
+        <li>Sp: Socialistiska partiet (1934–1940)</li>
+        <li>Sd: Sverigedemokraterna (2010–)</li>
+        <li>V: Vänsterpartiet (1917–)</li>
+        <li>[–]: Utan partibeteckning</li>
+      </ul>`,
     },
   },
 
@@ -274,7 +440,7 @@ export default {
   openSource: "Öppna källa",
   download: "Ladda ner",
   downloadAll: "Ladda ner alla",
-  downloadSpeech: "Ladda ner tal",
+  downloadSpeech: "Ladda ner anföranden",
   downloadWordtrends: "Ladda ner ordtrender",
   downloadNgram: "Ladda ner N-gram",
 
@@ -293,7 +459,7 @@ export default {
 
     searchAdd: "Lägg till sökord",
     tooltipSpeechID:
-      "Här ska det vara en beskrivning av hur anförande-ID beskrivs",
+      "För anförande före 1971 anges kammare (Första/Andra) sedan riksmötesår och protokollnummer. Det sista numret anger vilken ordning anförandet har i protokollet.",
     loadingResults: "Resultat hämtas, vänligen vänta...",
 
     noResults: "Inga resultat för sökningen.",

@@ -11,11 +11,13 @@
     </q-card-section> -->
 
     <q-card-section class="q-pl-none">
-      <q-item-label class="text-subtitle1">{{ name }}</q-item-label>
-      <q-item-label caption class="text-grey-8">{{ title }}</q-item-label>
-      <q-item-label caption>
-        <a class="link-deco text-accent text-bold" :href="'mailto:' + email">{{ email }}</a>
+      <q-item-label class="text-subtitle1">
+        <a v-if="link" class="link-deco text-accent text-bold" :href="link">
+          {{ name }}
+        </a>
+        <span v-else>{{ name }}</span>
       </q-item-label>
+      <q-item-label caption class="text-grey-8">{{ title }}</q-item-label>
 
       <!--       <q-item-label class='text-body2 text-grey-7'>{{ description }}</q-item-label> -->
     </q-card-section>
@@ -24,13 +26,13 @@
 
 <script setup>
 import { defineProps } from "vue";
+import { useLink } from "vue-router";
 
 const props = defineProps({
   avatarUrl: String,
   name: String,
   title: String,
-  description: String,
-  email: String,
+  link: String,
 });
 </script>
 

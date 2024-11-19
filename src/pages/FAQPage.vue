@@ -4,14 +4,20 @@
       $t("faqPageTitle")
     }}</q-item-label>
     <q-card-section
-      class="text-body2 q-mt-sm"
+      class="text-body2 q-mt-sm q-mb-xl"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
       <div v-for="(faq, index) in faqContent" :key="index" class="q-pt-md">
         <q-item-label class="text-h6 q-mb-sm">{{ faq.q }}</q-item-label>
-        <q-item-label class="text-body2">
-          {{ faq.a }}
-          <a v-if="faq.link" :href="faq.link" class='link-deco text-accent text-bold'>{{ faq.linkText }}</a>
+        <q-item-label class="text-body2 lineHeight2">
+          <span v-html="faq.a" />
+          <a
+            v-for="(link, index) in faq.links"
+            :key="index"
+            :href="link.link"
+            class="link-deco text-accent text-bold q-mr-sm"
+            >{{ link.linkText }}
+          </a>
         </q-item-label>
       </div>
     </q-card-section>
