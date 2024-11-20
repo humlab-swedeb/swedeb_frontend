@@ -305,7 +305,7 @@ export default {
       genom att identifiera ledamoten i respektive talarintroduktion i protokollen.
       Kopplingen mellan rätt ledamot och rätt anföranden är inte komplett och ibland är den
       felaktig. SWERIK-projektet försöker kontinuerligt att arbeta med annoteringskvalitén
-      på anförandena.`,
+      på anförandena. `,
       links: {
         0: {
           link: "https://swerik-project.github.io/",
@@ -431,6 +431,110 @@ export default {
         <li>V: Vänsterpartiet (1917–)</li>
         <li>[–]: Utan partibeteckning</li>
       </ul>`,
+    },
+    3: {
+      q: "Vad är ett kammarprotokoll?",
+      a: `Ett kammarprotokoll eller kammarens protokoll är den dokumenttyp
+      i riksdagstrycket där ledamöternas anföranden finns registrerade,
+      liksom information om voteringar och beslut.`,
+    },
+    4: {
+      q: "Varför finns det länkar till varje talares sida på Wikidata?",
+      a: `SWERIK-projektet har byggt upp en databas med svenska riksdagsledamöter
+      från 1867 och framåt via Wikidata. Det gör att alla är välkomna att bidra med
+      att lägga till information om ledamöterna. Den information som används i
+      Riksdagsdebatter.se är dock begränsad till bland annat parti, levnadsår och kön.
+      SWERIK har en katalog med alla svenska riksdagsledamöter. `,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+        1: {
+          link: "https://swerik-project.github.io/person-catalog/",
+          linkText: "Katalog med alla ledamöter.",
+        },
+      },
+    },
+    5: {
+      q: "Varför saknas det anföranden till vissa ledamöter?",
+      a: `Riksdagsdebatter.se hämtar sin data från SWERIK-projektet. Tal och talare
+      kopplas ihop genom en kombination av maskininlärning och manuellt kontrollarbete.
+      Det sker genom att först identifiera talarintroduktioner i kammarprotokollen
+      och sedan identifiera vem som nämns i talarintroduktionen och koppla den personen
+      till databasen med ledamöter. Vissa talarintroduktioner kan vara enkla att identifiera
+      som människa men svåra att identifiera och koppla samman för en algoritm.
+      En talarintroduktion från 1875 som ”Grefve af Ugglas:” kan till exempel vara svår
+      för algoritmen att upptäcka dels på grund av den äldre stavningsformen, och dels om det
+      gäller Ludvig af Ugglas (1814–1880) eller Gustaf af Ugglas (1820–1895) som under en
+      period var ledamöter samtidigt i första kammaren.
+</br></br>
+      SWERIK har annoterar över en miljon anföranden i kammarprotokollen sedan 1867.
+      Det betyder till exempel att om en ledamot saknar 100 anföranden utgör det cirka
+      0,0001 % av samtliga anföranden. Men SWERIK-projektet försöker kontinuerligt att
+      arbeta med kvalitén på kopplingen mellan tal och talare. `,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+      },
+    },
+    6: {
+      q: "Varför slutar vissa anföranden mitt i?",
+      a: `SWERIK-projektet har annoterat (dvs märkt upp) innehållet i protokollen för
+      att bland annat särskilja mellan vad som är en talarintroduktion, vad som är ett
+      anförande, och vad som är annan text i protokollen. Detta arbete sker iterativt
+      genom att kombinera maskininlärning med manuellt kontrollarbete. På så sätt
+      förbättras kvalitén successivt men det innebär också att det kan förekomma fel
+      i annoteringen, till exempel att textblock som egentligen tillhör ett anförande
+      har blivit annoterat som något annat. SWERIK-projektet försöker kontinuerligt
+      att arbeta med annoteringskvalitén på anförandena. `,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+      },
+    },
+    7: {
+      q: "Varför finns det text i anförandet som inte tillhör själva talet?",
+      a: `SWERIK-projektet har annoterat (dvs märkt upp) innehållet i protokollen för
+      att bland annat särskilja vad som är en talarintroduktion, vad som är ett anförande,
+      och vad som är annan text i protokollen. Detta arbete sker iterativt genom att
+      kombinera maskininlärning med manuellt kontrollarbete. På så sätt förbättras
+      kvalitén successivt men det innebär också att det kan förekomma fel i annoteringen,
+      till exempel att textblock som egentligen inte tillhör ett anförande har blivit annoterat
+      som en del av anförandet (t ex texten i sidhuvudet). SWERIK-projektet försöker
+      kontinuerligt att arbeta med annoteringskvalitén på anförandena. `,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+      },
+    },
+    8: {
+      q: "Varför är det konstiga radbrytningar och stavfel i talen?",
+      a: `SWERIK-projektet bygger på de digitaliserade kammarprotokollen som har utförts av
+      Riksdagsbiblioteket. Det är inte ovanligt att textblock på en sida kan representeras på
+      lite konstiga sätt i digitaliseringsprocessen. Vissa textblock består till exempel bara
+      av enskilda och avhuggna rader medan andra av riktiga paragrafer. När talen representeras
+      i Riksdagsdebatter.se kan det därför hända att ett tal som egentligen utgörs av en
+      sammanhängande paragraf är uppstyckat i flera kortare segment
+</br></br>
+      Ibland händer också att digitaliseringsprocessen skapar en felaktig OCR-läsning.
+      OCR står för Optical Character Recognition och är en datorteknik för att identifiera
+      texten på en digitaliserad sida. I en text som är OCR-skannad går det till exempel att
+      söka efter ord. Ibland händer det dock att textöverföringen i OCR-skanningen blir fel och
+      att vissa ord ges en felaktig representation. Till exempel kan ”om” blir ”örn” om
+      bokstaven o lästs som ö och m misstolkats som bokstäverna r och n. `,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+      },
     },
   },
 

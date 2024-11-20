@@ -7,7 +7,20 @@
       class="text-body2 q-mt-sm q-mb-xl"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
-      <div v-for="(faq, index) in faqContent" :key="index" class="q-pt-md">
+<!--       <q-item-label
+        v-for="(faq, index) in faqContent"
+        :key="index"
+        class=""
+        :class="$q.screen.lt.md ? 'none' : 'q-mx-xl'"
+      >
+        {{ faq.q }}
+      </q-item-label> -->
+      <div
+        v-for="(faq, index) in faqContent"
+        :key="index"
+        class="q-pt-md"
+        :class="$q.screen.lt.md ? 'none' : 'q-mx-xl'"
+      >
         <q-item-label class="text-h6 q-mb-sm">{{ faq.q }}</q-item-label>
         <q-item-label class="text-body2 lineHeight2">
           <span v-html="faq.a" />
