@@ -5,16 +5,16 @@
         class="bg-secondary text-grey-9"
         :style="$q.screen.lt.sm ? '' : 'max-width: 400px; min-width: 400px'"
       >
-        <q-toolbar-title class="text-bold q-pa-none">{{
-          $t("swedeb")
-        }}</q-toolbar-title>
-        <q-tabs no-caps color="black" class="gt-sm">
+        <q-toolbar-title class="text-bold q-pa-none">
+            <router-link to="/" style="text-decoration: none; color: inherit;">{{ $t('swedeb') }}</router-link>
+        </q-toolbar-title>
+        <!--         <q-tabs no-caps color="black" class="gt-sm">
           <q-route-tab to="/" :label="$t('home')" />
           <q-route-tab to="/about" :label="$t('about')" />
           <q-route-tab to="/faq" :label="$t('faq')" />
-        </q-tabs>
+        </q-tabs> -->
 
-        <q-btn flat round icon="menu" class="lt-md">
+        <q-btn flat round icon="menu">
           <q-menu>
             <q-list>
               <q-item to="/" clickable>
@@ -58,10 +58,7 @@
           no-caps
           color="accent"
         />
-        <q-dialog
-          v-model="metaStore.mobilePopup"
-          class="fit"
-        >
+        <q-dialog v-model="metaStore.mobilePopup" class="fit">
           <q-card class="fit full-width bg-grey-2">
             <q-card-section class="row items-center justify-between">
               <q-item-label class="text-body1 text-bold">

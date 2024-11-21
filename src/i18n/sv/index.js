@@ -200,7 +200,7 @@ export default {
     },
   },
 
-  aboutTeam: "Teamet bakom riksdagsdebatter.se",
+  aboutTeam: "Teamet bakom Riksdagsdebatter.se",
   aboutReference: "Referensgrupp",
   peopleDevelopment: {
     0: {

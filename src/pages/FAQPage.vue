@@ -7,7 +7,7 @@
       class="text-body2 q-mt-sm q-mb-xl"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
-<!--       <q-item-label
+      <!--       <q-item-label
         v-for="(faq, index) in faqContent"
         :key="index"
         class=""
@@ -24,13 +24,15 @@
         <q-item-label class="text-h6 q-mb-sm">{{ faq.q }}</q-item-label>
         <q-item-label class="text-body2 lineHeight2">
           <span v-html="faq.a" />
-          <a
-            v-for="(link, index) in faq.links"
-            :key="index"
-            :href="link.link"
-            class="link-deco text-accent text-bold q-mr-sm"
-            >{{ link.linkText }}
-          </a>
+          <q-item-label>
+            <a
+              v-for="(link, index) in faq.links"
+              :key="index"
+              :href="link.link"
+              class="link-deco text-accent text-bold q-mr-sm"
+              >{{ link.linkText }}
+            </a>
+          </q-item-label>
         </q-item-label>
       </div>
     </q-card-section>

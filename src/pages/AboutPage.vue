@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="background row justify-center max-width q-mt-lg">
-    <q-item-label class="text-h1">{{ $t("aboutPageTitle") }}</q-item-label>
+    <q-item-label class="text-h1 text-center">{{ $t("aboutPageTitle") }}</q-item-label>
     <q-card-section
       class="text-body2 q-mt-sm"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
@@ -19,13 +19,13 @@
         style="max-width: fit-content"
       >
         <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
-        <q-item-label>
+        <q-item-label class="text-bold q-pt-md text-center">
           {{ $t("aboutFinance") }}
           <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
             Huminfra.
           </a>
         </q-item-label>
-        <div class="q-gutter-sm">
+        <div class="q-gutter-sm text-center q-mt-md">
           <q-img
             v-for="(financier, index) in financiers"
             :key="index"
