@@ -6,7 +6,9 @@
         :style="$q.screen.lt.sm ? '' : 'max-width: 400px; min-width: 400px'"
       >
         <q-toolbar-title class="text-bold q-pa-none">
-            <router-link to="/" style="text-decoration: none; color: inherit;">{{ $t('swedeb') }}</router-link>
+          <router-link to="/" style="text-decoration: none; color: inherit">{{
+            $t("swedeb")
+          }}</router-link>
         </q-toolbar-title>
         <!--         <q-tabs no-caps color="black" class="gt-sm">
           <q-route-tab to="/" :label="$t('home')" />
@@ -31,7 +33,15 @@
         </q-btn>
       </q-toolbar>
       <q-toolbar :class="$q.screen.lt.sm ? 'bg-primary' : 'background'">
-        <div style="max-width: 95vw">
+        <div
+          :style="
+            $q.screen.lt.sm
+              ? ''
+              : $q.screen.lt.md
+              ? 'max-width:30vw'
+              : 'max-width: 95vw'
+          "
+        >
           <q-tabs
             no-caps
             inline-label
