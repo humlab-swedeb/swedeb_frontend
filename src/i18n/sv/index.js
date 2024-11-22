@@ -84,6 +84,8 @@ export default {
   ngramWidth: "Bredd",
   ngramSizePlaceLabel:
     "Välj storlek på N-gram och var sökordet ska vara placerat:",
+  tooltipNgramSize:
+    "För närvarande räknas även skiljetecken som ord, till exempel . , : –",
 
   searchInput: "Sök på ett ord eller en fras",
   searchAdd: "Lägg till ord och klicka på +",
@@ -105,6 +107,8 @@ export default {
 
   nrOfWordsIntro:
     "Välj hur många ord som ska visas till vänster och höger om sökorden:",
+  tooltipKWIC:
+    "För närvarande räknas även skiljetecken som ord, till exempel . , : –",
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
