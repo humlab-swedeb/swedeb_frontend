@@ -12,7 +12,7 @@ export default defineComponent({
   beforeMount() {
     const metaStore = metaDataStore();
     metaStore.fetchAllMetaData();
-    document.title = "SweDeb - Riksdagens anföranden";
+    document.title = "Riksdagsdebatter.se - Riksdagens anföranden";
 
   }
 });

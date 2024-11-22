@@ -40,9 +40,9 @@ export default {
     "Se vilka som är de mest förekommande orden före och efter ett visst sökt ord eller en fras.",
   nGramsIcon: "show_chart",
 
-  contactLabelButton: "Kontakta SweDeb-Teamet",
+  contactLabelButton: "Kontakta Riksdagsdebatter.se-Teamet",
   contactText:
-    "Har du frågor, synpunkter, eller bara vill lämna feedback till någon i SweDeb-teamet?",
+    "Har du frågor, synpunkter, eller bara vill lämna feedback till någon i Riksdagsdebatter.se-teamet?",
 
   // MetaDataFilter component -------------------------------------------
   metaDataFilter: "Filtrera på metadata",
@@ -206,7 +206,7 @@ export default {
     0: {
       name: "Fredrik Mohammadi Norén",
       title:
-        "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+        "Riksdagsdebatter.se:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
       link: "https://mau.se/personer/fredrik.noren/",
     },
     1: {
