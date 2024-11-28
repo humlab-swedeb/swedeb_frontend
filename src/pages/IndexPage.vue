@@ -62,12 +62,14 @@ const tools = [
     text: "speechesText",
     icon: "speechesIcon",
   },
+  /*
   {
     route: "tools/ngram",
     title: "nGramsTitle",
     text: "nGramsText",
     icon: "nGramsIcon",
   },
+  */
 ];
 </script>
 
