@@ -387,53 +387,53 @@ export default {
       däremot konstruerade av teamet bakom riksdagsdebatter.se.
 </br></br>
       <ul style="list-style-type: none; padding: 0; margin: 0;">
-        <li>AK-bd: AK:s bondeska diskussionsklubben (1897–1899)</li>
-        <li>AK-c89: AK:s center (1889–1894)</li>
-        <li>AK-ch: AK:s center-högern (1883–1886)</li>
-        <li>AK-c73: AK:s centern (1873–1882)</li>
-        <li>AK-mfg: AK:s de moderata reformvännernas grupp (1903–1905)</li>
-        <li>AK-fp: AK:s folkpartiet (1895–1899)</li>
-        <li>AK-fd: AK:s friesenska diskussionsklubben (1897–1899)</li>
-        <li>AK-frip: AK:s frihandelsparti (1887–1888)</li>
-        <li>AK-fc: AK:s frihandelsvänliga centern (1895–1897)</li>
-        <li>AK-ff: AK:s frisinnade försvarsvänner (1914)</li>
-        <li>AK-glmp: AK:s gamla lantmannapartiet (1888–1894)</li>
-        <li>AK-lb: AK:s lantmanna- och borgarepartiet (1912–1934)</li>
-        <li>AK-lmp: AK:s lantmannapartiet (1867–1887, 1895–1911)</li>
-        <li>AK-lmpf: AK:s lantmannapartiets filial (1873–1887)</li>
-        <li>AK-minip: AK:s ministeriella partiet (1867–1872)</li>
-        <li>AK-nf: AK:s nationella framstegspartiet (1906–1911)</li>
-        <li>AK-ng: AK:s nationella gruppen (1935-1936)</li>
-        <li>AK-nc83: AK:s nya centern (1883–1887)</li>
-        <li>AK-nc95: AK:s nya centern (1895–1896)</li>
-        <li>AK-nlmp: AK:s nya lantmannapartiet (1888–1894)</li>
-        <li>AK-np: AK:s nyliberala partiet (1868–1871)</li>
-        <li>AK-v: AK:s vänstern (1886)</li>
-        <li>C: Centerpartiet (1922–)</li>
-        <li>FK-c: FK:s centern (1885–1887)</li>
-        <li>FK-fh: FK:s det förenade högerpartiet (1910–1911)</li>
-        <li>FK-ep: FK:s ehrenheimska partiet (1873–1887)</li>
-        <li>FK-kg: FK:s konservativa grupp (1867–1872)</li>
-        <li>FK-mg: FK:s ministeriella grupp (1867–1872)</li>
-        <li>FK-minop: FK:s minoritetsparti (1888–1904)</li>
-        <li>FK-modp: FK:s moderata parti (1905–1911)</li>
-        <li>FK-np: FK:s nationella parti (1912–1934)</li>
-        <li>FK-pp: FK:s protektionistiska parti (1888–1909)</li>
-        <li>FK-v: FK:s vänstern (1886)</li>
-        <li>Jfg: Jordbrukarnas fria grupp (1918–1921)</li>
-        <li>Kp: Kilbomspartiet (1930–1933)</li>
-        <li>Kd: Kristdemokraterna (1985–)</li>
-        <li>Lrp: Liberala riksdagspartiet (1924–1934)</li>
-        <li>L: Liberalerna (1900–)</li>
-        <li>Ms: Medborgerlig samling (1964–1968)</li>
-        <li>Mp: Miljöpartiet (1988–)</li>
-        <li>M: Moderaterna (1935–)</li>
-        <li>Nyd: Ny demokrati (1991–1994)</li>
-        <li>S: Socialdemokraterna (1897–)</li>
-        <li>Sp: Socialistiska partiet (1934–1940)</li>
-        <li>Sd: Sverigedemokraterna (2010–)</li>
-        <li>V: Vänsterpartiet (1917–)</li>
-        <li>[–]: Utan partibeteckning</li>
+        <li><b>AK-bd</b>: AK:s bondeska diskussionsklubben (1897–1899)</li>
+        <li><b>AK-c89</b>: AK:s center (1889–1894)</li>
+        <li><b>AK-ch</b>: AK:s center-högern (1883–1886)</li>
+        <li><b>AK-c73</b>: AK:s centern (1873–1882)</li>
+        <li><b>AK-mfg</b>: AK:s de moderata reformvännernas grupp (1903–1905)</li>
+        <li><b>AK-fp</b>: AK:s folkpartiet (1895–1899)</li>
+        <li><b>AK-fd</b>: AK:s friesenska diskussionsklubben (1897–1899)</li>
+        <li><b>AK-frip</b>: AK:s frihandelsparti (1887–1888)</li>
+        <li><b>AK-fc</b>: AK:s frihandelsvänliga centern (1895–1897)</li>
+        <li><b>AK-ff</b>: AK:s frisinnade försvarsvänner (1914)</li>
+        <li><b>AK-glmp</b>: AK:s gamla lantmannapartiet (1888–1894)</li>
+        <li><b>AK-lb</b>: AK:s lantmanna- och borgarepartiet (1912–1934)</li>
+        <li><b>AK-lmp</b>: AK:s lantmannapartiet (1867–1887, 1895–1911)</li>
+        <li><b>AK-lmpf</b>: AK:s lantmannapartiets filial (1873–1887)</li>
+        <li><b>AK-minip</b>: AK:s ministeriella partiet (1867–1872)</li>
+        <li><b>AK-nf</b>: AK:s nationella framstegspartiet (1906–1911)</li>
+        <li><b>AK-ng</b>: AK:s nationella gruppen (1935-1936)</li>
+        <li><b>AK-nc83</b>: AK:s nya centern (1883–1887)</li>
+        <li><b>AK-nc95</b>: AK:s nya centern (1895–1896)</li>
+        <li><b>AK-nlmp</b>: AK:s nya lantmannapartiet (1888–1894)</li>
+        <li><b>AK-np</b>: AK:s nyliberala partiet (1868–1871)</li>
+        <li><b>AK-v</b>: AK:s vänstern (1886)</li>
+        <li><b>C</b>: Centerpartiet (1922–)</li>
+        <li><b>FK-c</b>: FK:s centern (1885–1887)</li>
+        <li><b>FK-fh</b>: FK:s det förenade högerpartiet (1910–1911)</li>
+        <li><b>FK-ep</b>: FK:s ehrenheimska partiet (1873–1887)</li>
+        <li><b>FK-kg</b>: FK:s konservativa grupp (1867–1872)</li>
+        <li><b>FK-mg</b>: FK:s ministeriella grupp (1867–1872)</li>
+        <li><b>FK-minop</b>: FK:s minoritetsparti (1888–1904)</li>
+        <li><b>FK-modp</b>: FK:s moderata parti (1905–1911)</li>
+        <li><b>FK-np</b>: FK:s nationella parti (1912–1934)</li>
+        <li><b>FK-pp</b>: FK:s protektionistiska parti (1888–1909)</li>
+        <li><b>FK-v</b>: FK:s vänstern (1886)</li>
+        <li><b>Jfg</b>: Jordbrukarnas fria grupp (1918–1921)</li>
+        <li><b>Kp</b>: Kilbomspartiet (1930–1933)</li>
+        <li><b>Kd</b>: Kristdemokraterna (1985–)</li>
+        <li><b>Lrp</b>: Liberala riksdagspartiet (1924–1934)</li>
+        <li><b>L</b>: Liberalerna (1900–)</li>
+        <li><b>Ms</b>: Medborgerlig samling (1964–1968)</li>
+        <li><b>Mp</b>: Miljöpartiet (1988–)</li>
+        <li><b>M</b>: Moderaterna (1935–)</li>
+        <li><b>Nyd</b>: Ny demokrati (1991–1994)</li>
+        <li><b>S</b>: Socialdemokraterna (1897–)</li>
+        <li><b>Sp</b>: Socialistiska partiet (1934–1940)</li>
+        <li><b>Sd</b>: Sverigedemokraterna (2010–)</li>
+        <li><b>V</b>: Vänsterpartiet (1917–)</li>
+        <li><b>[–]</b>: Utan partibeteckning</li>
       </ul>`,
     },
     3: {
