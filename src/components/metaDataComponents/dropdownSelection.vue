@@ -136,6 +136,10 @@ const customOptionLabel = (opt) => {
     let party = opt.party_abbrev ? opt.party_abbrev : "";
     party = getPartyLabel(opt.party_abbrev);
 
+    if (opt.name.includes("&quot")) {
+      opt.name = opt.name.replace(/&quot/g, '"');
+    }
+
     return `${opt.name}, ${party}  (${birthYear}-${deathYear})`;
   } else {
     return opt; // Return to default display for other types
