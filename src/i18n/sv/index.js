@@ -43,6 +43,7 @@ export default {
   metaDataFilter: "Filtrera på metadata",
   metaDataFilterMini: "Metadatafilter",
   selectedMetaDataTitle: "Valda filtreringsalternativ:",
+  dataVersion: "Data-version:",
   toolsFilterMini: "Verktygsspecifika Filter",
   filterAndSearch: "Filtrera och sök",
 
