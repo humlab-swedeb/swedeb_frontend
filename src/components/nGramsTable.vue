@@ -107,7 +107,10 @@ const loading = ref(false);
 const innerLoading = ref({});
 
 const formatSearch = (value) => {
-  const searchString = nGramStore.searchString;
+  let searchString = nGramStore.searchString;
+  if (searchString.includes(".*")) {
+    searchString = searchString.replace(".*", "");
+  }
   if (searchString && value.includes(searchString)) {
     // Split the value and wrap the matching part in bold tags
     return value.replace(searchString, `<b>${searchString}</b>`);
