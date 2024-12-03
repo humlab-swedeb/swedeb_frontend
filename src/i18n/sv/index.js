@@ -8,21 +8,21 @@ export default {
     huminfra: "https://www.huminfra.se/",
   },
   // MAIN LAYOUT ------------------------------------------------
-  swedeb: "Riksdagsdebatter.se",
+  swedeb: "SweDeb",
   home: "Hem",
   tools: "Verktyg",
-  about: "Om Riksdagsdebatter",
+  about: "Om SweDeb",
   faq: "FAQ",
   contact: "Kontakt",
 
   // INDEX PAGE ------------------------------------------------
   indexPageTitle: "Utforska och läs riksdagsanföranden sedan 1867",
-  indexPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
+  indexPageIntroText: `SweDeb är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i riksdagen
   sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med
   finansiering av Umeå universitet och `,
   indexPageIntroText2: `vid samma universitet. Det dataset med
-  annoterade anföranden som riksdagsdebatter.se bygger på hämtas från
+  annoterade anföranden som SweDeb bygger på hämtas från
   forskningsinfrastrukturprojektet`,
 
   wordTrendsTitle: "Ordtrender",
@@ -40,9 +40,9 @@ export default {
     "Se vilka som är de mest förekommande orden före och efter ett visst sökt ord eller en fras.",
   nGramsIcon: "show_chart",
 
-  contactLabelButton: "Kontakta Riksdagsdebatter.se-Teamet",
+  contactLabelButton: "Kontakta SweDeb-Teamet",
   contactText:
-    "Har du frågor, synpunkter, eller bara vill lämna feedback till någon i Riksdagsdebatter.se-teamet?",
+    "Har du frågor, synpunkter, eller bara vill lämna feedback till någon i SweDeb-teamet?",
 
   // MetaDataFilter component -------------------------------------------
   metaDataFilter: "Filtrera på metadata",
@@ -183,9 +183,8 @@ export default {
   till vissa partier, talare eller år.`,
 
   // ABOUT PAGE ------------------------------------------------
-  aboutPageTitle: "Om Riksdagsdebatter.se",
-  aboutFinance:
-    "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
+  aboutPageTitle: "Om SweDeb",
+  aboutFinance: "SweDeb primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
     0: {
       alt: "Umeå universitet logo",
@@ -204,13 +203,13 @@ export default {
     },
   },
 
-  aboutTeam: "Teamet bakom Riksdagsdebatter.se",
+  aboutTeam: "Teamet bakom SweDeb",
   aboutReference: "Referensgrupp",
   peopleDevelopment: {
     0: {
       name: "Fredrik Mohammadi Norén",
       title:
-        "Riksdagsdebatter.se:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+        "SweDeb:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
       link: "https://mau.se/personer/fredrik.noren/",
     },
     1: {
@@ -329,11 +328,11 @@ export default {
       Den visar utvecklingen av partibildningar, partisplittringar och partisammanslagningar
       under hela tvåkammartiden, från 1867 till 1970. Information om senare partier som har
       tillkommit under enkammarriksdagen (1970–) har hämtats från riksdagens register.
-      Till varje parti i riksdagsdebatter.se anges det år som partiet första gången
+      Till varje parti i SweDeb anges det år som partiet första gången
       representerades i riksdagen och eventuellt till det sista året i riksdagen, enlig
       den information som finns i Carlssons kapitel och i riksdagens register.
 </br></br>
-      I riksdagsdebatter.se kan du bara välja mellan partier som formellt har varit
+      I SweDeb kan du bara välja mellan partier som formellt har varit
       representerade i riksdagen. Det är därför som till exempel Feministiskt initiativ
       inte finns med. Ledamöter som aldrig tillhörde ett parti (vilket var mer vanligt
       under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
@@ -345,11 +344,11 @@ export default {
       form än dagens partiorganisationer. Man brukar säga att Socialdemokraterna var
       det första så kallade moderna partiet i Sverige.
 </br></br>
-      Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges i
+      Partinamnen som används i SweDeb bygger på de namn som anges i
       biografibanden för tvåkammarriksdagen. Många av partiförkortningarna är däremot
-      konstruerade av teamet bakom riksdagsdebatter.se.
+      konstruerade av teamet bakom SweDeb.
 </br></br>
-      Vissa moderna partier har haft olika namn under årens lopp. I riksdagsdebatter.se
+      Vissa moderna partier har haft olika namn under årens lopp. I SweDeb
       har följande partinamn slagits ihop:
       <ul>
         <li>
@@ -369,7 +368,7 @@ export default {
           riksdagsgrupp. Utifrån denna logik startade Vänsterpartiet 1917.
         </li>
         <li>Moderaterna – givet den större komplexitet som råder kring
-          partierna som var knutna till Allmänna valförbundet har riksdagsdebatter.se
+          partierna som var knutna till Allmänna valförbundet har SweDeb
           valt att enbart inkludera Högerns riksdagsgrupp som sedan bytte namn till
           Moderaterna. Utifrån denna logik startade Moderaterna 1935.
         </li>
@@ -377,14 +376,14 @@ export default {
     },
     2: {
       q: "Var står partiförkortningarna för?",
-      a: `Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges
+      a: `Partinamnen som används i SweDeb bygger på de namn som anges
       i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
       samt information från riksdagens register. Många av partiförkortningarna är
-      däremot konstruerade av teamet bakom riksdagsdebatter.se.`,
-      a: `Partinamnen som används i riksdagsdebatter.se bygger på de namn som anges
+      däremot konstruerade av teamet bakom SweDeb.`,
+      a: `Partinamnen som används i SweDeb bygger på de namn som anges
       i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
       samt information från riksdagens register. Många av partiförkortningarna är
-      däremot konstruerade av teamet bakom riksdagsdebatter.se.
+      däremot konstruerade av teamet bakom SweDeb.
 </br></br>
       <ul style="list-style-type: none; padding: 0; margin: 0;">
         <li><b>AK-bd</b>: AK:s bondeska diskussionsklubben (1897–1899)</li>
@@ -447,7 +446,7 @@ export default {
       a: `SWERIK-projektet har byggt upp en databas med svenska riksdagsledamöter
       från 1867 och framåt via Wikidata. Det gör att alla är välkomna att bidra med
       att lägga till information om ledamöterna. Den information som används i
-      Riksdagsdebatter.se är dock begränsad till bland annat parti, levnadsår och kön.
+      SweDeb är dock begränsad till bland annat parti, levnadsår och kön.
       SWERIK har en katalog med alla svenska riksdagsledamöter. `,
       links: {
         0: {
@@ -462,7 +461,7 @@ export default {
     },
     5: {
       q: "Varför saknas det anföranden till vissa ledamöter?",
-      a: `Riksdagsdebatter.se hämtar sin data från SWERIK-projektet. Tal och talare
+      a: `SweDeb hämtar sin data från SWERIK-projektet. Tal och talare
       kopplas ihop genom en kombination av maskininlärning och manuellt kontrollarbete.
       Det sker genom att först identifiera talarintroduktioner i kammarprotokollen
       och sedan identifiera vem som nämns i talarintroduktionen och koppla den personen
@@ -524,7 +523,7 @@ export default {
       Riksdagsbiblioteket. Det är inte ovanligt att textblock på en sida kan representeras på
       lite konstiga sätt i digitaliseringsprocessen. Vissa textblock består till exempel bara
       av enskilda och avhuggna rader medan andra av riktiga paragrafer. När talen representeras
-      i Riksdagsdebatter.se kan det därför hända att ett tal som egentligen utgörs av en
+      i SweDeb kan det därför hända att ett tal som egentligen utgörs av en
       sammanhängande paragraf är uppstyckat i flera kortare segment
 </br></br>
       Ibland händer också att digitaliseringsprocessen skapar en felaktig OCR-läsning.
