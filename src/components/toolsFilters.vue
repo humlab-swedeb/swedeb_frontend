@@ -30,9 +30,19 @@
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
-    <q-item-label caption class="text-bold q-mt-lg text-grey-8">
-      {{ $t("ngramSizePlaceLabel") }}
-    </q-item-label>
+    <div class="row">
+      <q-item-label caption class="text-bold q-mt-lg text-grey-8 col-11">
+        {{ $t("ngramSizePlaceLabel") }}
+      </q-item-label>
+      <q-icon
+        name="info_outline"
+        color="accent"
+        class="q-mt-lg"
+        style="margin-left: -10px"
+      >
+        <q-tooltip>{{ $t("tooltipNgramSize") }}</q-tooltip>
+      </q-icon>
+    </div>
     <q-card-section horizontal class="q-px-none">
       <q-card-section class="col-6">
         <nGramWidth />
