@@ -151,7 +151,7 @@
               </q-btn>
               <q-btn
                 no-caps
-                :href="props.props.row.source"
+                to="/pdf"
                 target="_blank"
                 class="full-width items-start text-grey-8"
                 color="white"
@@ -228,7 +228,9 @@ const replaceNewLine = (str) => {
 };
 
 const replaceWordWithBoldTags = (str, word) => {
-  const words = word.includes(",") ? word.split(",").map((w) => w.trim()) : [word.trim()];
+  const words = word.includes(",")
+    ? word.split(",").map((w) => w.trim())
+    : [word.trim()];
 
   words.forEach((w) => {
     const regex = new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "giu");
@@ -239,12 +241,12 @@ const replaceWordWithBoldTags = (str, word) => {
 };
 
 const replaceNgramWithBoldTags = (str, ngram) => {
-
-  const fixed_spaces = ngram.replace(" .", ".").replace(" ,", ",").replace(" :", ":");
+  const fixed_spaces = ngram
+    .replace(" .", ".")
+    .replace(" ,", ",")
+    .replace(" :", ":");
   return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>"`);
-
 };
-
 
 const downloadCurrentSpeech = () => {
   downloadStore.downloadCurrentSpeechText(
@@ -262,20 +264,17 @@ watchEffect(() => {
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
 
-
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
       } else if (route.path === "/tools/ngram") {
-
         speechText.value = replaceNgramWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
-
-      }else{
+      } else {
         speechText.value = replaceNewLine(speechData.speech_text);
       }
     })();

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@tato30/vue-pdf": "^1.11.2",
     "apexcharts": "^3.45.2",
     "axios": "^1.2.1",
     "core-js": "^3.6.5",
