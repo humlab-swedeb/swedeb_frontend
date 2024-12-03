@@ -5,7 +5,7 @@
       <q-btn flat no-caps @click="goBack" icon="close">Stäng tal</q-btn>
     </q-card-section>
     <q-card-section
-      class="toolbar row justify-center justify-between q-py-none"
+      class="row justify-center justify-between q-py-none"
     >
       <q-card-section class="q-pt-none">
         <q-btn
