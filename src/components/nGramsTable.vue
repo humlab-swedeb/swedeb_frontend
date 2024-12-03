@@ -41,7 +41,12 @@
           class="bg-white"
           :class="props.expand ? 'bg-grey-3' : ''"
         >
-          {{ col.value }}
+          <q-item-label v-if="col.name === 'ngram'">
+            <span v-html="formatSearch(col.value)" />
+          </q-item-label>
+          <q-item-label v-else>
+            {{ col.value }}
+          </q-item-label>
         </q-td>
         <q-td
           auto-width
@@ -101,6 +106,18 @@ const columns = ref([]);
 const loading = ref(false);
 const innerLoading = ref({});
 
+const formatSearch = (value) => {
+  let searchString = nGramStore.searchString;
+  if (searchString.includes(".*")) {
+    searchString = searchString.replace(".*", "");
+  }
+  if (searchString && value.includes(searchString)) {
+    // Split the value and wrap the matching part in bold tags
+    return value.replace(searchString, `<b>${searchString}</b>`);
+  }
+  return value;
+};
+
 const expandRow = async (props) => {
   props.expand = !props.expand;
 
@@ -120,7 +137,7 @@ rows.value = nGramStore.nGrams.map((entry, index) => ({
   id: index + 1,
   ngram: entry.ngram,
   count: entry.count,
-  speeches: entry.count + 1,
+  speeches: entry.documents.length,
 }));
 /* rows.value = [
       { id: 1, words: "ett ord", frequency: 1 },
