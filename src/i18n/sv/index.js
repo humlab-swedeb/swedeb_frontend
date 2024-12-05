@@ -138,10 +138,10 @@ export default {
   kwicIntroTitle:
     "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
-  t ex <code>information</code> eller <code>information om</code>, och se kontexten till vänster och
+  till exempel <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se kontexten till vänster och
   höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
-  t ex <code>information*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till vissa partier, talare eller år.`,
+  till exempel <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  anförandena till bland annat vissa partier, talare eller år.`,
 
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
