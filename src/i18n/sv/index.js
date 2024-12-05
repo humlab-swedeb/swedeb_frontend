@@ -62,7 +62,7 @@ export default {
   toggleGenderLabel: "Filtrera på kön",
   clearFilter: "Rensa filter",
 
-  toolsFilterTitle: "Verktygsspecifika Filter",
+  toolsFilterTitle: "Verktygsspecifika filter",
   "/tools/wordtrends": "Ordtrender",
   "/tools/kwic": "Key Words in Context",
   "/tools/speeches": "Anföranden",
