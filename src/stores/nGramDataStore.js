@@ -30,7 +30,6 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       if (row_nr >= 0 && row_nr < this.nGrams.length) {
         const documents = this.nGrams[row_nr].documents;
         return documents.slice(0, 10);
-        return documents
       } else {
         return [];
       }
@@ -42,30 +41,19 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
 
       const path = `/tools/speeches?${queryString}`;
-      const response = await api.get(path);
-      this.nGramSpeeches = response.data.speech_list;
-        this.nGramSpeeches.forEach((speech) => {
-          speech.node_word = ngram;
-      });
 
-      /*
-      try {
-        const response = await api.get(path, json_payload, {
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-          },
-          responseType: "json",
-        });
-
+      try{
+        const response = await api.get(path);
         this.nGramSpeeches = response.data.speech_list;
-        this.nGramSpeeches.forEach((speech) => {
-          speech.node_word = ngram;
+          this.nGramSpeeches.forEach((speech) => {
+            speech.node_word = ngram;
         });
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+      } catch (error){
+        console.log("Error fetching n-gram speeches")
+        this.nGramSpeeches = []
       }
-        */
+
     },
 
     async getNGramsResult(search) {
