@@ -26,17 +26,22 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
-    getSpeechIdsForRow(row_nr) {
+    getSpeechIdsForRow(row_nr, page, rows_per_page) {
+      console.log("reqeueste page and rows per page")
+      console.log(page, rows_per_page)
       if (row_nr >= 0 && row_nr < this.nGrams.length) {
         const documents = this.nGrams[row_nr].documents;
-        return documents.slice(0, 10);
+        const start = (page - 1) * rows_per_page;
+        const end = start + rows_per_page;
+        return documents.slice(start, end);
       } else {
         return [];
       }
     },
 
-    async getNGramSpeeches(row_nr, ngram) {
-      const speech_ids = this.getSpeechIdsForRow(row_nr);
+    async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
+      console.log('asking')
+      const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
       const queryString = speech_ids.map(id => `speech_id=${id}`).join('&');
 
 

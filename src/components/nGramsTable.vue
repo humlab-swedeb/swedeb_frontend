@@ -83,7 +83,7 @@
               <loadingIcon />
             </div>
             <div v-else>
-              <speechDataTable type="ngram" />
+              <speechDataTableNgram type="ngram" />
             </div>
           </div>
         </q-td>
@@ -96,7 +96,7 @@
 <script setup>
 import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import speechDataTable from "src/components/speechDataTable.vue";
+import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 
 const nGramStore = nGramDataStore();
@@ -125,7 +125,7 @@ const expandRow = async (props) => {
     console.log(props.row);
     innerLoading.value[props.row.id] = true;
     try {
-      await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram);
+      await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram, 1, 15);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
