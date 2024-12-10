@@ -8,7 +8,6 @@
       class="q-mr-lg"
       @click="setAllTrue(props.type)"
       v-model="store[`${props.type}Filter`]"
-      :label="store[`${props.type}Filter`] ? $t('toggleYes') : $t('toggleNo')"
       color="accent"
       checked-icon="check"
       unchecked-icon="close"

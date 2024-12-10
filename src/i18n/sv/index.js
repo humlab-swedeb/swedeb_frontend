@@ -60,6 +60,7 @@ export default {
   toggleYes: "Ja",
   toggleNo: "Nej",
   toggleGenderLabel: "Filtrera på kön",
+  toggleChamberLabel: "Filtrera på kammare",
   clearFilter: "Rensa filter",
 
   toolsFilterTitle: "Verktygsspecifika filter",
