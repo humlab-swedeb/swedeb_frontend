@@ -9,7 +9,7 @@ import axios from "axios";
 // for each client)
 
 
-const api = axios.create({ baseURL: "http://127.0.0.1:3000/v1" });
+const api = axios.create({ baseURL: "http://127.0.0.1:2000/v1" });
 
 
 export default boot(({ app }) => {
