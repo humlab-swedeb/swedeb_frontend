@@ -261,6 +261,7 @@ function prepareDataForLineChart() {
   const seriesData = Object.keys(wordTrends[0].count)
     .map((word) => ({
       name: word,
+      total: wordTrends.reduce((sum, entry) => sum + entry.count[word], 0),
       data: wordTrends.map((entry) => entry.count[word]),
     }))
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
@@ -291,6 +292,7 @@ function renderChart(container, categories, seriesData) {
     color: index === seriesData.length - 1 ? "#333333" : null, // Give "Totalt" a different color
     dashStyle: index === seriesData.length - 1 ? "Solid" : getDashStyle(index), // Give "Totalt" a solid line
     legendIndex: series.name === "Totalt" ? -1 : index, // Move "Totalt" to the beginning of the legend
+    //name: `${series.name} (${series.total})`,
   }));
 
   Highcharts.chart(container, {
@@ -300,6 +302,13 @@ function renderChart(container, categories, seriesData) {
       categories: categories,
     },
     series: seriesWithDashStyles,
+    legend: {
+      ...chartOptions.legend,
+      labelFormatter: function () {
+        // Use `this` to access the series data
+        return `${this.name} (${this.userOptions.total || 0})`;
+      },
+    },
   });
 }
 
