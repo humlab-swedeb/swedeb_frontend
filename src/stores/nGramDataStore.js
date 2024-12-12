@@ -27,8 +27,6 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     getSpeechIdsForRow(row_nr, page, rows_per_page) {
-      console.log("reqeueste page and rows per page")
-      console.log(page, rows_per_page)
       if (row_nr >= 0 && row_nr < this.nGrams.length) {
         const documents = this.nGrams[row_nr].documents;
         const start = (page - 1) * rows_per_page;
@@ -40,25 +38,26 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
-      console.log('asking')
+
       const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
-      const queryString = speech_ids.map(id => `speech_id=${id}`).join('&');
+
+      if (speech_ids.length > 0) {
+        const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
+
+        const path = `/tools/speeches?${queryString}`;
 
 
-      const path = `/tools/speeches?${queryString}`;
-
-      try{
-        const response = await api.get(path);
-        this.nGramSpeeches = response.data.speech_list;
+        try {
+          const response = await api.get(path);
+          this.nGramSpeeches = response.data.speech_list;
           this.nGramSpeeches.forEach((speech) => {
             speech.node_word = ngram;
-        });
-
-      } catch (error){
-        console.log("Error fetching n-gram speeches")
-        this.nGramSpeeches = []
+          });
+        } catch (error) {
+          console.log("Error fetching n-gram speeches");
+          this.nGramSpeeches = [];
+        }
       }
-
     },
 
     async getNGramsResult(search) {

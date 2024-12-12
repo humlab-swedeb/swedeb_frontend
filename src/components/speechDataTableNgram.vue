@@ -50,7 +50,11 @@
         row-key="id"
         :rows-per-page-options="[10, 20, 50]"
         v-model:pagination="pagination"
+        :loading="loading"
         class="bg-grey-2"
+        @request = "onRequest"
+
+
       >
         <template v-slot:header="props">
           <q-tr :props="props">
@@ -138,7 +142,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, mergeProps } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -153,10 +157,25 @@ const wtStore = wordTrendsDataStore();
 const nGramStore = nGramDataStore();
 const downloadStore = downloadDataStore();
 
+
+
 const props = defineProps({
   type: String,
   download: Function,
+  totalHits: Number,
+  rowID: Number,
+  ngram: String
 });
+
+const pagination = ref({
+      sortBy: 'desc',
+      descending: false,
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: props.totalHits
+})
+
+const loading = ref(false)
 
 const displayedData = ref([]);
 const SpeechTable = ref(null);
@@ -169,25 +188,51 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
+async function onRequest  (table_props) {
+
+  const {sortBy, descending, page, rowsPerPage, rowsNumber } = table_props.pagination
+
+  try {
+      loading.value = true
+
+      await nGramStore.getNGramSpeeches(props.rowID, props.ngram, page, rowsPerPage);
+      pagination.value.rowsPerPage = rowsPerPage
+      pagination.value.page = page
+      rows.value =  mapSpeechesToRows(nGramStore.nGramSpeeches)
+      loading.value = false
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+  }
+
 if (props.type === "wordTrends") {
-  displayedData.value = wtStore.speechesData; // detta kan sättas som en prop?
+  displayedData.value = wtStore.speechesData;
 } else if (props.type === "speeches") {
   displayedData.value = speechStore.speechesData;
 }else if (props.type === "ngram") {
   displayedData.value = nGramStore.nGramSpeeches;
 }
 
-rows.value = displayedData.value.map((speech) => ({
-  id: speech.document_name,
-  protocol: speech.speech_name,
-  node_word: speech.node_word,
-  speaker: speech.name,
-  gender: speech.gender,
-  party: speech.party_abbrev,
-  source: speech.speech_link,
-  year: speech.year,
-  link: speech.link,
-}));
+
+
+
+function mapSpeechesToRows(speeches) {
+  return speeches.map((speech) => ({
+    id: speech.document_name,
+    protocol: speech.speech_name,
+    node_word: speech.node_word,
+    speaker: speech.name,
+    gender: speech.gender,
+    party: speech.party_abbrev,
+    source: speech.speech_link,
+    year: speech.year,
+    link: speech.link,
+  }));
+}
+
+rows.value = mapSpeechesToRows(displayedData.value)
 
 columns.value = [
   {
@@ -244,7 +289,7 @@ if (props.type === "wordTrends") {
   });
 }
 
-const pagination = ref({});
+
 
 function sortByYear(a, b) {
   const yearRegex = /(\d{4})/;
