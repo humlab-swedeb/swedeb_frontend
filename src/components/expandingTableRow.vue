@@ -159,19 +159,6 @@
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }}</q-item-label>
               </q-btn>
-              <div>
-                <q-btn
-                  no-caps
-                  target="_blank"
-                  class="full-width items-start text-grey-8"
-                  color="white"
-                  @click="popupsource = true"
-                >
-                  <q-icon left name="arrow_upward" color="accent" />
-                  <q-item-label>Popup källa</q-item-label>
-                </q-btn>
-              </div>
-              <pfdPopup :clicked="popupsource" @close="popupsource = false" />
               <q-btn
                 outline
                 no-caps
@@ -214,7 +201,6 @@ import { nGramDataStore } from "src/stores/nGramDataStore";
 
 import loadingIcon from "src/components/loadingIcon.vue";
 import reportForm from "src/components/reportForm.vue";
-import pfdPopup from "./pfdPopup.vue";
 
 const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
