@@ -7,6 +7,9 @@ export default {
     humlab: "https://umu.se/humlab",
     huminfra: "https://www.huminfra.se/",
   },
+
+  dataVersion: "Data-version:",
+  dataVersionLinkText: "Swerik 1.1.0",
   // MAIN LAYOUT ------------------------------------------------
   swedeb: "SweDeb",
   home: "Hem",
