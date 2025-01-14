@@ -34,6 +34,12 @@
             <b>{{ customKey(key) }}:</b> Alla
           </div>
         </div>
+        <div class="text-caption q-mt-sm">
+          {{ $t("dataVersion") }}
+          <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+            {{ $t("dataVersionLinkText") }}
+          </a>
+        </div>
       </q-list>
     </q-slide-transition>
   </div>
@@ -66,43 +72,43 @@ const props = defineProps({
 });
 
 onMounted(() => {
-      let selectedData;
-      switch (props.filterSelections) {
-        case 'WordTrends':
-          selectedData = store.filterAtSearchWT;
-          break;
-        case 'Speeches':
-          selectedData = store.filterAtSearchSpeeches;
-          break;
-        case 'Ngrams':
-          selectedData = store.filterAtSearchNgrams;
-          break;
-        case 'KWIC':
-          selectedData = store.filterAtSearchKWIC;
-          break;
-        default:
-          selectedData = {};
-      }
+  let selectedData;
+  switch (props.filterSelections) {
+    case "WordTrends":
+      selectedData = store.filterAtSearchWT;
+      break;
+    case "Speeches":
+      selectedData = store.filterAtSearchSpeeches;
+      break;
+    case "Ngrams":
+      selectedData = store.filterAtSearchNgrams;
+      break;
+    case "KWIC":
+      selectedData = store.filterAtSearchKWIC;
+      break;
+    default:
+      selectedData = {};
+  }
 
-      if (selectedData !== undefined && Object.keys(selectedData).length > 0) {
-        displayedData.value = selectedData;
-      }
-    });
+  if (selectedData !== undefined && Object.keys(selectedData).length > 0) {
+    displayedData.value = selectedData;
+  }
+});
 
 watch(
   () => {
-   switch (props.filterSelections) {
-        case 'WordTrends':
-          return store.filterAtSearchWT;
-        case 'Speeches':
-          return store.filterAtSearchSpeeches;
-        case 'Ngrams':
-          return store.filterAtSearchNgrams;
-        case 'KWIC':
-          return store.filterAtSearchKWIC;
-        default:
-          selectedData = {};
-      }
+    switch (props.filterSelections) {
+      case "WordTrends":
+        return store.filterAtSearchWT;
+      case "Speeches":
+        return store.filterAtSearchSpeeches;
+      case "Ngrams":
+        return store.filterAtSearchNgrams;
+      case "KWIC":
+        return store.filterAtSearchKWIC;
+      default:
+        selectedData = {};
+    }
   },
   (newValue) => {
     displayedData.value = newValue;

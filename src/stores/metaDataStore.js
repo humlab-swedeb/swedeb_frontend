@@ -324,15 +324,15 @@ export const metaDataStore = defineStore("metaDataStore", {
       const response = await api.get(path);
 
       this.options.party = response.data.party_list
-        .sort((a, b) => a.party_abbrev.localeCompare(b.party))
-        .reduce((acc, party) => {
-          acc[party.party] = {
-            party_id: party.party_id,
-            party_abbrev: party.party_abbrev,
-            party_color: party.party_color,
-          };
-          return acc;
-        }, {});
+      .sort((a, b) => a.party_id - b.party_id)
+      .reduce((acc, party) => {
+        acc[party.party] = {
+        party_id: party.party_id,
+        party_abbrev: party.party_abbrev,
+        party_color: party.party_color,
+        };
+        return acc;
+      }, {});
     },
 
     async getOfficeOptions() {
