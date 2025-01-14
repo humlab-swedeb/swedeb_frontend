@@ -1,6 +1,8 @@
 <template>
   <q-card flat class="background row justify-center max-width q-mt-lg">
-    <q-item-label class="text-h4 text-center">{{ $t("indexPageTitle") }}</q-item-label>
+    <q-item-label class="text-h4 text-center">{{
+      $t("indexPageTitle")
+    }}</q-item-label>
     <q-card-section
       class="text-body2 q-mt-sm lineHeight"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
@@ -15,7 +17,7 @@
       </a>
     </q-card-section>
     <q-card-section
-      class=""
+      class="q-mb-lg"
       :class="$q.screen.lt.sm ? 'q-pt-sm q-pb-xl' : 'q-py-xl'"
     >
       <div class="grid-container max">
@@ -69,7 +71,6 @@ const tools = [
     text: "nGramsText",
     icon: "nGramsIcon",
   },
- 
 ];
 </script>
 

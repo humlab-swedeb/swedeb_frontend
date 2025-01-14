@@ -2,7 +2,7 @@
   <q-card flat class="background row justify-center max-width q-mt-lg">
     <q-item-label class="text-h1 text-center">{{ $t("aboutPageTitle") }}</q-item-label>
     <q-card-section
-      class="text-body2 q-mt-sm"
+      class="text-body2 q-mt-sm lineHeight"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
       {{ $t("indexPageIntroText") }}
@@ -10,7 +10,7 @@
         Swerik
       </a>
     </q-card-section>
-    <q-card-section class="col-12 items-center column">
+    <q-card-section class="col-12 items-center column q-my-lg">
       <q-card
         flat
         bordered
@@ -39,7 +39,7 @@
     </q-card-section>
 
     <q-card-section
-      class="q-pa-none"
+      class="q-pa-none q-mb-xl"
       :class="$q.screen.lt.sm ? 'column' : 'row'"
     >
       <q-card-section :class="$q.screen.lt.sm ? 'column' : 'col'">
