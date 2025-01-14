@@ -553,7 +553,7 @@ export default {
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
-    corpus_version: "Korpusversion: v0.10.0",
+    corpus_version: "Korpusversion: v1.1.0",
     swerik_ref: "Datakälla: https://swerik-project.github.io/",
     swedeb_ref: "Nedladdat från: https://swedeb.se/public/index.html#/",
   },
