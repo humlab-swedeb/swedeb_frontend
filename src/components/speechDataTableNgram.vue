@@ -241,7 +241,7 @@ columns.value = [
     label: "Anförande",
     align: "left",
     field: (row) => row.protocol,
-    sortable: true,
+    sortable: false,
     sort: (a, b) => sortSpeeches(a, b),
   },
   {
@@ -249,7 +249,7 @@ columns.value = [
     required: true,
     label: "Talare",
     field: "speaker",
-    sortable: true,
+    sortable: false,
     align: "left",
   },
   {
@@ -257,7 +257,7 @@ columns.value = [
     required: true,
     label: "Kön",
     field: "gender",
-    sortable: true,
+    sortable: false,
     align: "left",
   },
   {
@@ -265,7 +265,7 @@ columns.value = [
     required: true,
     label: "Parti",
     field: "party",
-    sortable: true,
+    sortable: false,
     align: "left",
   },
   {
@@ -273,7 +273,7 @@ columns.value = [
     required: true,
     label: "År",
     field: "year",
-    sortable: true,
+    sortable: false,
     align: "left",
   },
 ];
