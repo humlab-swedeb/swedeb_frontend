@@ -8,7 +8,7 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-const api = axios.create({ baseURL: "https://swedeb.se/v1" });
+const api = axios.create({ baseURL: "https://riksdagsdebatter.se/v1" });
 
 
 export default boot(({ app }) => {
