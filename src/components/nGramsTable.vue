@@ -41,7 +41,12 @@
           class="bg-white"
           :class="props.expand ? 'bg-grey-3' : ''"
         >
-          {{ col.value }}
+          <q-item-label v-if="col.name === 'ngram'">
+            <span v-html="formatSearch(col.value)" />
+          </q-item-label>
+          <q-item-label v-else>
+            {{ col.value }}
+          </q-item-label>
         </q-td>
         <q-td
           auto-width
@@ -78,7 +83,13 @@
               <loadingIcon />
             </div>
             <div v-else>
-              <speechDataTable type="ngram" />
+              <speechDataTableNgram
+                ref="speechesNgram"
+                type="ngram"
+                :totalHits="getNumberDocHits(props)"
+                :rowID="props.row.id"
+                :ngram="props.row.ngram"
+              />
             </div>
           </div>
         </q-td>
@@ -91,7 +102,7 @@
 <script setup>
 import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import speechDataTable from "src/components/speechDataTable.vue";
+import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 
 const nGramStore = nGramDataStore();
@@ -100,15 +111,40 @@ const rows = ref([]);
 const columns = ref([]);
 const loading = ref(false);
 const innerLoading = ref({});
+const speechesNgram = ref(null);
+
+
+
+const formatSearch = (value) => {
+  let searchString = nGramStore.searchString;
+  if (searchString.includes(".*")) {
+    searchString = searchString.replace(".*", "");
+  }
+  if (searchString && value.includes(searchString)) {
+    // Split the value and wrap the matching part in bold tags
+    return value.replace(searchString, `<b>${searchString}</b>`);
+  }
+  return value;
+};
+
+const getNumberDocHits = (props) => {
+  return nGramStore.nGrams[props.row.id - 1].documents.length;
+};
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
 
+
   if (props.expand) {
-    console.log(props.row);
     innerLoading.value[props.row.id] = true;
+
     try {
-      await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram);
+      await nGramStore.getNGramSpeeches(
+        props.row.id - 1,
+        props.row.ngram,
+        1, //page, initial value
+        10 //hits per page, initial value
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -116,17 +152,14 @@ const expandRow = async (props) => {
     }
   }
 };
+
 rows.value = nGramStore.nGrams.map((entry, index) => ({
   id: index + 1,
   ngram: entry.ngram,
   count: entry.count,
-  speeches: entry.count + 1,
+  speeches: entry.documents.length,
 }));
-/* rows.value = [
-      { id: 1, words: "ett ord", frequency: 1 },
-    { id: 2, words: "två ord", frequency: 2 },
-    { id: 3, words: "tre ord", frequency: 3 },
-  ];*/
+
 columns.value = [
   {
     name: "ngram",

@@ -3,17 +3,15 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 
-
 export default defineComponent({
-  name: 'App',
+  name: "App",
   beforeMount() {
     const metaStore = metaDataStore();
     metaStore.fetchAllMetaData();
-    document.title = "SweDeb - Riksdagens anföranden";
-
-  }
+    document.title = "Riksdagsdebatter.se - Riksdagens anföranden";
+  },
 });
 </script>

@@ -11,11 +11,10 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     placingOptions: ["Ej specificerat", "Vänster", "Höger"],
 
     placingSelected: "Ej specificerat",
-    searchText: "",
+    searchString: "",
   }),
 
   actions: {
-
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {
@@ -27,36 +26,37 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
-
-    getSpeechIdsForRow(row_nr) {
-        if (row_nr >= 0 && row_nr < this.nGrams.length) {
-            const documents = this.nGrams[row_nr].documents;
-            return documents.slice(0, 10);
-        } else {
-          return [];
-        }
+    getSpeechIdsForRow(row_nr, page, rows_per_page) {
+      if (row_nr >= 0 && row_nr < this.nGrams.length) {
+        const documents = this.nGrams[row_nr].documents;
+        const start = (page - 1) * rows_per_page;
+        const end = start + rows_per_page;
+        return documents.slice(start, end);
+      } else {
+        return [];
+      }
     },
 
-    async getNGramSpeeches(row_nr, ngram) {
-      const speech_ids = this.getSpeechIdsForRow(row_nr);
-      const path = "/tools/ngram_speeches"; // Full URL
-      const json_payload = JSON.stringify(speech_ids);
+    async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
 
-      try {
-        const response = await api.post(path, json_payload, {
-          headers: {
-            'Content-Type': 'application/json',
-            'accept': 'application/json'
-          },
-          responseType: 'json',
-        });
+      const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
 
-        this.nGramSpeeches = response.data.speech_list;
-        this.nGramSpeeches.forEach(speech => {
-          speech.node_word = ngram;
-        });
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      if (speech_ids.length > 0) {
+        const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
+
+        const path = `/tools/speeches?${queryString}`;
+
+
+        try {
+          const response = await api.get(path);
+          this.nGramSpeeches = response.data.speech_list;
+          this.nGramSpeeches.forEach((speech) => {
+            speech.node_word = ngram;
+          });
+        } catch (error) {
+          console.log("Error fetching n-gram speeches");
+          this.nGramSpeeches = [];
+        }
       }
     },
 
@@ -72,14 +72,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         this.nGrams = response.data.ngram_list.sort(
           (a, b) => b.count - a.count
         );
+        this.searchString = this.searchText;
       } catch (error) {
         this.nGrams = [];
         console.error("Error fetching data:", error);
       }
     },
   },
-
-
-
-
 });

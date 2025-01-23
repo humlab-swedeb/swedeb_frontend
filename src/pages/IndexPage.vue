@@ -1,17 +1,23 @@
 <template>
   <q-card flat class="background row justify-center max-width q-mt-lg">
-    <q-item-label class="text-h1">SweDeb</q-item-label>
+    <q-item-label class="text-h4 text-center">{{
+      $t("indexPageTitle")
+    }}</q-item-label>
     <q-card-section
-      class="text-body2 q-mt-sm"
+      class="text-body2 q-mt-sm lineHeight"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
       {{ $t("indexPageIntroText") }}
+      <a :href="$t('links.humlab')" class="link-deco text-accent text-bold">
+        Humlab
+      </a>
+      {{ $t("indexPageIntroText2") }}
       <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
-        Swerik
+        SWERIK.
       </a>
     </q-card-section>
     <q-card-section
-      class=""
+      class="q-mb-lg"
       :class="$q.screen.lt.sm ? 'q-pt-sm q-pb-xl' : 'q-py-xl'"
     >
       <div class="grid-container max">
@@ -58,14 +64,13 @@ const tools = [
     text: "speechesText",
     icon: "speechesIcon",
   },
-  /*
+
   {
     route: "tools/ngram",
     title: "nGramsTitle",
     text: "nGramsText",
     icon: "nGramsIcon",
   },
-  */
 ];
 </script>
 
