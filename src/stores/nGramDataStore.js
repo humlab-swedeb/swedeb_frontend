@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import JSZip from 'jszip';
+
 
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
@@ -15,6 +17,49 @@ export const nGramDataStore = defineStore("nGramDataStore", {
   }),
 
   actions: {
+
+    downloadNGramTableCSV(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const columnNames = ["ngram", "count", "number_speeches"];
+        const headerRow = columnNames.join(",");
+        console.log(headerRow);
+
+        // Map each object in nGramData to a CSV row, only including keys from columnNames
+        const dataRows = this.nGrams
+          .map((obj) =>
+            columnNames
+              .map((key) => {
+                if (key === "number_speeches") {
+                  return `"${obj.documents.length}"`;
+                }
+                return `"${obj[key]}"`;
+              })
+              .join(",")
+          )
+          .join("\n");
+
+        const csvContent = headerRow + "\n" + dataRows;
+
+        const zip = new JSZip();
+        zip.file("nGramData.csv", csvContent);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          // Create a temporary URL for the Blob
+          const url = window.URL.createObjectURL(content);
+          // Create an anchor element for initiating the download
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.setAttribute("download", "nGram.zip");
+          anchor.click(); // Trigger the download
+          // Revoke the temporary URL after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
+        });
+      }
+    },
+
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {

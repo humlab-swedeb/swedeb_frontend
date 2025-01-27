@@ -12,6 +12,7 @@
       color="secondary"
       :label="$t('downloadNgram')"
       style="width: fit-content"
+      @click="downloadNgram"
     >
     </q-btn>
   </div>
@@ -104,8 +105,11 @@ import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { metaDataStore } from "src/stores/metaDataStore";
 
 const nGramStore = nGramDataStore();
+const metaStore = metaDataStore();
+
 
 const rows = ref([]);
 const columns = ref([]);
@@ -125,6 +129,16 @@ const formatSearch = (value) => {
     return value.replace(searchString, `<b>${searchString}</b>`);
   }
   return value;
+};
+
+const getParamString = () => {
+  return metaStore.selectedMetadataToText("ngrams");
+};
+
+const downloadNgram = () => {
+  const paramstring = getParamString()
+  console.log(paramstring)
+  nGramStore.downloadNGramTableCSV(getParamString());
 };
 
 const getNumberDocHits = (props) => {
