@@ -68,8 +68,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.filterAtSearchSpeeches = { ...this.selectedWithOnlyValidSpeakers() };
     },
 
-    saveNgramsFilterData() {
+    saveNgramsFilterData(search) {
       this.filterAtSearchNgrams = { ...this.selectedWithOnlyValidSpeakers() };
+      this.filterAtSearchNgrams["search"] = search;
+
     },
 
     setSubmitNgramsEvent() {
@@ -211,6 +213,8 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
+
+
 
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
