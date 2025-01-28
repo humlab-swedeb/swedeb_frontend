@@ -29,25 +29,24 @@ export const downloadDataStore = defineStore("downloadData", {
       return `${speaker}_${id}.txt`.replace(/ /g, "_");
     },
 
+    setupDownload(filename, blob) {
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.setAttribute("download", filename);
+      anchor.click(); // Trigger the download
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+    },
+
     async downloadCurrentSpeechText(text, currentMetadata) {
       try {
         const filename = this.formatFileName(currentMetadata);
-        // Create a new Blob object with the text content
         const content = `${this.formatProps(currentMetadata)}\n${text}`;
         const blob = new Blob([content], { type: "text/plain" });
-        // Create a temporary URL for the Blob object
-        const url = window.URL.createObjectURL(blob);
-
-        // Create an anchor element for initiating the download
-        const anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.setAttribute("download", filename);
-        anchor.click(); // Trigger the download
-
-        // Revoke the temporary URL after a short delay
-        setTimeout(() => {
-          window.URL.revokeObjectURL(url);
-        }, 1000);
+        this.setupDownload(filename, blob);
       } catch (error) {
         console.error("Error downloading text file:", error);
       }
@@ -75,22 +74,8 @@ export const downloadDataStore = defineStore("downloadData", {
 
         originalZip.file("metadata.txt", selected_metadata);
 
-        // Generate the new ZIP file asynchronously
-        const newZipBlob = await originalZip.generateAsync({ type: "blob" });
-
-        // Create a temporary URL for the new ZIP file
-        const url = window.URL.createObjectURL(newZipBlob);
-
-        // Create an anchor element for initiating the download
-        const anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.setAttribute("download", "tal.zip");
-        anchor.click(); // Trigger the download
-
-        // Revoke the temporary URL after a short delay
-        setTimeout(() => {
-          window.URL.revokeObjectURL(url);
-        }, 1000);
+        const zipBlob = await originalZip.generateAsync({ type: "blob" });
+        this.setupDownload("tal.zip", zipBlob);
       } catch (error) {
         console.error("Error fetching data for download:", error);
       }

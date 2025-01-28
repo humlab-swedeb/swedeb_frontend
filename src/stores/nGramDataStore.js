@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
-import JSZip from 'jszip';
+import { downloadDataStore } from "./downloadDataStore";
+
+import JSZip from "jszip";
 import ExcelJS from "exceljs";
-
-
 
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
@@ -16,74 +16,40 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
     placingSelected: "Ej specificerat",
     searchString: "",
+    columnNames: ["ngram", "count", "number_speeches"],
   }),
 
   actions: {
-
     downloadNGramTableCSV(selectedMetadata) {
       if (this.nGrams.length > 0) {
-        const columnNames = ["ngram", "count", "number_speeches"];
-        const headerRow = columnNames.join(",");
-        console.log(headerRow);
+        const headerRow = this.columnNames.join(",");
 
-        // Map each object in nGramData to a CSV row, only including keys from columnNames
-        const dataRows = this.nGrams
-          .map((obj) =>
-            columnNames
-              .map((key) => {
-                if (key === "number_speeches") {
-                  return `"${obj.documents.length}"`;
-                }
-                return `"${obj[key]}"`;
-              })
-              .join(",")
-          )
-          .join("\n");
+        const dataRows = this.nGrams.map((obj) => {
+          return `"${obj.ngram},${obj.count}, ${obj.documents.length}"`;
+        });
 
-        const csvContent = headerRow + "\n" + dataRows;
+        const csvContent = headerRow + "\n" + dataRows.join("\n");
 
         const zip = new JSZip();
         zip.file("nGramData.csv", csvContent);
         zip.file("metadata.txt", selectedMetadata);
 
         zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "nGram.zip");
-          anchor.click(); // Trigger the download
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
+          downloadDataStore().setupDownload("ngramCSV.zip", content);
         });
       }
     },
 
     async downloadNGramTableExcel(selectedMetadata) {
       if (this.nGrams.length > 0) {
-        const columnNames = ["ngram", "count", "number_speeches"];
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('nGramData');
+        const worksheet = workbook.addWorksheet("nGramData");
 
-        // Add header row
-        worksheet.addRow(columnNames);
+        worksheet.addRow(this.columnNames);
 
-        // Add data rows
         this.nGrams.forEach((obj) => {
-          worksheet.addRow([
-            obj.ngram,
-            obj.count,
-            obj.documents.length
-          ]);
+          worksheet.addRow([obj.ngram, obj.count, obj.documents.length]);
         });
-
-        // Add metadata sheet
-        const metadataSheet = workbook.addWorksheet('Metadata');
-        metadataSheet.addRow(['Metadata']);
-        metadataSheet.addRow([selectedMetadata]);
 
         const buffer = await workbook.xlsx.writeBuffer();
 
@@ -92,17 +58,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         zip.file("metadata.txt", selectedMetadata);
 
         zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "nGram.zip");
-          anchor.click(); // Trigger the download
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
+          downloadDataStore().setupDownload("ngramExcel.zip", content);
         });
       }
     },
@@ -130,14 +86,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
-
       const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
 
       if (speech_ids.length > 0) {
         const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
 
         const path = `/tools/speeches?${queryString}`;
-
 
         try {
           const response = await api.get(path);
