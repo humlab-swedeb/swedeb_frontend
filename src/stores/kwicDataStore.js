@@ -60,7 +60,6 @@ export const kwicDataStore = defineStore("kwicData", {
     async downloadKWICTableExcel(selectedMetadata) {
 
       if (this.kwicData.length > 0) {
-        // Map each object in kwicData to an array of objects with new column names
         const data = this.kwicData.map((obj) => {
           let newObj = {};
           Object.keys(this.columnNames).forEach((key) => {
@@ -69,17 +68,14 @@ export const kwicDataStore = defineStore("kwicData", {
           return newObj;
         });
 
-        // Create a new workbook and add the data
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Sheet1");
 
-        // Add the header row
         worksheet.columns = Object.values(this.columnNames).map((header) => ({
           header,
           key: header,
         }));
 
-        // Add the data rows
         data.forEach((row) => worksheet.addRow(row));
 
         const buffer = await workbook.xlsx.writeBuffer();
@@ -96,9 +92,9 @@ export const kwicDataStore = defineStore("kwicData", {
           const anchor = document.createElement("a");
           anchor.href = url;
           anchor.setAttribute("download", "kwic.zip");
-          anchor.click(); // Trigger the download
+          anchor.click();
 
-          // Revoke the temporary URL after a short delay
+          // Revoke the temporary URL after a delay
           setTimeout(() => {
             window.URL.revokeObjectURL(url);
           }, 1000);

@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import JSZip from 'jszip';
+import ExcelJS from "exceljs";
+
 
 
 export const nGramDataStore = defineStore("nGramDataStore", {
@@ -42,6 +44,51 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
         const zip = new JSZip();
         zip.file("nGramData.csv", csvContent);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          // Create a temporary URL for the Blob
+          const url = window.URL.createObjectURL(content);
+          // Create an anchor element for initiating the download
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          anchor.setAttribute("download", "nGram.zip");
+          anchor.click(); // Trigger the download
+          // Revoke the temporary URL after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
+        });
+      }
+    },
+
+    async downloadNGramTableExcel(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const columnNames = ["ngram", "count", "number_speeches"];
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('nGramData');
+
+        // Add header row
+        worksheet.addRow(columnNames);
+
+        // Add data rows
+        this.nGrams.forEach((obj) => {
+          worksheet.addRow([
+            obj.ngram,
+            obj.count,
+            obj.documents.length
+          ]);
+        });
+
+        // Add metadata sheet
+        const metadataSheet = workbook.addWorksheet('Metadata');
+        metadataSheet.addRow(['Metadata']);
+        metadataSheet.addRow([selectedMetadata]);
+
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        const zip = new JSZip();
+        zip.file("nGramData.xlsx", buffer);
         zip.file("metadata.txt", selectedMetadata);
 
         zip.generateAsync({ type: "blob" }).then((content) => {

@@ -5,16 +5,28 @@
       {{ $t("searchResult2") }}
     </q-item-label>
 
-    <q-btn
+    <q-btn-dropdown
       no-caps
       icon="download"
       class="text-grey-8 col-3"
       color="secondary"
       :label="$t('downloadNgram')"
       style="width: fit-content"
-      @click="downloadNgram"
     >
-    </q-btn>
+      <q-list>
+        <q-item clickable v-close-popup @click="downloadNgram">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadNgramExcel">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+      </q-list>
+    </q-btn-dropdown>
   </div>
   <q-table
     bordered
@@ -136,10 +148,14 @@ const getParamString = () => {
 };
 
 const downloadNgram = () => {
-  const paramstring = getParamString()
-  console.log(paramstring)
   nGramStore.downloadNGramTableCSV(getParamString());
 };
+
+
+const downloadNgramExcel = () => {
+  nGramStore.downloadNGramTableExcel(getParamString())
+};
+
 
 const getNumberDocHits = (props) => {
   return nGramStore.nGrams[props.row.id - 1].documents.length;
