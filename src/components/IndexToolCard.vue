@@ -23,8 +23,10 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
+@use "sass:color";
+
 .onHover:hover {
-  background-color: darken($primary, 7%) !important;
+  background-color: color.adjust($primary, $lightness: -7%) !important;
   transition: 200ms ease-in-out;
 }
 </style>
