@@ -181,9 +181,10 @@ export default {
   },
 
   // SPEECHES PAGE & COMPONENTS ------------------------------------------
-  speechesIntroTitle: "Anföranden — Sök på Riksdagsanföranden.",
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du avgränsa anförandena
-  till vissa partier, talare eller år.`,
+  speechesIntroTitle:
+    "Anföranden — Sök på och filtrera fram riksdagsanföranden.",
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du
+  avgränsa anförandena till bland annat vissa partier, talare eller år.`,
 
   // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om Riksdagsdebatter.se",
@@ -591,4 +592,4 @@ export default {
   reportText:
     "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
   githubLink: "Gå vidare till SWERIK:s GitHub-sida",
-  };
+};
