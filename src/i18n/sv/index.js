@@ -213,49 +213,49 @@ export default {
     0: {
       name: "Fredrik Mohammadi Norén",
       title:
-        "Riksdagsdebatter.se:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+        "Riksdagsdebatter.se:s projektledare, Institutionen för konst, kultur och kommunikation, Malmö Universitet",
       link: "https://mau.se/personer/fredrik.noren/",
     },
     1: {
       name: "Johan Jarlbrink",
       title:
-        "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
+        "Institutionen för kultur- och medievetenskaper, Umeå Universitet",
       link: "https://www.umu.se/personal/johan-jarlbrink/ ",
     },
     2: {
       name: "Rebecka Weegar",
-      title: "Systemutvecklare, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/rebecka-weegar/",
     },
     3: {
       name: "Roger Mähler",
-      title: "Systemutvecklare, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/roger-mahler/",
     },
-    5: {
+/*     5: {
       name: "Marita Nilsson",
       title: "Krav och test, tidigare antsälld på Humlab Umeå Universitet",
       link: "https://www.umu.se/personal/marita-nilsson/ ",
-    },
+    }, */
     4: {
       name: "Kajsa Palm",
-      title: "Systemutvecklare, UX/UI, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/kajsa-palm/",
     },
   },
   peopleReference: {
     0: {
       name: "Hanna Bäck",
-      title: "Professor, Statsvetenskapliga institutionen Lunds Universitet",
+      title: "Statsvetenskapliga institutionen, Lunds Universitet",
     },
     1: {
       name: "Simon Lindgren",
-      title: "Professor, Sociologiska institutionen Umeå Universitet",
+      title: "Sociologiska institutionen, Umeå Universitet",
     },
     2: {
       name: "Måns Magnusson",
       title:
-        "Universitetslektor, Statistiska institutionen Uppsala Universitet",
+        "Statistiska institutionen, Uppsala Universitet",
     },
     3: {
       name: "Leif-Jöran Olsson",
