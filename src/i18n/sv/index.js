@@ -139,7 +139,7 @@ export default {
 
   // KWIC PAGE & COMPONENTS ------------------------------------------------
   kwicIntroTitle:
-    "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
+    "Key Words in Context — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
   till exempel <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se kontexten till vänster och
   höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
