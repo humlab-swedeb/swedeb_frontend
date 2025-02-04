@@ -187,7 +187,8 @@ export default {
 
   // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om Riksdagsdebatter.se",
-  aboutFinance: "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
+  aboutFinance:
+    "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
     0: {
       alt: "Umeå universitet logo",
@@ -302,16 +303,16 @@ export default {
     0: {
       q: "Hur funkar kopplingen mellan talare och parti?",
       a: `Partifiltreringen bygger på det annoteringsarbetet som gjorts i SWERIK-projektet.
-      SWERIK har byggt upp en databas med svenska riksdagsdagsledamöter sedan 1867 där
-      varje ledamot är kopplad till olika metadata-kategorier
-      (bl a födelsedatum, kön och parti). En katalog med alla ledamöter finns här.
-      Via ledamotsdatabasen har SWERIK kopplat ihop ledamöter –
-      liksom ministrar som inte var ledamöter men som också har rätt att tala i riksdagen
-      – med deras respektive anföranden i kammarprotokollen. Denna koppling har gjorts
-      genom att identifiera ledamoten i respektive talarintroduktion i protokollen.
-      Kopplingen mellan rätt ledamot och rätt anföranden är inte komplett och ibland är den
-      felaktig. SWERIK-projektet försöker kontinuerligt att arbeta med annoteringskvalitén
-      på anförandena. `,
+      SWERIK har byggt upp en databas med svenska riksdagsdagsledamöter sedan 1867 där varje
+      ledamot är kopplad till olika metadata-kategorier (bl a födelsedatum, kön och parti).
+      En länk till en katalog med alla ledamöter finns nedan. Via ledamotsdatabasen har
+      SWERIK kopplat ihop ledamöter – liksom ministrar som inte var ledamöter men som
+      också har rätt att tala i riksdagen – med deras respektive anföranden i
+      kammarprotokollen. Denna koppling har gjorts genom att identifiera ledamoten
+      i respektive talarintroduktion i protokollen. Kopplingen mellan rätt ledamot
+      och rätt anföranden är inte komplett och ibland är den felaktig. SWERIK-projektet
+      försöker kontinuerligt att arbeta med annoteringskvalitén på anförandena.`,
+
       links: {
         0: {
           link: "https://swerik-project.github.io/",
@@ -378,7 +379,7 @@ export default {
       </ul>`,
     },
     2: {
-      q: "Var står partiförkortningarna för?",
+      q: "Vad står partiförkortningarna för?",
       a: `Partinamnen som används i Riksdagsdebatter.se bygger på de namn som anges
       i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
       samt information från riksdagens register. Många av partiförkortningarna är
@@ -393,7 +394,7 @@ export default {
         <li><b>AK-c89</b>: AK:s center (1889–1894)</li>
         <li><b>AK-ch</b>: AK:s center-högern (1883–1886)</li>
         <li><b>AK-c73</b>: AK:s centern (1873–1882)</li>
-        <li><b>AK-mfg</b>: AK:s de moderata reformvännernas grupp (1903–1905)</li>
+        <li><b>AK-mrg</b>: AK:s de moderata reformvännernas grupp (1903–1905)</li>
         <li><b>AK-fp</b>: AK:s folkpartiet (1895–1899)</li>
         <li><b>AK-fd</b>: AK:s friesenska diskussionsklubben (1897–1899)</li>
         <li><b>AK-frip</b>: AK:s frihandelsparti (1887–1888)</li>
@@ -435,7 +436,6 @@ export default {
         <li><b>Sp</b>: Socialistiska partiet (1934–1940)</li>
         <li><b>Sd</b>: Sverigedemokraterna (2010–)</li>
         <li><b>V</b>: Vänsterpartiet (1917–)</li>
-        <li><b>[–]</b>: Utan partibeteckning</li>
       </ul>`,
     },
     3: {
@@ -558,7 +558,8 @@ export default {
   downLoadInfo: {
     corpus_version: "Korpusversion: v1.1.0",
     swerik_ref: "Datakälla: https://swerik-project.github.io/",
-    swedeb_ref: "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
+    swedeb_ref:
+      "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
   },
 
   //ACCessibility ------------------------------------------------
