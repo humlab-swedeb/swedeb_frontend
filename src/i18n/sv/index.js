@@ -341,7 +341,9 @@ export default {
       inte finns med. Ledamöter som aldrig tillhörde ett parti (vilket var mer vanligt
       under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
       ledamöter som hoppat av ett parti under mandatperioden.
+
       <img src="/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
+
 </br></br>
       Det är viktigt att känna till att ett parti på 1800-talet inte är samma sak som
       ett parti idag. I början av tvåkammarriksdagen hade partier en betydligt lösare
