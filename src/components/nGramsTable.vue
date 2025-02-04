@@ -74,7 +74,7 @@
             <div class="row q-pb-md justify-between">
               <q-item-label class="col-9 q-mt-md">
                 {{ $t("searchResult1") }}
-                <b>{{ props.row.count }}</b> {{ $t("searchResult2") }}
+                <b>{{ props.row.speeches }}</b> {{ $t("searchResult2") }}
               </q-item-label>
             </div>
             <!-- SECOND TABLE -->
