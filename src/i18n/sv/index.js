@@ -150,14 +150,14 @@ export default {
   till vissa partier, talare eller år.`,
 
   ngramIntroTitle:
-    "N-grams — Se hur ett ord eller en fras har använts i olika sammanhang.",
+    "N-grams — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
   ngramIntro: `
   Med verktyget <strong>N-gram</strong> kan du söka på ord och fraser, till exempel
-  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se en lista med de mest förekommande N-grams
-  (beroende på dess storlek) före och/eller efter sökordet eller
-  sökfrasen. Här måste du söka på exakta ord och <code>*</code> kan <b>inte</b> användas.
-  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland annat vissa partier,
-  talare eller år.`,
+  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och få fram en lista med mest
+  förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
+   Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas).
+  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
+  annat vissa partier, talare eller år.`,
 
   searchResult1: "Sökningen resulterade i ",
 
