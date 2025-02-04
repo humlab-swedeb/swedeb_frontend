@@ -218,8 +218,7 @@ export default {
     },
     1: {
       name: "Johan Jarlbrink",
-      title:
-        "Institutionen för kultur- och medievetenskaper, Umeå Universitet",
+      title: "Institutionen för kultur- och medievetenskaper, Umeå Universitet",
       link: "https://www.umu.se/personal/johan-jarlbrink/ ",
     },
     2: {
@@ -232,7 +231,7 @@ export default {
       title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/roger-mahler/",
     },
-/*     5: {
+    /*     5: {
       name: "Marita Nilsson",
       title: "Krav och test, tidigare antsälld på Humlab Umeå Universitet",
       link: "https://www.umu.se/personal/marita-nilsson/ ",
@@ -254,8 +253,7 @@ export default {
     },
     2: {
       name: "Måns Magnusson",
-      title:
-        "Statistiska institutionen, Uppsala Universitet",
+      title: "Statistiska institutionen, Uppsala Universitet",
     },
     3: {
       name: "Leif-Jöran Olsson",
@@ -588,8 +586,9 @@ export default {
   },
 
   //REPORT BUGS/ FEEDBACK ----------------------------------------------
-  meta: "Metadata",
+  meta: "Metadata om anförande",
   reportTitle: "Rapportera fel i anföranden, dess metadata, eller ge feedback",
   reportText:
-    "För att lämna feedback eller rapportera fel, vänligen kopiera metadatan nedan och gå sedan vidare till SweRik:s GitHub-sida för att skapa en diskussion. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
-};
+    "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
+  githubLink: "Gå vidare till SWERIK:s GitHub-sida",
+  };
