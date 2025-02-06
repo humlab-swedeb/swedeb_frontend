@@ -139,7 +139,7 @@ export default {
 
   // KWIC PAGE & COMPONENTS ------------------------------------------------
   kwicIntroTitle:
-    "Key Words in Context — Se hur ord eller fraser har använts i olika sammanhang.",
+    "Key Words in Context — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
   kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
   till exempel <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se kontexten till vänster och
   höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
@@ -150,14 +150,14 @@ export default {
   till vissa partier, talare eller år.`,
 
   ngramIntroTitle:
-    "N-grams — Se hur ett ord eller en fras har använts i olika sammanhang.",
+    "N-grams — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
   ngramIntro: `
   Med verktyget <strong>N-gram</strong> kan du söka på ord och fraser, till exempel
-  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se en lista med de mest förekommande N-grams
-  (beroende på dess storlek) före och/eller efter sökordet eller
-  sökfrasen. Här måste du söka på exakta ord och <code>*</code> kan <b>inte</b> användas.
-  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland annat vissa partier,
-  talare eller år.`,
+  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och få fram en lista med mest
+  förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
+   Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas).
+  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
+  annat vissa partier, talare eller år.`,
 
   searchResult1: "Sökningen resulterade i ",
 
@@ -181,13 +181,15 @@ export default {
   },
 
   // SPEECHES PAGE & COMPONENTS ------------------------------------------
-  speechesIntroTitle: "Anföranden — Sök på Riksdagsanföranden.",
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du avgränsa anförandena
-  till vissa partier, talare eller år.`,
+  speechesIntroTitle:
+    "Anföranden — Sök på och filtrera fram riksdagsanföranden.",
+  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du
+  avgränsa anförandena till bland annat vissa partier, talare eller år.`,
 
   // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om Riksdagsdebatter.se",
-  aboutFinance: "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
+  aboutFinance:
+    "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
     0: {
       alt: "Umeå universitet logo",
@@ -212,49 +214,47 @@ export default {
     0: {
       name: "Fredrik Mohammadi Norén",
       title:
-        "Riksdagsdebatter.se:s projektledare, Universitetslektor biträdande, Institutionen för konst, kultur och kommunikation Malmö Universitet",
+        "Riksdagsdebatter.se:s projektledare, Institutionen för konst, kultur och kommunikation, Malmö Universitet",
       link: "https://mau.se/personer/fredrik.noren/",
     },
     1: {
       name: "Johan Jarlbrink",
-      title:
-        "Universitetslektor, Institutionen för kultur- och medievetenskaper Umeå Universitet",
+      title: "Institutionen för kultur- och medievetenskaper, Umeå Universitet",
       link: "https://www.umu.se/personal/johan-jarlbrink/ ",
     },
     2: {
       name: "Rebecka Weegar",
-      title: "Systemutvecklare, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/rebecka-weegar/",
     },
     3: {
       name: "Roger Mähler",
-      title: "Systemutvecklare, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/roger-mahler/",
     },
-    5: {
+    /*     5: {
       name: "Marita Nilsson",
       title: "Krav och test, tidigare antsälld på Humlab Umeå Universitet",
       link: "https://www.umu.se/personal/marita-nilsson/ ",
-    },
+    }, */
     4: {
       name: "Kajsa Palm",
-      title: "Systemutvecklare, UX/UI, Humlab Umeå Universitet",
+      title: "Humlab, Umeå Universitet",
       link: "https://www.umu.se/personal/kajsa-palm/",
     },
   },
   peopleReference: {
     0: {
       name: "Hanna Bäck",
-      title: "Professor, Statsvetenskapliga institutionen Lunds Universitet",
+      title: "Statsvetenskapliga institutionen, Lunds Universitet",
     },
     1: {
       name: "Simon Lindgren",
-      title: "Professor, Sociologiska institutionen Umeå Universitet",
+      title: "Sociologiska institutionen, Umeå Universitet",
     },
     2: {
       name: "Måns Magnusson",
-      title:
-        "Universitetslektor, Statistiska institutionen Uppsala Universitet",
+      title: "Statistiska institutionen, Uppsala Universitet",
     },
     3: {
       name: "Leif-Jöran Olsson",
@@ -302,16 +302,16 @@ export default {
     0: {
       q: "Hur funkar kopplingen mellan talare och parti?",
       a: `Partifiltreringen bygger på det annoteringsarbetet som gjorts i SWERIK-projektet.
-      SWERIK har byggt upp en databas med svenska riksdagsdagsledamöter sedan 1867 där
-      varje ledamot är kopplad till olika metadata-kategorier
-      (bl a födelsedatum, kön och parti). En katalog med alla ledamöter finns här.
-      Via ledamotsdatabasen har SWERIK kopplat ihop ledamöter –
-      liksom ministrar som inte var ledamöter men som också har rätt att tala i riksdagen
-      – med deras respektive anföranden i kammarprotokollen. Denna koppling har gjorts
-      genom att identifiera ledamoten i respektive talarintroduktion i protokollen.
-      Kopplingen mellan rätt ledamot och rätt anföranden är inte komplett och ibland är den
-      felaktig. SWERIK-projektet försöker kontinuerligt att arbeta med annoteringskvalitén
-      på anförandena. `,
+      SWERIK har byggt upp en databas med svenska riksdagsdagsledamöter sedan 1867 där varje
+      ledamot är kopplad till olika metadata-kategorier (bl a födelsedatum, kön och parti).
+      En länk till en katalog med alla ledamöter finns nedan. Via ledamotsdatabasen har
+      SWERIK kopplat ihop ledamöter – liksom ministrar som inte var ledamöter men som
+      också har rätt att tala i riksdagen – med deras respektive anföranden i
+      kammarprotokollen. Denna koppling har gjorts genom att identifiera ledamoten
+      i respektive talarintroduktion i protokollen. Kopplingen mellan rätt ledamot
+      och rätt anföranden är inte komplett och ibland är den felaktig. SWERIK-projektet
+      försöker kontinuerligt att arbeta med annoteringskvalitén på anförandena.`,
+
       links: {
         0: {
           link: "https://swerik-project.github.io/",
@@ -340,7 +340,9 @@ export default {
       inte finns med. Ledamöter som aldrig tillhörde ett parti (vilket var mer vanligt
       under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
       ledamöter som hoppat av ett parti under mandatperioden.
+
       <img src="/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
+
 </br></br>
       Det är viktigt att känna till att ett parti på 1800-talet inte är samma sak som
       ett parti idag. I början av tvåkammarriksdagen hade partier en betydligt lösare
@@ -378,7 +380,7 @@ export default {
       </ul>`,
     },
     2: {
-      q: "Var står partiförkortningarna för?",
+      q: "Vad står partiförkortningarna för?",
       a: `Partinamnen som används i Riksdagsdebatter.se bygger på de namn som anges
       i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
       samt information från riksdagens register. Många av partiförkortningarna är
@@ -393,7 +395,7 @@ export default {
         <li><b>AK-c89</b>: AK:s center (1889–1894)</li>
         <li><b>AK-ch</b>: AK:s center-högern (1883–1886)</li>
         <li><b>AK-c73</b>: AK:s centern (1873–1882)</li>
-        <li><b>AK-mfg</b>: AK:s de moderata reformvännernas grupp (1903–1905)</li>
+        <li><b>AK-mrg</b>: AK:s de moderata reformvännernas grupp (1903–1905)</li>
         <li><b>AK-fp</b>: AK:s folkpartiet (1895–1899)</li>
         <li><b>AK-fd</b>: AK:s friesenska diskussionsklubben (1897–1899)</li>
         <li><b>AK-frip</b>: AK:s frihandelsparti (1887–1888)</li>
@@ -435,7 +437,6 @@ export default {
         <li><b>Sp</b>: Socialistiska partiet (1934–1940)</li>
         <li><b>Sd</b>: Sverigedemokraterna (2010–)</li>
         <li><b>V</b>: Vänsterpartiet (1917–)</li>
-        <li><b>[–]</b>: Utan partibeteckning</li>
       </ul>`,
     },
     3: {
@@ -558,7 +559,8 @@ export default {
   downLoadInfo: {
     corpus_version: "Korpusversion: v1.1.0",
     swerik_ref: "Datakälla: https://swerik-project.github.io/",
-    swedeb_ref: "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
+    swedeb_ref:
+      "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
   },
 
   //ACCessibility ------------------------------------------------
@@ -585,8 +587,9 @@ export default {
   },
 
   //REPORT BUGS/ FEEDBACK ----------------------------------------------
-  meta: "Metadata",
+  meta: "Metadata om anförande",
   reportTitle: "Rapportera fel i anföranden, dess metadata, eller ge feedback",
   reportText:
-    "För att lämna feedback eller rapportera fel, vänligen kopiera metadatan nedan och gå sedan vidare till SweRik:s GitHub-sida för att skapa en diskussion. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
+    "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
+  githubLink: "Gå vidare till SWERIK:s GitHub-sida",
 };
