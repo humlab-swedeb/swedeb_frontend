@@ -15,7 +15,7 @@
       class="q-mt-md"
       :label="$t('normalizeResultLabel')"
       :tooltip="$t('normalizeResultTooltip')"
-      @toggle-event="handleNormalizeData"
+      v-model="wtStore.normalizeResults"
     />
   </q-card-section>
   <q-card-section v-else-if="currentPath === '/tools/kwic'">
@@ -24,7 +24,7 @@
       class="q-mt-md"
       :label="$t('lemmaResultLabel')"
       :tooltip="$t('lemmaResultTooltip')"
-      @toggle-event="handleLemmatizedSearch"
+      v-model="kwicStore.lemmatizeSearch"
     />
     <inputNrOfWords />
   </q-card-section>
@@ -66,18 +66,12 @@ import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
 import nGramWidth from "src/components/toolsFilterData/nGramWidth.vue";
 import nGramPlacingRadio from "src/components/toolsFilterData/nGramPlacingRadio.vue";
+import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
+import { kwicDataStore } from "src/stores/kwicDataStore";
+
+const wtStore = wordTrendsDataStore();
+const kwicStore = kwicDataStore();
 
 const route = useRoute();
-
 const currentPath = computed(() => route.path);
-
-const emit = defineEmits(["normalize-data", "lemmatize-search"]);
-
-function handleNormalizeData(newValue) {
-  emit("normalize-data", newValue);
-}
-
-function handleLemmatizedSearch(newValue) {
-  emit("lemmatize-search", newValue);
-}
 </script>
