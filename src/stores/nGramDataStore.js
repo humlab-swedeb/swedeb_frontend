@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import { downloadDataStore } from "./downloadDataStore";
+
+import JSZip from "jszip";
+import ExcelJS from "exceljs";
 
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
@@ -12,9 +16,53 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
     placingSelected: "Ej specificerat",
     searchString: "",
+    columnNames: ["ngram", "count", "number_speeches"],
   }),
 
   actions: {
+    downloadNGramTableCSV(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const headerRow = this.columnNames.join(",");
+
+        const dataRows = this.nGrams.map((obj) => {
+          return `"${obj.ngram},${obj.count}, ${obj.documents.length}"`;
+        });
+
+        const csvContent = headerRow + "\n" + dataRows.join("\n");
+
+        const zip = new JSZip();
+        zip.file("nGramData.csv", csvContent);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          downloadDataStore().setupDownload("ngramCSV.zip", content);
+        });
+      }
+    },
+
+    async downloadNGramTableExcel(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("nGramData");
+
+        worksheet.addRow(this.columnNames);
+
+        this.nGrams.forEach((obj) => {
+          worksheet.addRow([obj.ngram, obj.count, obj.documents.length]);
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        const zip = new JSZip();
+        zip.file("nGramData.xlsx", buffer);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          downloadDataStore().setupDownload("ngramExcel.zip", content);
+        });
+      }
+    },
+
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {
@@ -38,14 +86,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
-
       const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
 
       if (speech_ids.length > 0) {
         const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
 
         const path = `/tools/speeches?${queryString}`;
-
 
         try {
           const response = await api.get(path);

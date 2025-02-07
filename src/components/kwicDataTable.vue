@@ -195,7 +195,7 @@ columns.value = [
   {
     name: "left_word",
     required: true,
-    label: "Väster",
+    label: "Vänster",
     align: "right",
     field: "left_word",
     sortable: true,
