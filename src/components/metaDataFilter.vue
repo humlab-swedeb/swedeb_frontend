@@ -42,6 +42,10 @@
               type="gender"
               :toggle_label="$t('toggleGenderLabel')"
             />
+            <genderOfficeToggleCheckbox
+              type="chamber"
+              :toggle_label="$t('toggleChamberLabel')"
+            />
             <!-- <genderOfficeCheckbox type="gender" /> -->
             <!-- <q-card-section class="q-py-none"> -->
             <!-- <genderOfficeCheckbox type="office" /> -->

@@ -13,6 +13,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       office: [],
       subOffice: [],
       speakers: [],
+      chamber: [],
       yearRange: {
         min: 0,
         max: 0,
@@ -26,6 +27,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       office: [],
       subOffice: [],
       speakers: [],
+      chamber: [],
       yearRange: {
         min: 0,
         max: 0,
@@ -34,6 +36,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     genderFilter: false,
     partyFilter: false,
+    chamberFilter: false,
 
     submitEventKWIC: false,
     submitEventWT: false,
@@ -109,6 +112,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         office: [],
         subOffice: [],
         speakers: [],
+        chamber: [],
         yearRange: {
           min: this.options.yearRange.min,
           max: this.options.yearRange.max,
@@ -116,7 +120,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       };
 
       this.selected.gender = Object.keys(this.options.gender);
+      this.selected.chamber = Object.keys(this.options.chamber);
       this.genderFilter = false;
+      this.chamberFilter = false;
     },
 
     async fetchAllMetaData() {
@@ -126,6 +132,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.getOfficeOptions();
       this.getGenderOptions();
       this.getSpeakersOptions();
+      this.getChamberOptions();
     },
 
     addParamArray(current_key, api_key, query_params) {
@@ -163,7 +170,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       return this.options.gender[gender_id];
     },
 
+
     getMetaRow(metadata_variable, metadata_variable_name) {
+
       // Helper function to create a string representation of selected metadata
       let selected = "Alla";
       if (metadata_variable.length > 0) {
@@ -355,6 +364,19 @@ export const metaDataStore = defineStore("metaDataStore", {
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
+    },
+
+    async getChamberOptions() {
+      const path = "/metadata/chambers";
+      const response = await api.get(path);
+      this.options.chamber = response.data.chamber_list.reduce(
+        (acc, chamber) => {
+          acc[chamber.chamber_id] = chamber.chamber;
+          return acc;
+        },
+        {}
+      );
+      this.selected.chamber = Object.keys(this.options.chamber);
     },
 
     async getSubOfficeOptions() {
