@@ -18,7 +18,7 @@
     v-for="(value, key) in store.options[props.type]"
     :key="key"
     :val="key"
-    :label="value"
+    :label="value.displayStr"
     class="q-ml-md"
     size="sm"
     :color="!store[`${props.type}Filter`] ? 'grey' : 'accent'"
@@ -41,6 +41,8 @@ const setAllTrue = (type) => {
 };
 
 const handleCheckboxChange = (checked, key) => {
+  console.log(checked, key)
+
   if (checked) {
     if (!store.selected[props.type].includes(key)) {
       store.selected[props.type].push(key);

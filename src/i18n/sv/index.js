@@ -65,6 +65,7 @@ export default {
   toggleGenderLabel: "Filtrera på kön",
   toggleChamberLabel: "Filtrera på kammare",
   clearFilter: "Rensa filter",
+  chamber: "Kammare",
 
   toolsFilterTitle: "Verktygsspecifika filter",
   "/tools/wordtrends": "Ordtrender",

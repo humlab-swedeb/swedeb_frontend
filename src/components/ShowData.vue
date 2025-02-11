@@ -18,7 +18,15 @@
             <b>{{ customKey(key) }}:</b>
             {{
               value
-                .map((gender_id) => store.options.gender[gender_id])
+                .map((gender_id) => store.options.gender[gender_id].displayStr)
+                .join(", ")
+            }}
+          </div>
+          <div v-else-if="key === 'chamber' && value.length > 0">
+            <b>{{ customKey(key) }}:</b>
+            {{
+              value
+                .map((chamber_id) => store.options.chamber[chamber_id].displayStr)
                 .join(", ")
             }}
           </div>
@@ -61,6 +69,7 @@ const customKeys = {
   gender: i18n.gender,
   yearRange: i18n.year,
   speakers: i18n.speakers,
+  chamber: i18n.chamber,
 };
 const customKey = (key) => customKeys[key] || key;
 

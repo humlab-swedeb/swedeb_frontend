@@ -348,6 +348,21 @@ export const metaDataStore = defineStore("metaDataStore", {
       }, {});
     },
 
+    async getChamberOptions() {
+      const path = "/metadata/chambers";
+      const response = await api.get(path);
+      this.options.chamber = response.data.chamber_list.reduce(
+        (acc, chamber) => {
+          acc[chamber.chamber_id] = {displayStr: chamber.chamber,
+            chamber_abbrev: chamber.chamber_abbrev
+          };
+          return acc;
+        },
+        {}
+      );
+      this.selected.chamber = Object.keys(this.options.chamber);
+    },
+
     async getOfficeOptions() {
       const path = "/metadata/office_types";
       const response = await api.get(path);
@@ -355,29 +370,18 @@ export const metaDataStore = defineStore("metaDataStore", {
         (office_type) => office_type.office
       );
     },
-
     async getGenderOptions() {
       const path = "/metadata/genders";
       const response = await api.get(path);
       this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = gender.gender;
+        acc[gender.gender_id] = {displayStr: gender.gender};
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
     },
 
-    async getChamberOptions() {
-      const path = "/metadata/chambers";
-      const response = await api.get(path);
-      this.options.chamber = response.data.chamber_list.reduce(
-        (acc, chamber) => {
-          acc[chamber.chamber_id] = chamber.chamber;
-          return acc;
-        },
-        {}
-      );
-      this.selected.chamber = Object.keys(this.options.chamber);
-    },
+
+
 
     async getSubOfficeOptions() {
       const path = "/metadata/sub_office_types";
