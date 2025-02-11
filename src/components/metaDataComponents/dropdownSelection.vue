@@ -20,7 +20,7 @@
     }"
     :option-label="customOptionLabel"
     @filter="filterHandler"
-    :use-input="props.type === 'speakers'"
+    use-input
     @clear="handleClear"
   >
     <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
@@ -114,17 +114,20 @@ watchEffect(async () => {
 });
 
 const filterHandler = (searchTerm, updateOptions) => {
+  const lowercasedInput = searchTerm.toLowerCase();
   if (props.type === "speakers") {
-    const lowercasedInput = searchTerm.toLowerCase();
     filterOptions.value = options.value.filter((opt) =>
       customOptionLabel(opt).toLowerCase().includes(lowercasedInput)
     );
-    updateOptions(filterOptions.value);
+  } else if (props.type === "party") {
+    filterOptions.value = options.value.filter((opt) =>
+      opt.toLowerCase().includes(lowercasedInput)
+    );
   } else {
     // For other types, set filterOptions to be the same as options.value
     filterOptions.value = options.value;
-    updateOptions(filterOptions.value);
   }
+  updateOptions(filterOptions.value);
 };
 
 const customOptionLabel = (opt) => {

@@ -14,28 +14,35 @@
         class="q-mr-lg"
         v-model="toggleValue"
         color="accent"
-        :label="toggleValue ? $t('toggleYes') : $t('toggleNo')"
         keep-color
-        @click="handleToggle"
         checked-icon="check"
         unchecked-icon="close"
       >
-        <template #label>
-          {{ toggleValue ? "Ja" : "Nej" }}
-        </template>
       </q-toggle>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-const props = defineProps(["label", "tooltip"]);
-const emit = defineEmits(["toggle-event"]);
+import { ref, watch } from "vue";
 
-const toggleValue = ref(false);
+const props = defineProps({
+  modelValue: Boolean,
+  label: String,
+  tooltip: String,
+});
+const emit = defineEmits(["update:modelValue"]);
 
-const handleToggle = () => {
-  emit("toggle-event", toggleValue.value);
-};
+const toggleValue = ref(props.modelValue);
+
+watch(toggleValue, (newValue) => {
+  emit("update:modelValue", newValue);
+});
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    toggleValue.value = newValue;
+  }
+);
 </script>

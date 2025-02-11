@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import { downloadDataStore } from "./downloadDataStore";
+
+import JSZip from "jszip";
+import ExcelJS from "exceljs";
 
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
@@ -12,9 +16,53 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
     placingSelected: "Ej specificerat",
     searchString: "",
+    columnNames: ["ngram", "count", "number_speeches"],
   }),
 
   actions: {
+    downloadNGramTableCSV(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const headerRow = this.columnNames.join(",");
+
+        const dataRows = this.nGrams.map((obj) => {
+          return `"${obj.ngram},${obj.count}, ${obj.documents.length}"`;
+        });
+
+        const csvContent = headerRow + "\n" + dataRows.join("\n");
+
+        const zip = new JSZip();
+        zip.file("nGramData.csv", csvContent);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          downloadDataStore().setupDownload("ngramCSV.zip", content);
+        });
+      }
+    },
+
+    async downloadNGramTableExcel(selectedMetadata) {
+      if (this.nGrams.length > 0) {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("nGramData");
+
+        worksheet.addRow(this.columnNames);
+
+        this.nGrams.forEach((obj) => {
+          worksheet.addRow([obj.ngram, obj.count, obj.documents.length]);
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        const zip = new JSZip();
+        zip.file("nGramData.xlsx", buffer);
+        zip.file("metadata.txt", selectedMetadata);
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          downloadDataStore().setupDownload("ngramExcel.zip", content);
+        });
+      }
+    },
+
     getPosition() {
       const placement = this.placingSelected;
       if (placement === "Vänster") {
@@ -26,35 +74,35 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
-    getSpeechIdsForRow(row_nr) {
+    getSpeechIdsForRow(row_nr, page, rows_per_page) {
       if (row_nr >= 0 && row_nr < this.nGrams.length) {
         const documents = this.nGrams[row_nr].documents;
-        return documents.slice(0, 10);
+        const start = (page - 1) * rows_per_page;
+        const end = start + rows_per_page;
+        return documents.slice(start, end);
       } else {
         return [];
       }
     },
 
-    async getNGramSpeeches(row_nr, ngram) {
-      const speech_ids = this.getSpeechIdsForRow(row_nr);
-      const path = "/tools/ngram_speeches"; // Full URL
-      const json_payload = JSON.stringify(speech_ids);
+    async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
+      const speech_ids = this.getSpeechIdsForRow(row_nr, page, rows_per_page);
 
-      try {
-        const response = await api.post(path, json_payload, {
-          headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
-          },
-          responseType: "json",
-        });
+      if (speech_ids.length > 0) {
+        const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
 
-        this.nGramSpeeches = response.data.speech_list;
-        this.nGramSpeeches.forEach((speech) => {
-          speech.node_word = ngram;
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const path = `/tools/speeches?${queryString}`;
+
+        try {
+          const response = await api.get(path);
+          this.nGramSpeeches = response.data.speech_list;
+          this.nGramSpeeches.forEach((speech) => {
+            speech.node_word = ngram;
+          });
+        } catch (error) {
+          console.log("Error fetching n-gram speeches");
+          this.nGramSpeeches = [];
+        }
       }
     },
 

@@ -77,10 +77,7 @@
       class="bg-transparent padding-bot"
       :class="$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'"
     >
-      <toolsFilters
-        @normalize-data="handleNormalizeData"
-        @lemmatize-search="lemmatizeSearch"
-      />
+      <toolsFilters />
       <div class="q-pa-lg full-width sticky-bottom">
         <!-- Search button for WORDTRENDS -->
         <q-btn
