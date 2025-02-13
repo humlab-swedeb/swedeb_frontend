@@ -41,7 +41,6 @@ const setAllTrue = (type) => {
 };
 
 const handleCheckboxChange = (checked, key) => {
-  console.log(checked, key)
 
   if (checked) {
     if (!store.selected[props.type].includes(key)) {

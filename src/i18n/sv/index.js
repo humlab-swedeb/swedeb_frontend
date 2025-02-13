@@ -66,6 +66,8 @@ export default {
   toggleChamberLabel: "Filtrera på kammare",
   clearFilter: "Rensa filter",
   chamber: "Kammare",
+  yearInterval: "Årsintervall",
+  parties: "partier",
 
   toolsFilterTitle: "Verktygsspecifika filter",
   "/tools/wordtrends": "Ordtrender",

@@ -223,16 +223,14 @@ export const metaDataStore = defineStore("metaDataStore", {
     selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
 
-
-
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
       const selected_years_end = selected_metadata.yearRange.max;
-      const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
+      const year_string = `${i18n.yearInterval}: ${selected_years_start} - ${selected_years_end}`;
 
       const selected_parties = this.getMetaRow(
         selected_metadata.party,
-        "partier"
+        `${i18n.parties}`
       );
 
       const selectedValidSpeakers = this.filterSelectedSpeakers(
@@ -244,16 +242,29 @@ export const metaDataStore = defineStore("metaDataStore", {
       );
       const selected_speakers = this.getMetaRow(
         selected_speakers_as_string,
-        "talare"
+        `${i18n.speakers}`.toLowerCase()
       );
+
+      const selected_chambers_as_string = selected_metadata.chamber.map((chamber) =>
+        this.options.chamber[chamber].displayStr
+      );
+
       const selected_genders_as_string = selected_metadata.gender.map(
-        (gender) => this.options.gender[gender]
+        (gender) => this.options.gender[gender].displayStr
       );
 
       const selected_genders = this.getMetaRow(
         selected_genders_as_string,
-        "kön"
+        `${i18n.gender}`.toLowerCase()
       );
+
+      const selected_chambers = this.getMetaRow(
+        selected_chambers_as_string,
+        `${i18n.chamber}`.toLowerCase()
+      );
+
+      console.log(selected_chambers)
+
       const selected_terms = this.getSearchTermsAsString(
         selected_metadata.search
       );
@@ -261,7 +272,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
+      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
     },
 
     getSelectedParams(additional_params = {}) {
