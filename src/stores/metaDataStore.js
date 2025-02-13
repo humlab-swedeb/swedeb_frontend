@@ -175,7 +175,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         this.selected.chamber.forEach((chamber) =>
           selected_params.append(
             "chamber_abbrev",
-            this.options.chamber[chamber].chamber_abbrev
+            this.options.chamber[chamber].chamber_abbrev.toLowerCase()
           )
         );
       }
@@ -318,8 +318,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const searchParams = new URLSearchParams();
       this.addPartyParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
-      //this.addParamArray("office", "office_types", searchParams);
-      //this.addParamArray("subOffice", "sub_office_types", searchParams);
+      this.addChamberParam(searchParams);
       return searchParams.toString();
     },
 
