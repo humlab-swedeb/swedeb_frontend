@@ -280,26 +280,6 @@ export default {
   // FAQ PAGE ------------------------------------------------
   faqPageTitle: "FAQ: Vanliga frågor och svar",
   faqContent: {
-    /* 0: {
-      q: "Vad är Riksdagsdebatter.se?",
-      a: "Riksdagsdebatter.se är en förkortning av Swedish Debates och är ett forskningsinfrastrukturprojekt som finansieras av Umeå Universitet.",
-    },
-    1: {
-      q: "Vad är syftet med Riksdagsdebatter.se?",
-      a: `Syftet med Riksdagsdebatter.se är att tillgängliggöra de annoterade svenska riksdagsdebatterna för det bredare forskarsamhället. Projektet utvecklar ett publikt användargränssnitt - Riksdagsdebatter.se - som gör det möjligt för forskare att få access, filtrera samt att utforska detta unika material med hjälp av olika metoder.`,
-    },
-    2: {
-      q: "Varifrån kommer materialet till Riksdagsdebatter.se?",
-      a: "De annoterade riksdagstalen hämtas från samarbetsprojektet Swerik. Talen är kopplade till riksdagsledamot med metadata för bland annat parti, kön och år.",
-      link: "https://swerik-project.github.io/",
-      linkText: "Läs mer om Swerik här.",
-    },
-    3: {
-      q: "Vilka typer av brister finns i materialet?",
-      a: "Även om kvalitén är god finns det brister i materialet. Talen har till exempel inte alltid blivit rätt segmenterade (var talet börjar och slutar) och kopplingen mellan talarintroduktion och talande ledamot är inte fullständig.",
-      link: "https://github.com/swerik-project/the-swedish-parliament-corpus",
-      linkText: "Mer information om kvalitén finns här.",
-    }, */
     0: {
       q: "Hur funkar kopplingen mellan talare och parti?",
       a: `Partifiltreringen bygger på det annoteringsarbetet som gjorts i SWERIK-projektet.
@@ -444,7 +424,14 @@ export default {
       q: "Vad är ett kammarprotokoll?",
       a: `Ett kammarprotokoll eller kammarens protokoll är den dokumenttyp
       i riksdagstrycket där ledamöternas anföranden finns registrerade,
-      liksom information om voteringar och beslut.`,
+      liksom information om voteringar och beslut. Där finns ca 18,000
+      protokoll sedan 1867. Du kan ta del av protokollen på Riksdagens hemsida.`,
+      links: {
+        0: {
+          link: "https://www.riksdagen.se/sv/sok/?avd=dokument",
+          linkText: "Sök på Riksdagens hemsida.",
+        },
+      },
     },
     4: {
       q: "Varför finns det länkar till varje talares sida på Wikidata?",
