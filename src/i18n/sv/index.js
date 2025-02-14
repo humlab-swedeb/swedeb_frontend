@@ -531,6 +531,47 @@ export default {
         },
       },
     },
+    9: {
+      q: "Hur mycket data och material bygger Riksdagsdebatter.se på?",
+      a: `Alla anföranden och information om riksdagsledamöter som avänds i Riksdagdebatter.se
+      kommer ursprungligen från de svenska riksdagsprotokollen och andra källor som riksdagen
+      har varit med och producerat. Med hjälp av automatiska maskininlärningsmodeller och manuellt
+      kontrollarbete har alla protokoll har processats av SWERIK-projektet för att identifiera
+      enskilda anföranden och för att koppla ihop dessa med respektive ledamot.
+</br></br>
+      På grund av det stora materialet är det svårt för modellerna att uppnå 100 % träffsäkerhet,
+      till exempel vad gäller att identifiera alla anföranden och koppla dessa till rätt ledamot.
+      Den statistiskt uppskattade träffsäkerheten för att koppla samman anföranden med rätt ledamot
+      är över 90 % efter 1900 (och ofta över 95 % efter 1920). Du kan följa kvalitén i den senaste
+      versionen på SWERIKs GitHub-sida.
+</br></br>
+      Generell information om den anförande-data som SWERIK har förfinat finns i konferenspapret
+      "The Swedish Parliament Corpus 1867–2022" som publicerades på LREC-Coling 2024 2024.
+      I stora drag bygger Riksdagsdebatter.se på följande dataset (sedan 1867):
+      <ul>
+        <li>ca 18,000 riksdagsprotokoll</li>
+        <li>ca 1,000,000 annoterade anföranden från riksdagsprotokollen</li>
+        <li>ca 6,000 riksdagsledamöter. SWERIK har även skapat en egen katalog med riksdagsledamöter.</li>
+      </ul>`,
+      links: {
+        0: {
+          link: "https://swerik-project.github.io/",
+          linkText: "Läs mer om SWERIK.",
+        },
+        1: {
+          link: "https://github.com/swerik-project/the-swedish-parliament-corpus",
+          linkText: "SWERIKs GitHub-sida.",
+        },
+        2: {
+          link: "https://aclanthology.org/2024.lrec-main.1400.pdf",
+          linkText: "The Swedish Parliament Corpus 1867–2022.",
+        },
+        3: {
+          link: "https://swerik-project.github.io/person-catalog/",
+          linkText: "Katalog med alla ledamöter.",
+        },
+      },
+    },
   },
 
   // Expanded table row & DOWNLOAAD------------------------------------------
