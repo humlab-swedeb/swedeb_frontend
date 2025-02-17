@@ -94,6 +94,9 @@
                   ? $t("accessibility.metadataMissing")
                   : col.value
               }}
+              <q-tooltip v-if="col.value !== '[-]'">
+                {{ props.row.speaker }}
+              </q-tooltip>
             </q-item-label>
             <q-item-label
               v-else-if="col.name === 'node_word'"
