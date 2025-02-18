@@ -91,7 +91,10 @@
                     ? $t("accessibility.metadataMissing")
                     : col.value
                 }}
-                <q-tooltip v-if="col.value !== '[-]'">
+                <q-tooltip
+                  v-if="col.value !== '[-]'"
+                  class="text-subtitle2"
+                >
                   {{ props.row.party_full }}
                 </q-tooltip>
               </q-item-label>
