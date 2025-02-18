@@ -5,7 +5,7 @@
       {{ $t("searchResult2") }}
     </q-item-label>
 
-    <q-btn
+    <q-btn-dropdown
       no-caps
       icon="download"
       class="text-grey-8 col-3"
@@ -13,7 +13,20 @@
       :label="$t('downloadNgram')"
       style="width: fit-content"
     >
-    </q-btn>
+      <q-list>
+        <q-item clickable v-close-popup @click="downloadNgram">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadNgramExcel">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+      </q-list>
+    </q-btn-dropdown>
   </div>
   <q-table
     bordered
@@ -41,7 +54,12 @@
           class="bg-white"
           :class="props.expand ? 'bg-grey-3' : ''"
         >
-          {{ col.value }}
+          <q-item-label v-if="col.name === 'ngram'">
+            <span v-html="formatSearch(col.value)" />
+          </q-item-label>
+          <q-item-label v-else>
+            {{ col.value }}
+          </q-item-label>
         </q-td>
         <q-td
           auto-width
@@ -69,7 +87,7 @@
             <div class="row q-pb-md justify-between">
               <q-item-label class="col-9 q-mt-md">
                 {{ $t("searchResult1") }}
-                <b>{{ props.row.count }}</b> {{ $t("searchResult2") }}
+                <b>{{ props.row.speeches }}</b> {{ $t("searchResult2") }}
               </q-item-label>
             </div>
             <!-- SECOND TABLE -->
@@ -78,7 +96,13 @@
               <loadingIcon />
             </div>
             <div v-else>
-              <speechDataTable type="ngram" />
+              <speechDataTableNgram
+                ref="speechesNgram"
+                type="ngram"
+                :totalHits="getNumberDocHits(props)"
+                :rowID="props.row.id"
+                :ngram="props.row.ngram"
+              />
             </div>
           </div>
         </q-td>
@@ -91,24 +115,66 @@
 <script setup>
 import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
-import speechDataTable from "src/components/speechDataTable.vue";
+import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { metaDataStore } from "src/stores/metaDataStore";
 
 const nGramStore = nGramDataStore();
+const metaStore = metaDataStore();
+
 
 const rows = ref([]);
 const columns = ref([]);
 const loading = ref(false);
 const innerLoading = ref({});
+const speechesNgram = ref(null);
+
+
+
+const formatSearch = (value) => {
+  let searchString = nGramStore.searchString;
+  if (searchString.includes(".*")) {
+    searchString = searchString.replace(".*", "");
+  }
+  if (searchString && value.includes(searchString)) {
+    // Split the value and wrap the matching part in bold tags
+    return value.replace(searchString, `<b>${searchString}</b>`);
+  }
+  return value;
+};
+
+const getParamString = () => {
+  return metaStore.selectedMetadataToText("ngrams");
+};
+
+const downloadNgram = () => {
+  nGramStore.downloadNGramTableCSV(getParamString());
+};
+
+
+const downloadNgramExcel = () => {
+  nGramStore.downloadNGramTableExcel(getParamString())
+};
+
+
+const getNumberDocHits = (props) => {
+  return nGramStore.nGrams[props.row.id - 1].documents.length;
+};
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
 
+
   if (props.expand) {
-    console.log(props.row);
     innerLoading.value[props.row.id] = true;
+
     try {
-      await nGramStore.getNGramSpeeches(props.row.id - 1, props.row.ngram);
+      await nGramStore.getNGramSpeeches(
+        props.row.id - 1,
+        props.row.ngram,
+        1, //page, initial value
+        10 //hits per page, initial value
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -116,17 +182,14 @@ const expandRow = async (props) => {
     }
   }
 };
+
 rows.value = nGramStore.nGrams.map((entry, index) => ({
   id: index + 1,
   ngram: entry.ngram,
   count: entry.count,
-  speeches: entry.count + 1,
+  speeches: entry.documents.length,
 }));
-/* rows.value = [
-      { id: 1, words: "ett ord", frequency: 1 },
-    { id: 2, words: "två ord", frequency: 2 },
-    { id: 3, words: "tre ord", frequency: 3 },
-  ];*/
+
 columns.value = [
   {
     name: "ngram",

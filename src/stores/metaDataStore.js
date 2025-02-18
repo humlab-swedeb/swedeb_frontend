@@ -13,6 +13,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       office: [],
       subOffice: [],
       speakers: [],
+      chamber: [],
       yearRange: {
         min: 0,
         max: 0,
@@ -26,6 +27,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       office: [],
       subOffice: [],
       speakers: [],
+      chamber: [],
       yearRange: {
         min: 0,
         max: 0,
@@ -34,6 +36,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     genderFilter: false,
     partyFilter: false,
+    chamberFilter: false,
 
     submitEventKWIC: false,
     submitEventWT: false,
@@ -68,8 +71,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.filterAtSearchSpeeches = { ...this.selectedWithOnlyValidSpeakers() };
     },
 
-    saveNgramsFilterData() {
+    saveNgramsFilterData(search) {
       this.filterAtSearchNgrams = { ...this.selectedWithOnlyValidSpeakers() };
+      this.filterAtSearchNgrams["search"] = search;
+
     },
 
     setSubmitNgramsEvent() {
@@ -107,6 +112,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         office: [],
         subOffice: [],
         speakers: [],
+        chamber: [],
         yearRange: {
           min: this.options.yearRange.min,
           max: this.options.yearRange.max,
@@ -114,7 +120,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       };
 
       this.selected.gender = Object.keys(this.options.gender);
+      this.selected.chamber = Object.keys(this.options.chamber);
       this.genderFilter = false;
+      this.chamberFilter = false;
     },
 
     async fetchAllMetaData() {
@@ -124,6 +132,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.getOfficeOptions();
       this.getGenderOptions();
       this.getSpeakersOptions();
+      this.getChamberOptions();
     },
 
     addParamArray(current_key, api_key, query_params) {
@@ -161,7 +170,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       return this.options.gender[gender_id];
     },
 
-    getMetarRow(metadata_variable, metadata_variable_name) {
+
+    getMetaRow(metadata_variable, metadata_variable_name) {
+
       // Helper function to create a string representation of selected metadata
       let selected = "Alla";
       if (metadata_variable.length > 0) {
@@ -212,12 +223,14 @@ export const metaDataStore = defineStore("metaDataStore", {
     selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
 
+
+
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
       const selected_years_end = selected_metadata.yearRange.max;
       const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
 
-      const selected_parties = this.getMetarRow(
+      const selected_parties = this.getMetaRow(
         selected_metadata.party,
         "partier"
       );
@@ -229,7 +242,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_speakers_as_string = selectedValidSpeakers.map((speaker) =>
         this.getSpeakerAsString(speaker)
       );
-      const selected_speakers = this.getMetarRow(
+      const selected_speakers = this.getMetaRow(
         selected_speakers_as_string,
         "talare"
       );
@@ -237,7 +250,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         (gender) => this.options.gender[gender]
       );
 
-      const selected_genders = this.getMetarRow(
+      const selected_genders = this.getMetaRow(
         selected_genders_as_string,
         "kön"
       );
@@ -324,15 +337,15 @@ export const metaDataStore = defineStore("metaDataStore", {
       const response = await api.get(path);
 
       this.options.party = response.data.party_list
-        .sort((a, b) => a.party_abbrev.localeCompare(b.party))
-        .reduce((acc, party) => {
-          acc[party.party] = {
-            party_id: party.party_id,
-            party_abbrev: party.party_abbrev,
-            party_color: party.party_color,
-          };
-          return acc;
-        }, {});
+      .sort((a, b) => a.party_id - b.party_id)
+      .reduce((acc, party) => {
+        acc[party.party] = {
+        party_id: party.party_id,
+        party_abbrev: party.party_abbrev,
+        party_color: party.party_color,
+        };
+        return acc;
+      }, {});
     },
 
     async getOfficeOptions() {
@@ -351,6 +364,19 @@ export const metaDataStore = defineStore("metaDataStore", {
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
+    },
+
+    async getChamberOptions() {
+      const path = "/metadata/chambers";
+      const response = await api.get(path);
+      this.options.chamber = response.data.chamber_list.reduce(
+        (acc, chamber) => {
+          acc[chamber.chamber_id] = chamber.chamber;
+          return acc;
+        },
+        {}
+      );
+      this.selected.chamber = Object.keys(this.options.chamber);
     },
 
     async getSubOfficeOptions() {

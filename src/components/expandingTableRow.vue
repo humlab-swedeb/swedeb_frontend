@@ -242,11 +242,10 @@ const replaceWordWithBoldTags = (str, word) => {
 };
 
 const replaceNgramWithBoldTags = (str, ngram) => {
-  const fixed_spaces = ngram
-    .replace(" .", ".")
-    .replace(" ,", ",")
-    .replace(" :", ":");
-  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>"`);
+
+  const fixed_spaces = ngram.replace(" .", ".").replace(" ,", ",").replace(" :", ":");
+  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>`);
+
 };
 
 const downloadCurrentSpeech = () => {

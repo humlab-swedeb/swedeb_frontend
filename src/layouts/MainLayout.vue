@@ -124,6 +124,8 @@
 <script setup></script>
 
 <style lang="scss" scoped>
+@use "sass:color";
+
 .transparentColor {
   background-color: rgba($secondary, 0.6);
 }
@@ -165,7 +167,7 @@
       100% 100%,
       0% 100%
     );
-    background-color: lighten($accentLight, 20%);
+    background-color: color.adjust($accentLight, $lightness: 20%)
   }
 }
 </style>
