@@ -38,19 +38,19 @@
                 }},&nbsp;
               </q-item-label>
               <q-item-label
+                v-if="props.props.row.party"
                 class="q-mt-xs"
                 :class="
                   props.props.row.party === '[-]'
                     ? 'text-italic text-grey-6'
                     : ''
                 "
-                v-if="props.props.row.party"
               >
-                ({{
+                {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : props.props.row.party
-                }}),&nbsp;
+                    : props.props.row.party_full
+                }},&nbsp;
               </q-item-label>
               <q-item-label
                 class="q-mt-xs"
