@@ -21,7 +21,7 @@
         <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
         <q-item-label class="text-bold q-pt-md text-center">
           {{ $t("aboutFinance") }}
-          <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+          <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
             Huminfra.
           </a>
         </q-item-label>

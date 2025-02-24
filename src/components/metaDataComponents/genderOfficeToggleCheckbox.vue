@@ -1,8 +1,16 @@
 <template>
   <div class="row items-center justify-between q-py-none q-px-none">
     <q-item-label class="text-bold text-grey-9">
-      {{ toggle_label + ":" }}</q-item-label
-    >
+      {{ toggle_label + ":" }}
+      <q-icon
+        v-show="(props.type == 'chamber')"
+        name="info_outline"
+        color="accent"
+        class="q-mb-md q-ml-xs"
+      >
+        <q-tooltip>{{ $t('tooltipChamber') }}</q-tooltip>
+      </q-icon>
+    </q-item-label>
 
     <q-toggle
       class="q-mr-lg"
