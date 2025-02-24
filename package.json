@@ -1,8 +1,8 @@
 {
-  "name": "quasar-test",
+  "name": "riksdagsdebatter",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar-test",
+  "description": "Riksdagsdebatter.se - en webbplats för att söka och analysera Sveriges riksdagsdebatter",
+  "productName": "Riksdagsdebatter.se",
   "author": "kpaalm <kajsa.palm@umu.se>",
   "private": true,
   "scripts": {

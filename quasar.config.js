@@ -146,9 +146,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Quasar-test`,
-        short_name: `Quasar-test`,
-        description: `A Quasar Project`,
+        name: `Riksdagsdebatter.se`,
+        short_name: `Riksdagsdebatter`,
+        description: `Riksdagsdebatter.se - Explore the Swedish parliament's debates`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
