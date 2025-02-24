@@ -86,7 +86,7 @@ export default {
     "Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i taget",
   searchTooltipNgramError:
     "Sökningar i verktyget N-gram kan endast göras på ett ord eller fras i taget",
-  tooltipChamber:"Första och Andra kammare användes fram till 1971, därefter enkammare i form av Sveriges riksdag.",
+  tooltipChamber:"Första och Andra kammare användes fram till och med 1970, därefter enkammare i form av Sveriges riksdag.",
 
   //TOOLS FILTER ------------------------------------------------
   ngramIntro: `Under utveckling.`,
