@@ -36,8 +36,11 @@
         </div>
         <div class="text-caption q-mt-sm">
           {{ $t("dataVersion") }}
-          <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+          <a :href="$t('links.swerik_version')" target="_blank" class="link-deco text-accent text-bold">
             {{ $t("dataVersionLinkText") }}
+          </a>&nbsp;,
+          <a :href="$t('links.swerik_persons')" target="_blank" class="link-deco text-accent text-bold">
+            {{ $t("personVersionText") }}
           </a>
         </div>
       </q-list>
