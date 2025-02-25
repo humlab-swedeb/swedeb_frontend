@@ -74,7 +74,6 @@ export const metaDataStore = defineStore("metaDataStore", {
     saveNgramsFilterData(search) {
       this.filterAtSearchNgrams = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchNgrams["search"] = search;
-
     },
 
     setSubmitNgramsEvent() {
@@ -150,6 +149,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         );
       }
     },
+
     addSpeakerParam(selected_params) {
       if (this.selected.speakers.length > 0) {
         // Get the list of valid speaker IDs from options.speakers
@@ -170,9 +170,18 @@ export const metaDataStore = defineStore("metaDataStore", {
       return this.options.gender[gender_id];
     },
 
+    addChamberParam(selected_params) {
+      if (this.selected.chamber.length > 0) {
+        this.selected.chamber.forEach((chamber) =>
+          selected_params.append(
+            "chamber_abbrev",
+            this.options.chamber[chamber].chamber_abbrev.toLowerCase()
+          )
+        );
+      }
+    },
 
     getMetaRow(metadata_variable, metadata_variable_name) {
-
       // Helper function to create a string representation of selected metadata
       let selected = "Alla";
       if (metadata_variable.length > 0) {
@@ -223,16 +232,14 @@ export const metaDataStore = defineStore("metaDataStore", {
     selectedMetadataToText(tool_type) {
       // String representation of selected metadata to be included in downloads
 
-
-
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
       const selected_years_end = selected_metadata.yearRange.max;
-      const year_string = `Årsintervall: ${selected_years_start} - ${selected_years_end}`;
+      const year_string = `${i18n.yearInterval}: ${selected_years_start} - ${selected_years_end}`;
 
       const selected_parties = this.getMetaRow(
         selected_metadata.party,
-        "partier"
+        `${i18n.parties}`
       );
 
       const selectedValidSpeakers = this.filterSelectedSpeakers(
@@ -244,16 +251,29 @@ export const metaDataStore = defineStore("metaDataStore", {
       );
       const selected_speakers = this.getMetaRow(
         selected_speakers_as_string,
-        "talare"
+        `${i18n.speakers}`.toLowerCase()
       );
+
+      const selected_chambers_as_string = selected_metadata.chamber.map(
+        (chamber) => this.options.chamber[chamber].displayStr
+      );
+
       const selected_genders_as_string = selected_metadata.gender.map(
-        (gender) => this.options.gender[gender]
+        (gender) => this.options.gender[gender].displayStr
       );
 
       const selected_genders = this.getMetaRow(
         selected_genders_as_string,
-        "kön"
+        `${i18n.gender}`.toLowerCase()
       );
+
+      const selected_chambers = this.getMetaRow(
+        selected_chambers_as_string,
+        `${i18n.chamber}`.toLowerCase()
+      );
+
+      console.log(selected_chambers);
+
       const selected_terms = this.getSearchTermsAsString(
         selected_metadata.search
       );
@@ -261,7 +281,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
+      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
     },
 
     getSelectedParams(additional_params = {}) {
@@ -275,6 +295,9 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.addSpeakerParam(searchParams);
       if (this.genderFilter) {
         this.addParamArray("gender", "gender_id", searchParams);
+      }
+      if (this.chamberFilter) {
+        this.addChamberParam(searchParams);
       }
       //this.addParamArray("office", "office_types", searchParams);
       //this.addParamArray("subOffice", "sub_office_types", searchParams);
@@ -295,8 +318,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const searchParams = new URLSearchParams();
       this.addPartyParam(searchParams);
       this.addParamArray("gender", "gender_id", searchParams);
-      //this.addParamArray("office", "office_types", searchParams);
-      //this.addParamArray("subOffice", "sub_office_types", searchParams);
+      this.addChamberParam(searchParams);
       return searchParams.toString();
     },
 
@@ -337,15 +359,31 @@ export const metaDataStore = defineStore("metaDataStore", {
       const response = await api.get(path);
 
       this.options.party = response.data.party_list
-      .sort((a, b) => a.party_id - b.party_id)
-      .reduce((acc, party) => {
-        acc[party.party] = {
-        party_id: party.party_id,
-        party_abbrev: party.party_abbrev,
-        party_color: party.party_color,
-        };
-        return acc;
-      }, {});
+        .sort((a, b) => a.party_id - b.party_id)
+        .reduce((acc, party) => {
+          acc[party.party] = {
+            party_id: party.party_id,
+            party_abbrev: party.party_abbrev,
+            party_color: party.party_color,
+          };
+          return acc;
+        }, {});
+    },
+
+    async getChamberOptions() {
+      const path = "/metadata/chambers";
+      const response = await api.get(path);
+      this.options.chamber = response.data.chamber_list.reduce(
+        (acc, chamber) => {
+          acc[chamber.chamber_id] = {
+            displayStr: chamber.chamber,
+            chamber_abbrev: chamber.chamber_abbrev,
+          };
+          return acc;
+        },
+        {}
+      );
+      this.selected.chamber = Object.keys(this.options.chamber);
     },
 
     async getOfficeOptions() {
@@ -355,28 +393,14 @@ export const metaDataStore = defineStore("metaDataStore", {
         (office_type) => office_type.office
       );
     },
-
     async getGenderOptions() {
       const path = "/metadata/genders";
       const response = await api.get(path);
       this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = gender.gender;
+        acc[gender.gender_id] = { displayStr: gender.gender };
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
-    },
-
-    async getChamberOptions() {
-      const path = "/metadata/chambers";
-      const response = await api.get(path);
-      this.options.chamber = response.data.chamber_list.reduce(
-        (acc, chamber) => {
-          acc[chamber.chamber_id] = chamber.chamber;
-          return acc;
-        },
-        {}
-      );
-      this.selected.chamber = Object.keys(this.options.chamber);
     },
 
     async getSubOfficeOptions() {
