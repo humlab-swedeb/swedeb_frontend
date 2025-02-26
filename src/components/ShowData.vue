@@ -26,7 +26,9 @@
             <b>{{ customKey(key) }}:</b>
             {{
               value
-                .map((chamber_id) => store.options.chamber[chamber_id].displayStr)
+                .map(
+                  (chamber_id) => store.options.chamber[chamber_id].displayStr
+                )
                 .join(", ")
             }}
           </div>
@@ -35,7 +37,10 @@
           </div>
           <div
             v-else-if="
-              (key === 'gender' || key === 'speakers' || key === 'party') &&
+              (key === 'gender' ||
+                key === 'speakers' ||
+                key === 'party' ||
+                key === 'chamber') &&
               value.length == 0
             "
           >
@@ -44,10 +49,18 @@
         </div>
         <div class="text-caption q-mt-sm">
           {{ $t("dataVersion") }}
-          <a :href="$t('links.swerik_version')" target="_blank" class="link-deco text-accent text-bold">
-            {{ $t("dataVersionLinkText") }}
-          </a>&nbsp;,
-          <a :href="$t('links.swerik_persons')" target="_blank" class="link-deco text-accent text-bold">
+          <a
+            :href="$t('links.swerik_version')"
+            target="_blank"
+            class="link-deco text-accent text-bold"
+          >
+            {{ $t("dataVersionLinkText") }} </a
+          >&nbsp;,
+          <a
+            :href="$t('links.swerik_persons')"
+            target="_blank"
+            class="link-deco text-accent text-bold"
+          >
             {{ $t("personVersionText") }}
           </a>
         </div>
@@ -87,26 +100,25 @@ onMounted(() => {
   let selectedData;
   switch (props.filterSelections) {
     case "WordTrends":
-      selectedData = {...store.filterAtSearchWT};
+      selectedData = { ...store.filterAtSearchWT };
       break;
     case "Speeches":
-      selectedData = {...store.filterAtSearchSpeeches};
+      selectedData = { ...store.filterAtSearchSpeeches };
       break;
     case "Ngrams":
-      selectedData = {...store.filterAtSearchNgrams};
+      selectedData = { ...store.filterAtSearchNgrams };
       break;
     case "KWIC":
-      selectedData = {...store.filterAtSearchKWIC};
+      selectedData = { ...store.filterAtSearchKWIC };
       break;
     default:
       selectedData = {};
   }
 
   if (selectedData !== undefined && Object.keys(selectedData).length > 0) {
-    displayedData.value = {...selectedData};
+    displayedData.value = { ...selectedData };
   }
 });
-
 
 watch(
   () => {
