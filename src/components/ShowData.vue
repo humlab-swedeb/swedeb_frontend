@@ -87,25 +87,26 @@ onMounted(() => {
   let selectedData;
   switch (props.filterSelections) {
     case "WordTrends":
-      selectedData = store.filterAtSearchWT;
+      selectedData = {...store.filterAtSearchWT};
       break;
     case "Speeches":
-      selectedData = store.filterAtSearchSpeeches;
+      selectedData = {...store.filterAtSearchSpeeches};
       break;
     case "Ngrams":
-      selectedData = store.filterAtSearchNgrams;
+      selectedData = {...store.filterAtSearchNgrams};
       break;
     case "KWIC":
-      selectedData = store.filterAtSearchKWIC;
+      selectedData = {...store.filterAtSearchKWIC};
       break;
     default:
       selectedData = {};
   }
 
   if (selectedData !== undefined && Object.keys(selectedData).length > 0) {
-    displayedData.value = selectedData;
+    displayedData.value = {...selectedData};
   }
 });
+
 
 watch(
   () => {
