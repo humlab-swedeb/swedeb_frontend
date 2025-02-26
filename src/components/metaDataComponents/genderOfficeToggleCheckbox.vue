@@ -31,8 +31,8 @@
     size="sm"
     :color="!store[`${props.type}Filter`] ? 'grey' : 'accent'"
     :disable="!store[`${props.type}Filter`]"
-    :modelValue="store.selected[props.type].includes(key)"
-    @update:modelValue="handleCheckboxChange($event, key)"
+    :model-value="isSelected(key)"
+    @update:model-value="toggleSelection(key)"
   />
 </template>
 
@@ -48,17 +48,14 @@ const setAllTrue = (type) => {
   store.selected[type] = Object.keys(store.options[type]);
 };
 
-const handleCheckboxChange = (checked, key) => {
 
-  if (checked) {
-    if (!store.selected[props.type].includes(key)) {
-      store.selected[props.type].push(key);
-    }
+const isSelected = (key) => store.selected[props.type].includes(key);
+
+const toggleSelection = (key) => {
+  if (isSelected(key)) {
+    store.selected[props.type] = store.selected[props.type].filter((item) => item !== key);
   } else {
-    const index = store.selected[props.type].indexOf(key);
-    if (index > -1) {
-      store.selected[props.type].splice(index, 1);
-    }
+    store.selected[props.type] = [...store.selected[props.type], key];
   }
 };
 </script>
