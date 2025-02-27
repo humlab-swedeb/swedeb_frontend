@@ -361,6 +361,8 @@ export const metaDataStore = defineStore("metaDataStore", {
       this.options.party = response.data.party_list
         .sort((a, b) => a.party_id - b.party_id)
         .reduce((acc, party) => {
+          party.party =
+            party.party === "Okänt" ? "Metadata saknas" : party.party; // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
           acc[party.party] = {
             party_id: party.party_id,
             party_abbrev: party.party_abbrev,
@@ -397,7 +399,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       const path = "/metadata/genders";
       const response = await api.get(path);
       this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = { displayStr: gender.gender };
+        acc[gender.gender_id] = {
+          displayStr:
+            gender.gender === "Okänt" ? "Metadata saknas" : gender.gender, // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
+        };
         return acc;
       }, {});
       this.selected.gender = Object.keys(this.options.gender);
@@ -420,9 +425,12 @@ export const metaDataStore = defineStore("metaDataStore", {
         const queryString = this.getSelectedParamsForSpeakerList();
         const response = await api.get(`${path}?${queryString}`);
 
-        this.options.speakers = response.data.speaker_list.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        this.options.speakers = response.data.speaker_list
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((speaker) => ({
+            ...speaker,
+            name: speaker.name === "Okänd" ? "Metadata saknas" : speaker.name, // QUICK FIX OF OKÄND TO METADATA SAKNAS!
+          }));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
