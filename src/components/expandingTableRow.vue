@@ -151,13 +151,15 @@
               </q-btn>
               <q-btn
                 no-caps
-                :href="props.props.row.source"
-                target="_blank"
                 class="full-width items-start text-grey-8"
                 color="white"
+                :disabled="true"
               >
+                <q-tooltip class="text-subtitle2">
+                  Denna funktion är under utveckling
+                </q-tooltip>
                 <q-icon left name="open_in_new" color="accent" />
-                <q-item-label>{{ $t("openSource") }}</q-item-label>
+                <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
               <q-btn
                 outline
