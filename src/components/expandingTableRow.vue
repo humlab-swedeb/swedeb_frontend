@@ -38,19 +38,19 @@
                 }},&nbsp;
               </q-item-label>
               <q-item-label
+                v-if="props.props.row.party"
                 class="q-mt-xs"
                 :class="
                   props.props.row.party === '[-]'
                     ? 'text-italic text-grey-6'
                     : ''
                 "
-                v-if="props.props.row.party"
               >
-                ({{
+                {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : props.props.row.party
-                }}),&nbsp;
+                    : props.props.row.party_full
+                }},&nbsp;
               </q-item-label>
               <q-item-label
                 class="q-mt-xs"
@@ -151,13 +151,15 @@
               </q-btn>
               <q-btn
                 no-caps
-                :href="props.props.row.source"
-                target="_blank"
                 class="full-width items-start text-grey-8"
                 color="white"
+                :disabled="true"
               >
+                <q-tooltip class="text-subtitle2">
+                  Denna funktion är under utveckling
+                </q-tooltip>
                 <q-icon left name="open_in_new" color="accent" />
-                <q-item-label>{{ $t("openSource") }}</q-item-label>
+                <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
               <q-btn
                 outline
@@ -228,7 +230,9 @@ const replaceNewLine = (str) => {
 };
 
 const replaceWordWithBoldTags = (str, word) => {
-  const words = word.includes(",") ? word.split(",").map((w) => w.trim()) : [word.trim()];
+  const words = word.includes(",")
+    ? word.split(",").map((w) => w.trim())
+    : [word.trim()];
 
   words.forEach((w) => {
     const regex = new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "giu");
@@ -239,12 +243,12 @@ const replaceWordWithBoldTags = (str, word) => {
 };
 
 const replaceNgramWithBoldTags = (str, ngram) => {
-
-  const fixed_spaces = ngram.replace(" .", ".").replace(" ,", ",").replace(" :", ":");
-  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>"`);
-
+  const fixed_spaces = ngram
+    .replaceAll(" .", ".")
+    .replaceAll(" ,", ",")
+    .replaceAll(" :", ":");
+  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>`);
 };
-
 
 const downloadCurrentSpeech = () => {
   downloadStore.downloadCurrentSpeechText(
@@ -262,20 +266,17 @@ watchEffect(() => {
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
 
-
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
       } else if (route.path === "/tools/ngram") {
-
         speechText.value = replaceNgramWithBoldTags(
           replaceNewLine(speechData.speech_text),
           props.props.row.node_word
         );
-
-      }else{
+      } else {
         speechText.value = replaceNewLine(speechData.speech_text);
       }
     })();

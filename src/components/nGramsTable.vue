@@ -5,7 +5,7 @@
       {{ $t("searchResult2") }}
     </q-item-label>
 
-    <q-btn
+    <q-btn-dropdown
       no-caps
       icon="download"
       class="text-grey-8 col-3"
@@ -13,7 +13,20 @@
       :label="$t('downloadNgram')"
       style="width: fit-content"
     >
-    </q-btn>
+      <q-list>
+        <q-item clickable v-close-popup @click="downloadNgram">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable v-close-popup @click="downloadNgramExcel">
+            <q-item-section>
+              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+      </q-list>
+    </q-btn-dropdown>
   </div>
   <q-table
     bordered
@@ -74,7 +87,7 @@
             <div class="row q-pb-md justify-between">
               <q-item-label class="col-9 q-mt-md">
                 {{ $t("searchResult1") }}
-                <b>{{ props.row.count }}</b> {{ $t("searchResult2") }}
+                <b>{{ props.row.speeches }}</b> {{ $t("searchResult2") }}
               </q-item-label>
             </div>
             <!-- SECOND TABLE -->
@@ -104,8 +117,11 @@ import { ref } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { metaDataStore } from "src/stores/metaDataStore";
 
 const nGramStore = nGramDataStore();
+const metaStore = metaDataStore();
+
 
 const rows = ref([]);
 const columns = ref([]);
@@ -126,6 +142,20 @@ const formatSearch = (value) => {
   }
   return value;
 };
+
+const getParamString = () => {
+  return metaStore.selectedMetadataToText("ngrams");
+};
+
+const downloadNgram = () => {
+  nGramStore.downloadNGramTableCSV(getParamString());
+};
+
+
+const downloadNgramExcel = () => {
+  nGramStore.downloadNGramTableExcel(getParamString())
+};
+
 
 const getNumberDocHits = (props) => {
   return nGramStore.nGrams[props.row.id - 1].documents.length;

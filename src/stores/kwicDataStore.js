@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import axios from "axios";
 import { metaDataStore } from "./metaDataStore";
+import { downloadDataStore } from "./downloadDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 
@@ -17,10 +18,10 @@ export const kwicDataStore = defineStore("kwicData", {
       right_word: "Höger",
       year: "År",
       party_abbrev: "Parti",
+      name: "Name",
       gender: "Kön",
-      formatted_speech_id: "Anförande",
+      document_name: "Anförande",
       link: "Länk talare",
-      speech_link: "Länk tal",
     },
     lemmatizeSearch: false,
     cancelTokenSource: null,
@@ -44,8 +45,7 @@ export const kwicDataStore = defineStore("kwicData", {
           cut_off: 100000,
         };
 
-        const queryString =
-          metaDataStore().getSelectedParams(additionalParams);
+        const queryString = metaDataStore().getSelectedParams(additionalParams);
         const response = await api.get(`${path}?${queryString}`, {
           cancelToken: this.cancelTokenSource.token,
         });
@@ -58,9 +58,7 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
     async downloadKWICTableExcel(selectedMetadata) {
-
       if (this.kwicData.length > 0) {
-        // Map each object in kwicData to an array of objects with new column names
         const data = this.kwicData.map((obj) => {
           let newObj = {};
           Object.keys(this.columnNames).forEach((key) => {
@@ -69,17 +67,14 @@ export const kwicDataStore = defineStore("kwicData", {
           return newObj;
         });
 
-        // Create a new workbook and add the data
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Sheet1");
 
-        // Add the header row
         worksheet.columns = Object.values(this.columnNames).map((header) => ({
           header,
           key: header,
         }));
 
-        // Add the data rows
         data.forEach((row) => worksheet.addRow(row));
 
         const buffer = await workbook.xlsx.writeBuffer();
@@ -89,30 +84,15 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("metadata.txt", selectedMetadata);
 
         zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "kwic.zip");
-          anchor.click(); // Trigger the download
-
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
+          downloadDataStore().setupDownload("kwicExcel.zip", content);
         });
       }
     },
 
     downloadKWICTableCSV(selectedMetadata) {
-
       if (this.kwicData.length > 0) {
-        // Get the keys from columnNames to create the header row
         const headerRow = Object.values(this.columnNames).join(",");
 
-        // Map each object in kwicData to a CSV row, only including keys from columnNames
         const dataRows = this.kwicData
           .map((obj) =>
             Object.keys(this.columnNames)
@@ -121,7 +101,6 @@ export const kwicDataStore = defineStore("kwicData", {
           )
           .join("\n");
 
-
         const csvContent = headerRow + "\n" + dataRows;
 
         const zip = new JSZip();
@@ -129,17 +108,7 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("metadata.txt", selectedMetadata);
 
         zip.generateAsync({ type: "blob" }).then((content) => {
-          // Create a temporary URL for the Blob
-          const url = window.URL.createObjectURL(content);
-          // Create an anchor element for initiating the download
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.setAttribute("download", "kwic.zip");
-          anchor.click(); // Trigger the download
-          // Revoke the temporary URL after a short delay
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-          }, 1000);
+          downloadDataStore().setupDownload("kwicCSV.zip", content);
         });
       }
     },

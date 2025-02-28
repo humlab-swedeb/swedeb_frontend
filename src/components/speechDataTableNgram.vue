@@ -3,8 +3,9 @@
     v-if="
       (wtStore.speechesData.length > 0 &&
         $route.path === '/tools/wordtrends') ||
-      ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0) ||
-      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length  > 0)
+      ($route.path === '/tools/speeches' &&
+        speechStore.speechesData.length > 0) ||
+      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length > 0)
     "
   >
     <div>
@@ -52,9 +53,7 @@
         v-model:pagination="pagination"
         :loading="loading"
         class="bg-grey-2"
-        @request = "onRequest"
-
-
+        @request="onRequest"
       >
         <template v-slot:header="props">
           <q-tr :props="props">
@@ -94,6 +93,9 @@
                     ? $t("accessibility.metadataMissing")
                     : col.value
                 }}
+                <q-tooltip class="text-subtitle2" v-if="col.value !== '[-]'">
+                  {{ props.row.party_full }}
+                </q-tooltip>
               </q-item-label>
               <q-item-label
                 v-else-if="col.name === 'node_word'"
@@ -157,25 +159,23 @@ const wtStore = wordTrendsDataStore();
 const nGramStore = nGramDataStore();
 const downloadStore = downloadDataStore();
 
-
-
 const props = defineProps({
   type: String,
   download: Function,
   totalHits: Number,
   rowID: Number,
-  ngram: String
+  ngram: String,
 });
 
 const pagination = ref({
-      sortBy: 'desc',
-      descending: false,
-      page: 1,
-      rowsPerPage: 10,
-      rowsNumber: props.totalHits
-})
+  sortBy: "desc",
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+  rowsNumber: props.totalHits,
+});
 
-const loading = ref(false)
+const loading = ref(false);
 
 const displayedData = ref([]);
 const SpeechTable = ref(null);
@@ -188,35 +188,35 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
-async function onRequest  (table_props) {
-
-  const {sortBy, descending, page, rowsPerPage, rowsNumber } = table_props.pagination
+async function onRequest(table_props) {
+  const { sortBy, descending, page, rowsPerPage, rowsNumber } =
+    table_props.pagination;
 
   try {
-      loading.value = true
+    loading.value = true;
 
-      await nGramStore.getNGramSpeeches(props.rowID, props.ngram, page, rowsPerPage);
-      pagination.value.rowsPerPage = rowsPerPage
-      pagination.value.page = page
-      rows.value =  mapSpeechesToRows(nGramStore.nGramSpeeches)
-      loading.value = false
-
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-
+    await nGramStore.getNGramSpeeches(
+      props.rowID,
+      props.ngram,
+      page,
+      rowsPerPage
+    );
+    pagination.value.rowsPerPage = rowsPerPage;
+    pagination.value.page = page;
+    rows.value = mapSpeechesToRows(nGramStore.nGramSpeeches);
+    loading.value = false;
+  } catch (error) {
+    console.error("Error fetching data:", error);
   }
+}
 
 if (props.type === "wordTrends") {
   displayedData.value = wtStore.speechesData;
 } else if (props.type === "speeches") {
   displayedData.value = speechStore.speechesData;
-}else if (props.type === "ngram") {
+} else if (props.type === "ngram") {
   displayedData.value = nGramStore.nGramSpeeches;
 }
-
-
-
 
 function mapSpeechesToRows(speeches) {
   return speeches.map((speech) => ({
@@ -226,13 +226,14 @@ function mapSpeechesToRows(speeches) {
     speaker: speech.name,
     gender: speech.gender,
     party: speech.party_abbrev,
+    party_full: speech.party,
     source: speech.speech_link,
     year: speech.year,
     link: speech.link,
   }));
 }
 
-rows.value = mapSpeechesToRows(displayedData.value)
+rows.value = mapSpeechesToRows(displayedData.value);
 
 columns.value = [
   {
@@ -288,8 +289,6 @@ if (props.type === "wordTrends") {
     align: "left",
   });
 }
-
-
 
 function sortByYear(a, b) {
   const yearRegex = /(\d{4})/;

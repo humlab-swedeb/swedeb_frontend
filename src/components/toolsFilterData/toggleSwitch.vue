@@ -15,7 +15,6 @@
         v-model="toggleValue"
         color="accent"
         keep-color
-        @click="handleToggle"
         checked-icon="check"
         unchecked-icon="close"
       >
@@ -25,13 +24,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-const props = defineProps(["label", "tooltip"]);
-const emit = defineEmits(["toggle-event"]);
+import { ref, watch } from "vue";
 
-const toggleValue = ref(false);
+const props = defineProps({
+  modelValue: Boolean,
+  label: String,
+  tooltip: String,
+});
+const emit = defineEmits(["update:modelValue"]);
 
-const handleToggle = () => {
-  emit("toggle-event", toggleValue.value);
-};
+const toggleValue = ref(props.modelValue);
+
+watch(toggleValue, (newValue) => {
+  emit("update:modelValue", newValue);
+});
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    toggleValue.value = newValue;
+  }
+);
 </script>

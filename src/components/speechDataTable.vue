@@ -3,8 +3,9 @@
     v-if="
       (wtStore.speechesData.length > 0 &&
         $route.path === '/tools/wordtrends') ||
-      ($route.path === '/tools/speeches' && speechStore.speechesData.length > 0) ||
-      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length  > 0)
+      ($route.path === '/tools/speeches' &&
+        speechStore.speechesData.length > 0) ||
+      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length > 0)
     "
   >
     <div>
@@ -90,6 +91,12 @@
                     ? $t("accessibility.metadataMissing")
                     : col.value
                 }}
+                <q-tooltip
+                  v-if="col.value !== '[-]'"
+                  class="text-subtitle2"
+                >
+                  {{ props.row.party_full }}
+                </q-tooltip>
               </q-item-label>
               <q-item-label
                 v-else-if="col.name === 'node_word'"
@@ -173,7 +180,7 @@ if (props.type === "wordTrends") {
   displayedData.value = wtStore.speechesData; // detta kan sättas som en prop?
 } else if (props.type === "speeches") {
   displayedData.value = speechStore.speechesData;
-}else if (props.type === "ngram") {
+} else if (props.type === "ngram") {
   displayedData.value = nGramStore.nGramSpeeches;
 }
 
@@ -184,6 +191,7 @@ rows.value = displayedData.value.map((speech) => ({
   speaker: speech.name,
   gender: speech.gender,
   party: speech.party_abbrev,
+  party_full: speech.party,
   source: speech.speech_link,
   year: speech.year,
   link: speech.link,

@@ -103,7 +103,7 @@ const chartOptions = reactive({
 
   yAxis: {
     title: {
-      text: "Antal",
+      text: "Frekvens",
     },
   },
 

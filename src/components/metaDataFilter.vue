@@ -42,6 +42,10 @@
               type="gender"
               :toggle_label="$t('toggleGenderLabel')"
             />
+            <genderOfficeToggleCheckbox
+              type="chamber"
+              :toggle_label="$t('toggleChamberLabel')"
+            />
             <!-- <genderOfficeCheckbox type="gender" /> -->
             <!-- <q-card-section class="q-py-none"> -->
             <!-- <genderOfficeCheckbox type="office" /> -->
@@ -73,10 +77,7 @@
       class="bg-transparent padding-bot"
       :class="$q.screen.lt.sm ? 'q-ma-xs' : 'q-ma-md'"
     >
-      <toolsFilters
-        @normalize-data="handleNormalizeData"
-        @lemmatize-search="lemmatizeSearch"
-      />
+      <toolsFilters />
       <div class="q-pa-lg full-width sticky-bottom">
         <!-- Search button for WORDTRENDS -->
         <q-btn

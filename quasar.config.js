@@ -23,7 +23,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "axios", "analytics"],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ["app.sass"],
@@ -146,9 +146,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Quasar-test`,
-        short_name: `Quasar-test`,
-        description: `A Quasar Project`,
+        name: `Riksdagsdebatter.se`,
+        short_name: `Riksdagsdebatter`,
+        description: `Riksdagsdebatter.se - Explore the Swedish parliament's debates`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",

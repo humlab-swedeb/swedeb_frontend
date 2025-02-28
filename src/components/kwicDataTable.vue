@@ -94,6 +94,9 @@
                   ? $t("accessibility.metadataMissing")
                   : col.value
               }}
+              <q-tooltip class="text-subtitle2" v-if="col.value !== '[-]'">
+                {{ props.row.party_full }}
+              </q-tooltip>
             </q-item-label>
             <q-item-label
               v-else-if="col.name === 'node_word'"
@@ -184,6 +187,7 @@ rows.value = kwicStore.kwicData.map((entry, index) => ({
   year: entry.year,
   speaker: entry.name,
   party: entry.party_abbrev,
+  party_full: entry.party,
   gender: entry.gender,
   person_id: entry.person_id,
   link: entry.link,
@@ -195,7 +199,7 @@ columns.value = [
   {
     name: "left_word",
     required: true,
-    label: "Väster",
+    label: "Vänster",
     align: "right",
     field: "left_word",
     sortable: true,

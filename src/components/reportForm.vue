@@ -36,7 +36,7 @@
       <q-card-actions align="right">
         <q-btn flat label="Stäng" no-caps @click="handleClose" icon="close" />
         <q-btn
-          label="Gå vidare till Github"
+          :label="$t('githubLink')"
           href="https://github.com/orgs/swerik-project/discussions/categories/report-errors"
           target="_blank"
           color="accent"

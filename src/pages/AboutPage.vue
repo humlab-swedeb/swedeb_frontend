@@ -5,9 +5,9 @@
       class="text-body2 q-mt-sm lineHeight"
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
-      {{ $t("indexPageIntroText") }}
-      <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
-        Swerik
+      {{ $t("aboutPageIntroText") }}
+      <a :href="$t('links.swedebGithub')" class="link-deco text-accent text-bold">
+        here
       </a>
     </q-card-section>
     <q-card-section class="col-12 items-center column q-my-lg">
@@ -21,7 +21,7 @@
         <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
         <q-item-label class="text-bold q-pt-md text-center">
           {{ $t("aboutFinance") }}
-          <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+          <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
             Huminfra.
           </a>
         </q-item-label>

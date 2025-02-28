@@ -24,6 +24,8 @@ import ShowData from "src/components/ShowData.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
+import { onMounted } from "vue";
+
 
 const formattedIntro = i18n.ngramIntro;
 const metaStore = metaDataStore();
@@ -31,6 +33,15 @@ const nGramStore = nGramDataStore();
 
 const loading = ref(false);
 const showData = ref(false);
+
+
+onMounted(() => {
+
+ if(nGramStore.nGrams && nGramStore.nGrams.length > 0){
+   showData.value = true
+
+ }
+});
 
 watchEffect(async () => {
   if (metaStore.submitEventNgrams) {
