@@ -15,6 +15,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     searchString: [],
     ifAsterisk: false,
     normalizeResults: false,
+    singleLine: false,
   }),
 
   actions: {

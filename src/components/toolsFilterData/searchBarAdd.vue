@@ -41,6 +41,26 @@
   <loadingIcon v-if="loading" size="50" />
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">{{ $t("searchAddedWords") }}</q-item-label>
+    <div class="row items-center justify-between">
+      <div class="row">
+        <q-item-label caption class="q-my-sm text-bold text-grey-8"
+          >Visa alla
+          <span class="text-black">{{ wtStore.wordHitsSelected.length }}</span>
+          valda ord som en linje:
+        </q-item-label>
+        <q-icon name="info_outline" color="accent" class="q-mb-md q-ml-xs">
+          <q-tooltip>Slå ihop alla ord till en linje</q-tooltip>
+        </q-icon>
+      </div>
+      <q-toggle
+        v-model="wtStore.singleLine"
+        color="accent"
+        keep-color
+        checked-icon="check"
+        unchecked-icon="close"
+        @update:model-value="toggleSingleLine"
+      />
+    </div>
     <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
       >{{ $t("searchDropdownOfHits1") }}
       <b class="text-subtitle2">{{ $t("searchDropdownOfHits2") }} </b>
@@ -48,6 +68,27 @@
       <b>{{ wtStore.wordHits.length - wtStore.wordHitsSelected.length }}</b>
       {{ $t("searchDropdownOfHits4") }}
     </q-item-label>
+
+    <div class="row items-center justify-between">
+      <div class="row">
+        <q-item-label caption class="q-my-sm text-bold text-grey-8"
+          >{{
+            selectAll ? "Återgå till de 10 vanligaste orden" : "Välj alla ord"
+          }}:
+        </q-item-label>
+      </div>
+
+      <q-toggle
+        class="q-mr-lg"
+        v-model="selectAll"
+        color="accent"
+        keep-color
+        checked-icon="check"
+        unchecked-icon="close"
+        @update:model-value="toggleSelectAll"
+      >
+      </q-toggle>
+    </div>
     <q-select
       v-if="wtStore.wordHitsSelected.length > 0"
       v-model="wtStore.wordHitsSelected"
@@ -94,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, watch } from "vue";
 import { useRoute } from "vue-router";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
@@ -102,6 +143,16 @@ import loadingIcon from "src/components/loadingIcon.vue";
 const wtStore = wordTrendsDataStore();
 const route = useRoute();
 const loading = ref(false);
+const selectAll = ref(false);
+
+// Funktionen för att slå ihop alla ord till en enda linje
+const toggleSingleLine = (value) => {
+  if (value) {
+    wtStore.singleLine = true;
+  } else {
+    wtStore.singleLine = false;
+  }
+};
 
 const removeSelectedWord = () => {
   if (wtStore.wordHitsSelected.length === 0) {
@@ -129,6 +180,23 @@ watchEffect(() => {
     wtStore.ifAsterisk = false;
   }
 });
+
+const toggleSelectAll = () => {
+  if (selectAll.value) {
+    wtStore.wordHitsSelected = [...wtStore.wordHits];
+  } else {
+    wtStore.wordHitsSelected = wtStore.wordHits.slice(0, 10);
+  }
+};
+
+watch(
+  () => wtStore.wordHitsSelected.length,
+  () => {
+    // Kontrollera om alla ord är valda, och uppdatera selectAll
+    selectAll.value =
+      wtStore.wordHitsSelected.length === wtStore.wordHits.length;
+  }
+);
 </script>
 
 <style lang="scss" scoped>
