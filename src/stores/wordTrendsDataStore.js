@@ -70,7 +70,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         this.wordHits = [...this.wordHits, ...newHits].sort();
         this.wordHitsSelected = [
           ...this.wordHitsSelected,
-          ...newHits.slice(0, 10),
+          ...newHits.slice(0, 5),
         ].sort();
         this.searchText = "";
         this.ifAsterisk = true;

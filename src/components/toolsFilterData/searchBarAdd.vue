@@ -73,7 +73,7 @@
       <div class="row">
         <q-item-label caption class="q-my-sm text-bold text-grey-8"
           >{{
-            selectAll ? "Återgå till de 10 vanligaste orden" : "Välj alla ord"
+            selectAll ? "Återgå till de 5 vanligaste orden" : "Välj alla ord"
           }}:
         </q-item-label>
       </div>
@@ -185,7 +185,7 @@ const toggleSelectAll = () => {
   if (selectAll.value) {
     wtStore.wordHitsSelected = [...wtStore.wordHits];
   } else {
-    wtStore.wordHitsSelected = wtStore.wordHits.slice(0, 10);
+    wtStore.wordHitsSelected = wtStore.wordHits.slice(0, 5);
   }
 };
 
