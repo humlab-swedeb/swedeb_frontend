@@ -7,7 +7,8 @@
     clearable
     v-model="store.selected[props.type]"
     :options="filterOptions"
-    :label="$t(`${props.type}`)"
+    :label="'Alla ' + $t(`${props.type}`)"
+    :placeholder="store.selected[props.type].length === 0 ? 'Välj specifika ' + $t(`${props.type}`) : ''"
     label-color="black"
     use-chips
     filled
