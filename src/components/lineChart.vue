@@ -20,6 +20,11 @@ import annotations from "highcharts/modules/annotations";
 annotations(Highcharts);
 import exporting from "highcharts/modules/exporting";
 exporting(Highcharts);
+import offlineExporting from "highcharts/modules/offline-exporting";
+offlineExporting(Highcharts);
+import { metaDataStore } from "src/stores/metaDataStore.js";
+
+const metaStore = metaDataStore();
 
 const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
@@ -197,24 +202,48 @@ const chartOptions = reactive({
   exporting: {
     filename: "word-trends",
     sourceWidth: 1080,
-    menuItemDefinitions: {
-      downloadPNG: {
-        text: "Ladda ner som PNG",
-      },
-      downloadSVG: {
-        text: "Ladda ner som SVG",
-      },
-      printChart: {
-        text: "Skriv ut diagram",
-      },
-    },
     buttons: {
       contextButton: {
-        menuItems: ["downloadPNG", "downloadSVG", "printChart"],
+        menuItems: [
+          {
+            text: "Ladda ner som PNG",
+            onclick: function () {
+              this.exportChartLocal({ type: "image/png" });
+              downloadMetadata();
+            },
+          },
+          {
+            text: "Ladda ner som SVG",
+            onclick: function () {
+              this.exportChartLocal({ type: "image/svg+xml" });
+              downloadMetadata();
+            },
+          },
+          {
+            text: "Skriv ut diagram",
+            onclick: function () {
+              this.print();
+            },
+          },
+        ],
       },
     },
   },
 });
+
+function downloadMetadata() {
+  const textContent = generateTextFileContent();
+  const blob = new Blob([textContent], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "metadata.txt";
+  link.click();
+}
+
+function generateTextFileContent() {
+  const selectedMetaData = metaStore.selectedMetadataToText("wordTrends");
+  return selectedMetaData;
+}
 
 const dataLoaded = ref(false);
 const wordTrends = wtStore.wordTrends;

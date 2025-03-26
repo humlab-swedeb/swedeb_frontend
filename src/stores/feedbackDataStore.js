@@ -1,28 +1,31 @@
 import { defineStore } from "pinia";
+import i18n from "src/i18n/sv/index.js";
 
 export const feedbackDataStore = defineStore("feedbackDataStore", {
   state: () => ({
     data: {
-      gender: "",
-      id: "",
+      Kön: "",
+      ID: "",
       link: "",
       node_word: "",
-      party: "",
+      Parti: "",
       source: "",
-      speaker: "",
-      year: 0,
+      Talare: "",
+      År: 0,
+      Data: "",
     },
   }),
 
   actions: {
     getFeedbackVariables: (data) => {
       const feedbackVariables = {
-        id: data.id,
-        gender: data.gender,
-        party: data.party,
+        ID: data.id,
+        Kön: data.gender,
+        Parti: data.party,
         //source: data.source,
-        year: data.year,
-        speaker: data.speaker,
+        År: data.year,
+        Talare: data.speaker,
+        Data: `${i18n.dataVersionLinkText}, ${i18n.personVersionText}`,
       };
       return feedbackVariables;
     },

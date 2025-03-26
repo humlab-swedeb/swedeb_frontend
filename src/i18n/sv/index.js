@@ -4,11 +4,11 @@
 export default {
   links: {
     swerik: "https://swerik-project.github.io/",
-    swerik_version:"https://github.com/swerik-project/riksdagen-records",
-    swerik_persons:"https://github.com/swerik-project/riksdagen-persons",
+    swerik_version: "https://github.com/swerik-project/riksdagen-records",
+    swerik_persons: "https://github.com/swerik-project/riksdagen-persons",
     humlab: "https://umu.se/humlab",
     huminfra: "https://www.huminfra.se/",
-    swedebGithub: "https://github.com/humlab-swedeb"
+    swedebGithub: "https://github.com/humlab-swedeb",
   },
 
   dataVersion: "Data-version:",
@@ -89,7 +89,8 @@ export default {
     "Sökningar i verktyget KWIC kan endast göras på ett ord eller fras i taget",
   searchTooltipNgramError:
     "Sökningar i verktyget N-gram kan endast göras på ett ord eller fras i taget",
-  tooltipChamber:"Första och Andra kammare användes fram till och med 1970, därefter enkammare i form av Sveriges riksdag.",
+  tooltipChamber:
+    "Första och Andra kammare användes fram till och med 1970, därefter enkammare i form av Sveriges riksdag.",
 
   //TOOLS FILTER ------------------------------------------------
   ngramIntro: `Under utveckling.`,
@@ -599,8 +600,11 @@ export default {
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
-    corpus_version: "Korpusversion: v1.1.0",
-    swerik_ref: "Datakälla: https://swerik-project.github.io/",
+    corpus_version: "Data-version: SWERIK-records 1.1, SWERIK-persons 1.1",
+    swerik_ref:
+      "SWERIK-records: https://github.com/swerik-project/riksdagen-records",
+    swerik_persons:
+      "SWERIK-persons: https://github.com/swerik-project/riksdagen-persons",
     swedeb_ref:
       "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
   },
