@@ -22,14 +22,16 @@
           >
             Föregående sida
           </q-btn>
-          <span class="text-bold text-subtitle1">{{ page }} / {{ pages }}</span>
+          <span class="text-bold text-subtitle1">
+            {{ page }} / {{ totalPages }}
+          </span>
           <q-btn
             class="q-ml-md q-pr-sm"
             color="accent"
             no-caps
             icon-right="chevron_right"
             @click="nextPage"
-            :disable="page >= pages"
+            :disable="page >= pdfData?.value?.pages"
           >
             Nästa sida
           </q-btn>
@@ -41,7 +43,12 @@
       </q-card-section>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
-        <VuePDF :pdf="pdf" :page="page" :scale="scale"/>
+        <div v-if="pdfData">
+          <VuePDF :pdf="pdfData.pdf" :page="page" :scale="scale" />
+        </div>
+        <div v-else>
+          <p class="text-center">PDF data is not available.</p>
+        </div>
       </q-card-section>
     </q-card-section>
 
@@ -127,7 +134,7 @@
 
 <script setup>
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 
@@ -137,6 +144,10 @@ const metaStore = metaDataStore();
 const speakerData = ref([]);
 const speechText = ref();
 const speakerNote = ref();
+const pdfLink = ref();
+const pdfData = ref(null);
+const searchWord = ref(""); // The word to search for
+
 
 onMounted(() => {
   const storedData = sessionStorage.getItem("pdfData");
@@ -145,15 +156,23 @@ onMounted(() => {
     speakerData.value = pdfStore.speechData.speakerData;
     speechText.value = pdfStore.speechData.speechText;
     speakerNote.value = pdfStore.speechData.speakerNote;
+    pdfLink.value = pdfStore.speechData.speakerData.source;
+    pdfData.value = usePDF(pdfLink.value);
   }
 });
 
-const { pdf, pages } = usePDF("/pdf/test.pdf");
+const totalPages = computed(() => {
+  return pdfData.value?.pages || "...";
+});
+
+
+
+//const { pdf, pages } = usePDF("/pdf/test.pdf");
 const page = ref(1);
 const scale = ref(1.4);
 
 const nextPage = () => {
-  if (page.value < pages.value) {
+  if (page.value < pdfData.value.pages) {
     page.value++;
   }
 };
