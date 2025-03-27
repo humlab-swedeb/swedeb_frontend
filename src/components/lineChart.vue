@@ -23,6 +23,8 @@ exporting(Highcharts);
 import offlineExporting from "highcharts/modules/offline-exporting";
 offlineExporting(Highcharts);
 import { metaDataStore } from "src/stores/metaDataStore.js";
+import accessibility from "highcharts/modules/accessibility";
+accessibility(Highcharts);
 
 const metaStore = metaDataStore();
 
@@ -118,7 +120,7 @@ const chartOptions = reactive({
     },
   },
   colors: [
-    "#a6cee3",
+    /*     "#a6cee3",
     "#1f78b4",
     "#b2df8a",
     "#33a02c",
@@ -127,7 +129,16 @@ const chartOptions = reactive({
     "#fdbf6f",
     "#ff7f00",
     "#cab2d6",
-    "#6a3d9a",
+    "#6a3d9a", */
+    "#332288",
+    "#88CCEE",
+    "#44AA99",
+    "#117733",
+    "#999933",
+    "#DDCC77",
+    "#CC6677",
+    "#882255",
+    "#AA4499",
   ],
 
   tooltip: {
@@ -140,6 +151,11 @@ const chartOptions = reactive({
     marker: {
       enabled: true,
     },
+  },
+
+  accessibility: {
+    description: "Linjediagram som visar ordtrender över tid.",
+    enabled: true,
   },
 
   legend: {
