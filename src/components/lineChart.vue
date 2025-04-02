@@ -39,6 +39,7 @@ const chartOptions = reactive({
     style: {
       fontFamily: '"Open Sans", sans-serif',
     },
+    spacingTop: 20,
     backgroundColor: "#fcfcfc",
     zooming: {
       type: "xy",
@@ -106,6 +107,10 @@ const chartOptions = reactive({
 
       return positions;
     },
+    tickLength: 7,
+    tickWidth: 2,
+    tickColor: "#808080",
+    tickmarkPlacement: "on",
   },
 
   yAxis: {
@@ -224,6 +229,9 @@ const chartOptions = reactive({
           {
             text: "Ladda ner som PNG",
             onclick: function () {
+              this.update({
+                title: { text: "Riksdagsdebatter.se - Ordtrender" },
+              });
               this.exportChartLocal({ type: "image/png" });
               downloadMetadata();
             },
@@ -231,6 +239,9 @@ const chartOptions = reactive({
           {
             text: "Ladda ner som SVG",
             onclick: function () {
+              this.update({
+                title: { text: "Riksdagsdebatter.se - Ordtrender" },
+              });
               this.exportChartLocal({ type: "image/svg+xml" });
               downloadMetadata();
             },
