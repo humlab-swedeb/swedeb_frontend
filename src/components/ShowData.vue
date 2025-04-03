@@ -25,10 +25,11 @@
           <div v-else-if="key === 'chamber' && value.length > 0">
             <b>{{ customKey(key) }}:</b>
             {{
-              value
-                .map(
-                  (chamber_id) => store.options.chamber[chamber_id].displayStr
-                )
+                value
+                .map((chamber_id) => {
+                  const displayStr = store.options.chamber[chamber_id].displayStr;
+                  return displayStr === "Sveriges riksdag" ? "Enkammare" : displayStr;
+                })
                 .join(", ")
             }}
           </div>

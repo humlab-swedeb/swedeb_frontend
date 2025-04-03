@@ -255,7 +255,10 @@ export const metaDataStore = defineStore("metaDataStore", {
       );
 
       const selected_chambers_as_string = selected_metadata.chamber.map(
-        (chamber) => this.options.chamber[chamber].displayStr
+        (chamber) => {
+          const displayStr = this.options.chamber[chamber].displayStr;
+          return displayStr === "Sveriges riksdag" ? "Enkammare" : displayStr;
+        }
       );
 
       const selected_genders_as_string = selected_metadata.gender.map(
