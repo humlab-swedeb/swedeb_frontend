@@ -4,7 +4,8 @@
       <q-card-section
         horizontal
         @click="showing = !showing"
-        class="items-center cursor-pointer q-pr-sm bg-white"
+        class="items-center q-pr-sm bg-white"
+        :class="$route.path === '/tools/speeches' ? '' : 'cursor-pointer'"
       >
         <q-card-section class="text-subtitle1">
           <q-icon
@@ -17,6 +18,7 @@
         >
         <q-space />
         <q-btn
+          v-if="$route.path !== '/tools/speeches'"
           :aria-label="$t('accessibility.metadataFilter')"
           color="accent"
           round
@@ -29,7 +31,7 @@
 
       <!-- <q-slide-transition v-show="showing"> -->
       <q-slide-transition
-        v-if="$route.path === '/tools/speeches' ? !showing : showing"
+        v-if="$route.path === '/tools/speeches' ? (showing = true) : showing"
       >
         <q-card-section class="q-px-md q-pt-none">
           <q-separator />
@@ -216,7 +218,7 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
 import { useGtag } from "vue-gtag-next";

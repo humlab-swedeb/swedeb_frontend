@@ -272,16 +272,15 @@ export const metaDataStore = defineStore("metaDataStore", {
         `${i18n.chamber}`.toLowerCase()
       );
 
-      console.log(selected_chambers);
-
       const selected_terms = this.getSearchTermsAsString(
         selected_metadata.search
       );
       const corpus_version = i18n.downLoadInfo.corpus_version;
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
+      const swerik_persons = i18n.downLoadInfo.swerik_persons;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
-      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}`;
+      return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swerik_persons}\n${swedeb_ref}`;
     },
 
     getSelectedParams(additional_params = {}) {

@@ -15,11 +15,12 @@ export const downloadDataStore = defineStore("downloadData", {
 
       const corpus_version = i18n.downLoadInfo.corpus_version;
       const swerik_ref = i18n.downLoadInfo.swerik_ref;
+      const swerik_persons = i18n.downLoadInfo.swerik_persons;
       const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
 
       //speaker, party, gender,
 
-      return `${speaker}\n${party}\n${gender}\n${year}\n${id}\n${hit}\n${corpus_version}\n${swerik_ref}\n${swedeb_ref}\n\n`;
+      return `${speaker}\n${party}\n${gender}\n${year}\n${id}\n${hit}\n${corpus_version}\n${swerik_ref}\n${swerik_persons}\n${swedeb_ref}\n\n`;
     },
 
     formatFileName(currentProps) {

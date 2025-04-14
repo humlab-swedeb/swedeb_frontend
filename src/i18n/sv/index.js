@@ -600,8 +600,11 @@ export default {
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
-    corpus_version: "Korpusversion: v1.1.0",
-    swerik_ref: "Datakälla: https://swerik-project.github.io/",
+    corpus_version: "Data-version: SWERIK-records 1.1, SWERIK-persons 1.1",
+    swerik_ref:
+      "SWERIK-records: https://github.com/swerik-project/riksdagen-records",
+    swerik_persons:
+      "SWERIK-persons: https://github.com/swerik-project/riksdagen-persons",
     swedeb_ref:
       "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
   },
