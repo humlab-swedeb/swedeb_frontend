@@ -208,17 +208,17 @@ export default {
   financiers: {
     0: {
       alt: "Umeå universitet logo",
-      src: "/images/umu-logo-left-SE.png",
+      src: "/public/images/umu-logo-left-SE.png" ,
       style: "width: 200px",
     },
     1: {
       alt: "Humlab logo",
-      src: "/images/humlab_logo_left_SE.png",
+      src: "public/images/humlab_logo_left_SE.png",
       style: "width: 250px",
     },
     2: {
       alt: "Huminfra logo",
-      src: "/images/huminfra_3.svg",
+      src: "https://riksdagsdebatter.se/public/images/huminfra_3.svg",
       style: "width: 150px",
     },
   },
