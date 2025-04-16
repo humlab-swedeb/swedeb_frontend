@@ -4,7 +4,8 @@
       <q-card-section
         horizontal
         @click="showing = !showing"
-        class="items-center cursor-pointer q-pr-sm bg-white"
+        class="items-center q-pr-sm bg-white"
+        :class="$route.path === '/tools/speeches' ? '' : 'cursor-pointer'"
       >
         <q-card-section class="text-subtitle1">
           <q-icon
@@ -17,6 +18,7 @@
         >
         <q-space />
         <q-btn
+          v-if="$route.path !== '/tools/speeches'"
           :aria-label="$t('accessibility.metadataFilter')"
           color="accent"
           round
@@ -29,7 +31,7 @@
 
       <!-- <q-slide-transition v-show="showing"> -->
       <q-slide-transition
-        v-if="$route.path === '/tools/speeches' ? !showing : showing"
+        v-if="$route.path === '/tools/speeches' ? (showing = true) : showing"
       >
         <q-card-section class="q-px-md q-pt-none">
           <q-separator />
@@ -216,9 +218,10 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
+import { useGtag } from "vue-gtag-next";
 
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
@@ -228,6 +231,7 @@ const ngramStore = nGramDataStore();
 const showing = ref(false);
 const route = useRoute();
 const $q = useQuasar();
+const { event } = useGtag();
 
 const handleNormalizeData = (newValue) => {
   if (route.path === "/tools/wordtrends") {
@@ -245,16 +249,36 @@ const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
     store.saveKwicFilterData(kwicStore.searchText);
     store.setSubmitKwicEvent();
+    event("kwic_search", {
+      event_category: "search",
+      event_label: "KWIC-SÖK",
+      value: 1,
+    });
   } else if (route.path === "/tools/wordtrends") {
     const wordHitsString = wtStore.wordHitsSelected.join(", ");
     store.saveWTFilterData(wordHitsString);
     store.setSubmitWTEvent();
+    event("wordtrend_search", {
+      event_category: "search",
+      event_label: "Wordtrends-SÖK",
+      value: 1,
+    });
   } else if (route.path === "/tools/speeches") {
     store.saveSpeechesFilterData();
     store.setSubmitSpeechesEvent();
+    event("speeches_search", {
+      event_category: "search",
+      event_label: "Speeches-SÖK",
+      value: 1,
+    });
   } else if (route.path === "/tools/ngram") {
     store.saveNgramsFilterData();
     store.setSubmitNgramsEvent();
+    event("ngram_search", {
+      event_category: "search",
+      event_label: "nGram-SÖK",
+      value: 1,
+    });
   } else {
     console.log("unknown route in handleSubmit, metadatafilter.vue");
   }

@@ -23,11 +23,13 @@ import { kwicDataStore } from "src/stores/kwicDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 import { useRoute } from "vue-router";
+import { useGtag } from "vue-gtag-next";
 
 const kwicStore = kwicDataStore();
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
 const route = useRoute();
+const { event } = useGtag();
 
 const searchText = computed({
   get() {
@@ -49,6 +51,11 @@ const handleEnter = () => {
     if (route.path === "/tools/kwic") {
       metaStore.saveKwicFilterData(searchText.value);
       metaStore.setSubmitKwicEvent();
+      event("kwic_search", {
+        event_category: "search",
+        event_label: "KWIC-SÖK",
+        value: 1,
+      });
     } else if (route.path === "/tools/ngram") {
       metaStore.saveNgramsFilterData(searchText.value);
       metaStore.setSubmitNgramsEvent();

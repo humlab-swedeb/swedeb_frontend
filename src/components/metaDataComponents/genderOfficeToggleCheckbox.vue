@@ -26,7 +26,7 @@
     v-for="(value, key) in store.options[props.type]"
     :key="key"
     :val="key"
-    :label="value.displayStr"
+    :label="value.displayStr === 'Sveriges riksdag' ? 'Enkammare' : value.displayStr"
     class="q-ml-md"
     size="sm"
     :color="!store[`${props.type}Filter`] ? 'grey' : 'accent'"

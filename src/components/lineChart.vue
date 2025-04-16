@@ -20,6 +20,13 @@ import annotations from "highcharts/modules/annotations";
 annotations(Highcharts);
 import exporting from "highcharts/modules/exporting";
 exporting(Highcharts);
+import offlineExporting from "highcharts/modules/offline-exporting";
+offlineExporting(Highcharts);
+import { metaDataStore } from "src/stores/metaDataStore.js";
+import accessibility from "highcharts/modules/accessibility";
+accessibility(Highcharts);
+
+const metaStore = metaDataStore();
 
 const chartContainer = ref(null);
 const wtStore = wordTrendsDataStore();
@@ -32,6 +39,7 @@ const chartOptions = reactive({
     style: {
       fontFamily: '"Open Sans", sans-serif',
     },
+    spacingTop: 20,
     backgroundColor: "#fcfcfc",
     zooming: {
       type: "xy",
@@ -99,6 +107,10 @@ const chartOptions = reactive({
 
       return positions;
     },
+    tickLength: 7,
+    tickWidth: 2,
+    tickColor: "#808080",
+    tickmarkPlacement: "on",
   },
 
   yAxis: {
@@ -113,7 +125,7 @@ const chartOptions = reactive({
     },
   },
   colors: [
-    "#a6cee3",
+    /*     "#a6cee3",
     "#1f78b4",
     "#b2df8a",
     "#33a02c",
@@ -122,7 +134,16 @@ const chartOptions = reactive({
     "#fdbf6f",
     "#ff7f00",
     "#cab2d6",
-    "#6a3d9a",
+    "#6a3d9a", */
+    "#332288",
+    "#88CCEE",
+    "#44AA99",
+    "#117733",
+    "#999933",
+    "#DDCC77",
+    "#CC6677",
+    "#882255",
+    "#AA4499",
   ],
 
   tooltip: {
@@ -135,6 +156,11 @@ const chartOptions = reactive({
     marker: {
       enabled: true,
     },
+  },
+
+  accessibility: {
+    description: "Linjediagram som visar ordtrender över tid.",
+    enabled: true,
   },
 
   legend: {
@@ -197,24 +223,54 @@ const chartOptions = reactive({
   exporting: {
     filename: "word-trends",
     sourceWidth: 1080,
-    menuItemDefinitions: {
-      downloadPNG: {
-        text: "Ladda ner som PNG",
-      },
-      downloadSVG: {
-        text: "Ladda ner som SVG",
-      },
-      printChart: {
-        text: "Skriv ut diagram",
-      },
-    },
     buttons: {
       contextButton: {
-        menuItems: ["downloadPNG", "downloadSVG", "printChart"],
+        menuItems: [
+          {
+            text: "Ladda ner som PNG",
+            onclick: function () {
+              this.update({
+                title: { text: "Riksdagsdebatter.se - Ordtrender" },
+              });
+              this.exportChartLocal({ type: "image/png" });
+              downloadMetadata();
+            },
+          },
+          {
+            text: "Ladda ner som SVG",
+            onclick: function () {
+              this.update({
+                title: { text: "Riksdagsdebatter.se - Ordtrender" },
+              });
+              this.exportChartLocal({ type: "image/svg+xml" });
+              downloadMetadata();
+            },
+          },
+          {
+            text: "Skriv ut diagram",
+            onclick: function () {
+              this.print();
+            },
+          },
+        ],
       },
     },
   },
 });
+
+function downloadMetadata() {
+  const textContent = generateTextFileContent();
+  const blob = new Blob([textContent], { type: "text/plain" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "metadata.txt";
+  link.click();
+}
+
+function generateTextFileContent() {
+  const selectedMetaData = metaStore.selectedMetadataToText("wordTrends");
+  return selectedMetaData;
+}
 
 const dataLoaded = ref(false);
 const wordTrends = wtStore.wordTrends;
