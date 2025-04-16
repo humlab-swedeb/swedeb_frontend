@@ -207,7 +207,7 @@ export default {
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
     0: {
-      alt: "Logo Umeå universitet",
+      alt: "Umeå universitet logo",
       src: "/public/images/umu-logo-left-SE.png" ,
       style: "width: 200px",
     },
