@@ -12,8 +12,8 @@ export default {
   },
 
   dataVersion: "Data-version:",
-  dataVersionLinkText: "SWERIK-records 1.1",
-  personVersionText: "SWERIK-persons 1.1",
+  dataVersionLinkText: "SWERIK-records 1.4.1",
+  personVersionText: "SWERIK-persons 1.1.3",
   // MAIN LAYOUT ------------------------------------------------
   swedeb: "Riksdagsdebatter.se",
   home: "Hem",
@@ -208,7 +208,7 @@ export default {
   financiers: {
     0: {
       alt: "Umeå universitet logo",
-      src: "/public/images/umu-logo-left-SE.png" ,
+      src: "/public/images/umu-logo-left-SE.png",
       style: "width: 200px",
     },
     1: {
@@ -600,7 +600,7 @@ export default {
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
-    corpus_version: "Data-version: SWERIK-records 1.1, SWERIK-persons 1.1",
+    corpus_version: "Data-version: SWERIK-records 1.4.1, SWERIK-persons 1.1.3",
     swerik_ref:
       "SWERIK-records: https://github.com/swerik-project/riksdagen-records",
     swerik_persons:
