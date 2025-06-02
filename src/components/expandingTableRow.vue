@@ -222,6 +222,7 @@ const feedbackData = (myProps) => {
 const popup = ref(false);
 const speakerNote = ref("");
 const speechText = ref("");
+const page = ref(1);
 const originalSpeechText = ref("");
 const loading = ref(false);
 
@@ -230,6 +231,7 @@ const openPdf = () => {
     speakerNote: speakerNote.value,
     speechText: speechText.value,
     speakerData: props.props.row,
+    page: page.value
   };
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data)); // store data in session storage for new tab
@@ -272,11 +274,14 @@ const downloadCurrentSpeech = () => {
 watchEffect(() => {
   if (props.props.expand) {
     feedbackData({ ...props.props.row });
+
     loading.value = true;
     (async () => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
+      page.value = speechData.page_number;
+
 
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(

@@ -147,7 +147,7 @@ const speakerNote = ref();
 const pdfLink = ref();
 const pdfData = ref(null);
 const searchWord = ref(""); // The word to search for
-
+const page =  ref(1);
 
 onMounted(() => {
   const storedData = sessionStorage.getItem("pdfData");
@@ -158,6 +158,7 @@ onMounted(() => {
     speakerNote.value = pdfStore.speechData.speakerNote;
     pdfLink.value = pdfStore.speechData.speakerData.source;
     pdfData.value = usePDF(pdfLink.value);
+    page.value = pdfStore.speechData.page;
   }
 });
 
@@ -168,7 +169,7 @@ const totalPages = computed(() => {
 
 
 //const { pdf, pages } = usePDF("/pdf/test.pdf");
-const page = ref(1);
+
 const scale = ref(1.4);
 
 const nextPage = () => {
