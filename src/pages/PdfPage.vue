@@ -23,7 +23,7 @@
             Föregående sida
           </q-btn>
           <span class="text-bold text-subtitle1">
-            {{ page }} / {{ totalPages }}
+            {{ page }} / {{ pages }}
           </span>
           <q-btn
             class="q-ml-md q-pr-sm"
@@ -43,11 +43,16 @@
       </q-card-section>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
-        <div v-if="pdfData">
-          <VuePDF :pdf="pdfData.pdf" :page="page" :scale="scale" />
+        <div v-if="pdfSrc">
+          <PdfEmbed
+            :source="pdfSrc"
+            :page="page"
+            :scale="scale"
+            @loaded="onLoaded"
+          />
         </div>
         <div v-else>
-          <p class="text-center">PDF data is not available.</p>
+          <p>PDF is not available.</p>
         </div>
       </q-card-section>
     </q-card-section>
@@ -133,7 +138,7 @@
 </template>
 
 <script setup>
-import { VuePDF, usePDF } from "@tato30/vue-pdf";
+import PdfEmbed from "vue-pdf-embed";
 import { ref, onMounted, computed } from "vue";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
@@ -147,33 +152,33 @@ const speakerNote = ref();
 const pdfLink = ref();
 const pdfData = ref(null);
 const searchWord = ref(""); // The word to search for
-const page =  ref(1);
+const page = ref(1);
+const pdfSrc = ref(null);
+const pages = ref(0);
 
 onMounted(() => {
   const storedData = sessionStorage.getItem("pdfData");
   if (storedData) {
     pdfStore.setRowData(JSON.parse(storedData));
+
+    const parsed = JSON.parse(storedData);
+    pdfSrc.value = parsed.speakerData?.source;
+
     speakerData.value = pdfStore.speechData.speakerData;
     speechText.value = pdfStore.speechData.speechText;
     speakerNote.value = pdfStore.speechData.speakerNote;
-    pdfLink.value = pdfStore.speechData.speakerData.source;
-    pdfData.value = usePDF(pdfLink.value);
-    page.value = pdfStore.speechData.page;
+    page.value = parsed.page;
   }
 });
 
-const totalPages = computed(() => {
-  return pdfData.value?.pages || "...";
-});
-
-
-
-//const { pdf, pages } = usePDF("/pdf/test.pdf");
+const onLoaded = (pdf) => {
+  pages.value = pdf.numPages;
+};
 
 const scale = ref(1.4);
 
 const nextPage = () => {
-  if (page.value < pdfData.value.pages) {
+  if (page.value < pages.value) {
     page.value++;
   }
 };
