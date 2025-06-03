@@ -47,7 +47,7 @@
           <PdfEmbed
             :source="pdfSrc"
             :page="page"
-            :scale="scale"
+            :width="docWith"
             @loaded="onLoaded"
           />
         </div>
@@ -155,6 +155,7 @@ const searchWord = ref(""); // The word to search for
 const page = ref(1);
 const pdfSrc = ref(null);
 const pages = ref(0);
+const docWith = ref(600);
 
 onMounted(() => {
   const storedData = sessionStorage.getItem("pdfData");
@@ -175,7 +176,6 @@ const onLoaded = (pdf) => {
   pages.value = pdf.numPages;
 };
 
-const scale = ref(1.4);
 
 const nextPage = () => {
   if (page.value < pages.value) {
@@ -190,12 +190,12 @@ const prevPage = () => {
 };
 
 const zoomIn = () => {
-  scale.value += 0.1;
+  docWith.value += 30;
 };
 
 const zoomOut = () => {
-  if (scale.value > 0.5) {
-    scale.value -= 0.1;
+  if (docWith.value > 200) {
+    docWith.value -= 30;
   }
 };
 
