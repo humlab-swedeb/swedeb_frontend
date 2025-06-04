@@ -8,11 +8,14 @@
     v-model="store.selected[props.type]"
     :options="filterOptions"
     :label="
-      store.selected[props.type].length > 0 ? '' : 'Alla ' + $t(`${props.type}`)
+      store.selected[props.type].length > 0
+      ? ''
+      : 'Alla ' + (props.type === 'party' ? 'Partier' : $t(`${props.type}`))
     "
+
     :placeholder="
       store.selected[props.type].length === 0
-        ? 'Välj specifika ' + $t(`${props.type}`)
+        ? 'Välj specifika ' + (props.type === 'party' ? 'Partier' : $t(`${props.type}`))
         : ''
     "
     label-color="black"
