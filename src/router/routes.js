@@ -55,6 +55,8 @@ const routes = [
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
+    redirect: '/',
+  /*
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -63,6 +65,7 @@ const routes = [
         meta: { title: "Sidan hittades inte" },
       },
     ],
+  */
   },
 ];
 
