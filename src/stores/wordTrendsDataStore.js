@@ -8,6 +8,7 @@ import { downloadDataStore } from "./downloadDataStore";
 export const wordTrendsDataStore = defineStore("wordTrendsData", {
   state: () => ({
     wordTrends: [],
+    wordTrendsSummed: [],
     speechesData: [],
     searchText: "",
     wordHits: [],
@@ -19,6 +20,28 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
   }),
 
   actions: {
+
+
+
+  sumWordTrendsPerWord() {
+
+    this.wordTrendsSummed = this.wordTrends.map((item) => {
+      const summedCounts = {};
+      for (const [key, value] of Object.entries(item.count)) {
+        const word = key.split(" ")[0];
+        if (!summedCounts[word]) {
+          summedCounts[word] = 0;
+        }
+        summedCounts[word] += value;
+      }
+      return {
+        year: item.year,
+        count: summedCounts,
+      };
+    });
+  },
+
+
     async getWordTrendsResult(search) {
       try {
         const path = `/tools/word_trends/${search}`;
@@ -27,6 +50,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           metaDataStore().getSelectedParams(additional_params);
         const response = await api.get(`${path}?${queryString}`);
         this.wordTrends = response.data.wt_list;
+        this.sumWordTrendsPerWord();
       } catch (error) {
         this.wordTrends = [];
         console.error("Error fetching data:", error);

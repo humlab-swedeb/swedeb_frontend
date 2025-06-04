@@ -42,7 +42,7 @@
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">{{ $t("searchAddedWords") }}</q-item-label>
     <div class="row items-center justify-between">
-      <div class="row">
+<!--       <div class="row">
         <q-item-label caption class="q-my-sm text-bold text-grey-8"
           >Visa alla
           <span class="text-black">{{ wtStore.wordHitsSelected.length }}</span>
@@ -51,15 +51,15 @@
         <q-icon name="info_outline" color="accent" class="q-mb-md q-ml-xs">
           <q-tooltip>Slå ihop alla ord till en linje</q-tooltip>
         </q-icon>
-      </div>
-      <q-toggle
+      </div> -->
+<!--       <q-toggle
         v-model="wtStore.singleLine"
         color="accent"
         keep-color
         checked-icon="check"
         unchecked-icon="close"
         @update:model-value="toggleSingleLine"
-      />
+      /> -->
     </div>
     <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
       >{{ $t("searchDropdownOfHits1") }}

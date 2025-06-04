@@ -1,7 +1,7 @@
 <template>
   <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
     <item-label class="text-caption">
-      Klicka på "Totalt" i legenden för att visa/dölja alla ord samtidigt.
+      Klicka på "Totalt" i legenden för att endast visa totalsumman av alla ord.
     </item-label>
     <div class="row justify-center q-mt-lg">
       <div ref="chartContainer" id="chartContainer" class="fit"></div>
