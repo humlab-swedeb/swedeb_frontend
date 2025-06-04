@@ -136,9 +136,9 @@ const formatSearch = (value) => {
   if (searchString.includes(".*")) {
     searchString = searchString.replace(".*", "");
   }
-  if (searchString && value.includes(searchString)) {
-    // Split the value and wrap the matching part in bold tags
-    return value.replace(searchString, `<b>${searchString}</b>`);
+  if (searchString && value.toLowerCase().includes(searchString.toLowerCase())) {
+    const regex = new RegExp(searchString, "gi");
+    return value.replace(regex, (match) => `<b>${match}</b>`);
   }
   return value;
 };
