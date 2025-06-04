@@ -45,7 +45,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      vueRouterMode: "hash", // available values: 'hash', 'history'
+      vueRouterMode: "history", // available values: 'hash', 'history'
 
       // transpile: false,
       // publicPath: '/',
@@ -146,9 +146,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Quasar-test`,
-        short_name: `Quasar-test`,
-        description: `A Quasar Project`,
+        name: `Riksdagsdebatter.se`,
+        short_name: `Riksdagsdebatter`,
+        description: `Riksdagsdebatter.se - Explore the Swedish parliament's debates`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",

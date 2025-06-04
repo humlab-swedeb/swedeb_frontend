@@ -1,8 +1,8 @@
 {
-  "name": "quasar-test",
+  "name": "riksdagsdebatter",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar-test",
+  "description": "Riksdagsdebatter.se - en webbplats för att söka och analysera Sveriges riksdagsdebatter",
+  "productName": "Riksdagsdebatter.se",
   "author": "kpaalm <kajsa.palm@umu.se>",
   "private": true,
   "scripts": {
@@ -25,7 +25,8 @@
     "qs": "^6.11.2",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
-    "vue-gtag": "^2.0.1",
+    "vue-gtag": "^2.1.0",
+    "vue-gtag-next": "^1.14.0",
     "vue-i18n": "^9.0.0",
     "vue-pdf-embed": "^2.1.2",
     "vue-router": "^4.0.0",

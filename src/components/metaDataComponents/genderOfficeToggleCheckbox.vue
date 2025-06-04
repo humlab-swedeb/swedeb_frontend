@@ -1,8 +1,16 @@
 <template>
   <div class="row items-center justify-between q-py-none q-px-none">
     <q-item-label class="text-bold text-grey-9">
-      {{ toggle_label + ":" }}</q-item-label
-    >
+      {{ toggle_label + ":" }}
+      <q-icon
+        v-show="(props.type == 'chamber')"
+        name="info_outline"
+        color="accent"
+        class="q-mb-md q-ml-xs"
+      >
+        <q-tooltip>{{ $t('tooltipChamber') }}</q-tooltip>
+      </q-icon>
+    </q-item-label>
 
     <q-toggle
       class="q-mr-lg"
@@ -18,13 +26,13 @@
     v-for="(value, key) in store.options[props.type]"
     :key="key"
     :val="key"
-    :label="value"
+    :label="value.displayStr === 'Sveriges riksdag' ? 'Enkammare' : value.displayStr"
     class="q-ml-md"
     size="sm"
     :color="!store[`${props.type}Filter`] ? 'grey' : 'accent'"
     :disable="!store[`${props.type}Filter`]"
-    :modelValue="store.selected[props.type].includes(key)"
-    @update:modelValue="handleCheckboxChange($event, key)"
+    :model-value="isSelected(key)"
+    @update:model-value="toggleSelection(key)"
   />
 </template>
 
@@ -40,16 +48,14 @@ const setAllTrue = (type) => {
   store.selected[type] = Object.keys(store.options[type]);
 };
 
-const handleCheckboxChange = (checked, key) => {
-  if (checked) {
-    if (!store.selected[props.type].includes(key)) {
-      store.selected[props.type].push(key);
-    }
+
+const isSelected = (key) => store.selected[props.type].includes(key);
+
+const toggleSelection = (key) => {
+  if (isSelected(key)) {
+    store.selected[props.type] = store.selected[props.type].filter((item) => item !== key);
   } else {
-    const index = store.selected[props.type].indexOf(key);
-    if (index > -1) {
-      store.selected[props.type].splice(index, 1);
-    }
+    store.selected[props.type] = [...store.selected[props.type], key];
   }
 };
 </script>

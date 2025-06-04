@@ -151,12 +151,18 @@
               </q-btn>
               <q-btn
                 no-caps
+
                 @click="openPdf"
+
                 class="full-width items-start text-grey-8"
                 color="white"
+                :disabled="true"
               >
+                <q-tooltip class="text-subtitle2">
+                  Denna funktion är under utveckling
+                </q-tooltip>
                 <q-icon left name="open_in_new" color="accent" />
-                <q-item-label>{{ $t("openSource") }}</q-item-label>
+                <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
               <q-btn
                 outline
@@ -258,9 +264,9 @@ const replaceWordWithBoldTags = (str, word) => {
 
 const replaceNgramWithBoldTags = (str, ngram) => {
   const fixed_spaces = ngram
-    .replace(" .", ".")
-    .replace(" ,", ",")
-    .replace(" :", ":");
+    .replaceAll(" .", ".")
+    .replaceAll(" ,", ",")
+    .replaceAll(" :", ":");
   return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>`);
 };
 

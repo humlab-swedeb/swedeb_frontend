@@ -3,10 +3,25 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
-      { path: "about", component: () => import("pages/AboutPage.vue") },
-      { path: "faq", component: () => import("pages/FAQPage.vue") },
+
       { path: "pdf", component: () => import("pages/PdfPage.vue") },
+
+      {
+        path: "",
+        component: () => import("pages/IndexPage.vue"),
+        meta: { title: "Hem" },
+      },
+      {
+        path: "about",
+        component: () => import("pages/AboutPage.vue"),
+        meta: { title: "Om" },
+      },
+      {
+        path: "faq",
+        component: () => import("pages/FAQPage.vue"),
+        meta: { title: "FAQ" },
+      },
+
     ],
   },
   {
@@ -16,10 +31,23 @@ const routes = [
       {
         path: "wordtrends",
         component: () => import("pages/WordTrendsPage.vue"),
+        meta: { title: "Ordtrender" },
       },
-      { path: "kwic", component: () => import("pages/KWICPage.vue") },
-      { path: "speeches", component: () => import("pages/SpeechesPage.vue") },
-      { path: "ngram", component: () => import("pages/NgramPage.vue") },
+      {
+        path: "kwic",
+        component: () => import("pages/KWICPage.vue"),
+        meta: { title: "KWIC" },
+      },
+      {
+        path: "speeches",
+        component: () => import("pages/SpeechesPage.vue"),
+        meta: { title: "Anföranden" },
+      },
+      {
+        path: "ngram",
+        component: () => import("pages/NgramPage.vue"),
+        meta: { title: "N-Gram" },
+      },
     ],
   },
 
@@ -32,6 +60,7 @@ const routes = [
       {
         path: "",
         component: () => import("pages/ErrorNotFound.vue"),
+        meta: { title: "Sidan hittades inte" },
       },
     ],
   },
