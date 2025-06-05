@@ -105,7 +105,7 @@ export default {
   searchClear: "Ta bort alla ord",
   searchAddedWords: "Valda ord:",
   searchDropdownOfHits1:
-    "Här visas de 10 vanligaste orden relaterade till söktermen med",
+    "Här visas de 5 vanligaste orden relaterade till söktermen med",
   searchDropdownOfHits2: "*",
   searchDropdownOfHits3: "Det finns ytterligare",
   searchDropdownOfHits4: "ord att lägga till för att förfina sökningen.",
