@@ -107,6 +107,9 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async getNGramsResult(search) {
+      if (search.endsWith("*") && !search.endsWith(".*")) {
+        search = search.slice(0, -1) + ".*";
+      }
       try {
         const path = `/tools/ngrams/${search}`;
         const queryString = metaDataStore().getSelectedParams();

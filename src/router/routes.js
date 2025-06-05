@@ -3,6 +3,9 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
+
+      { path: "pdf", component: () => import("pages/PdfPage.vue") },
+
       {
         path: "",
         component: () => import("pages/IndexPage.vue"),
@@ -18,6 +21,7 @@ const routes = [
         component: () => import("pages/FAQPage.vue"),
         meta: { title: "FAQ" },
       },
+
     ],
   },
   {
@@ -51,6 +55,8 @@ const routes = [
   // but you can also remove it
   {
     path: "/:catchAll(.*)*",
+    redirect: '/',
+  /*
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
@@ -59,6 +65,7 @@ const routes = [
         meta: { title: "Sidan hittades inte" },
       },
     ],
+  */
   },
 ];
 

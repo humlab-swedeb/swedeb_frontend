@@ -1,5 +1,8 @@
 <template>
   <template v-if="wtStore.wordTrends && wtStore.wordTrends.length > 0">
+    <item-label class="text-caption">
+      Klicka på "Totalt" i legenden för att endast visa totalsumman av alla ord.
+    </item-label>
     <div class="row justify-center q-mt-lg">
       <div ref="chartContainer" id="chartContainer" class="fit"></div>
     </div>
@@ -358,6 +361,33 @@ function renderChart(container, categories, seriesData) {
       categories: categories,
     },
     series: seriesWithDashStyles,
+    plotOptions: {
+      series: {
+        events: {
+          legendItemClick: function (event) {
+            const chart = this.chart;
+            const series = chart.series;
+            const clickedSeries = this;
+
+            if (clickedSeries.name === "Totalt") {
+              const allOtherSeriesVisible = series.some(
+                (s) => s !== clickedSeries && s.visible
+              );
+
+              series.forEach((s) => {
+                if (s !== clickedSeries) {
+                  s.setVisible(!allOtherSeriesVisible, false);
+                } else {
+                  s.setVisible(true, false);
+                }
+              });
+              chart.redraw();
+              return false; // Prevent default action
+            }
+          },
+        },
+      },
+    },
     legend: {
       ...chartOptions.legend,
       labelFormatter: function () {
@@ -390,10 +420,6 @@ function renderChart(container, categories, seriesData) {
               xAxis: 0,
               yAxis: 0,
               x: index,
-              y: 0, // Adjust the y-value as needed
-            },
-            text: `Year ${year}`,
-          },
         ],
       });
     }

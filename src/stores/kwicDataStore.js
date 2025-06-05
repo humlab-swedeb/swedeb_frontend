@@ -35,6 +35,9 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     async getKwicResult(search) {
+      if (search.endsWith("*") && !search.endsWith(".*")) {
+        search = search.slice(0, -1) + ".*";
+      }
       this.cancelTokenSource = axios.CancelToken.source();
       try {
         const path = `/tools/kwic/${search}`;

@@ -151,13 +151,14 @@
               </q-btn>
               <q-btn
                 no-caps
+
+                @click="openPdf"
+
                 class="full-width items-start text-grey-8"
                 color="white"
-                :disabled="true"
+                :disabled="false"
               >
-                <q-tooltip class="text-subtitle2">
-                  Denna funktion är under utveckling
-                </q-tooltip>
+ 
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
@@ -194,12 +195,13 @@
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { pdfDataStore } from "src/stores/pdfDataStore";
 
 import loadingIcon from "src/components/loadingIcon.vue";
 import reportForm from "src/components/reportForm.vue";
@@ -209,7 +211,9 @@ const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
 const feedbackStore = feedbackDataStore();
 const nGramStore = nGramDataStore();
+const pdfStore = pdfDataStore();
 const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
   props: Object,
@@ -222,8 +226,22 @@ const feedbackData = (myProps) => {
 const popup = ref(false);
 const speakerNote = ref("");
 const speechText = ref("");
+const page = ref(1);
 const originalSpeechText = ref("");
 const loading = ref(false);
+
+const openPdf = () => {
+  const data = {
+    speakerNote: speakerNote.value,
+    speechText: speechText.value,
+    speakerData: props.props.row,
+    page: page.value
+  };
+  pdfStore.setRowData(data);
+  sessionStorage.setItem("pdfData", JSON.stringify(data)); // store data in session storage for new tab
+  const routeData = router.resolve("/pdf");
+  window.open(routeData.href, "_blank");
+};
 
 const replaceNewLine = (str) => {
   return str.replace(/\n/g, "<br><br>");
@@ -260,11 +278,14 @@ const downloadCurrentSpeech = () => {
 watchEffect(() => {
   if (props.props.expand) {
     feedbackData({ ...props.props.row });
+
     loading.value = true;
     (async () => {
       const speechData = await speechStore.getSpeech(props.props.row.id);
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
+      page.value = speechData.page_number;
+
 
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
