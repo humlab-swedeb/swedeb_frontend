@@ -156,7 +156,7 @@
 
                 class="full-width items-start text-grey-8"
                 color="white"
-                :disabled="true"
+                :disabled="false"
               >
                 <q-tooltip class="text-subtitle2">
                   Denna funktion är under utveckling
