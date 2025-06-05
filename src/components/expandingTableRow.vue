@@ -238,9 +238,17 @@ const openPdf = () => {
     page: page.value
   };
   pdfStore.setRowData(data);
-  sessionStorage.setItem("pdfData", JSON.stringify(data)); // store data in session storage for new tab
-  const routeData = router.resolve("/pdf");
-  window.open(routeData.href, "_blank");
+  sessionStorage.setItem("pdfData", JSON.stringify(data));
+  const clientRoutePath = "/pdf";
+  const clientRouteHash = `#${clientRoutePath}`;
+  const resolvedClientRoute = router.resolve({ path: clientRoutePath });
+  // console.log("router.resolve().href (for debugging):", resolvedClientRoute.href);
+  // console.log("Manually constructed clientRouteHash:", clientRouteHash);
+  const spaPublicPath = '/public/';
+  const fullPathToIndexHtml = `${window.location.origin}${spaPublicPath}index.html`;
+  const finalUrlToOpen = `${fullPathToIndexHtml}${clientRouteHash}`;
+  // console.log("Attempting to open PDF at URL:", finalUrlToOpen);
+  window.open(finalUrlToOpen, "_blank");
 };
 
 const replaceNewLine = (str) => {
