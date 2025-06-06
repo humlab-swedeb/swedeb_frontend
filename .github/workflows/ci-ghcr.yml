@@ -39,5 +39,5 @@ jobs:
           # These are used by build-and-push-container.sh
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: pnpm semantic-release
   
