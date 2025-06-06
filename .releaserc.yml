@@ -66,23 +66,32 @@ plugins:
 
   - - "@semantic-release/changelog"
     - changelogTitle: |
-        # 📦 Changelog 
+        # 📦 Changelog
         [![conventional commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
         [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
         > All notable changes to this project will be documented in this file
 
+  # This runs scripts to build the application and create release assets.
+  - - "@semantic-release/exec"
+    - prepareCmd: ".github/scripts/build-assets.sh ${nextRelease.version}"
+
+  # Creates the GitHub release and uploads the .tar.gz created in the previous step.
   - - "@semantic-release/github"
     - addReleases: bottom
       assets:
-        - path: "./dist/**/*.{msi,deb,rpm,AppImage,dmg,sha256sum,bin,exe}"
+        - path: "dist/frontend-*.tar.gz"
+          label: "Frontend Build (tar.gz)"
       successComment: false
       failTitle: false
+
+  - - "@semantic-release/exec"
+    - publishCmd: ".github/scripts/build-and-push-container.sh ${nextRelease.version}"
 
   - - "@semantic-release/git"
     - assets:
         - LICENSE*
         - CHANGELOG.md
       message: |
-        chore(${nextRelease.type}): ${nextRelease.version} [skip ci]
+        chore(release): ${nextRelease.version} [skip ci]
 
         ${nextRelease.notes}
