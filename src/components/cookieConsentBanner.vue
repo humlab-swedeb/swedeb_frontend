@@ -27,12 +27,14 @@ onMounted(() => {
 
 const acceptCookies = () => {
   localStorage.setItem("cookie_consent", "true");
-  location.reload(); // Ladda om för att aktivera analytics
+  //location.reload(); // Ladda om för att aktivera analytics
+  showBanner.value = false;
 };
 
 const rejectCookies = () => {
   localStorage.setItem("cookie_consent", "false");
-  location.reload(); // Se till att analytics inte körs
+  //location.reload(); // Se till att analytics inte körs
+  showBanner.value = false;
 };
 </script>
 
