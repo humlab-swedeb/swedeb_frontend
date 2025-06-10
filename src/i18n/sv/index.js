@@ -213,12 +213,12 @@ export default {
     },
     1: {
       alt: "Humlab logo",
-      src: "public/images/humlab_logo_left_SE.png",
+      src: "/public/images/humlab_logo_left_SE.png",
       style: "width: 250px",
     },
     2: {
       alt: "Huminfra logo",
-      src: "https://riksdagsdebatter.se/public/images/huminfra_3.svg",
+      src: "/public/images/huminfra_3_b.png",
       style: "width: 150px",
     },
   },
