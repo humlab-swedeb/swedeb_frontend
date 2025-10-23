@@ -27,7 +27,10 @@ onMounted(() => {
 
 const acceptCookies = () => {
   localStorage.setItem("cookie_consent", "true");
-  //location.reload(); // Ladda om för att aktivera analytics
+  // Initiera analytics direkt här istället för att ladda om sidan
+  if (typeof window.initAnalytics === "function") {
+    window.initAnalytics();
+  }
   showBanner.value = false;
 };
 
