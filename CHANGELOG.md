@@ -4,6 +4,26 @@
 > All notable changes to this project will be documented in this file
 
 
+## [0.10.1](https://github.com/humlab-swedeb/swedeb_frontend/compare/v0.10.0...v0.10.1) (2025-10-23)
+
+### 🐛 Bug Fixes
+
+* avoid reload after consent banner ([5ef3771](https://github.com/humlab-swedeb/swedeb_frontend/commit/5ef3771c9634a3ff2d5aad6789277efe5d1329c2))
+* updated image paths ([684463e](https://github.com/humlab-swedeb/swedeb_frontend/commit/684463e5350118f9d913b3492d2d613931007ed0))
+
+### 📝 Documentation
+
+* add CI/CD workflow documentation for swedeb_frontend ([d4e3e74](https://github.com/humlab-swedeb/swedeb_frontend/commit/d4e3e741856fde12dd7eaa110498341767a42633))
+
+### 🔁 Continuous Integration
+
+* enhance logging and error handling in build-and-push script ([0f90449](https://github.com/humlab-swedeb/swedeb_frontend/commit/0f904497b98b9fbb999aa545cc1f1b026857fbfe))
+* format permissions section and add caching for pnpm store ([23d1f68](https://github.com/humlab-swedeb/swedeb_frontend/commit/23d1f68d29773e05de3effe31195c74275ea30d7))
+* improve logging and error handling in build-assets script ([66d8f3a](https://github.com/humlab-swedeb/swedeb_frontend/commit/66d8f3ade79715ca66ff28780a706a33f07c23ec))
+* initialize analytics directly upon cookie acceptance without page reload ([5a38fd9](https://github.com/humlab-swedeb/swedeb_frontend/commit/5a38fd9e7e05d4b026abfb1127dc4b974457e6e9))
+* locked dependencies ([bd1415f](https://github.com/humlab-swedeb/swedeb_frontend/commit/bd1415f0c8189c9e0485e51f5e378b451bf39747))
+* remove major and minor version tagging from build-and-push script ([29ac7ba](https://github.com/humlab-swedeb/swedeb_frontend/commit/29ac7ba36236af653ff0261e16a739c53bf87a5a))
+
 ## [0.10.0](https://github.com/humlab-swedeb/swedeb_frontend/compare/v0.9.0...v0.10.0) (2025-06-06)
 
 ### 🍕 Features
