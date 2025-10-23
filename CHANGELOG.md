@@ -3,6 +3,19 @@
 [![semantic versioning](https://img.shields.io/badge/semantic%20versioning-2.0.0-green.svg)](https://semver.org)
 > All notable changes to this project will be documented in this file
 
+
+## [0.10.0](https://github.com/humlab-swedeb/swedeb_frontend/compare/v0.9.0...v0.10.0) (2025-06-06)
+
+### 🍕 Features
+
+* add build and push scripts for container images and assets ([6d7b5dc](https://github.com/humlab-swedeb/swedeb_frontend/commit/6d7b5dcc078caef504c4ab851bf92e72228d7f97))
+* update README to reflect project details and automated release process ([1762452](https://github.com/humlab-swedeb/swedeb_frontend/commit/1762452a445286d2b35964b84d62cfdfe3268e08))
+* update semantic-release configuration and dependencies ([22bfeeb](https://github.com/humlab-swedeb/swedeb_frontend/commit/22bfeebad76e3fed34e3d1217bfefa2530314989))
+
+### 📝 Documentation
+
+* bootstrap initial changelog [skip ci] ([c9555bd](https://github.com/humlab-swedeb/swedeb_frontend/commit/c9555bdfcb5dd6d32787016fffeb2b0847c8e3ea))
+
 ## 0.0.1 (2025-06-06)
 
 ### Features
