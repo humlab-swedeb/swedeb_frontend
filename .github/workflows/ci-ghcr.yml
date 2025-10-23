@@ -11,9 +11,9 @@ jobs:
     name: Build, Version, and Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write      # to push tags and update changelog
-      packages: write      # to push to ghcr.io
-      issues: write        # to comment on issues
+      contents: write # to push tags and update changelog
+      packages: write # to push to ghcr.io
+      issues: write # to comment on issues
       pull-requests: write # to comment on PRs
 
     steps:
@@ -26,6 +26,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Set up pnpm and install dependencies
         uses: pnpm/action-setup@v3
@@ -40,4 +48,3 @@ jobs:
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm semantic-release
-  
