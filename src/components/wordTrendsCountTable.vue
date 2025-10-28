@@ -44,7 +44,7 @@
               class="bg-white"
               :class="col.name === 'Year' ? 'bg-grey-1' : ''"
             >
-              {{ col.value }}
+              {{ formatValue(col.name, col.value) }}
             </q-td>
           </q-tr>
         </template>
@@ -80,6 +80,18 @@ const downloadWTCountsCSV = () => {
 
 const downloadWTCountsExcel = () => {
   wtStore.downloadExcelCountsWT(getParamString());
+};
+
+const formatValue = (columnName, value) => {
+  if (columnName === "Year") {
+    return value;
+  }
+  if (typeof value === "number") {
+    return Number(value)
+      .toFixed(7)
+      .replace(/\.?0+$/, "");
+  }
+  return value;
 };
 
 const wordTrends = wtStore.wordTrends;
