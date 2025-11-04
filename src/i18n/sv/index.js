@@ -203,6 +203,8 @@ export default {
   zoomIn: "Zooma in",
   zoomOut: "Zooma ut",
   closeSpeech: "Stäng anförande",
+  riksdagenLinkText: "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
+  riksdagenLink: "https://www.riksdagen.se",
 
   // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om Riksdagsdebatter.se",
@@ -221,12 +223,12 @@ export default {
     },
     1: {
       alt: "Humlab logo",
-      src: "/public/images/humlab_logo_left_SE.png",
+      src: "/public/images/humlab_logo_left_se.png",
       style: "width: 250px",
     },
     2: {
       alt: "Huminfra logo",
-      src: "/public/images/huminfra_3_b.png",
+      src: "/public/images/HumInfra_3_b.png",
       style: "width: 150px",
     },
   },

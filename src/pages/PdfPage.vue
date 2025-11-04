@@ -56,6 +56,17 @@
           <p>PDF is not available.</p>
         </div>
       </q-card-section>
+      <div class="q-ml-md q-pr-sm">
+        {{ $t("riksdagenLinkText") }}
+        <a
+          :href="$t('riksdagenLink')"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="q-ml-sm text-accent"
+        >
+          {{ $t("riksdagenLink") }}
+        </a>
+      </div>
     </q-card-section>
 
     <q-card-section :class="$q.screen.lt.md ? '' : 'col-5 q-pt-xl'">
