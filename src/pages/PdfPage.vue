@@ -41,7 +41,7 @@
           <q-btn no-caps flat @click="zoomIn" icon="zoom_in">Zoom in</q-btn>
         </q-card-section>
       </q-card-section>
-      <div class="q-ml-md q-pr-sm text-bold">OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande</div>
+      <div class="q-ml-md q-pr-sm text-bold text-negative">OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande</div>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
         <div v-if="pdfSrc">
