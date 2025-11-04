@@ -1,6 +1,6 @@
 <template>
   <q-btn flat no-caps @click="goBack" icon="close" class="q-mt-lg"
-    >Stäng anförande</q-btn
+    >{{ $t("closeSpeech") }}</q-btn
   >
   <q-card
     flat
@@ -20,7 +20,7 @@
             icon="chevron_left"
             :disable="page <= 1"
           >
-            Föregående sida
+            {{$t("previousPage")}}
           </q-btn>
           <span class="text-bold text-subtitle1">
             {{ page }} / {{ pages }}
@@ -33,15 +33,15 @@
             @click="nextPage"
             :disable="page >= pdfData?.value?.pages"
           >
-            Nästa sida
+            {{$t("nextPage")}}
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">Zoom ut</q-btn>
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">Zoom in</q-btn>
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomIn") }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomOut") }}</q-btn>
         </q-card-section>
       </q-card-section>
-      <div class="q-ml-md q-pr-sm text-bold text-negative">OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande</div>
+      <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }} </div>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
         <div v-if="pdfSrc">
