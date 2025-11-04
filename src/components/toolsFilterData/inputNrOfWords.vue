@@ -32,7 +32,7 @@
     <div class="col">
       <q-input
         v-model="kwicStore.wordsRight"
-        outlined
+        outlined12
         :label="$t('nrOfWordsRight')"
         type="number"
         class="bg-white"
