@@ -1,4 +1,5 @@
 <template>
+<template v-if="nGramStore.nGrams && nGramStore.nGrams.length > 0">
   <div class="row q-py-md justify-between">
     <q-item-label class="col-9 q-mt-md" v-if="nGramStore.nGrams.length > 0">
       {{ $t("searchResult1") }} <b>{{ nGramStore.nGrams.length }}</b>
@@ -111,6 +112,11 @@
     </template>
   </q-table>
 </template>
+  <template v-else>
+    <!-- Show a message when there's no data -->
+    <noResults />
+  </template>
+</template>
 
 <script setup>
 import { ref } from "vue";
@@ -118,6 +124,7 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
+import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
 const metaStore = metaDataStore();
