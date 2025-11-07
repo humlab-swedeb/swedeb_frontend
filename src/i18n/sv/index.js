@@ -210,8 +210,8 @@ export default {
   aboutPageTitle: "Om Riksdagsdebatter.se",
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
-  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter”
-  med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna k`,
+  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
@@ -594,6 +594,12 @@ export default {
           linkText: "Katalog med alla ledamöter.",
         },
       },
+    },
+    10: {
+      q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
+      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976. 
+      Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
+      Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
     },
   },
 
