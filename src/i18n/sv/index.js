@@ -201,8 +201,7 @@ export default {
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
   riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter”
-  med finansiering av Umeå universitet och Swerik. GitHub is used as the development
-  platform for Riksdagsdebatter.se and you can access it`,
+  med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna k`,
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
