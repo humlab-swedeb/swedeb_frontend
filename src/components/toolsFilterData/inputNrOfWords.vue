@@ -22,7 +22,7 @@
         class="bg-white"
         color="accent"
         max="20"
-        min="0"
+        min="1"
       >
       </q-input>
     </div>
@@ -38,7 +38,7 @@
         class="bg-white"
         color="accent"
         max="20"
-        min="0"
+        min="1"
       >
       </q-input>
     </div>

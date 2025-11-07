@@ -196,12 +196,22 @@ export default {
   speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du
   avgränsa anförandena till bland annat vissa partier, talare eller år.`,
 
+  // PDF PAGE ------------------------------------------------
+  pageNrInfoText: "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
+  nextPage: "Nästa sida",
+  previousPage: "Föregående sida",
+  zoomIn: "Zooma in",
+  zoomOut: "Zooma ut",
+  closeSpeech: "Stäng anförande",
+  riksdagenLinkText: "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
+  riksdagenLink: "https://www.riksdagen.se",
+
   // ABOUT PAGE ------------------------------------------------
   aboutPageTitle: "Om Riksdagsdebatter.se",
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
-  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter”
-  med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
@@ -212,12 +222,12 @@ export default {
     },
     1: {
       alt: "Humlab logo",
-      src: "/public/images/humlab_logo_left_SE.png",
+      src: "/public/images/humlab_logo_left_se.png",
       style: "width: 250px",
     },
     2: {
       alt: "Huminfra logo",
-      src: "/public/images/huminfra_3_b.png",
+      src: "/public/images/HumInfra_3_b.png",
       style: "width: 150px",
     },
   },

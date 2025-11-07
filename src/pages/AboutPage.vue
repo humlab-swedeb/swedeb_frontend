@@ -18,13 +18,7 @@
         :class="$q.screen.lt.sm ? 'q-px-md' : 'q-px-xl'"
         style="max-width: fit-content"
       >
-        <q-item-label class="text-accent text-h6"> Finansiär </q-item-label>
-        <q-item-label class="text-bold q-pt-md text-center">
-          {{ $t("aboutFinance") }}
-          <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
-            Huminfra.
-          </a>
-        </q-item-label>
+
         <div class="q-gutter-sm text-center q-mt-md">
           <q-img
             v-for="(financier, index) in financiers"
