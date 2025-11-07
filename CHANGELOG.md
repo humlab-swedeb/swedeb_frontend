@@ -4,6 +4,21 @@
 > All notable changes to this project will be documented in this file
 
 
+## [0.10.2](https://github.com/humlab-swedeb/swedeb_frontend/compare/v0.10.1...v0.10.2) (2025-11-07)
+
+### 🐛 Bug Fixes
+
+* adding link to riksdagen on pdfPage. Fixes [#133](https://github.com/humlab-swedeb/swedeb_frontend/issues/133) ([5aa3bd3](https://github.com/humlab-swedeb/swedeb_frontend/commit/5aa3bd3dfebbda31dddffd19a1d76327ae45f292))
+* **i18n:** correct Swedish translation in aboutPageIntroText ([ae690d7](https://github.com/humlab-swedeb/swedeb_frontend/commit/ae690d7a02827485001aaaec8728cac9303da3e3))
+* format values in word trends table for better display ([41d8644](https://github.com/humlab-swedeb/swedeb_frontend/commit/41d8644dfa6e9cffc86b05e054a35ad8b7b85945)), closes [#131](https://github.com/humlab-swedeb/swedeb_frontend/issues/131)
+* min 1 words as keyword context, solves issue [#121](https://github.com/humlab-swedeb/swedeb_frontend/issues/121) ([eb1b126](https://github.com/humlab-swedeb/swedeb_frontend/commit/eb1b1266a9584ef2d1d9bbb7f2e6f4c69fbd9237))
+* show error message for searches with no results instead of empty table ([20a5913](https://github.com/humlab-swedeb/swedeb_frontend/commit/20a59130a7bf30a5fbc6fce86ca0ebd34d787fc0))
+* updated logobox paths and removed text ([0a7e6a5](https://github.com/humlab-swedeb/swedeb_frontend/commit/0a7e6a5416a91a5bbe840038a10a794372ac2f0f))
+
+### 🎨 Styles
+
+* make info text about pages red on pdf page ([b8115c1](https://github.com/humlab-swedeb/swedeb_frontend/commit/b8115c1a30e962a35e577151a76d32529bb44d54))
+
 ## [0.10.1](https://github.com/humlab-swedeb/swedeb_frontend/compare/v0.10.0...v0.10.1) (2025-10-23)
 
 ### 🐛 Bug Fixes
