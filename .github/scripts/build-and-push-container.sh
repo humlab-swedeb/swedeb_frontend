@@ -22,7 +22,8 @@ IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY}"
 # Set image tag based on environment
 if [ "$ENVIRONMENT" = "staging" ]; then
   IMAGE_TAG="staging"
-  IMAGE_VERSION_TAG="staging-${VERSION}"
+  # For staging, use same tag to avoid duplicates since Docker allows duplicate --tag
+  IMAGE_VERSION_TAG="staging"
 else
   IMAGE_TAG="latest"
   IMAGE_VERSION_TAG="${VERSION}"
