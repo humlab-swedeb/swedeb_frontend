@@ -84,9 +84,6 @@ plugins:
       successComment: false
       failTitle: false
 
-  - - "@semantic-release/exec"
-    - publishCmd: ".github/scripts/build-and-push-container.sh ${nextRelease.version}"
-
   - - "@semantic-release/git"
     - assets:
         - LICENSE*
