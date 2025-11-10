@@ -31,7 +31,10 @@ fi
 
 log "Building ${ENVIRONMENT} frontend image for version ${VERSION}..."
 log "Logging into GitHub Container Registry..."
-echo "${DOCKER_PASSWORD}" | docker login ghcr.io -u "${DOCKER_USERNAME}" --password-stdin
+if ! echo "${DOCKER_PASSWORD}" | docker login ghcr.io -u "${DOCKER_USERNAME}" --password-stdin; then
+  log "ERROR: Failed to login to GitHub Container Registry"
+  exit 1
+fi
 
 # Build the frontend
 log "Building frontend application..."
@@ -58,7 +61,7 @@ COPY dist/spa .
 EOF
 
 # Report image size
-IMAGE_SIZE=$(docker images --format "{{.Size}}" "${IMAGE_NAME}:${IMAGE_TAG}" | head -n1)
+IMAGE_SIZE=$(docker images --format "{{.Size}}" "${IMAGE_NAME}:${IMAGE_VERSION_TAG}" | head -n1)
 log "Container image size: ${IMAGE_SIZE}"
 
 docker push "${IMAGE_NAME}:${IMAGE_TAG}"
