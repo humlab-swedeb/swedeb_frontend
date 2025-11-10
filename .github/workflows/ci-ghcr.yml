@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - staging
   workflow_dispatch:
 
 jobs:
@@ -41,10 +42,51 @@ jobs:
           version: 8
           run_install: true
 
-      - name: Run semantic-release
+      - name: Run semantic-release (main branch only)
+        if: github.ref_name == 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # These are used by build-and-push-container.sh
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm semantic-release
+
+      - name: Build and push staging container
+        if: github.ref_name == 'staging'
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Building staging container..."
+          pnpm build
+
+          # Validate build output
+          if [ ! -d "dist/spa" ] || [ -z "$(ls -A dist/spa)" ]; then
+            echo "ERROR: Build output is empty or missing!"
+            exit 1
+          fi
+
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY}"
+
+          echo "Logging into GitHub Container Registry..."
+          echo "${DOCKER_PASSWORD}" | docker login ghcr.io -u "${DOCKER_USERNAME}" --password-stdin
+
+          echo "Building and pushing staging container image..."
+
+          # Create Dockerfile and build image with staging tag
+          cat <<EOF | docker build \
+            --tag "${IMAGE_NAME}:staging" \
+            -f - .
+          # This Dockerfile is generated on-the-fly.
+          FROM scratch
+          WORKDIR /app/public
+          COPY dist/spa .
+          EOF
+
+          # Report image size
+          IMAGE_SIZE=$(docker images --format "{{.Size}}" "${IMAGE_NAME}:staging" | head -n1)
+          echo "Container image size: ${IMAGE_SIZE}"
+
+          docker push "${IMAGE_NAME}:staging"
+
+          echo "Staging container image published successfully with tag: staging"

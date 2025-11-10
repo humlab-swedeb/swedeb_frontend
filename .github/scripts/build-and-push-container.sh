@@ -35,6 +35,7 @@ EOF
 IMAGE_SIZE=$(docker images --format "{{.Size}}" "${IMAGE_NAME}:${VERSION}" | head -n1)
 log "Container image size: ${IMAGE_SIZE}"
 
-docker push --all-tags "${IMAGE_NAME}"
+docker push "${IMAGE_NAME}:${VERSION}"
+docker push "${IMAGE_NAME}:latest"
 
 log "Container image published successfully with tags: ${VERSION}, latest"
