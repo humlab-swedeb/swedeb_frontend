@@ -19,10 +19,8 @@ fi
 
 IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY}"
 
-# Set image tag based on environment
 if [ "$ENVIRONMENT" = "staging" ]; then
   IMAGE_TAG="staging"
-  # For staging, use same tag to avoid duplicates since Docker allows duplicate --tag
   IMAGE_VERSION_TAG="staging"
 else
   IMAGE_TAG="latest"
@@ -46,10 +44,8 @@ if [ ! -d "dist/spa" ] || [ -z "$(ls -A dist/spa)" ]; then
     exit 1
 fi
 
-log "Building and pushing container image..."
-
 log "Building ${ENVIRONMENT} image with tags: ${IMAGE_TAG}, ${IMAGE_VERSION_TAG}"
-# Dynamically create a simple Dockerfile and pipe it to docker build
+
 cat <<EOF | docker build \
   --tag "${IMAGE_NAME}:${IMAGE_TAG}" \
   --tag "${IMAGE_NAME}:${IMAGE_VERSION_TAG}" \
@@ -60,7 +56,6 @@ WORKDIR /app/public
 COPY dist/spa .
 EOF
 
-# Report image size
 IMAGE_SIZE=$(docker images --format "{{.Size}}" "${IMAGE_NAME}:${IMAGE_VERSION_TAG}" | head -n1)
 log "Container image size: ${IMAGE_SIZE}"
 
