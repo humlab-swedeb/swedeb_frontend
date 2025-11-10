@@ -188,25 +188,34 @@ const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
+const currentReqId = ref(0);
+
 async function onRequest(table_props) {
-  const { sortBy, descending, page, rowsPerPage, rowsNumber } =
-    table_props.pagination;
-
+  const { page, rowsPerPage } = table_props.pagination;
+  loading.value = true;
+  const reqId = ++currentReqId.value;
   try {
-    loading.value = true;
-
-    await nGramStore.getNGramSpeeches(
-      props.rowID,
+    const data = await nGramStore.getNGramSpeeches(
+      props.rowID - 1,
       props.ngram,
       page,
       rowsPerPage
     );
+    if (reqId !== currentReqId.value) return;
+
+    pagination.value.rowsNumber = data.total;
+    console.log('Total speeches fetched:', data.total);
+    // Clamp page if user clicked beyond last after total changed
+    const maxPage = Math.max(1, Math.ceil(data.total / rowsPerPage));
+    pagination.value.page = page > maxPage ? maxPage : page;
     pagination.value.rowsPerPage = rowsPerPage;
-    pagination.value.page = page;
-    rows.value = mapSpeechesToRows(nGramStore.nGramSpeeches);
-    loading.value = false;
+
+    rows.value = mapSpeechesToRows(data.items);
   } catch (error) {
     console.error("Error fetching data:", error);
+    rows.value = [];
+  } finally {
+    if (reqId === currentReqId.value) loading.value = false;
   }
 }
 
@@ -219,8 +228,8 @@ if (props.type === "wordTrends") {
 }
 
 function mapSpeechesToRows(speeches) {
-  return speeches.map((speech) => ({
-    id: speech.document_name,
+  return speeches.map((speech, idx) => ({
+    id: speech.speech_id ?? `${speech.document_name}::${speech.link || idx}`,
     protocol: speech.speech_name,
     node_word: speech.node_word,
     speaker: speech.name,
