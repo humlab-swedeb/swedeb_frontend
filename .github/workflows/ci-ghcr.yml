@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - staging
   workflow_dispatch:
 
 jobs:
@@ -41,10 +42,34 @@ jobs:
           version: 8
           run_install: true
 
-      - name: Run semantic-release
+      - name: Run semantic-release (main branch only)
+        id: semantic_release
+        if: github.ref_name == 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # These are used by build-and-push-container.sh
           DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm semantic-release
+
+      - name: Build and push production container
+        if: github.ref_name == 'main' && steps.semantic_release.outputs.new_release_published == 'true'
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the version from semantic-release output
+          VERSION="${{ steps.semantic_release.outputs.new_release_version }}"
+          echo "Building production container for version: ${VERSION}"
+          ./.github/scripts/build-and-push-container.sh "${VERSION}" production
+
+      - name: Build and push staging container
+        if: github.ref_name == 'staging'
+        env:
+          DOCKER_USERNAME: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get current version for staging build
+          VERSION=$(pnpm pkg get version | tr -d '"')
+          echo "Building staging container for version: ${VERSION}"
+          ./.github/scripts/build-and-push-container.sh "${VERSION}" staging
