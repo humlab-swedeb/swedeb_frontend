@@ -70,6 +70,6 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Get current version for staging build
-          VERSION=$(npm pkg get version | tr -d '"')
+          VERSION=$(pnpm pkg get version | tr -d '"')
           echo "Building staging container for version: ${VERSION}"
           ./.github/scripts/build-and-push-container.sh "${VERSION}" staging
