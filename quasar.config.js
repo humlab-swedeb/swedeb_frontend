@@ -47,10 +47,10 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: "hash", // available values: 'hash', 'history'
       env: {
-        API: '/v1'
+        API: "/v1",
       },
       // transpile: false,
-      publicPath: '/public',
+      publicPath: "/public",
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
@@ -81,7 +81,7 @@ module.exports = configure(function (ctx) {
       server: {
         type: "http",
       },
-      port: 8080,
+      port: 9001,
       open: true, // opens browser window automatically
     },
 

@@ -37,8 +37,9 @@
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomIn") }}</q-btn>
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomOut") }}</q-btn>
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomOut") }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomIn") }}</q-btn>
+           <q-btn label="Get Page Count" @click="loadPageCount" />
         </q-card-section>
       </q-card-section>
       <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }} </div>
@@ -154,6 +155,18 @@ import PdfEmbed from "vue-pdf-embed";
 import { ref, onMounted, computed } from "vue";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
+import { getPdfPageCount } from "src/utils/pdfPAgeCount";
+
+const pdfUrl = "https://pdf.swedeb.se/riksdagen-records-pdf/1867/prot-1867--ak--0118.pdf"
+const check_pages = ref(null)
+
+async function loadPageCount() {
+  console.log("Loading page count for PDF:", pdfUrl)
+  check_pages.value = await getPdfPageCount(pdfUrl)
+  console.log("Page count loaded:", check_pages.value)
+}
+
+
 
 const pdfStore = pdfDataStore();
 const metaStore = metaDataStore();
@@ -175,6 +188,7 @@ onMounted(() => {
     pdfStore.setRowData(JSON.parse(storedData));
 
     const parsed = JSON.parse(storedData);
+    console.log("Parsed PDF Data:", parsed);
     pdfSrc.value = parsed.speakerData?.source;
 
     speakerData.value = pdfStore.speechData.speakerData;
