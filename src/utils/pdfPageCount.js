@@ -17,64 +17,77 @@ export async function getPdfPageCount(url) {
 
     // Check cache first
     if (pageCountCache.has(url)) {
-      console.log("[getPdfPageCount] Returning cached page count for:", url);
       return pageCountCache.get(url);
     }
 
-    console.log("[getPdfPageCount] Fetching page count for:", url);
 
-    // First, check if the server supports range requests
     const headResponse = await fetch(url, {
       method: "HEAD",
       mode: "cors", // Explicitly set CORS mode
     });
 
     if (!headResponse.ok) {
-      console.warn(
-        "[getPdfPageCount] HEAD request failed, trying full download"
-      );
       return await getPageCountFullDownload(url);
     }
 
     const acceptRanges = headResponse.headers.get("Accept-Ranges");
     const contentLength = headResponse.headers.get("Content-Length");
 
-    console.log(
-      "[getPdfPageCount] Server supports range requests:",
-      acceptRanges === "bytes"
-    );
-    console.log("[getPdfPageCount] Content length:", contentLength);
 
-    if (
-      !acceptRanges ||
-      acceptRanges.toLowerCase() !== "bytes" ||
-      !contentLength
-    ) {
-      // Server doesn't support range requests
-      console.log("[getPdfPageCount] Server doesn't support range requests.");
-      console.log(
-        "[getPdfPageCount] Note: To improve performance, enable 'Accept-Ranges: bytes' on the PDF server."
-      );
-      console.log(
-        "[getPdfPageCount] Downloading full PDF to get page count..."
-      );
+    // Try range request even if Accept-Ranges header is not exposed via CORS
+    // Many servers support it even if they don't expose the header
+    if (!contentLength) {
       return await getPageCountFullDownload(url);
     }
 
+    const supportsRanges =
+      acceptRanges && acceptRanges.toLowerCase() === "bytes";
     const fileSize = parseInt(contentLength, 10);
 
-    // Try progressively larger chunks if needed
+    // First, try to check if this is a linearized PDF by reading the beginning
+    // Linearized PDFs have the page count in the first few KB
+    const headerSize = 8192; // 8KB should be enough for the linearization dictionary
+
+    try {
+      const headerResponse = await fetch(url, {
+        headers: {
+          Range: `bytes=0-${headerSize - 1}`,
+        },
+        mode: "cors",
+      });
+
+      if (headerResponse.ok) {
+        const headerChunk = await headerResponse.arrayBuffer();
+        const headerText = new TextDecoder("latin1").decode(headerChunk);
+
+        // Check for linearized PDF marker and /N (page count)
+        const linearizedMatch = headerText.match(/\/Linearized\s+1/);
+        if (linearizedMatch) {
+
+          const pageCountMatch = headerText.match(/\/N\s+(\d+)/);
+          if (pageCountMatch && pageCountMatch[1]) {
+            const count = parseInt(pageCountMatch[1], 10);
+            if (count > 0 && count < 100000) {
+              pageCountCache.set(url, count);
+              return count;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log(
+        "[getPdfPageCount] Could not check linearized header:",
+        error.message
+      );
+    }
+
+    // If not linearized or /N not found, try progressively larger chunks from the end
     const chunkSizes = [65536, 131072, 262144]; // 64KB, 128KB, 256KB
 
     for (const chunkSize of chunkSizes) {
       const actualChunkSize = Math.min(chunkSize, fileSize);
       const startByte = Math.max(0, fileSize - actualChunkSize);
 
-      console.log(
-        "[getPdfPageCount] Requesting range:",
-        `bytes=${startByte}-${fileSize - 1}`,
-        `(${actualChunkSize} bytes)`
-      );
 
       const response = await fetch(url, {
         headers: {
@@ -83,13 +96,18 @@ export async function getPdfPageCount(url) {
         mode: "cors",
       });
 
-      if (!response.ok) {
-        console.warn(
-          "[getPdfPageCount] Range request failed, trying full download"
-        );
-        return await getPageCountFullDownload(url);
-      }
 
+      if (!response.ok) {
+
+        // If status is 416 (Range Not Satisfiable), fall back
+        if (response.status === 416) {
+
+          return await getPageCountFullDownload(url);
+        }
+
+        // For other errors, continue trying
+        continue;
+      }
       const chunk = await response.arrayBuffer();
       const text = new TextDecoder("latin1").decode(chunk);
 
@@ -97,19 +115,11 @@ export async function getPdfPageCount(url) {
       const pageCount = extractPageCount(text);
 
       if (pageCount !== null) {
-        console.log(
-          "[getPdfPageCount] Page count extracted from range:",
-          pageCount,
-          `(chunk size: ${actualChunkSize} bytes)`
-        );
         // Cache the result
         pageCountCache.set(url, pageCount);
         return pageCount;
       }
 
-      console.log(
-        `[getPdfPageCount] Could not extract from ${actualChunkSize} bytes, trying larger chunk...`
-      );
 
       // If we've tried the full file, stop
       if (actualChunkSize >= fileSize) {
@@ -117,10 +127,6 @@ export async function getPdfPageCount(url) {
       }
     }
 
-    // If we couldn't find the page count in the last chunk, we need the full file
-    console.log(
-      "[getPdfPageCount] Could not extract page count from range, downloading full file"
-    );
     return await getPageCountFullDownload(url);
   } catch (error) {
     console.error("[getPdfPageCount] Error:", error.message);
@@ -153,18 +159,13 @@ function extractPageCount(text) {
     const match = text.match(pattern);
     if (match && match[1]) {
       const count = parseInt(match[1], 10);
-      if (count > 0 && count < 100000) {
-        // Sanity check
-        console.log(
-          "[extractPageCount] Found page count using pattern:",
-          pattern.source.substring(0, 30) + "..."
-        );
+      if (count > 0 && count < 1000) {
         return count;
       }
     }
   }
 
-  console.log("[extractPageCount] Could not find page count in chunk");
+
   return null;
 }
 
@@ -174,7 +175,6 @@ function extractPageCount(text) {
  * @returns {Promise<number>} - Page count
  */
 async function getPageCountFullDownload(url) {
-  console.log("[getPageCountFullDownload] Downloading full PDF from:", url);
 
   const { PDFDocument } = await import("pdf-lib");
 
@@ -186,16 +186,9 @@ async function getPageCountFullDownload(url) {
   }
 
   const arrayBuffer = await response.arrayBuffer();
-  console.log(
-    "[getPageCountFullDownload] PDF size:",
-    arrayBuffer.byteLength,
-    "bytes"
-  );
-
   const pdfDoc = await PDFDocument.load(arrayBuffer);
   const pageCount = pdfDoc.getPageCount();
 
-  console.log("[getPageCountFullDownload] Page count:", pageCount);
 
   // Cache the result
   pageCountCache.set(url, pageCount);
@@ -210,9 +203,7 @@ async function getPageCountFullDownload(url) {
 export function clearPageCountCache(url) {
   if (url) {
     pageCountCache.delete(url);
-    console.log("[clearPageCountCache] Cleared cache for:", url);
   } else {
     pageCountCache.clear();
-    console.log("[clearPageCountCache] Cleared all cached page counts");
   }
 }

@@ -1,7 +1,7 @@
 <template>
-  <q-btn flat no-caps @click="goBack" icon="close" class="q-mt-lg"
-    >{{ $t("closeSpeech") }}</q-btn
-  >
+  <q-btn flat no-caps @click="goBack" icon="close" class="q-mt-lg">{{
+    $t("closeSpeech")
+  }}</q-btn>
   <q-card
     flat
     class="background justify-center full-width"
@@ -18,12 +18,12 @@
             no-caps
             @click="prevPage"
             icon="chevron_left"
-            :disable="page <= 1"
+            :disable="currentPage <= 1"
           >
-            {{$t("previousPage")}}
+            {{ $t("previousPage") }}
           </q-btn>
           <span class="text-bold text-subtitle1">
-            {{ page }} / {{ pages }}
+            {{ currentPage }} / {{ totalNumPages }}
           </span>
           <q-btn
             class="q-ml-md q-pr-sm"
@@ -31,27 +31,27 @@
             no-caps
             icon-right="chevron_right"
             @click="nextPage"
-            :disable="page >= pdfData?.value?.pages"
+            :disable="currentPage >= totalNumPages"
           >
-            {{$t("nextPage")}}
+            {{ $t("nextPage") }}
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomOut") }}</q-btn>
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomIn") }}</q-btn>
-           <q-btn label="Get Page Count" @click="loadPageCount" />
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{
+            $t("zoomOut")
+          }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{
+            $t("zoomIn")
+          }}</q-btn>
         </q-card-section>
       </q-card-section>
-      <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }} </div>
+      <div class="q-ml-md q-pr-sm text-bold text-negative">
+        {{ pageNumberMissing ? $t("pageNrMissingText") : $t("pageNrInfoText") }}
+      </div>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
-        <div v-if="pdfSrc">
-          <PdfEmbed
-            :source="pdfSrc"
-            :page="page"
-            :width="docWith"
-            @loaded="onLoaded"
-          />
+        <div v-if="singlePagePdfUrl">
+          <PdfEmbed :source="singlePagePdfUrl" :page="1" :width="docWith" />
         </div>
         <div v-else>
           <p>PDF is not available.</p>
@@ -152,21 +152,10 @@
 
 <script setup>
 import PdfEmbed from "vue-pdf-embed";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
-import { getPdfPageCount } from "src/utils/pdfPAgeCount";
-
-const pdfUrl = "https://pdf.swedeb.se/riksdagen-records-pdf/1867/prot-1867--ak--0118.pdf"
-const check_pages = ref(null)
-
-async function loadPageCount() {
-  console.log("Loading page count for PDF:", pdfUrl)
-  check_pages.value = await getPdfPageCount(pdfUrl)
-  console.log("Page count loaded:", check_pages.value)
-}
-
-
+import { getPdfPageCount } from "src/utils/pdfPageCount";
 
 const pdfStore = pdfDataStore();
 const metaStore = metaDataStore();
@@ -177,41 +166,120 @@ const speakerNote = ref();
 const pdfLink = ref();
 const pdfData = ref(null);
 const searchWord = ref(""); // The word to search for
-const page = ref(1);
-const pdfSrc = ref(null);
-const pages = ref(0);
+const currentPage = ref(1);
+const pdfSrc = ref(null); // Full PDF URL (used for getting page count)
+const singlePagePdfUrl = ref(null); // Single-page PDF URL (used for display)
+const totalNumPages = ref(0);
 const docWith = ref(600);
+const pageNumberMissing = ref(false); // Track if original page was -1
 
-onMounted(() => {
+/**
+ * Converts a full PDF URL to a single-page PDF URL
+ * @param {string} fullPdfUrl - Full PDF URL (e.g., https://pdf.swedeb.se/riksdagen-records-pdf/1870/prot-1870--ak--0118.pdf#page=1)
+ * @param {number} pageNumber - Page number (1-indexed)
+ * @returns {string} Single-page PDF URL
+ */
+function getSinglePagePdfUrl(fullPdfUrl, pageNumber) {
+  if (!fullPdfUrl) return null;
+
+  // Remove the #page=X fragment if present
+  const urlWithoutFragment = fullPdfUrl.split("#")[0];
+
+  // Extract the base URL and filename
+  // Example: https://pdf.swedeb.se/riksdagen-records-pdf/1870/prot-1870--ak--0118.pdf
+  const lastSlashIndex = urlWithoutFragment.lastIndexOf("/");
+  const baseUrl = urlWithoutFragment.substring(0, lastSlashIndex);
+  const filename = urlWithoutFragment.substring(lastSlashIndex + 1);
+
+  // Remove .pdf extension
+  const filenameWithoutExt = filename.replace(".pdf", "");
+
+  // Special case for years 199293 and 199394:
+  // - Pages are 1-indexed (not 0-indexed)
+  // - Page numbers are zero-padded to 4 digits
+  const isSpecialYear =
+    urlWithoutFragment.includes("/199293/") ||
+    urlWithoutFragment.includes("/199394/");
+
+  let paddedPageNumber;
+  if (isSpecialYear) {
+    // 1-indexed, 4 digits (e.g., page 1 → 0001, page 2 → 0002)
+    paddedPageNumber = String(pageNumber).padStart(4, "0");
+  } else {
+    // 0-indexed, 3 digits (e.g., page 1 → 000, page 2 → 001)
+    const pageIndex = pageNumber - 1;
+    paddedPageNumber = String(pageIndex).padStart(3, "0");
+  }
+
+  // Construct single-page URL
+  // Example: https://pdf.swedeb.se/riksdagen-records-pdf/1870/prot-1870--ak--0118/prot-1870--ak--0118_000.pdf
+  // Special: https://pdf.swedeb.se/riksdagen-records-pdf/199293/prot-199293--007/prot-199293--007_0001.pdf
+  return `${baseUrl}/${filenameWithoutExt}/${filenameWithoutExt}_${paddedPageNumber}.pdf`;
+}
+
+onMounted(async () => {
   const storedData = sessionStorage.getItem("pdfData");
   if (storedData) {
     pdfStore.setRowData(JSON.parse(storedData));
 
     const parsed = JSON.parse(storedData);
     console.log("Parsed PDF Data:", parsed);
+
+    // Store the full PDF URL (for getting page count)
     pdfSrc.value = parsed.speakerData?.source;
 
     speakerData.value = pdfStore.speechData.speakerData;
     speechText.value = pdfStore.speechData.speechText;
     speakerNote.value = pdfStore.speechData.speakerNote;
-    page.value = parsed.page;
+
+    // If page is -1 (missing), set it to 1
+    if (parsed.page === -1) {
+      pageNumberMissing.value = true;
+      currentPage.value = 1;
+    } else {
+      currentPage.value = parsed.page;
+    }
+
+    // Set the initial single-page PDF URL
+    if (pdfSrc.value) {
+      singlePagePdfUrl.value = getSinglePagePdfUrl(
+        pdfSrc.value,
+        currentPage.value
+      );
+      console.log("Single-page PDF URL:", singlePagePdfUrl.value);
+    }
+
+    // Get total page count from PDF using efficient range requests
+    if (pdfSrc.value) {
+      try {
+        // Remove the #page=X fragment from URL if present
+        const pdfUrl = pdfSrc.value.split("#")[0];
+        totalNumPages.value = await getPdfPageCount(pdfUrl);
+        console.log("Total pages loaded:", totalNumPages.value);
+      } catch (error) {
+        console.error("Failed to get page count:", error);
+      }
+    }
   }
 });
 
-const onLoaded = (pdf) => {
-  pages.value = pdf.numPages;
-};
-
+// Watch for page changes and update the single-page PDF URL
+watch(currentPage, (newPage) => {
+  if (pdfSrc.value) {
+    singlePagePdfUrl.value = getSinglePagePdfUrl(pdfSrc.value, newPage);
+    console.log("Updated single-page PDF URL:", singlePagePdfUrl.value);
+  }
+});
 
 const nextPage = () => {
-  if (page.value < pages.value) {
-    page.value++;
+  if (currentPage.value < totalNumPages.value) {
+    currentPage.value++;
   }
 };
 
 const prevPage = () => {
-  if (page.value > 1) {
-    page.value--;
+  if (currentPage.value > 1) {
+    currentPage.value--;
   }
 };
 
