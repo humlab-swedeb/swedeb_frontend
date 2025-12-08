@@ -9,7 +9,7 @@
   </template>
   <template v-else>
     <!-- Show a message when there's no data -->
-    <noResults />
+    <NoResults />
   </template>
 </template>
 
@@ -17,7 +17,7 @@
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { reactive, watchEffect, ref } from "vue";
 import { useQuasar } from "quasar";
-import noResults from "src/components/noResults.vue";
+import NoResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
 annotations(Highcharts);
@@ -128,16 +128,6 @@ const chartOptions = reactive({
     },
   },
   colors: [
-    /*     "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a", */
     "#332288",
     "#88CCEE",
     "#44AA99",
@@ -392,7 +382,10 @@ function renderChart(container, categories, seriesData) {
       ...chartOptions.legend,
       labelFormatter: function () {
         // Use `this` to access the series data
-        return `${this.name} (${this.userOptions.total || 0})`;
+        const total = this.userOptions.total || 0;
+        // Format to max 7 decimal places, removing trailing zeros
+        const formattedTotal = parseFloat(total.toFixed(7));
+        return `${this.name} (${formattedTotal})`;
       },
     },
   });
