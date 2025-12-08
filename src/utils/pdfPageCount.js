@@ -1,4 +1,3 @@
-// Cache for storing page counts to avoid re-downloading
 const pageCountCache = new Map();
 
 /**
@@ -44,9 +43,9 @@ export async function getPdfPageCount(url) {
       acceptRanges && acceptRanges.toLowerCase() === "bytes";
     const fileSize = parseInt(contentLength, 10);
 
-    // First, try to check if this is a linearized PDF by reading the beginning
+    // First, check if this is a linearized PDF by reading the beginning
     // Linearized PDFs have the page count in the first few KB
-    const headerSize = 8192; // 8KB should be enough for the linearization dictionary
+    const headerSize = 8192;
 
     try {
       const headerResponse = await fetch(url, {
@@ -67,7 +66,7 @@ export async function getPdfPageCount(url) {
           const pageCountMatch = headerText.match(/\/N\s+(\d+)/);
           if (pageCountMatch && pageCountMatch[1]) {
             const count = parseInt(pageCountMatch[1], 10);
-            if (count > 0 && count < 100000) {
+            if (count > 0 && count < 1000) {
               pageCountCache.set(url, count);
               return count;
             }
@@ -82,7 +81,7 @@ export async function getPdfPageCount(url) {
     }
 
     // If not linearized or /N not found, try progressively larger chunks from the end
-    const chunkSizes = [65536, 131072, 262144]; // 64KB, 128KB, 256KB
+    const chunkSizes = [65536, 131072, 262144];
 
     for (const chunkSize of chunkSizes) {
       const actualChunkSize = Math.min(chunkSize, fileSize);
@@ -121,7 +120,7 @@ export async function getPdfPageCount(url) {
       }
 
 
-      // If we've tried the full file, stop
+
       if (actualChunkSize >= fileSize) {
         break;
       }
@@ -130,8 +129,6 @@ export async function getPdfPageCount(url) {
     return await getPageCountFullDownload(url);
   } catch (error) {
     console.error("[getPdfPageCount] Error:", error.message);
-    console.error("[getPdfPageCount] Full error:", error);
-    throw new Error(`Failed to get PDF page count: ${error.message}`);
   }
 }
 
@@ -190,7 +187,6 @@ async function getPageCountFullDownload(url) {
   const pageCount = pdfDoc.getPageCount();
 
 
-  // Cache the result
   pageCountCache.set(url, pageCount);
 
   return pageCount;
