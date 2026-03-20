@@ -137,7 +137,7 @@ export default {
   För att söka på flera ord, separera dem med kommatecken, till exempel:
   <code>frihet, jämlikhet</code>. Sök med <code>*</code> för att få fler ordvarianter, till exempel:
   <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till bland annat vissa partier, talare eller år.`,
+  anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   wordtrendsResult1: "Här visas resultatet i en",
   wordtrendsResult2: "för de ord och metadata som valts.",
@@ -154,7 +154,7 @@ export default {
   till exempel <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se kontexten till vänster och
   höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
   till exempel <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
-  anförandena till bland annat vissa partier, talare eller år.`,
+  anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
@@ -168,7 +168,7 @@ export default {
    Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas). Träffar ges på N-gram
    med minst två förekomster i anförandena.
   Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
-  annat vissa partier, talare eller år.`,
+  annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   searchResult1: "Sökningen resulterade i ",
 
@@ -196,7 +196,7 @@ export default {
   speechesIntroTitle:
     "Anföranden — Sök på och filtrera fram riksdagsanföranden.",
   speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du
-  avgränsa anförandena till bland annat vissa partier, talare eller år.`,
+  avgränsa anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   // PDF PAGE ------------------------------------------------
   pageNrInfoText: "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
