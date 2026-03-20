@@ -347,7 +347,7 @@ export default {
       under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
       ledamöter som hoppat av ett parti under mandatperioden.
 
-      <img src="/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
+      <img src="/public/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
 
 </br></br>
       Det är viktigt att känna till att ett parti på 1800-talet inte är samma sak som
