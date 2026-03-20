@@ -98,7 +98,7 @@ export default {
   ngramSizePlaceLabel:
     "Välj storlek på N-gram och var sökordet ska vara placerat:",
   tooltipNgramSize:
-    "För närvarande räknas även skiljetecken som ord, till exempel . , : –. \n Ger träff på sökord som förekommer minst två gånger.",
+    "För närvarande räknas även skiljetecken som ord, till exempel . , : –. \n",
 
   searchInput: "Sök på ett ord eller en fras",
   searchAdd: "Lägg till ord och klicka på +",
@@ -165,7 +165,8 @@ export default {
   Med verktyget <strong>N-gram</strong> kan du söka på ord och fraser, till exempel
   <code>jämlikhet</code> eller <code>jämlikhet för</code>, och få fram en lista med mest
   förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
-   Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas).
+   Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas). Träffar ges på N-gram
+   med minst två förekomster i anförandena.
   Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
   annat vissa partier, talare eller år.`,
 
