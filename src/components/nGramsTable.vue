@@ -3,7 +3,7 @@
   <div class="row q-py-md justify-between">
     <q-item-label class="col-9 q-mt-md" v-if="nGramStore.nGrams.length > 0">
       {{ $t("searchResult1") }} <b>{{ nGramStore.nGrams.length }}</b>
-      {{ $t("searchResult2") }}
+      {{ $t("searchResult2ngram") }}
     </q-item-label>
 
     <q-btn-dropdown

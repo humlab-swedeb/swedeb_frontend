@@ -98,7 +98,7 @@ export default {
   ngramSizePlaceLabel:
     "Välj storlek på N-gram och var sökordet ska vara placerat:",
   tooltipNgramSize:
-    "För närvarande räknas även skiljetecken som ord, till exempel . , : –",
+    "För närvarande räknas även skiljetecken som ord, till exempel . , : –. \n Ger träff på sökord som förekommer minst två gånger.",
 
   searchInput: "Sök på ett ord eller en fras",
   searchAdd: "Lägg till ord och klicka på +",
@@ -172,6 +172,7 @@ export default {
   searchResult1: "Sökningen resulterade i ",
 
   searchResult2: "träffar.",
+  searchResult2ngram: "unika träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
   downloadExcel: "Ladda ner Excel",
@@ -597,7 +598,7 @@ export default {
     },
     10: {
       q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
-      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976. 
+      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
       Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
     },
