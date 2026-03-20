@@ -7,7 +7,7 @@
     >
       {{ $t("aboutPageIntroText") }}
       <a :href="$t('links.swedebGithub')" class="link-deco text-accent text-bold">
-        here
+        här
       </a>
     </q-card-section>
     <q-card-section class="col-12 items-center column q-my-lg">
