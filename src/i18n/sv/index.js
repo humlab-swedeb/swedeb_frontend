@@ -599,7 +599,8 @@ export default {
     },
     10: {
       q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
-      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
+
+      a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
       Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
     },
@@ -645,7 +646,7 @@ export default {
     errorMessageButton: "Tillbaka till startsidan",
     metadataMissing: "metadata saknas",
     speakerMissing: "talardata saknas",
-    genderMissing: "köndata saknas",
+    genderMissing: "data om kön saknas",
     partyMissing: "partidata saknas",
   },
 
