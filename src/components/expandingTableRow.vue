@@ -49,7 +49,7 @@
                 {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : props.props.row.party_full
+                    : "(" + props.props.row.party +")"
                 }},&nbsp;
               </q-item-label>
               <q-item-label
@@ -158,7 +158,7 @@
                 color="white"
                 :disabled="false"
               >
- 
+
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
