@@ -19,7 +19,7 @@ export const feedbackDataStore = defineStore("feedbackDataStore", {
   actions: {
     getFeedbackVariables: (data) => {
       const feedbackVariables = {
-        ID: data.id,
+        Protokoll: data.protocol.substring(0, data.protocol.lastIndexOf(' ')),
         Kön: data.gender,
         Parti: data.party,
         //source: data.source,
