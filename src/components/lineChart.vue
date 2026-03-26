@@ -9,7 +9,7 @@
   </template>
   <template v-else>
     <!-- Show a message when there's no data -->
-    <noResults />
+    <NoResults />
   </template>
 </template>
 
@@ -17,7 +17,7 @@
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { reactive, watchEffect, ref } from "vue";
 import { useQuasar } from "quasar";
-import noResults from "src/components/noResults.vue";
+import NoResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
 import annotations from "highcharts/modules/annotations";
 annotations(Highcharts);
@@ -128,16 +128,7 @@ const chartOptions = reactive({
     },
   },
   colors: [
-    /*     "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a", */
+
     "#332288",
     "#88CCEE",
     "#44AA99",
@@ -391,40 +382,15 @@ function renderChart(container, categories, seriesData) {
     legend: {
       ...chartOptions.legend,
       labelFormatter: function () {
-        // Use `this` to access the series data
-        return `${this.name} (${this.userOptions.total || 0})`;
+        const total = this.userOptions.total || 0;
+        const formattedTotal = parseFloat(total.toFixed(7));
+        return `${this.name} (${formattedTotal})`;
       },
     },
   });
 }
 
-/* function addAnnotations() {
-  const chart = Highcharts.charts[Highcharts.charts.length - 1]; // Get the last created chart
 
-  const annotationYears = [1990, 2004, 2014, 2020];
-
-  annotationYears.forEach((year) => {
-    const index = categories.indexOf(year);
-    if (index !== -1) {
-      chart.addAnnotation({
-        draggable: false,
-        labelOptions: {
-          backgroundColor: "rgba(255, 0, 255, 0.5)",
-          verticalAlign: "top",
-          y: -1000,
-          x: 0,
-        },
-        labels: [
-          {
-            point: {
-              xAxis: 0,
-              yAxis: 0,
-              x: index,
-        ],
-      });
-    }
-  });
-} */
 </script>
 
 <style scoped></style>
