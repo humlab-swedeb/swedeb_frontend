@@ -15,6 +15,10 @@
       <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
         SWERIK.
       </a>
+      {{ $t("indexPageIntroText3") }}
+      <a :href="$t('links.dhnb')" class="link-deco text-accent text-bold">
+        Riksdagsdebatter.se – An Interface to Explore Swedish Parliamentary Debates Since 1867.
+      </a>
     </q-card-section>
     <q-card-section
       class="q-mb-lg"

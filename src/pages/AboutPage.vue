@@ -7,8 +7,13 @@
     >
       {{ $t("aboutPageIntroText") }}
       <a :href="$t('links.swedebGithub')" class="link-deco text-accent text-bold">
-        här
+        här.
       </a>
+      {{ $t("indexPageIntroText3") }}
+      <a :href="$t('links.dhnb')" class="link-deco text-accent text-bold">
+        Riksdagsdebatter.se – An Interface to Explore Swedish Parliamentary Debates Since 1867.
+      </a>
+
     </q-card-section>
     <q-card-section class="col-12 items-center column q-my-lg">
       <q-card

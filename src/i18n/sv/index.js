@@ -9,6 +9,7 @@ export default {
     humlab: "https://umu.se/humlab",
     huminfra: "https://www.huminfra.se/",
     swedebGithub: "https://github.com/humlab-swedeb",
+    dhnb: "https://journals.uio.no/dhnbpub/article/view/13135"
   },
 
   dataVersion: "Data-version:",
@@ -31,6 +32,7 @@ export default {
   indexPageIntroText2: `vid samma universitet. Det dataset med
   annoterade anföranden som Riksdagsdebatter.se bygger på hämtas från
   forskningsinfrastrukturprojektet`,
+  indexPageIntroText3: ` Om ni använder riksdagsdebatter.se i forskning eller annan verkamhet är det välkommet att referera till publikationen`,
 
   wordTrendsTitle: "Ordtrender",
   wordTrendsText:
@@ -212,7 +214,8 @@ export default {
   aboutPageTitle: "Om Riksdagsdebatter.se",
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
-  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+  riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå
+  universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
 
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
@@ -600,7 +603,9 @@ export default {
     10: {
       q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
 
+
       a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
+
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
       Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
     },
