@@ -91,10 +91,7 @@
                     ? $t("accessibility.metadataMissing")
                     : col.value
                 }}
-                <q-tooltip
-                  v-if="col.value !== '[-]'"
-                  class="text-subtitle2"
-                >
+                <q-tooltip v-if="col.value !== '[-]'" class="text-subtitle2">
                   {{ props.row.party_full }}
                 </q-tooltip>
               </q-item-label>
@@ -185,7 +182,7 @@ if (props.type === "wordTrends") {
 }
 
 rows.value = displayedData.value.map((speech) => ({
-  id: speech.document_name,
+  id: speech.speech_id ?? speech.document_name,
   protocol: speech.speech_name,
   node_word: speech.node_word,
   speaker: speech.name,
