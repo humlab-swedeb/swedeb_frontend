@@ -151,14 +151,11 @@
               </q-btn>
               <q-btn
                 no-caps
-
                 @click="openPdf"
-
                 class="full-width items-start text-grey-8"
                 color="white"
                 :disabled="false"
               >
- 
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
@@ -235,7 +232,7 @@ const openPdf = () => {
     speakerNote: speakerNote.value,
     speechText: speechText.value,
     speakerData: props.props.row,
-    page: page.value
+    page: page.value,
   };
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
@@ -244,7 +241,7 @@ const openPdf = () => {
   const resolvedClientRoute = router.resolve({ path: clientRoutePath });
   // console.log("router.resolve().href (for debugging):", resolvedClientRoute.href);
   // console.log("Manually constructed clientRouteHash:", clientRouteHash);
-  const spaPublicPath = '/public/';
+  const spaPublicPath = "/public/";
   const fullPathToIndexHtml = `${window.location.origin}${spaPublicPath}index.html`;
   const finalUrlToOpen = `${fullPathToIndexHtml}${clientRouteHash}`;
   // console.log("Attempting to open PDF at URL:", finalUrlToOpen);
@@ -293,7 +290,6 @@ watchEffect(() => {
       speakerNote.value = speechData.speaker_note;
       originalSpeechText.value = speechData.speech_text;
       page.value = speechData.page_number;
-
 
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(

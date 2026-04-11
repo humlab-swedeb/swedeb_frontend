@@ -182,7 +182,7 @@ if (props.type === "wordTrends") {
 }
 
 rows.value = displayedData.value.map((speech) => ({
-  id: speech.speech_id ?? speech.document_name,
+  id: speech.speech_id,
   protocol: speech.speech_name,
   node_word: speech.node_word,
   speaker: speech.name,
