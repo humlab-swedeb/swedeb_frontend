@@ -2,7 +2,7 @@
 
 ## Overview
 
-The swedeb_frontend project employs a fully automated CI/CD pipeline using GitHub Actions and semantic-release to handle versioning, building, and deployment of frontend assets. The workflow creates containerized frontend assets that are consumed by the swedeb-api Docker deployment.
+The swedeb_frontend project employs a fully automated CI/CD pipeline using GitHub Actions and semantic-release to handle versioning, building, and deployment of frontend assets. The workflow creates tarball releases that are downloaded by the swedeb-api backend at runtime.
 
 ## Architecture
 
@@ -13,11 +13,12 @@ The swedeb_frontend project employs a fully automated CI/CD pipeline using GitHu
 - **Package Manager**: pnpm
 - **Output**: Static SPA files in `dist/spa/` directory
 
-### Container Strategy
+### Distribution Strategy
 
-- **Frontend Container**: Minimal `FROM scratch` Docker image containing only compiled static assets
-- **API Integration**: swedeb-api Dockerfile consumes the frontend container via multi-stage build
-- **Registry**: GitHub Container Registry (GHCR)
+- **Production Releases**: Tarball assets (`frontend-v{version}.tar.gz`) attached to GitHub releases
+- **Staging Releases**: Pre-release tarballs (`frontend-{version}-staging.tar.gz`) with floating `staging` tag
+- **API Integration**: swedeb-api downloads and extracts assets at container startup
+- **Storage**: GitHub Releases (no container registry needed)
 
 ## Workflow Components
 
@@ -30,10 +31,12 @@ on:
   push:
     branches:
       - main
+      - staging
   workflow_dispatch:
 ```
 
-- **Automatic**: Any push to the `main` branch
+- **Automatic Production**: Any push to the `main` branch (semantic versioning)
+- **Automatic Staging**: Any push to the `staging` branch (pre-release)
 - **Manual**: Via GitHub UI workflow dispatch
 
 ### 2. Conventional Commits Integration
@@ -94,25 +97,41 @@ The `.releaserc.yml` defines six plugins that execute sequentially:
 
 4. **@semantic-release/exec** (prepare phase):
 
-   - Executes `.github/scripts/build-assets.sh ${nextRelease.version}`
+   - Executes `.github/scripts/build-assets.sh ${nextRelease.version} production`
    - Builds frontend and creates versioned tarball
+   - Creates `dist/frontend-v{version}.tar.gz`
 
 5. **@semantic-release/github**:
 
    - Creates GitHub release with generated notes
-   - Uploads `frontend-*.tar.gz` as release asset
+   - Uploads `frontend-v{version}.tar.gz` as release asset
    - Disables automatic issue/PR comments
 
-6. **@semantic-release/exec** (publish phase):
-
-   - Executes `.github/scripts/build-and-push-container.sh ${nextRelease.version}`
-   - Builds and pushes Docker image to GHCR
-
-7. **@semantic-release/git**:
+6. **@semantic-release/git**:
    - Commits updated CHANGELOG.md back to repository
    - Uses commit message template with `[skip ci]`
 
 ## Build Pipeline
+
+### Workflow Branches
+
+The workflow handles two different release types:
+
+#### Production Releases (main branch)
+
+- **Trigger**: Push to `main` branch
+- **Versioning**: Automatic via semantic-release
+- **Release Type**: Stable, permanent
+- **Output**: `frontend-v{version}.tar.gz`
+- **Changelog**: Auto-updated
+
+#### Staging Releases (staging branch)
+
+- **Trigger**: Push to `staging` branch
+- **Versioning**: Uses current package.json version
+- **Release Type**: Pre-release, floating
+- **Output**: `frontend-{version}-staging.tar.gz`
+- **Changelog**: Not updated
 
 ### Complete Workflow Execution
 
@@ -138,17 +157,37 @@ The workflow executes as a single job called `release` with the following stages
     run_install: true
 ```
 
-### Stage 2: Semantic Release Execution
+### Stage 2: Production Release (main branch)
 
 The entire build and release process is orchestrated by semantic-release through a single command:
 
 ```yaml
-- name: Run semantic-release
+- name: Run semantic-release (main branch only)
+  if: github.ref_name == 'main'
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    DOCKER_USERNAME: ${{ github.actor }}
-    DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
   run: pnpm semantic-release
+```
+
+### Stage 2: Staging Release (staging branch)
+
+Staging releases are built directly by the workflow:
+
+```yaml
+- name: Build and create staging release
+  if: github.ref_name == 'staging'
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    VERSION=$(pnpm pkg get version | tr -d '"')
+    ./.github/scripts/build-assets.sh "${VERSION}" staging
+
+    gh release delete staging --yes || true
+    gh release create staging \
+      --title "Staging Build v${VERSION}" \
+      --notes "..." \
+      --prerelease \
+      "dist/frontend-${VERSION}-staging.tar.gz"
 ```
 
 This executes the plugin chain defined in `.releaserc.yml` in the following order:
@@ -171,11 +210,14 @@ This executes the plugin chain defined in `.releaserc.yml` in the following orde
 
 **Script**: `.github/scripts/build-assets.sh`
 
+This script is used by both production and staging workflows:
+
 ```bash
 #!/bin/bash
-set -e
+set -euo pipefail
 
 VERSION=$1
+ENVIRONMENT=${2:-production}
 if [ -z "$VERSION" ]; then
   echo "Version argument is missing!"
   exit 1
@@ -248,32 +290,44 @@ docker push --all-tags "${IMAGE_NAME}"
 
 ## Integration with swedeb-api
 
-### Multi-stage Dockerfile Integration
+### Runtime Asset Download
 
-The swedeb-api `Dockerfile` consumes the frontend container:
+The swedeb-api backend downloads frontend assets at container startup (decoupled architecture):
 
-```dockerfile
-ARG FRONTEND_VERSION=latest
+**Backend Container Startup Flow**:
 
-FROM ghcr.io/humlab-swedeb/swedeb_frontend:${FRONTEND_VERSION} AS frontend-dist
-FROM ghcr.io/humlab/cwb-container:latest AS final
-
-# ... other setup ...
-
-COPY --chown=${APP_USER}:${APP_USER} --from=frontend-dist /app/public ./public
-```
-
-### Base Image Details
-
-- **Base**: `ghcr.io/humlab/cwb-container:latest`
-- **Foundation**: Python 3.12 with IMS Open Corpus Workbench (CWB) pre-installed
-- **Purpose**: Provides backend API functionality with corpus linguistics tools
+1. Container starts with `FRONTEND_VERSION` environment variable
+2. Entrypoint script runs `download-frontend.sh`
+3. Script queries GitHub API for specified release/version
+4. Downloads appropriate tarball from GitHub releases
+5. Extracts to `/app/public` directory
+6. API starts and serves frontend assets
 
 ### Asset Integration
 
-1. Frontend assets are copied from the frontend container at build time
-2. API serves frontend from `/app/public` directory
-3. Frontend version can be controlled via `FRONTEND_VERSION` build arg
+**Environment Variable**: `FRONTEND_VERSION`
+
+| Value     | Description                 | Tarball Name                        |
+| --------- | --------------------------- | ----------------------------------- |
+| `latest`  | Latest production release   | `frontend-v{version}.tar.gz`        |
+| `staging` | Latest staging pre-release  | `frontend-{version}-staging.tar.gz` |
+| `v0.10.1` | Specific production version | `frontend-v0.10.1.tar.gz`           |
+
+**Example Usage**:
+
+```yaml
+# docker-compose.yml or .container file
+environment:
+  - FRONTEND_VERSION=staging # Use latest staging build
+```
+
+### Benefits of Decoupled Architecture
+
+1. ✅ **No build-time dependency** - Backend builds independently
+2. ✅ **Flexible versioning** - Change frontend version without rebuilding backend
+3. ✅ **Podman compatible** - No shared volumes or complex mounts
+4. ✅ **Security focused** - Self-contained containers
+5. ✅ **Easy rollback** - Change environment variable and restart
 
 ## Security and Permissions
 
@@ -281,8 +335,7 @@ COPY --chown=${APP_USER}:${APP_USER} --from=frontend-dist /app/public ./public
 
 ```yaml
 permissions:
-  contents: write # to push tags and update changelog
-  packages: write # to push to ghcr.io
+  contents: write # to push tags, update changelog, and create releases
   issues: write # to comment on issues
   pull-requests: write # to comment on PRs
 ```
@@ -291,7 +344,7 @@ permissions:
 
 - Uses `GITHUB_TOKEN` (automatically provided by GitHub Actions)
 - No external secrets required for standard workflow
-- Container registry authentication via GitHub token
+- No container registry authentication needed (assets stored in GitHub releases)
 
 ## Monitoring and Troubleshooting
 

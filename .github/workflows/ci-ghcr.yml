@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # to push tags and update changelog
-      packages: write # to push to ghcr.io
       issues: write # to comment on issues
       pull-requests: write # to comment on PRs
 
@@ -47,29 +46,32 @@ jobs:
         if: github.ref_name == 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # These are used by build-and-push-container.sh
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm semantic-release
 
-      - name: Build and push production container
-        if: github.ref_name == 'main' && steps.semantic_release.outputs.new_release_published == 'true'
-        env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Get the version from semantic-release output
-          VERSION="${{ steps.semantic_release.outputs.new_release_version }}"
-          echo "Building production container for version: ${VERSION}"
-          ./.github/scripts/build-and-push-container.sh "${VERSION}" production
-
-      - name: Build and push staging container
+      - name: Build and create staging release
         if: github.ref_name == 'staging'
         env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get current version for staging build
+          # Get current version from package.json
           VERSION=$(pnpm pkg get version | tr -d '"')
-          echo "Building staging container for version: ${VERSION}"
-          ./.github/scripts/build-and-push-container.sh "${VERSION}" staging
+          echo "Building staging release for version: ${VERSION}"
+
+          # Build the frontend using the shared build script
+          ./.github/scripts/build-assets.sh "${VERSION}" staging
+
+          # Create or update staging release
+          gh release delete staging --yes || true
+          gh release create staging \
+            --title "Staging Build v${VERSION}" \
+            --notes "Staging build from version ${VERSION}
+            
+            This is a pre-production build for testing purposes.
+            
+            **Branch**: staging
+            **Commit**: ${{ github.sha }}
+            **Build Date**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" \
+            --prerelease \
+            "dist/frontend-${VERSION}-staging.tar.gz"
+
+          echo "✅ Staging release created: frontend-${VERSION}-staging.tar.gz"
