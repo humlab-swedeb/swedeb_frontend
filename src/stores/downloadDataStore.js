@@ -55,7 +55,7 @@ export const downloadDataStore = defineStore("downloadData", {
 
     async downloadSpeechesZip(speech_list, selected_metadata) {
       try {
-        const path = "tools/speech_download/";
+        const path = "tools/speeches/download";
         const json_payload = JSON.stringify(speech_list);
 
         const response = await api.post(path, json_payload, {
