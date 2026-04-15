@@ -155,7 +155,6 @@ const downloadStore = downloadDataStore();
 const rows = ref([]);
 const columns = ref([]);
 const KWICTable = ref(null);
-const visibleRows = ref([]);
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
@@ -174,8 +173,8 @@ const downloadKWICTableAsCSV = () => {
 };
 
 const downloadKWICAsSpeeches = () => {
-  visibleRows.value = KWICTable.value.computedRows.map((row) => row.id);
-  downloadStore.downloadSpeechesZip(visibleRows.value);
+  const allIds = rows.value.map((row) => row.id);
+  downloadStore.downloadSpeechesZip(allIds);
 };
 
 rows.value = kwicStore.kwicData.map((entry, index) => ({

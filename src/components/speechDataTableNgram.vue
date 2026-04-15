@@ -179,7 +179,6 @@ const loading = ref(false);
 
 const displayedData = ref([]);
 const SpeechTable = ref(null);
-const visibleRows = ref([]);
 
 const rows = ref([]);
 const columns = ref([]);
@@ -348,9 +347,7 @@ function sortSpeeches(a, b) {
 }
 
 function downloadSpeeches() {
-  visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(props.type);
-  downloadStore.downloadSpeechesZip(visibleRows.value);
+  downloadStore.downloadSpeechesZip(rows.value.map((row) => row.id));
 }
 </script>
 
