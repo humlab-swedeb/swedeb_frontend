@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
+import { metaDataStore } from "./metaDataStore";
 
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
@@ -55,7 +56,8 @@ export const downloadDataStore = defineStore("downloadData", {
 
     async downloadSpeechesZip(speech_list, selected_metadata) {
       try {
-        const path = "tools/speeches/download";
+        const queryString = metaDataStore().getSelectedParams();
+        const path = `tools/speeches/download${queryString ? `?${queryString}` : ""}`;
         const json_payload = JSON.stringify(speech_list);
 
         const response = await api.post(path, json_payload, {
