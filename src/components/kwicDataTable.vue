@@ -175,7 +175,7 @@ const downloadKWICTableAsCSV = () => {
 
 const downloadKWICAsSpeeches = () => {
   visibleRows.value = KWICTable.value.computedRows.map((row) => row.id);
-  downloadStore.downloadSpeechesZip(visibleRows.value, getParamString());
+  downloadStore.downloadSpeechesZip(visibleRows.value);
 };
 
 rows.value = kwicStore.kwicData.map((entry, index) => ({

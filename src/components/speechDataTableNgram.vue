@@ -350,7 +350,7 @@ function sortSpeeches(a, b) {
 function downloadSpeeches() {
   visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
   const paramString = metaStore.selectedMetadataToText(props.type);
-  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
+  downloadStore.downloadSpeechesZip(visibleRows.value);
 }
 </script>
 
