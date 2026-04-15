@@ -1,8 +1,8 @@
 <template>
   <template v-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
-      <q-item-label class="col-9 q-mt-md" v-if="kwicStore.kwicData.length > 0">
-        {{ $t("searchResult1") }} <b>{{ kwicStore.kwicData.length }}</b>
+      <q-item-label class="col-9 q-mt-md" v-if="kwicStore.totalHits > 0">
+        {{ $t("searchResult1") }} <b>{{ kwicStore.totalHits }}</b>
         {{ $t("searchResult2") }}
       </q-item-label>
 
@@ -39,8 +39,10 @@
       :columns="columns"
       row-key="unique_id"
       :rows-per-page-options="[10, 20, 50]"
-      :pagination="pagination"
+      v-model:pagination="pagination"
+      :loading="kwicStore.isLoading || kwicStore.isPageLoading"
       class="bg-grey-2"
+      @request="onRequest"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -141,7 +143,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -152,49 +154,74 @@ const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
 
-const rows = ref([]);
-const columns = ref([]);
 const KWICTable = ref(null);
+
+const pagination = computed({
+  get: () => kwicStore.pagination,
+  set: (value) => {
+    kwicStore.pagination = value;
+  },
+});
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
+};
+
+const onRequest = async ({ pagination }) => {
+  if (!kwicStore.useTicketFlow || !kwicStore.ticketId) {
+    return;
+  }
+
+  await kwicStore.fetchKwicPage({
+    page: pagination.page,
+    rowsPerPage: pagination.rowsPerPage,
+    sortBy: pagination.sortBy,
+    descending: pagination.descending,
+  });
 };
 
 const getParamString = () => {
   return metaStore.selectedMetadataToText("kwic");
 };
 
-const downloadKWICTableAsExcel = () => {
-  kwicStore.downloadKWICTableExcel(getParamString());
+const downloadKWICTableAsExcel = async () => {
+  await kwicStore.downloadKWICTableExcel(getParamString());
 };
 
-const downloadKWICTableAsCSV = () => {
-  kwicStore.downloadKWICTableCSV(getParamString());
+const downloadKWICTableAsCSV = async () => {
+  await kwicStore.downloadKWICTableCSV(getParamString());
 };
 
 const downloadKWICAsSpeeches = () => {
+  if (kwicStore.useTicketFlow && kwicStore.ticketId) {
+    downloadStore.downloadSpeechesZipByTicket(kwicStore.ticketId);
+    return;
+  }
+
   const allIds = rows.value.map((row) => row.id);
   downloadStore.downloadSpeechesZip(allIds);
 };
 
-rows.value = kwicStore.kwicData.map((entry, index) => ({
-  id: entry.speech_id,
-  unique_id: index,
-  left_word: entry.left_word,
-  node_word: entry.node_word,
-  right_word: entry.right_word,
-  year: entry.year,
-  speaker: entry.name,
-  party: entry.party_abbrev,
-  party_full: entry.party,
-  gender: entry.gender,
-  person_id: entry.person_id,
-  link: entry.link,
-  protocol: entry.speech_name,
-  source: entry.speech_link,
-}));
+const rows = computed(() =>
+  kwicStore.kwicData.map((entry, index) => ({
+    id: entry.speech_id,
+    unique_id: `${kwicStore.pagination.page}-${index}-${entry.speech_id}`,
+    left_word: entry.left_word,
+    node_word: entry.node_word,
+    right_word: entry.right_word,
+    year: entry.year,
+    speaker: entry.name,
+    party: entry.party_abbrev,
+    party_full: entry.party,
+    gender: entry.gender,
+    person_id: entry.person_id,
+    link: entry.link,
+    protocol: entry.speech_name,
+    source: entry.speech_link,
+  }))
+);
 
-columns.value = [
+const columns = [
   {
     name: "left_word",
     required: true,
@@ -244,7 +271,7 @@ columns.value = [
     align: "left",
   },
   {
-    name: "id",
+    name: "protocol",
     required: true,
     label: "Anförande",
     field: "protocol",
@@ -252,13 +279,6 @@ columns.value = [
     align: "left",
   },
 ];
-
-const pagination = ref({
-  sortBy: "id",
-  descending: false,
-  page: 1,
-  rowsPerPage: 10,
-});
 </script>
 
 <style></style>
