@@ -60,20 +60,28 @@ export const metaDataStore = defineStore("metaDataStore", {
     saveKwicFilterData(search) {
       this.filterAtSearchKWIC = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchKWIC["search"] = search;
+      this.filterAtSearchKWIC["genderFilter"] = this.genderFilter;
+      this.filterAtSearchKWIC["chamberFilter"] = this.chamberFilter;
     },
 
     saveWTFilterData(search) {
       this.filterAtSearchWT = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchWT["search"] = search;
+      this.filterAtSearchWT["genderFilter"] = this.genderFilter;
+      this.filterAtSearchWT["chamberFilter"] = this.chamberFilter;
     },
 
     saveSpeechesFilterData() {
       this.filterAtSearchSpeeches = { ...this.selectedWithOnlyValidSpeakers() };
+      this.filterAtSearchSpeeches["genderFilter"] = this.genderFilter;
+      this.filterAtSearchSpeeches["chamberFilter"] = this.chamberFilter;
     },
 
     saveNgramsFilterData(search) {
       this.filterAtSearchNgrams = { ...this.selectedWithOnlyValidSpeakers() };
       this.filterAtSearchNgrams["search"] = search;
+      this.filterAtSearchNgrams["genderFilter"] = this.genderFilter;
+      this.filterAtSearchNgrams["chamberFilter"] = this.chamberFilter;
     },
 
     setSubmitNgramsEvent() {
@@ -283,34 +291,107 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swerik_persons}\n${swedeb_ref}`;
     },
 
-    getSelectedParams(additional_params = {}) {
+    getSelectedKwicTicketFilters() {
+      const filters = {};
+      const selected = this.selected;
+      const selectedSpeakers = this.filterSelectedSpeakers(selected.speakers);
+
+      if (selected.party.length > 0) {
+        filters.party_id = selected.party.map(
+          (party) => this.options.party[party].party_id
+        );
+      }
+
+      if (selectedSpeakers.length > 0) {
+        filters.who = selectedSpeakers.map((speaker) => speaker.person_id);
+      }
+
+      if (this.genderFilter && selected.gender.length > 0) {
+        filters.gender_id = [...selected.gender];
+      }
+
+      if (this.chamberFilter && selected.chamber.length > 0) {
+        filters.chamber_abbrev = selected.chamber.map((chamber) =>
+          this.options.chamber[chamber].chamber_abbrev.toLowerCase()
+        );
+      }
+
+      if (selected.yearRange.min !== null) {
+        filters.from_year = selected.yearRange.min;
+      }
+
+      if (selected.yearRange.max !== null) {
+        filters.to_year = selected.yearRange.max;
+      }
+
+      return filters;
+    },
+
+    getParamsForSelection(selected, additional_params = {}) {
       const searchParams = new URLSearchParams();
 
       for (const key in additional_params) {
         searchParams.append(key, additional_params[key]);
       }
 
-      this.addPartyParam(searchParams);
-      this.addSpeakerParam(searchParams);
-      if (this.genderFilter) {
-        this.addParamArray("gender", "gender_id", searchParams);
-      }
-      if (this.chamberFilter) {
-        this.addChamberParam(searchParams);
-      }
-      //this.addParamArray("office", "office_types", searchParams);
-      //this.addParamArray("subOffice", "sub_office_types", searchParams);
-
-      const year_value = this.selected["yearRange"];
-      if (year_value.min !== null) {
-        searchParams.append("from_year", year_value.min);
+      if (selected.party.length > 0) {
+        selected.party.forEach((party) =>
+          searchParams.append("party_id", this.options.party[party].party_id)
+        );
       }
 
-      if (year_value.max !== null) {
-        searchParams.append("to_year", year_value.max);
+      const selectedSpeakers = this.filterSelectedSpeakers(selected.speakers);
+      if (selectedSpeakers.length > 0) {
+        selectedSpeakers.forEach((speaker) =>
+          searchParams.append("who", speaker.person_id)
+        );
+      }
+
+      if (selected.genderFilter) {
+        selected.gender.forEach((gender) =>
+          searchParams.append("gender_id", gender)
+        );
+      }
+
+      if (selected.chamberFilter) {
+        selected.chamber.forEach((chamber) =>
+          searchParams.append(
+            "chamber_abbrev",
+            this.options.chamber[chamber].chamber_abbrev.toLowerCase()
+          )
+        );
+      }
+
+      if (selected.yearRange.min !== null) {
+        searchParams.append("from_year", selected.yearRange.min);
+      }
+
+      if (selected.yearRange.max !== null) {
+        searchParams.append("to_year", selected.yearRange.max);
       }
 
       return searchParams.toString();
+    },
+
+    getSelectedParamsAtSearch(tool_type, additional_params = {}) {
+      const selected = this.getSelectedAtSearchMetadata(tool_type);
+
+      if (!selected) {
+        return this.getSelectedParams(additional_params);
+      }
+
+      return this.getParamsForSelection(selected, additional_params);
+    },
+
+    getSelectedParams(additional_params = {}) {
+      return this.getParamsForSelection(
+        {
+          ...this.selected,
+          genderFilter: this.genderFilter,
+          chamberFilter: this.chamberFilter,
+        },
+        additional_params
+      );
     },
 
     getSelectedParamsForSpeakerList() {

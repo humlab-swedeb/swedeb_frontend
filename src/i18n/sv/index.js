@@ -172,6 +172,7 @@ export default {
   searchResult1: "Sökningen resulterade i ",
 
   searchResult2: "träffar.",
+  kwicFetchError: "Kunde inte hämta KWIC-resultat.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
   downloadExcel: "Ladda ner Excel",
@@ -197,13 +198,15 @@ export default {
   avgränsa anförandena till bland annat vissa partier, talare eller år.`,
 
   // PDF PAGE ------------------------------------------------
-  pageNrInfoText: "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
+  pageNrInfoText:
+    "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
   nextPage: "Nästa sida",
   previousPage: "Föregående sida",
   zoomIn: "Zooma in",
   zoomOut: "Zooma ut",
   closeSpeech: "Stäng anförande",
-  riksdagenLinkText: "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
+  riksdagenLinkText:
+    "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
   riksdagenLink: "https://www.riksdagen.se",
 
   // ABOUT PAGE ------------------------------------------------
@@ -597,7 +600,7 @@ export default {
     },
     10: {
       q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
-      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976. 
+      a: `Riskdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
       Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
     },

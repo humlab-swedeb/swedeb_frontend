@@ -5,7 +5,14 @@
     }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
-  <loadingIcon v-if="loading" size="100" />
+  <q-banner v-if="kwicStore.errorMessage" rounded class="bg-red-1 text-negative q-mt-md">
+    {{ $t("kwicFetchError") }}
+    <span v-if="kwicStore.errorMessage"> {{ kwicStore.errorMessage }}</span>
+  </q-banner>
+  <div v-if="loading" class="column items-center q-py-lg q-gutter-sm">
+    <loadingIcon size="100" />
+    <q-item-label>{{ $t("accessibility.loadingResults") }}</q-item-label>
+  </div>
   <div v-show="showData">
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
@@ -35,7 +42,7 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 
 
 const metaStore = metaDataStore();
@@ -47,23 +54,28 @@ const showData = ref(false);
 const loading = ref(false);
 
 onMounted(() => {
-  if (kwicStore.kwicData && kwicStore.kwicData.length > 0) {
+  if (kwicStore.hasSubmittedQuery) {
     showData.value = true;
     loading.value = false;
   }
 });
 
-watchEffect(async () => {
-  if (metaStore.submitEventKWIC) {
+watch(
+  () => metaStore.submitEventKWIC,
+  async (submitRequested) => {
+    if (!submitRequested) {
+      return;
+    }
+
     showData.value = false;
     loading.value = true;
     await kwicStore.getKwicResult(kwicStore.searchText);
     showData.value = true;
     loading.value = false;
-  }
 
-  metaStore.cancelSubmitKwicEvent();
-});
+    metaStore.cancelSubmitKwicEvent();
+  }
+);
 
 const cancelFetch = () => {
   kwicStore.cancelFetch();

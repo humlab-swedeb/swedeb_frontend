@@ -56,7 +56,9 @@ export const downloadDataStore = defineStore("downloadData", {
     async downloadSpeechesZip(speech_list) {
       try {
         const queryString = metaDataStore().getSelectedParams();
-        const path = `tools/speeches/download${queryString ? `?${queryString}` : ""}`;
+        const path = `tools/speeches/download${
+          queryString ? `?${queryString}` : ""
+        }`;
         const json_payload = JSON.stringify(speech_list);
 
         const response = await api.post(path, json_payload, {
@@ -67,6 +69,22 @@ export const downloadDataStore = defineStore("downloadData", {
         this.setupDownload("tal.zip", new Blob([response.data]));
       } catch (error) {
         console.error("Error fetching data for download:", error);
+      }
+    },
+
+    async downloadSpeechesZipByTicket(ticketId) {
+      try {
+        const response = await api.post(
+          `tools/speeches/download?ticket_id=${encodeURIComponent(ticketId)}`,
+          null,
+          {
+            responseType: "blob",
+          }
+        );
+
+        this.setupDownload("tal.zip", new Blob([response.data]));
+      } catch (error) {
+        console.error("Error fetching ticket download:", error);
       }
     },
   },
