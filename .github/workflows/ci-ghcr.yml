@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - staging
+      - test
   workflow_dispatch:
 
 jobs:
@@ -12,8 +13,7 @@ jobs:
     name: Build, Version, and Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to push tags and update changelog
-      packages: write # to push to ghcr.io
+      contents: write # to push tags, update changelog, and manage releases
       issues: write # to comment on issues
       pull-requests: write # to comment on PRs
 
@@ -47,29 +47,79 @@ jobs:
         if: github.ref_name == 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # These are used by build-and-push-container.sh
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm semantic-release
 
-      - name: Build and push production container
-        if: github.ref_name == 'main' && steps.semantic_release.outputs.new_release_published == 'true'
-        env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare release metadata
+        id: release_meta
         run: |
-          # Get the version from semantic-release output
-          VERSION="${{ steps.semantic_release.outputs.new_release_version }}"
-          echo "Building production container for version: ${VERSION}"
-          ./.github/scripts/build-and-push-container.sh "${VERSION}" production
+          BRANCH="${{ github.ref_name }}"
 
-      - name: Build and push staging container
-        if: github.ref_name == 'staging'
+          if [ "${BRANCH}" = "main" ]; then
+            # For main, use semantic-release output
+            VERSION="${{ steps.semantic_release.outputs.new_release_version }}"
+            IS_NEW_RELEASE="${{ steps.semantic_release.outputs.new_release_published }}"
+            TARBALL="frontend-${VERSION}.tar.gz"
+            RELEASE_TAG="v${VERSION}"
+            PRERELEASE="false"
+            TITLE="Release ${VERSION}"
+            NOTES="See CHANGELOG.md for details"
+          else
+            # For staging/test, use package.json version with branch suffix
+            VERSION=$(pnpm pkg get version | tr -d '"')
+            IS_NEW_RELEASE="true"
+            TARBALL="frontend-${VERSION}-${BRANCH}.tar.gz"
+            RELEASE_TAG="${BRANCH}"
+            PRERELEASE="true"
+            TITLE="${BRANCH^} Build"
+            NOTES="Latest ${BRANCH} build (version ${VERSION})"
+
+            # Build assets for non-main branches
+            echo "Building assets for ${BRANCH} branch, version: ${VERSION}"
+            ./.github/scripts/build-assets.sh "${VERSION}-${BRANCH}"
+          fi
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          echo "tarball=${TARBALL}" >> $GITHUB_OUTPUT
+          echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+          echo "is_new_release=${IS_NEW_RELEASE}" >> $GITHUB_OUTPUT
+          echo "prerelease=${PRERELEASE}" >> $GITHUB_OUTPUT
+          echo "title=${TITLE}" >> $GITHUB_OUTPUT
+          echo "notes=${NOTES}" >> $GITHUB_OUTPUT
+
+      - name: Create or update GitHub release
+        if: steps.release_meta.outputs.is_new_release == 'true'
         env:
-          DOCKER_USERNAME: ${{ github.actor }}
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get current version for staging build
-          VERSION=$(pnpm pkg get version | tr -d '"')
-          echo "Building staging container for version: ${VERSION}"
-          ./.github/scripts/build-and-push-container.sh "${VERSION}" staging
+          BRANCH="${{ steps.release_meta.outputs.branch }}"
+          RELEASE_TAG="${{ steps.release_meta.outputs.release_tag }}"
+          TARBALL="${{ steps.release_meta.outputs.tarball }}"
+          PRERELEASE="${{ steps.release_meta.outputs.prerelease }}"
+          TITLE="${{ steps.release_meta.outputs.title }}"
+          NOTES="${{ steps.release_meta.outputs.notes }}"
+
+          if [ "${BRANCH}" = "main" ]; then
+            # For main branch, create a new versioned release
+            echo "Creating release ${RELEASE_TAG}..."
+            gh release create "${RELEASE_TAG}" \
+              "dist/${TARBALL}" \
+              --title "${TITLE}" \
+              --notes "${NOTES}" \
+              --latest
+          else
+            # For staging/test, create or update pre-release
+            if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+              echo "Updating existing ${BRANCH} pre-release..."
+              gh release delete-asset "${RELEASE_TAG}" "${TARBALL}" --yes 2>/dev/null || true
+              gh release upload "${RELEASE_TAG}" "dist/${TARBALL}" --clobber
+            else
+              echo "Creating new ${BRANCH} pre-release..."
+              gh release create "${RELEASE_TAG}" \
+                "dist/${TARBALL}" \
+                --title "${TITLE}" \
+                --notes "${NOTES}" \
+                --prerelease \
+                --target "${BRANCH}"
+            fi
+          fi

@@ -41,7 +41,7 @@ on:
 The workflow relies on [Conventional Commits](https://www.conventionalcommits.org/) specification for automated versioning:
 
 | Commit Type                    | Version Impact        | Example                          |
-| ------------------------------ | --------------------- | -------------------------------- |
+|--------------------------------|-----------------------|----------------------------------|
 | `feat:`                        | Minor (1.0.0 → 1.1.0) | `feat: add search functionality` |
 | `fix:`                         | Patch (1.0.0 → 1.0.1) | `fix: correct button alignment`  |
 | `BREAKING CHANGE:`             | Major (1.0.0 → 2.0.0) | Includes breaking change footer  |
@@ -97,16 +97,11 @@ The `.releaserc.yml` defines six plugins that execute sequentially:
    - Executes `.github/scripts/build-assets.sh ${nextRelease.version}`
    - Builds frontend and creates versioned tarball
 
-5. **@semantic-release/github**:
+5. **@semantic-release/git**:
+   - Commits updated CHANGELOG.md back to repository
+   - Uses commit message template with `[skip ci]`
 
-   - Creates GitHub release with generated notes
-   - Uploads `frontend-*.tar.gz` as release asset
-   - Disables automatic issue/PR comments
-
-6. **@semantic-release/exec** (publish phase):
-
-   - Executes `.github/scripts/build-and-push-container.sh ${nextRelease.version}`
-   - Builds and pushes Docker image to GHCR
+Note: GitHub release creation has been moved to the workflow for consistency across all branches.
 
 7. **@semantic-release/git**:
    - Commits updated CHANGELOG.md back to repository
@@ -196,51 +191,38 @@ echo "Assets prepared: dist/frontend-${VERSION}.tar.gz"
 2. Compiles Vue.js SPA to `dist/spa/`
 3. Creates versioned tarball `frontend-${VERSION}.tar.gz`
 
-#### 2.5 GitHub Release Creation
+#### 2.5 GitHub Release Creation (Unified)
 
-- **@semantic-release/github**: Creates GitHub release with generated changelog
-- Uploads `frontend-${VERSION}.tar.gz` as release asset
-- Tags repository with version number
-
-#### 2.6 Container Image Publishing (publishCmd)
-
-**Script**: `.github/scripts/build-and-push-container.sh`
-
-```bash
-#!/bin/bash
-set -e
-
-VERSION=$1
-IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY}"
-
-echo "Logging into GitHub Container Registry..."
-echo "${DOCKER_PASSWORD}" | docker login ghcr.io -u "${DOCKER_USERNAME}" --password-stdin
-
-echo "Building and pushing Container image for version ${VERSION}..."
-
-# Dynamically create a simple Dockerfile and pipe it to docker build
-cat <<EOF | docker build \
-  --tag "${IMAGE_NAME}:${VERSION}" \
-  --tag "${IMAGE_NAME}:latest" \
-  -f - .
-# This Dockerfile is generated on-the-fly.
-FROM scratch
-WORKDIR /app/public
-COPY dist/spa .
-EOF
-
-docker push --all-tags "${IMAGE_NAME}"
-```
+All GitHub releases are now created in the workflow using `gh` CLI for consistency.
 
 **Process**:
 
-1. Authenticates to GHCR using GitHub token
-2. Creates minimal Dockerfile from scratch dynamically
-3. Copies `dist/spa` contents to `/app/public`
-4. Tags with both version-specific tag and `latest`
-5. Pushes to `ghcr.io/humlab-swedeb/swedeb_frontend`
+1. **Prepare release metadata** step determines:
+   - For **main branch**:
+     - Uses semantic-release outputs for version and notes
+     - Creates full release with version tag (`v1.2.3`)
+     - References CHANGELOG.md for release notes
+   - For **staging/test branches**:
+     - Uses package.json version with branch suffix
+     - Creates/updates pre-release with branch name as tag
+     - Includes branch-specific build metadata
 
-#### 2.7 Final Git Operations
+2. **Create or update GitHub release** step:
+   - For **main**: Creates new versioned release with `--latest` flag
+   - For **staging/test**: Creates or updates pre-release with `--prerelease` flag
+
+**Asset Naming**:
+- Main: `frontend-{VERSION}.tar.gz` (e.g., `frontend-1.2.3.tar.gz`)
+- Staging: `frontend-{VERSION}-staging.tar.gz` (e.g., `frontend-1.2.3-staging.tar.gz`)
+- Test: `frontend-{VERSION}-test.tar.gz` (e.g., `frontend-1.2.3-test.tar.gz`)
+
+**Benefits of Unified Approach**:
+- Single source of truth for release creation logic
+- Consistent behavior across all branches
+- Easier to maintain and modify
+- Better visibility in workflow logs
+
+#### 2.6 Final Git Operations (Main Branch Only)
 
 - **@semantic-release/git**: Commits updated `CHANGELOG.md` back to repository
 - Pushes version tag and updated files
@@ -248,20 +230,36 @@ docker push --all-tags "${IMAGE_NAME}"
 
 ## Integration with swedeb-api
 
-### Multi-stage Dockerfile Integration
+### Runtime Asset Download
 
-The swedeb-api `Dockerfile` consumes the frontend container:
+The swedeb-api backend downloads frontend assets at container startup instead of bundling them at build time.
 
-```dockerfile
-ARG FRONTEND_VERSION=latest
+**Environment Variable Configuration**:
 
-FROM ghcr.io/humlab-swedeb/swedeb_frontend:${FRONTEND_VERSION} AS frontend-dist
-FROM ghcr.io/humlab/cwb-container:latest AS final
-
-# ... other setup ...
-
-COPY --chown=${APP_USER}:${APP_USER} --from=frontend-dist /app/public ./public
+```bash
+FRONTEND_VERSION=latest  # or 'staging', 'test', or specific version like 'v1.2.3'
 ```
+
+**Download Script**: `docker/download-frontend.sh`
+
+**Process**:
+
+1. Container starts via `entrypoint.sh`
+2. Checks if frontend assets exist and match requested version
+3. If needed, downloads tarball from GitHub releases:
+   - `latest`: Fetches most recent tagged release
+   - `staging`/`test`: Fetches from pre-release tags
+   - Specific version: Fetches that version's release
+4. Extracts tarball to `/app/public`
+5. Starts API server
+
+**Benefits**:
+
+- Frontend and backend can be deployed independently
+- No rebuild required to update frontend
+- Backends can pin to specific frontend versions
+- Faster backend builds (no frontend assets to copy)
+- Smaller backend images
 
 ### Base Image Details
 
@@ -271,9 +269,10 @@ COPY --chown=${APP_USER}:${APP_USER} --from=frontend-dist /app/public ./public
 
 ### Asset Integration
 
-1. Frontend assets are copied from the frontend container at build time
+1. Frontend assets are downloaded at runtime from GitHub releases
 2. API serves frontend from `/app/public` directory
-3. Frontend version can be controlled via `FRONTEND_VERSION` build arg
+3. Frontend version controlled via `FRONTEND_VERSION` environment variable
+4. Version checking prevents redundant downloads on restarts
 
 ## Security and Permissions
 
@@ -281,11 +280,12 @@ COPY --chown=${APP_USER}:${APP_USER} --from=frontend-dist /app/public ./public
 
 ```yaml
 permissions:
-  contents: write # to push tags and update changelog
-  packages: write # to push to ghcr.io
+  contents: write # to push tags, update changelog, and manage releases
   issues: write # to comment on issues
   pull-requests: write # to comment on PRs
 ```
+
+Note: `packages: write` permission is no longer required as we no longer push Docker images to GHCR.
 
 ### Authentication
 
