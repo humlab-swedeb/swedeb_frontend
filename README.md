@@ -1,7 +1,7 @@
 
 # Riksdagsdebatter.se Frontend
 
-This repository contains the frontend application for [Riksdagsdebatter.se](https://riksdagsdebatter.se/), a website for searching and analyzing the debates of the Swedish Parliament.
+This repository contains the frontend application for [Riksdagsdebatter.se](https://riksdagsdebatter.se/), a website for searching and analyzing the debates of the Swedish Parliament 1867-2022.
 
 ## Technology Stack
 
