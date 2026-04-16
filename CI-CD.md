@@ -380,36 +380,6 @@ Note: `packages: write` permission is no longer required as we no longer push Do
 - Requires GitHub PAT with `repo`, `workflow`, `write:packages` scopes
 - Command: `act -j release -s GITHUB_TOKEN="$(cat ~/.ghcr_token)"`
 
-## Technical Considerations
-
-### Performance Characteristics
-
-- **Build Time**: Typical workflow execution ~3-5 minutes
-- **Image Size**: Minimal `FROM scratch` containers (~10-50MB depending on frontend assets)
-- **Registry Storage**: GHCR provides unlimited public package storage
-- **Bandwidth**: Efficient layer caching for repeated builds
-
-### Security Model
-
-- **Token Scope**: Uses built-in `GITHUB_TOKEN` with minimal required permissions
-- **Container Security**: Scratch-based images eliminate OS-level vulnerabilities
-- **Supply Chain**: All dependencies managed through pnpm lock file
-- **Access Control**: GHCR inherits repository permissions
-
-### Scalability Factors
-
-- **Concurrent Builds**: Single job prevents resource conflicts
-- **Version Management**: Semantic versioning prevents conflicts
-- **Storage Growth**: Old container images can be pruned periodically
-- **Network Dependencies**: Relies on GitHub/GHCR availability
-
-### Configuration Management
-
-- **Environment Variables**: Minimal external configuration required
-- **Version Pinning**: Node.js and pnpm versions explicitly specified
-- **Plugin Versions**: Semantic-release plugins versioned in package.json
-- **Build Reproducibility**: Lock files ensure consistent dependency resolution
-
 ## Benefits of This Approach
 
 1. **Zero-Touch Releases**: Fully automated from commit to deployment
@@ -420,42 +390,3 @@ Note: `packages: write` permission is no longer required as we no longer push Do
 6. **Container Efficiency**: Multi-stage builds optimize final image size
 7. **Developer Experience**: Simple workflow requiring only conventional commits
 8. **Cost Efficiency**: Minimal CI/CD resource usage and free GHCR storage
-
-## Workflow Execution Analysis
-
-### Current State (October 2025)
-
-Based on the CHANGELOG.md, the project has had several releases:
-
-- **Latest Version**: v0.10.0 (June 6, 2025)
-- **Initial Release**: v0.0.1 (April 19, 2025)
-- **Active Development**: Semantic-release infrastructure established and functioning
-
-### Key Workflow Characteristics
-
-1. **Single Job Execution**: All steps run in one `release` job on `ubuntu-latest`
-2. **Sequential Plugin Execution**: semantic-release plugins execute in defined order
-3. **Environment Variables**: Workflow provides Docker credentials via environment
-4. **Minimal Dependencies**: Only requires Node.js 20 and pnpm 8
-5. **Full History Access**: `fetch-depth: 0` ensures complete git history for analysis
-
-### Integration Points
-
-The workflow creates two primary integration points:
-
-1. **GitHub Releases**: For manual download and version tracking
-2. **Container Registry**: For automated consumption by downstream services
-
-### Validation and Testing
-
-Local testing can be performed using:
-
-```bash
-# Test semantic-release logic without publishing
-npx semantic-release --dry-run
-
-# Test GitHub Actions workflow locally
-act -j release -s GITHUB_TOKEN="$(cat ~/.ghcr_token)"
-```
-
-This workflow ensures consistent, reliable, and traceable deployment of frontend assets while maintaining clear separation between frontend compilation and backend API functionality.
