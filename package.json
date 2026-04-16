@@ -52,6 +52,7 @@
     "eslint-plugin-vue": "^10.8.0",
     "eslint-webpack-plugin": "^6.0.0",
     "exceljs": "^4.4.0",
+    "globals": "^17.5.0",
     "highcharts": "^11.4.8",
     "highcharts-vue": "^2.0.1",
     "jszip": "^3.10.1",
