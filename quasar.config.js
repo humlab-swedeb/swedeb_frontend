@@ -8,11 +8,10 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
-const ESLintPlugin = require("eslint-webpack-plugin");
+import ESLintPlugin from "eslint-webpack-plugin";
+import { configure } from "quasar/wrappers";
 
-const { configure } = require("quasar/wrappers");
-
-module.exports = configure(function (ctx) {
+export default configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
     supportTS: false,
