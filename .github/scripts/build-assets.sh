@@ -33,8 +33,8 @@ fi
 if [ "$ENVIRONMENT" = "production" ]; then
     TARBALL="frontend-${VERSION}.tar.gz"
 else
-    # staging or test
-    TARBALL="frontend-${VERSION}-${ENVIRONMENT}.tar.gz"
+    # staging or test - no version number needed
+    TARBALL="frontend-${ENVIRONMENT}.tar.gz"
 fi
 
 tar -czvf "dist/${TARBALL}" -C dist/spa .
