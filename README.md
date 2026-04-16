@@ -3,6 +3,17 @@
 
 This repository contains the frontend application for [Riksdagsdebatter.se](https://riksdagsdebatter.se/), a website for searching and analyzing the debates of the Swedish Parliament 1867-2022.
 
+## Features
+
+- **Full-text search** across 150+ years of parliamentary debates (1867-2022)
+- **Interactive visualizations** - Word trends, speaker statistics, and temporal analysis
+- **Advanced filtering** - Filter by party, speaker, gender, office, date range, and topics
+- **KWIC concordance** - Keyword-in-context view with configurable context windows
+- **N-gram analysis** - Explore word patterns and collocations
+- **Export capabilities** - Download results to Excel/CSV formats
+- **Multilingual support** - Swedish and English interface
+- **Responsive design** - Works on desktop, tablet, and mobile devices
+
 ## Technology Stack
 
 This project is a modern single-page application (SPA) built with a focus on rich data visualization and a responsive user interface. The core technologies used are:
@@ -20,7 +31,19 @@ This project uses a fully automated CI/CD pipeline with GitHub Actions and seman
 
 For detailed information about the CI/CD workflow, release process, branch strategy, and deployment, see **[CI-CD.md](CI-CD.md)**.
 
+## Related Repositories
+
+- **[Swedeb API](https://github.com/humlab-swedeb/swedeb-api)** - Backend API built with FastAPI and Corpus Workbench (CWB)
+- **[Sample Data](https://github.com/humlab-swedeb/sample-data)** - Test data and corpus samples for development
+- **[pyriksprot](https://github.com/welfare-state-analytics/pyriksprot)** - Python tools for processing parliamentary data
+
 ## Getting Started
+
+### Prerequisites
+
+- **Node.js** 18+ (20+ recommended)
+- **pnpm** 8+
+- **Backend API** - Running instance of [swedeb-api](https://github.com/humlab-swedeb/swedeb-api) or access to a deployed environment
 
 ### Local Development Setup
 
@@ -50,30 +73,56 @@ To set up the project for local development, follow these steps.
     ```
     The application will be available at `http://localhost:9000` (or another port specified by Quasar).
 
-### Key Scripts and Dependencies
+### Configuration
 
-The `package.json` file defines the core scripts and dependencies for this project.
+The frontend connects to the backend API through configuration in `quasar.config.js`. By default, the development server proxies API requests to `http://localhost:8000`.
 
-#### Main Scripts
-*   `pnpm dev`: Starts the local development server.
-*   `pnpm build`: Compiles and bundles the application for production.
-*   `pnpm lint`: Lints all `.js` and `.vue` files using ESLint to check for code quality issues.
-*   `pnpm format`: Formats the entire codebase using Prettier to ensure consistent code style.
+To configure a different API endpoint:
 
-#### Key Production Dependencies (`dependencies`)
-*   `quasar`: The core Quasar framework.
-*   `vue`: The core Vue.js library.
-*   `axios`: For making API requests to the backend.
-*   `pinia`: For application state management.
-*   `highcharts`, `apexcharts`: For data visualization.
-*   `exceljs`, `jszip`: For exporting data to formats like Excel.
-*   `vue-i18n`: For internationalization (handling multiple languages).
-*   `vue-router`: For handling client-side routing.
+1. Create a `.env` file in the project root (optional)
+2. Modify the `devServer.proxy` settings in `quasar.config.js`
+3. For production builds, the API endpoint is set via the `process.env.API` variable
 
-#### Key Development Dependencies (`devDependencies`)
-*   `@quasar/app-webpack`: The Quasar App CLI with Webpack, which manages the build process.
-*   `eslint`, `prettier`: Tooling for code linting and formatting.
-*   `semantic-release` and its plugins (`@semantic-release/*`): The suite of tools that power our entire automated release process.
+See [quasar.config.js](quasar.config.js) for detailed configuration options.
+
+### Project Structure
+
+```
+src/
+├── pages/          # Route-level screen components
+├── layouts/        # Top-level page layouts (MainLayout, ToolsLayout)
+├── components/     # Reusable UI components
+├── stores/         # Pinia state management stores
+├── router/         # Vue Router configuration
+├── i18n/           # Translation files (Swedish/English)
+├── boot/           # App initialization (axios, i18n, analytics)
+├── css/            # Global styles and theme customization
+└── assets/         # Static assets (images, fonts)
+```
+
+### Available Scripts
+
+```bash
+pnpm dev      # Start development server with hot-reload
+pnpm build    # Build production bundle
+pnpm lint     # Lint code with ESLint
+pnpm format   # Format code with Prettier
+pnpm test     # Run test suite (currently in development)
+```
+
+### Dependencies
+
+Built with **Vue 3**, **Quasar Framework**, **Pinia** (state management), **Axios** (API client), and charting libraries (**Highcharts**, **ApexCharts**). Uses **pnpm** for package management and **semantic-release** for automated versioning.
+
+See [package.json](package.json) for the complete dependency list.
+
+## Testing
+
+```bash
+pnpm test
+```
+
+**Note:** The test suite is currently in development. We welcome contributions to improve test coverage!
 
 ## Contributing
 
@@ -85,6 +134,10 @@ To contribute to this project:
 4. Open a Pull Request to `dev`
 
 For commit message examples and detailed CI/CD workflow information, see [CI-CD.md](CI-CD.md).
+
+## Acknowledgments
+
+This project is built on data from the [SWERIK project](https://github.com/swerik-project) (Swedish Parliamentary Records in the Digital Age), which provides digitized and structured parliamentary data spanning over 150 years.
 
 ## License
 
