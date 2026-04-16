@@ -168,28 +168,43 @@ This executes the plugin chain defined in `.releaserc.yml` in the following orde
 
 ```bash
 #!/bin/bash
-set -e
+set -euo pipefail
 
 VERSION=$1
+ENVIRONMENT=${2:-production}
+
 if [ -z "$VERSION" ]; then
-  echo "Version argument is missing!"
+  echo "ERROR: Version argument is missing!"
   exit 1
 fi
 
-echo "Preparing assets for version ${VERSION}..."
+if [[ ! "$ENVIRONMENT" =~ ^(production|staging|test)$ ]]; then
+  echo "ERROR: Environment must be 'production', 'staging', or 'test'."
+  exit 1
+fi
 
 pnpm build
 
-tar -czvf "dist/frontend-${VERSION}.tar.gz" -C dist/spa .
+# Create tarball with appropriate naming
+if [ "$ENVIRONMENT" = "production" ]; then
+    TARBALL="frontend-${VERSION}.tar.gz"
+else
+    # staging or test - no version number needed
+    TARBALL="frontend-${ENVIRONMENT}.tar.gz"
+fi
 
-echo "Assets prepared: dist/frontend-${VERSION}.tar.gz"
+tar -czvf "dist/${TARBALL}" -C dist/spa .
+
+echo "Assets prepared: dist/${TARBALL}"
 ```
 
 **Process**:
 
 1. Runs `pnpm build` (Quasar build process)
 2. Compiles Vue.js SPA to `dist/spa/`
-3. Creates versioned tarball `frontend-${VERSION}.tar.gz`
+3. Creates tarball:
+   - Production: `frontend-{VERSION}.tar.gz` with semantic version
+   - Staging/Test: `frontend-{staging|test}.tar.gz` without version (always "latest" for branch)
 
 #### 2.5 GitHub Release Creation (Unified)
 
@@ -213,8 +228,8 @@ All GitHub releases are now created in the workflow using `gh` CLI for consisten
 
 **Asset Naming**:
 - Main: `frontend-{VERSION}.tar.gz` (e.g., `frontend-1.2.3.tar.gz`)
-- Staging: `frontend-{VERSION}-staging.tar.gz` (e.g., `frontend-1.2.3-staging.tar.gz`)
-- Test: `frontend-{VERSION}-test.tar.gz` (e.g., `frontend-1.2.3-test.tar.gz`)
+- Staging: `frontend-staging.tar.gz` (no version number - always latest staging)
+- Test: `frontend-test.tar.gz` (no version number - always latest test)
 
 **Benefits of Unified Approach**:
 - Single source of truth for release creation logic
@@ -341,9 +356,13 @@ Note: `packages: write` permission is no longer required as we no longer push Do
 ### Release Artifacts
 
 - **GitHub Releases**: Versioned with changelog and tarball assets
-- **Container Images**: Available at `ghcr.io/humlab-swedeb/swedeb_frontend`
-- **Tags**: Both specific version (`v1.2.3`) and `latest`
-- **Tarball Assets**: `frontend-${VERSION}.tar.gz` containing compiled SPA files
+  - **Production** (main branch): Versioned releases with tags like `v1.2.3`
+    - Asset: `frontend-1.2.3.tar.gz`
+  - **Staging** (staging branch): Pre-release with tag `staging`
+    - Asset: `frontend-staging.tar.gz` (no version, always latest)
+  - **Test** (test branch): Pre-release with tag `test`
+    - Asset: `frontend-test.tar.gz` (no version, always latest)
+- **Tarball Assets**: Contain compiled SPA files from `dist/spa/`
 
 ## Development Workflow
 
