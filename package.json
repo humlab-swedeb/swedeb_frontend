@@ -4,6 +4,7 @@
   "description": "Riksdagsdebatter.se - en webbplats för att söka och analysera Sveriges riksdagsdebatter",
   "productName": "Riksdagsdebatter.se",
   "author": "kpaalm <kajsa.palm@umu.se>",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
