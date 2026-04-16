@@ -85,3 +85,9 @@ To contribute to this project:
 4. Open a Pull Request to `dev`
 
 For commit message examples and detailed CI/CD workflow information, see [CI-CD.md](CI-CD.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2026 Humlab, Umeå University
