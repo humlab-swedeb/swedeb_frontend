@@ -67,7 +67,7 @@ jobs:
             # For staging/test, use package.json version with branch suffix
             VERSION=$(pnpm pkg get version | tr -d '"')
             IS_NEW_RELEASE="true"
-            TARBALL="frontend-${VERSION}-${BRANCH}.tar.gz"
+            TARBALL="frontend-${BRANCH}.tar.gz"
             RELEASE_TAG="${BRANCH}"
             PRERELEASE="true"
             TITLE="${BRANCH^} Build"
