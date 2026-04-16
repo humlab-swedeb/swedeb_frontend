@@ -13,8 +13,8 @@ if [ -z "$VERSION" ]; then
     exit 1
 fi
 
-if [[ ! "$ENVIRONMENT" =~ ^(production|staging)$ ]]; then
-    log "ERROR: Environment must be 'production' or 'staging'. Got: $ENVIRONMENT"
+if [[ ! "$ENVIRONMENT" =~ ^(production|staging|test)$ ]]; then
+    log "ERROR: Environment must be 'production', 'staging', or 'test'. Got: $ENVIRONMENT"
     exit 1
 fi
 
@@ -30,10 +30,11 @@ if [ ! -d "dist/spa" ] || [ -z "$(ls -A dist/spa)" ]; then
 fi
 
 # Create tarball with appropriate naming
-if [ "$ENVIRONMENT" = "staging" ]; then
-    TARBALL="frontend-${VERSION}-staging.tar.gz"
-else
+if [ "$ENVIRONMENT" = "production" ]; then
     TARBALL="frontend-${VERSION}.tar.gz"
+else
+    # staging or test
+    TARBALL="frontend-${VERSION}-${ENVIRONMENT}.tar.gz"
 fi
 
 tar -czvf "dist/${TARBALL}" -C dist/spa .

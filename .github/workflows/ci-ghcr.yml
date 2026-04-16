@@ -75,7 +75,7 @@ jobs:
 
             # Build assets for non-main branches
             echo "Building assets for ${BRANCH} branch, version: ${VERSION}"
-            ./.github/scripts/build-assets.sh "${VERSION}-${BRANCH}"
+            ./.github/scripts/build-assets.sh "${VERSION}" "${BRANCH}"
           fi
 
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
