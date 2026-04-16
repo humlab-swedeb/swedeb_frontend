@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
+import { metaDataStore } from "./metaDataStore";
 
 export const downloadDataStore = defineStore("downloadData", {
   actions: {
@@ -53,9 +53,12 @@ export const downloadDataStore = defineStore("downloadData", {
       }
     },
 
-    async downloadSpeechesZip(speech_list, selected_metadata) {
+    async downloadSpeechesZip(speech_list) {
       try {
-        const path = "tools/speech_download/";
+        const queryString = metaDataStore().getSelectedParams();
+        const path = `tools/speeches/download${
+          queryString ? `?${queryString}` : ""
+        }`;
         const json_payload = JSON.stringify(speech_list);
 
         const response = await api.post(path, json_payload, {
@@ -63,22 +66,25 @@ export const downloadDataStore = defineStore("downloadData", {
           responseType: "blob",
         });
 
-        const originalZipBlob = new Blob([response.data]);
-
-        // Create a new instance of JSZip
-        const zip = new JSZip();
-
-        // Load the original ZIP file
-        const originalZip = await zip.loadAsync(originalZipBlob);
-
-        // Create a new text file with the selected metadata
-
-        originalZip.file("metadata.txt", selected_metadata);
-
-        const zipBlob = await originalZip.generateAsync({ type: "blob" });
-        this.setupDownload("tal.zip", zipBlob);
+        this.setupDownload("tal.zip", new Blob([response.data]));
       } catch (error) {
         console.error("Error fetching data for download:", error);
+      }
+    },
+
+    async downloadSpeechesZipByTicket(ticketId) {
+      try {
+        const response = await api.post(
+          `tools/speeches/download?ticket_id=${encodeURIComponent(ticketId)}`,
+          null,
+          {
+            responseType: "blob",
+          }
+        );
+
+        this.setupDownload("tal.zip", new Blob([response.data]));
+      } catch (error) {
+        console.error("Error fetching ticket download:", error);
       }
     },
   },

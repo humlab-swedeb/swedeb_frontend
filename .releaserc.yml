@@ -73,7 +73,7 @@ plugins:
 
   # This runs scripts to build the application and create release assets.
   - - "@semantic-release/exec"
-    - prepareCmd: ".github/scripts/build-assets.sh ${nextRelease.version}"
+    - prepareCmd: ".github/scripts/build-assets.sh ${nextRelease.version} production"
 
   - - "@semantic-release/git"
     - assets:

@@ -91,10 +91,7 @@
                     ? $t("accessibility.metadataMissing")
                     : col.value
                 }}
-                <q-tooltip
-                  v-if="col.value !== '[-]'"
-                  class="text-subtitle2"
-                >
+                <q-tooltip v-if="col.value !== '[-]'" class="text-subtitle2">
                   {{ props.row.party_full }}
                 </q-tooltip>
               </q-item-label>
@@ -167,7 +164,6 @@ const props = defineProps({
 
 const displayedData = ref([]);
 const SpeechTable = ref(null);
-const visibleRows = ref([]);
 
 const rows = ref([]);
 const columns = ref([]);
@@ -185,7 +181,7 @@ if (props.type === "wordTrends") {
 }
 
 rows.value = displayedData.value.map((speech) => ({
-  id: speech.document_name,
+  id: speech.speech_id,
   protocol: speech.speech_name,
   node_word: speech.node_word,
   speaker: speech.name,
@@ -303,9 +299,7 @@ function sortSpeeches(a, b) {
 }
 
 function downloadSpeeches() {
-  visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(props.type);
-  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
+  downloadStore.downloadSpeechesZip(rows.value.map((row) => row.id));
 }
 </script>
 

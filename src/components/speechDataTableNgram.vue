@@ -179,7 +179,6 @@ const loading = ref(false);
 
 const displayedData = ref([]);
 const SpeechTable = ref(null);
-const visibleRows = ref([]);
 
 const rows = ref([]);
 const columns = ref([]);
@@ -204,7 +203,7 @@ async function onRequest(table_props) {
     if (reqId !== currentReqId.value) return;
 
     pagination.value.rowsNumber = data.total;
-    console.log('Total speeches fetched:', data.total);
+    console.log("Total speeches fetched:", data.total);
     // Clamp page if user clicked beyond last after total changed
     const maxPage = Math.max(1, Math.ceil(data.total / rowsPerPage));
     pagination.value.page = page > maxPage ? maxPage : page;
@@ -229,7 +228,7 @@ if (props.type === "wordTrends") {
 
 function mapSpeechesToRows(speeches) {
   return speeches.map((speech, idx) => ({
-    id: speech.speech_id ?? `${speech.document_name}::${speech.link || idx}`,
+    id: speech.speech_id,
     protocol: speech.speech_name,
     node_word: speech.node_word,
     speaker: speech.name,
@@ -348,9 +347,7 @@ function sortSpeeches(a, b) {
 }
 
 function downloadSpeeches() {
-  visibleRows.value = SpeechTable.value.computedRows.map((row) => row.id);
-  const paramString = metaStore.selectedMetadataToText(props.type);
-  downloadStore.downloadSpeechesZip(visibleRows.value, paramString);
+  downloadStore.downloadSpeechesZip(rows.value.map((row) => row.id));
 }
 </script>
 

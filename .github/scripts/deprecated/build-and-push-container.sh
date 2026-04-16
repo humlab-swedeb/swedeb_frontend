@@ -1,9 +1,20 @@
 #!/bin/bash
 set -euo pipefail
 
+# ============================================================================
+# DEPRECATED: This script is no longer used in production
+# ============================================================================
+# Frontend assets are now distributed via GitHub releases as tarballs.
+# The backend container downloads assets at runtime from GitHub releases.
+# This script is kept for backward compatibility and legacy workflows only.
+# ============================================================================
+
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >&2
 }
+
+log "WARNING: This script is DEPRECATED and may be removed in future versions"
+log "Frontend assets are now distributed via GitHub releases, not container images"
 
 VERSION=$1
 if [ -z "$VERSION" ]; then
