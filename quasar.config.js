@@ -11,6 +11,10 @@
 import ESLintPlugin from "eslint-webpack-plugin";
 import { configure } from "quasar/wrappers";
 
+const useApiProxy = ["1", "true", "yes"].includes(
+  (process.env.USE_API_PROXY || "").toLowerCase(),
+);
+
 export default configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -46,10 +50,10 @@ export default configure(function (ctx) {
     build: {
       vueRouterMode: "hash", // available values: 'hash', 'history'
       env: {
-        API: '/v1'
+        API: "/v1",
       },
       // transpile: false,
-      publicPath: '/public',
+      publicPath: "/public",
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
@@ -82,6 +86,16 @@ export default configure(function (ctx) {
       },
       port: 8080,
       open: true, // opens browser window automatically
+      ...(useApiProxy
+        ? {
+            proxy: {
+              "/v1": {
+                target: "http://localhost:8000",
+                changeOrigin: true,
+              },
+            },
+          }
+        : {}),
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
