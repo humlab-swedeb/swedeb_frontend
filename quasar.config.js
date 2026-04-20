@@ -13,13 +13,11 @@ import { configure } from "quasar/wrappers";
 
 export default configure(function (ctx) {
   // Enable proxy by default in dev mode, unless explicitly disabled
-  const useApiProxy = ctx.dev
-    ? ["1", "true", "yes"].includes(
-        (process.env.USE_API_PROXY || "1").toLowerCase(),
-      )
-    : ["1", "true", "yes"].includes(
-        (process.env.USE_API_PROXY || "").toLowerCase(),
-      );
+  const useApiProxy =
+    ctx.dev &&
+    ["1", "true", "yes"].includes(
+      (process.env.USE_API_PROXY || "1").toLowerCase(),
+    );
 
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
