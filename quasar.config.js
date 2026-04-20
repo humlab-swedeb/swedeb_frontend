@@ -11,11 +11,16 @@
 import ESLintPlugin from "eslint-webpack-plugin";
 import { configure } from "quasar/wrappers";
 
-const useApiProxy = ["1", "true", "yes"].includes(
-  (process.env.USE_API_PROXY || "").toLowerCase(),
-);
-
 export default configure(function (ctx) {
+  // Enable proxy by default in dev mode, unless explicitly disabled
+  const useApiProxy = ctx.dev
+    ? ["1", "true", "yes"].includes(
+        (process.env.USE_API_PROXY || "1").toLowerCase(),
+      )
+    : ["1", "true", "yes"].includes(
+        (process.env.USE_API_PROXY || "").toLowerCase(),
+      );
+
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
     supportTS: false,
@@ -88,12 +93,13 @@ export default configure(function (ctx) {
       open: true, // opens browser window automatically
       ...(useApiProxy
         ? {
-            proxy: {
-              "/v1": {
+            proxy: [
+              {
+                context: ["/v1"],
                 target: "http://localhost:8000",
                 changeOrigin: true,
               },
-            },
+            ],
           }
         : {}),
     },
