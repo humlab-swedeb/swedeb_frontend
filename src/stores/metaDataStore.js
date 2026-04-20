@@ -435,68 +435,89 @@ export const metaDataStore = defineStore("metaDataStore", {
     },
 
     async getPartyOptions() {
-      const path = "/metadata/parties";
-      const response = await api.get(path);
+      try {
+        const path = "/metadata/parties";
+        const response = await api.get(path);
 
-      this.options.party = response.data.party_list
-        .sort((a, b) => a.party_id - b.party_id)
-        .reduce((acc, party) => {
-          party.party =
-            party.party === "Okänt" ? "Metadata saknas" : party.party; // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
-          acc[party.party] = {
-            party_id: party.party_id,
-            party_abbrev: party.party_abbrev,
-            party_color: party.party_color,
-          };
-          return acc;
-        }, {});
+        this.options.party = response.data.party_list
+          .sort((a, b) => a.party_id - b.party_id)
+          .reduce((acc, party) => {
+            party.party =
+              party.party === "Okänt" ? "Metadata saknas" : party.party; // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
+            acc[party.party] = {
+              party_id: party.party_id,
+              party_abbrev: party.party_abbrev,
+              party_color: party.party_color,
+            };
+            return acc;
+          }, {});
+      } catch (error) {
+        console.error("Error fetching party options:", error);
+      }
     },
 
     async getChamberOptions() {
-      const path = "/metadata/chambers";
-      const response = await api.get(path);
-      this.options.chamber = response.data.chamber_list.reduce(
-        (acc, chamber) => {
-          acc[chamber.chamber_id] = {
-            displayStr: chamber.chamber,
-            chamber_abbrev: chamber.chamber_abbrev,
-          };
-          return acc;
-        },
-        {}
-      );
-      this.selected.chamber = Object.keys(this.options.chamber);
+      try {
+        const path = "/metadata/chambers";
+        const response = await api.get(path);
+        this.options.chamber = response.data.chamber_list.reduce(
+          (acc, chamber) => {
+            acc[chamber.chamber_id] = {
+              displayStr: chamber.chamber,
+              chamber_abbrev: chamber.chamber_abbrev,
+            };
+            return acc;
+          },
+          {}
+        );
+        this.selected.chamber = Object.keys(this.options.chamber);
+      } catch (error) {
+        console.error("Error fetching chamber options:", error);
+      }
     },
 
     async getOfficeOptions() {
-      const path = "/metadata/office_types";
-      const response = await api.get(path);
-      this.options.office = response.data.office_type_list.map(
-        (office_type) => office_type.office
-      );
+      try {
+        const path = "/metadata/office_types";
+        const response = await api.get(path);
+        this.options.office = response.data.office_type_list.map(
+          (office_type) => office_type.office
+        );
+      } catch (error) {
+        console.error("Error fetching office options:", error);
+      }
     },
     async getGenderOptions() {
-      const path = "/metadata/genders";
-      const response = await api.get(path);
-      this.options.gender = response.data.gender_list.reduce((acc, gender) => {
-        acc[gender.gender_id] = {
-          displayStr:
-            gender.gender === "Okänt" ? "Metadata saknas" : gender.gender, // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
-        };
-        return acc;
-      }, {});
-      this.selected.gender = Object.keys(this.options.gender);
+      try {
+        const path = "/metadata/genders";
+        const response = await api.get(path);
+        this.options.gender = response.data.gender_list.reduce(
+          (acc, gender) => {
+            acc[gender.gender_id] = {
+              displayStr:
+                gender.gender === "Okänt" ? "Metadata saknas" : gender.gender, // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
+            };
+            return acc;
+          }, {});
+        this.selected.gender = Object.keys(this.options.gender);
+      } catch (error) {
+        console.error("Error fetching gender options:", error);
+      }
     },
 
     async getSubOfficeOptions() {
-      const path = "/metadata/sub_office_types";
-      const response = await api.get(path);
-      const sub_offices = response.data.sub_office_type_list.map(
-        (subOffice) => subOffice.identifier
-      );
-      this.options.subOffice = sub_offices.filter(
-        (subOffice) => subOffice !== null
-      );
+      try {
+        const path = "/metadata/sub_office_types";
+        const response = await api.get(path);
+        const sub_offices = response.data.sub_office_type_list.map(
+          (subOffice) => subOffice.identifier,
+        );
+        this.options.subOffice = sub_offices.filter(
+          (subOffice) => subOffice !== null,
+        );
+      } catch (error) {
+        console.error("Error fetching sub-office options:", error);
+      }
     },
 
     async getSpeakersOptions() {
