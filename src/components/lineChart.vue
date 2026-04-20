@@ -19,15 +19,12 @@ import { reactive, watchEffect, ref } from "vue";
 import { useQuasar } from "quasar";
 import NoResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
-import annotations from "highcharts/modules/annotations";
-annotations(Highcharts);
-import exporting from "highcharts/modules/exporting";
-exporting(Highcharts);
-import offlineExporting from "highcharts/modules/offline-exporting";
-offlineExporting(Highcharts);
+// Highcharts 12+ modules auto-register when imported
+import "highcharts/modules/annotations";
+import "highcharts/modules/exporting";
+import "highcharts/modules/offline-exporting";
+import "highcharts/modules/accessibility";
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import accessibility from "highcharts/modules/accessibility";
-accessibility(Highcharts);
 
 const metaStore = metaDataStore();
 
