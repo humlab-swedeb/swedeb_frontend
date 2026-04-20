@@ -93,7 +93,7 @@
             wtStore.wordHitsSelected.length < 1 ||
             ($route.path === '/tools/wordtrends' &&
               wtStore.wordHitsSelected.some(
-                (word) => word.includes(' ') || word.includes('*')
+                (word) => word.includes(' ') || word.includes('*'),
               ))
           "
         >
@@ -111,7 +111,7 @@
             v-if="
               $route.path === '/tools/wordtrends' &&
               wtStore.wordHitsSelected.some(
-                (word) => word.includes(' ') || word.includes('*')
+                (word) => word.includes(' ') || word.includes('*'),
               )
             "
             anchor="top middle"
@@ -121,7 +121,7 @@
             {{ $t("searchTooltipWordtrendsError") }}<br /><br />
             <code>{{
               wtStore.wordHitsSelected.filter(
-                (word) => word.includes(" ") || word.includes("*")
+                (word) => word.includes(" ") || word.includes("*"),
               )
             }}</code>
           </q-tooltip>
@@ -221,7 +221,7 @@ import { nGramDataStore } from "src/stores/nGramDataStore";
 import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useQuasar } from "quasar";
-import { useGtag } from "vue-gtag-next";
+import { useGtagEvent } from "src/composables/useGtagEvent";
 
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
@@ -231,7 +231,8 @@ const ngramStore = nGramDataStore();
 const showing = ref(false);
 const route = useRoute();
 const $q = useQuasar();
-const { event } = useGtag();
+
+const { gtagEvent } = useGtagEvent();
 
 const handleNormalizeData = (newValue) => {
   if (route.path === "/tools/wordtrends") {
@@ -249,7 +250,7 @@ const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {
     store.saveKwicFilterData(kwicStore.searchText);
     store.setSubmitKwicEvent();
-    event("kwic_search", {
+    gtagEvent("kwic_search", {
       event_category: "search",
       event_label: "KWIC-SÖK",
       value: 1,
@@ -258,7 +259,7 @@ const handleSubmit = async () => {
     const wordHitsString = wtStore.wordHitsSelected.join(", ");
     store.saveWTFilterData(wordHitsString);
     store.setSubmitWTEvent();
-    event("wordtrend_search", {
+    gtagEvent("wordtrend_search", {
       event_category: "search",
       event_label: "Wordtrends-SÖK",
       value: 1,
@@ -266,7 +267,7 @@ const handleSubmit = async () => {
   } else if (route.path === "/tools/speeches") {
     store.saveSpeechesFilterData();
     store.setSubmitSpeechesEvent();
-    event("speeches_search", {
+    gtagEvent("speeches_search", {
       event_category: "search",
       event_label: "Speeches-SÖK",
       value: 1,
@@ -274,7 +275,7 @@ const handleSubmit = async () => {
   } else if (route.path === "/tools/ngram") {
     store.saveNgramsFilterData();
     store.setSubmitNgramsEvent();
-    event("ngram_search", {
+    gtagEvent("ngram_search", {
       event_category: "search",
       event_label: "nGram-SÖK",
       value: 1,
