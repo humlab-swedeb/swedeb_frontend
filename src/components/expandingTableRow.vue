@@ -98,8 +98,7 @@
               </q-btn>
               <q-btn
                 no-caps
-                :href="props.props.row.source"
-                target="_blank"
+                @click="openPdf"
                 class="text-grey-8"
                 color="white"
               >
@@ -195,7 +194,7 @@
 
 <script setup>
 import { ref, watchEffect, defineProps } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -213,7 +212,6 @@ const feedbackStore = feedbackDataStore();
 const nGramStore = nGramDataStore();
 const pdfStore = pdfDataStore();
 const route = useRoute();
-const router = useRouter();
 
 const props = defineProps({
   props: Object,
@@ -230,6 +228,10 @@ const page = ref(1);
 const originalSpeechText = ref("");
 const loading = ref(false);
 
+const isPagePdfSource = (source) => {
+  return /\/prot-[^/]+\/prot-[^/]+_\d+\.pdf(?:$|[?#])/.test(source ?? "");
+};
+
 const openPdf = () => {
   const data = {
     speakerNote: speakerNote.value,
@@ -239,15 +241,11 @@ const openPdf = () => {
   };
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
-  const clientRoutePath = "/pdf";
+  const clientRoutePath = isPagePdfSource(props.props.row.source) ? "/pdf-pagewise" : "/pdf";
   const clientRouteHash = `#${clientRoutePath}`;
-  const resolvedClientRoute = router.resolve({ path: clientRoutePath });
-  // console.log("router.resolve().href (for debugging):", resolvedClientRoute.href);
-  // console.log("Manually constructed clientRouteHash:", clientRouteHash);
   const spaPublicPath = '/public/';
   const fullPathToIndexHtml = `${window.location.origin}${spaPublicPath}index.html`;
   const finalUrlToOpen = `${fullPathToIndexHtml}${clientRouteHash}`;
-  // console.log("Attempting to open PDF at URL:", finalUrlToOpen);
   window.open(finalUrlToOpen, "_blank");
 };
 
