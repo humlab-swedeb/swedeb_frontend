@@ -36,6 +36,9 @@ let categories = [];
 const chartOptions = reactive({
   chart: {
     type: "line",
+    animation: false,/* {
+      duration: 300  // Fast animation (300ms instead of default 1000ms)
+    },*/
     style: {
       fontFamily: '"Open Sans", sans-serif',
     },
@@ -122,6 +125,9 @@ const chartOptions = reactive({
   plotOptions: {
     line: {
       lineWidth: 3,
+      animation: false, /* {
+        duration: 300  // Fast line drawing animation
+      } */
     },
   },
   colors: [
@@ -264,10 +270,9 @@ function generateTextFileContent() {
 }
 
 const dataLoaded = ref(false);
-const wordTrends = wtStore.wordTrends;
 
 watchEffect(() => {
-  if (wordTrends && wordTrends.length > 0) {
+  if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
     prepareDataForLineChart();
   }
 });
@@ -292,24 +297,24 @@ function addDataPointsForMissingYears(categories) {
       count: {},
     };
 
-    Object.keys(wordTrends[0].count).forEach((key) => {
+    Object.keys(wtStore.wordTrends[0].count).forEach((key) => {
       newEntry.count[key] = 0;
     });
-    wordTrends.push(newEntry);
+    wtStore.wordTrends.push(newEntry);
   });
-  wordTrends.sort((a, b) => parseInt(a.year) - parseInt(b.year));
+  wtStore.wordTrends.sort((a, b) => parseInt(a.year) - parseInt(b.year));
 }
 
 function prepareDataForLineChart() {
-  categories = wordTrends.map((entry) => parseInt(entry.year));
+  categories = wtStore.wordTrends.map((entry) => parseInt(entry.year));
 
   addDataPointsForMissingYears(categories);
 
-  const seriesData = Object.keys(wordTrends[0].count)
+  const seriesData = Object.keys(wtStore.wordTrends[0].count)
     .map((word) => ({
       name: word,
-      total: wordTrends.reduce((sum, entry) => sum + entry.count[word], 0),
-      data: wordTrends.map((entry) => entry.count[word]),
+      total: wtStore.wordTrends.reduce((sum, entry) => sum + entry.count[word], 0),
+      data: wtStore.wordTrends.map((entry) => entry.count[word]),
     }))
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
 

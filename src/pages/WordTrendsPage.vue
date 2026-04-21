@@ -7,17 +7,10 @@
   </q-card>
 
   <div v-show="showData">
-    <ShowData :filterSelections="'WordTrends'"/>
+    <ShowData :filterSelections="'WordTrends'" />
     <br />
   </div>
-  <q-tabs
-    v-model="tabs"
-    inline-label
-    no-caps
-    active-color="accent"
-    align="justify"
-    class="q-mt-lg"
-  >
+  <q-tabs v-model="tabs" inline-label no-caps active-color="accent" align="justify" class="q-mt-lg">
     <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
     <q-tab name="table" icon="table_view" label="Tabell" />
     <q-tab name="speech" icon="groups" label="Anföranden" />
@@ -95,15 +88,39 @@ watchEffect(async () => {
     showData.value = false;
     showDataTable.value = false;
     const textString = wtStore.generateStringOfSelected();
-    await wtStore.getWordTrendsResult(textString);
-    showDataTable.value = true;
-    dataLoadedTable.value = true;
-    await wtStore.getWordTrendsSpeeches(textString);
-    showData.value = true;
-    dataLoaded.value = true;
-    loading.value = false;
-    store.cancelSubmitWTEvent();
 
+    // Start both API requests in parallel (don't await yet)
+    const trendsPromise = wtStore.getWordTrendsResult(textString);
+    const speechesPromise = wtStore.getWordTrendsSpeeches(textString);
+
+    // Track completion of both requests
+    let trendsComplete = false;
+    let speechesComplete = false;
+
+    // Show trends chart as soon as trends data arrives
+    trendsPromise.then(() => {
+      showDataTable.value = true;
+      dataLoadedTable.value = true;
+      trendsComplete = true;
+      if (speechesComplete) {
+        loading.value = false;
+        store.cancelSubmitWTEvent();
+      }
+    });
+
+    // Show speeches table as soon as speeches data arrives
+    speechesPromise.then(() => {
+      showData.value = true;
+      dataLoaded.value = true;
+      speechesComplete = true;
+      if (trendsComplete) {
+        loading.value = false;
+        store.cancelSubmitWTEvent();
+      }
+    });
+
+    // Wait for both to complete (for error handling)
+    await Promise.all([trendsPromise, speechesPromise]);
   }
 });
 </script>
