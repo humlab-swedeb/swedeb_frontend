@@ -2,22 +2,15 @@
   <q-card flat class="q-px-md background q-pt-sm q-pb-md">
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("wordTrendsIntroTitle")
-    }}</q-item-label>
+      }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
 
   <div v-show="showData">
-    <ShowData :filterSelections="'WordTrends'"/>
+    <ShowData :filterSelections="'WordTrends'" />
     <br />
   </div>
-  <q-tabs
-    v-model="tabs"
-    inline-label
-    no-caps
-    active-color="accent"
-    align="justify"
-    class="q-mt-lg"
-  >
+  <q-tabs v-model="tabs" inline-label no-caps active-color="accent" align="justify" class="q-mt-lg">
     <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
     <q-tab name="table" icon="table_view" label="Tabell" />
     <q-tab name="speech" icon="groups" label="Anföranden" />
@@ -29,7 +22,7 @@
         {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultLine") }}</b>
         {{ $t("wordtrendsResult2") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
+      <loadingIcon v-if="loadingChart" size="100" />
       <lineChart v-else-if="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
@@ -37,7 +30,7 @@
         {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultTable") }}</b>
         {{ $t("wordtrendsResult2") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
+      <loadingIcon v-if="loadingChart" size="100" />
       <div v-else-if="showDataTable">
         <wordTrendsCountTable />
       </div>
@@ -47,10 +40,8 @@
         {{ $t("wordtrendsResult3") }} <b>{{ $t("wordtrendsResultSpeech") }}</b>
         {{ $t("wordtrendsResult4") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
-      <div v-else v-show="showData">
-        <speechDataTable type="wordTrends" />
-      </div>
+      <loadingIcon v-if="loadingSpeeches" size="100" />
+      <wordTrendsSpeechTable v-else />
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -58,7 +49,7 @@
 import ShowData from "src/components/ShowData.vue";
 import lineChart from "src/components/lineChart.vue";
 import wordTrendsCountTable from "src/components/wordTrendsCountTable.vue";
-import speechDataTable from "src/components/speechDataTable.vue";
+import wordTrendsSpeechTable from "src/components/wordTrendsSpeechTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -71,7 +62,8 @@ const formattedIntro = i18n.wordTrendsIntro;
 
 const showData = ref(false);
 const dataLoaded = ref(false);
-const loading = ref(false);
+const loadingChart = ref(false);
+const loadingSpeeches = ref(false);
 const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const tabs = ref("diagram");
@@ -91,19 +83,45 @@ onMounted(() => {
 
 watchEffect(async () => {
   if (store.submitEventWT) {
-    loading.value = true;
+    // Start loading indicators for both tabs
+    loadingChart.value = true;
+    loadingSpeeches.value = true;
     showData.value = false;
     showDataTable.value = false;
-    const textString = wtStore.generateStringOfSelected();
-    await wtStore.getWordTrendsResult(textString);
-    showDataTable.value = true;
-    dataLoadedTable.value = true;
-    await wtStore.getWordTrendsSpeeches(textString);
-    showData.value = true;
-    dataLoaded.value = true;
-    loading.value = false;
-    store.cancelSubmitWTEvent();
 
+    const textString = wtStore.generateStringOfSelected();
+
+    // Start both API requests in parallel (don't await yet)
+    const trendsPromise = wtStore.getWordTrendsResult(textString);
+    const speechesPromise = wtStore.getWordTrendsSpeechesTicket(textString);
+
+    showData.value = true;
+
+    // Show trends chart/table as soon as trends data arrives (~2s)
+    trendsPromise.then(() => {
+      showDataTable.value = true;
+      dataLoadedTable.value = true;
+      loadingChart.value = false;  // Diagram and Table tabs ready!
+    }).catch((error) => {
+      console.error("Error loading trends:", error);
+      loadingChart.value = false;
+    });
+
+    // Show speeches table as soon as speeches data arrives (~30s)
+    speechesPromise.then(() => {
+      dataLoaded.value = true;
+      loadingSpeeches.value = false;  // Speech tab ready!
+    }).catch((error) => {
+      console.error("Error loading speeches:", error);
+      loadingSpeeches.value = false;
+    });
+
+    // Wait for both to complete, then reset submit event
+    try {
+      await Promise.all([trendsPromise, speechesPromise]);
+    } finally {
+      store.cancelSubmitWTEvent();
+    }
   }
 });
 </script>

@@ -7,5 +7,6 @@ export default {
   kwicFetchError: "Could not load KWIC results.",
   accessibility: {
     loadingResults: "Loading results, please wait...",
+    ticketExpired: "The results have expired. Please submit a new search.",
   },
 };

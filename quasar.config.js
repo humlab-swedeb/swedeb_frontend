@@ -12,6 +12,13 @@ import ESLintPlugin from "eslint-webpack-plugin";
 import { configure } from "quasar/wrappers";
 
 export default configure(function (ctx) {
+  // Enable proxy by default in dev mode, unless explicitly disabled
+  const useApiProxy =
+    ctx.dev &&
+    ["1", "true", "yes"].includes(
+      (process.env.USE_API_PROXY || "1").toLowerCase(),
+    );
+
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
     supportTS: false,
@@ -22,7 +29,7 @@ export default configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-    boot: ["i18n", "axios", "analytics"],
+    boot: ["error-handler", "i18n", "axios", "analytics"],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ["app.sass"],
@@ -46,10 +53,10 @@ export default configure(function (ctx) {
     build: {
       vueRouterMode: "hash", // available values: 'hash', 'history'
       env: {
-        API: '/v1'
+        API: "/v1",
       },
       // transpile: false,
-      publicPath: '/public',
+      publicPath: "/public",
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
@@ -82,6 +89,17 @@ export default configure(function (ctx) {
       },
       port: 8080,
       open: true, // opens browser window automatically
+      ...(useApiProxy
+        ? {
+            proxy: [
+              {
+                context: ["/v1"],
+                target: "http://localhost:8000",
+                changeOrigin: true,
+              },
+            ],
+          }
+        : {}),
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework

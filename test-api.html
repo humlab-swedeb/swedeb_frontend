@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>API Test</title>
+</head>
+
+<body>
+    <h1>API Connection Test</h1>
+    <div id="results"></div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+
+        async function testEndpoint(url, name) {
+            const startTime = Date.now();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const endTime = Date.now();
+
+                resultsDiv.innerHTML += `<p style="color: green;">✓ ${name}: OK (${endTime - startTime}ms)</p>`;
+                console.log(`${name}:`, data);
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">✗ ${name}: FAILED - ${error.message}</p>`;
+                console.error(`${name} error:`, error);
+            }
+        }
+
+        async function runTests() {
+            resultsDiv.innerHTML = '<p>Running tests...</p>';
+
+            await testEndpoint('/v1/metadata/start_year', 'Start Year');
+            await testEndpoint('/v1/metadata/end_year', 'End Year');
+            await testEndpoint('/v1/metadata/parties', 'Parties');
+            await testEndpoint('/v1/metadata/chambers', 'Chambers');
+            await testEndpoint('/v1/metadata/genders', 'Genders');
+            await testEndpoint('/v1/metadata/office_types', 'Office Types');
+
+            resultsDiv.innerHTML += '<p><strong>Tests complete! Check browser console for details.</strong></p>';
+        }
+
+        runTests();
+    </script>
+</body>
+
+</html>

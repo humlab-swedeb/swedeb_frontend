@@ -5,6 +5,7 @@ const routes = [
     children: [
 
       { path: "pdf", component: () => import("pages/PdfPage.vue") },
+      { path: "pdf-pagewise", component: () => import("pages/PdfPageWise.vue") },
 
       {
         path: "",

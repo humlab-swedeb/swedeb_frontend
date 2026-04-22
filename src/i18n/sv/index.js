@@ -178,6 +178,7 @@ export default {
   searchResult2ngram: "unika träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
+  downloadJSON: "Ladda ner JSON",
   downloadExcel: "Ladda ner Excel",
   downloadSpeech: "Tal",
 
@@ -646,6 +647,7 @@ export default {
     noResults: "Inga resultat för sökningen.",
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+    ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
 
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",
