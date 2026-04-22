@@ -207,6 +207,17 @@ export const kwicDataStore = defineStore("kwicData", {
         };
 
         return response.data;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = "Sökresultaten har gått ut. Vänligen gör en ny sökning.";
+          this.resetTicketState();
+        } else if (axios.isCancel(error)) {
+          console.log("Request canceled", error.message);
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        console.error("Error fetching KWIC page:", error);
+        return null;
       } finally {
         if (pageRequestId === this.pageRequestSequence) {
           this.isPageLoading = false;
