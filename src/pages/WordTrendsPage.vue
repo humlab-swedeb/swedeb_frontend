@@ -22,7 +22,7 @@
         {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultLine") }}</b>
         {{ $t("wordtrendsResult2") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
+      <loadingIcon v-if="loadingChart" size="100" />
       <lineChart v-else-if="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
@@ -30,7 +30,7 @@
         {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultTable") }}</b>
         {{ $t("wordtrendsResult2") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
+      <loadingIcon v-if="loadingChart" size="100" />
       <div v-else-if="showDataTable">
         <wordTrendsCountTable />
       </div>
@@ -40,7 +40,7 @@
         {{ $t("wordtrendsResult3") }} <b>{{ $t("wordtrendsResultSpeech") }}</b>
         {{ $t("wordtrendsResult4") }}
       </div>
-      <loadingIcon v-if="loading" size="100" />
+      <loadingIcon v-if="loadingSpeeches" size="100" />
       <div v-else v-show="showData">
         <speechDataTable type="wordTrends" />
       </div>
@@ -64,7 +64,8 @@ const formattedIntro = i18n.wordTrendsIntro;
 
 const showData = ref(false);
 const dataLoaded = ref(false);
-const loading = ref(false);
+const loadingChart = ref(false);
+const loadingSpeeches = ref(false);
 const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const tabs = ref("diagram");
@@ -84,43 +85,44 @@ onMounted(() => {
 
 watchEffect(async () => {
   if (store.submitEventWT) {
-    loading.value = true;
+    // Start loading indicators for both tabs
+    loadingChart.value = true;
+    loadingSpeeches.value = true;
     showData.value = false;
     showDataTable.value = false;
+    
     const textString = wtStore.generateStringOfSelected();
 
     // Start both API requests in parallel (don't await yet)
     const trendsPromise = wtStore.getWordTrendsResult(textString);
     const speechesPromise = wtStore.getWordTrendsSpeeches(textString);
 
-    // Track completion of both requests
-    let trendsComplete = false;
-    let speechesComplete = false;
-
-    // Show trends chart as soon as trends data arrives
+    // Show trends chart/table as soon as trends data arrives (~2s)
     trendsPromise.then(() => {
       showDataTable.value = true;
       dataLoadedTable.value = true;
-      trendsComplete = true;
-      if (speechesComplete) {
-        loading.value = false;
-        store.cancelSubmitWTEvent();
-      }
+      loadingChart.value = false;  // Diagram and Table tabs ready!
+    }).catch((error) => {
+      console.error("Error loading trends:", error);
+      loadingChart.value = false;
     });
 
-    // Show speeches table as soon as speeches data arrives
+    // Show speeches table as soon as speeches data arrives (~30s)
     speechesPromise.then(() => {
       showData.value = true;
       dataLoaded.value = true;
-      speechesComplete = true;
-      if (trendsComplete) {
-        loading.value = false;
-        store.cancelSubmitWTEvent();
-      }
+      loadingSpeeches.value = false;  // Speech tab ready!
+    }).catch((error) => {
+      console.error("Error loading speeches:", error);
+      loadingSpeeches.value = false;
     });
 
-    // Wait for both to complete (for error handling)
-    await Promise.all([trendsPromise, speechesPromise]);
+    // Wait for both to complete, then reset submit event
+    try {
+      await Promise.all([trendsPromise, speechesPromise]);
+    } finally {
+      store.cancelSubmitWTEvent();
+    }
   }
 });
 </script>
