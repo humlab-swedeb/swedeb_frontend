@@ -41,9 +41,7 @@
         {{ $t("wordtrendsResult4") }}
       </div>
       <loadingIcon v-if="loadingSpeeches" size="100" />
-      <div v-else v-show="showData">
-        <speechDataTable type="wordTrends" />
-      </div>
+      <wordTrendsSpeechTable v-else />
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -51,7 +49,7 @@
 import ShowData from "src/components/ShowData.vue";
 import lineChart from "src/components/lineChart.vue";
 import wordTrendsCountTable from "src/components/wordTrendsCountTable.vue";
-import speechDataTable from "src/components/speechDataTable.vue";
+import wordTrendsSpeechTable from "src/components/wordTrendsSpeechTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
