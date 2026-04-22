@@ -95,6 +95,8 @@ watchEffect(async () => {
     const trendsPromise = wtStore.getWordTrendsResult(textString);
     const speechesPromise = wtStore.getWordTrendsSpeechesTicket(textString);
 
+    showData.value = true;
+
     // Show trends chart/table as soon as trends data arrives (~2s)
     trendsPromise.then(() => {
       showDataTable.value = true;
@@ -107,7 +109,6 @@ watchEffect(async () => {
 
     // Show speeches table as soon as speeches data arrives (~30s)
     speechesPromise.then(() => {
-      showData.value = true;
       dataLoaded.value = true;
       loadingSpeeches.value = false;  // Speech tab ready!
     }).catch((error) => {

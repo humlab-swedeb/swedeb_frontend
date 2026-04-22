@@ -85,7 +85,7 @@ def touch_ticket(self, ticket_id: str) -> None:
     """Reset ticket expiration on access during pagination."""
     ticket = self.require_ticket(ticket_id)
     new_expiration = datetime.now(timezone.utc) + timedelta(seconds=self.ttl_seconds)
-    
+
     # Cap absolute lifetime to prevent unbounded tickets
     max_lifetime = ticket.created_at + timedelta(seconds=self.max_absolute_lifetime)
     ticket.expires_at = min(new_expiration, max_lifetime)
