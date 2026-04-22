@@ -178,6 +178,7 @@ export default {
   searchResult2ngram: "unika träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
+  downloadJSON: "Ladda ner JSON",
   downloadExcel: "Ladda ner Excel",
   downloadSpeech: "Tal",
 
