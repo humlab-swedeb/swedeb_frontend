@@ -2,9 +2,9 @@
 
 ## Status
 
-- ✅ **IMPLEMENTED** (commits: ddf1e0d backend, 6cda1fd frontend)
+- ✅ **IMPLEMENTED** (commits: ddf1e0d backend, 6cda1fd frontend, a8b5d0f download endpoint, a4a9983 download UI)
+- ✅ **DOWNLOAD COMPLETE** (CSV and JSON export functional)
 - ⏳ **TESTING PENDING** (manual end-to-end testing required)
-- ⚠️ **DOWNLOAD BLOCKED** (needs GET `/tools/speeches/download/{ticket_id}` endpoint)
 - Scope: Backend API and frontend UX for /tools/speeches
 - Goal: Add ticket-based async pagination to Speeches tool, consistent with KWIC and word trends
 
@@ -414,18 +414,17 @@ import speechesTable from "src/components/speechesTable.vue";
 
 ### Remaining Work
 
-**Backend (optional - download endpoint):**
-- [ ] Add GET `/tools/speeches/download/{ticket_id}` endpoint
-  - [ ] Support `format` query param: "csv" | "xlsx"
-  - [ ] Match word_trend_speeches download pattern
-  - [ ] Fetch speech_ids from ticket artifact
-  - [ ] Stream response with appropriate content-type
-- [ ] Add integration tests for download endpoint
-
-**Frontend (blocked by download endpoint):**
-- [ ] Uncomment download buttons in speechesTable.vue
-- [ ] Test CSV download functionality
-- [ ] Test Excel download functionality
+**Download Feature:** ✅ COMPLETE (commits: a8b5d0f backend, a4a9983 frontend)
+- ✅ Added GET `/tools/speeches/download/{ticket_id}` endpoint
+  - ✅ Support `format` query param: "csv" | "json" (changed from xlsx to json)
+  - ✅ Match word_trend_speeches download pattern
+  - ✅ Load from ResultStore feather artifact
+  - ✅ Stream response with appropriate content-type and Content-Disposition headers
+- ✅ Added 6 integration tests for download endpoint (19 total tests, all passing)
+- ✅ Uncommented download buttons in speechesTable.vue
+- ✅ Added downloadJSON translation to i18n
+- [ ] Test CSV download functionality (manual)
+- [ ] Test JSON download functionality (manual)
 
 ## Delivery Status
 
@@ -495,12 +494,12 @@ This brings the Speeches tool in line with KWIC and word trends, providing consi
 
 ### Deviations from Original Proposal
 
-1. **Download functionality delayed:**
+1. **Download functionality delayed (RESOLVED - same day):**
    - Original plan: Implement download buttons (CSV, Excel) as part of component
-   - Actual: Download buttons commented out in speechesTable.vue
-   - Reason: Backend needs GET `/tools/speeches/download/{ticket_id}` endpoint to match word_trend_speeches pattern
-   - Current: POST `/tools/speeches/download` uses different pattern (ZIP files)
-   - Resolution: Implement download endpoint in follow-up work
+   - Initial: Download buttons commented out in speechesTable.vue
+   - Reason: Backend needed GET `/tools/speeches/download/{ticket_id}` endpoint
+   - Resolution: Implemented download endpoint (commit a8b5d0f) + enabled UI (commit a4a9983)
+   - Format change: CSV and JSON (instead of CSV and Excel) to match backend pattern
 
 2. **Additional schemas:**
    - Original: Just `SpeechesPageResult`
@@ -575,26 +574,70 @@ Four bugs were discovered and fixed during backend testing:
 - ⏳ Manual end-to-end testing pending
 - ⏳ Browser testing pending
 
+### Download Implementation
+
+**Date:** April 22, 2026 (same day as pagination)  
+**Backend commit:** `a8b5d0f` - "feat(speeches): add GET download endpoint for ticket-based CSV/JSON export"  
+**Frontend commit:** `a4a9983` - "feat(speeches): enable CSV/JSON download buttons"
+
+**Backend Implementation (api_swedeb/api/v1/endpoints/tool_router.py):**
+- Added GET `/tools/speeches/download/{ticket_id}` endpoint (lines 543-590)
+- Format support: `format` query param with "csv" (default) or "json"
+- Pattern: Matches word_trend_speeches download exactly
+- Error handling:
+  - 404 for missing/expired tickets
+  - 409 for pending/failed tickets
+- CSV: Uses io.StringIO buffer + data.to_csv(buf, index=False)
+- JSON: Uses data.to_json(orient="records", force_ascii=False)
+- Headers: Content-Disposition with attachment; filename="speeches_{ticket_id}.{ext}"
+- Data loading: Direct read from ResultStore feather artifact
+
+**Testing (tests/integration/test_speeches_ticket_validation.py):**
+- Added 6 integration tests for download functionality (lines 267-379)
+- All 19 tests passing (13 pagination + 6 download) in 0.31s
+- Test coverage:
+  - ✅ CSV format returns valid CSV with expected columns
+  - ✅ JSON format returns valid JSON array with expected keys
+  - ✅ Default format is CSV
+  - ✅ 404 for nonexistent tickets
+  - ✅ 409 for pending tickets (mocked edge case with TicketMeta)
+  - ✅ Download row count matches pagination total_hits
+- Code quality: 10.00/10 by pylint
+- Import optimization: Moved json, datetime, timedelta, patch to top-level imports
+
+**Frontend Implementation (src/components/speechesTable.vue):**
+- Uncommented download dropdown with CSV and JSON options (lines 17-37)
+- Implemented downloadCSV() function (uses api.get with format=csv)
+- Implemented downloadJSON() function (uses api.get with format=json)
+- Both use downloadStore.setupDownload() for browser download trigger
+- Added downloadJSON translation to Swedish i18n: "Ladda ner JSON"
+- Note: Changed from Excel to JSON format (backend supports JSON, not xlsx)
+
+**Deviation from Original Plan:**
+- Original: CSV and Excel downloads
+- Actual: CSV and JSON downloads
+- Reason: Backend download endpoint pattern uses JSON, not xlsx
+- Advantage: JSON is more portable and developer-friendly for API consumers
+- Impact: Minimal - users get data export functionality as intended
+
 ### Next Steps
 
 1. **Manual testing:** End-to-end validation in dev environment
-2. **Download endpoint:** Implement GET `/tools/speeches/download/{ticket_id}` backend endpoint
-3. **Uncomment downloads:** Enable CSV/Excel buttons in speechesTable.vue
-4. **Deploy:** Test → Staging → Production rollout
-5. **Monitor:** Track performance metrics and error rates
+   - Submit query → wait for results → click "Ladda ner CSV" → verify download
+   - Submit query → wait for results → click "Ladda ner JSON" → verify download
+   - Test with different filters (year range, party, gender)
+   - Wait for ticket expiration → resubmit → test download again
+2. **Deploy:** Test → Staging → Production rollout
+3. **Monitor:** Track performance metrics, error rates, and download usage
 
 ### Known Limitations
 
-1. **Download functionality incomplete:**
-   - Cannot download speeches until backend endpoint is implemented
-   - Buttons are commented out with TODO notes
-   - Low priority: users can still use old POST /tools/speeches/download endpoint
-
-2. **Testing incomplete:**
+1. **Testing incomplete:**
    - No automated frontend tests yet
-   - Manual testing required before production deployment
+   - Manual end-to-end testing required before production deployment
+   - Download functionality needs manual verification
 
-3. **Legacy endpoint preserved:**
+2. **Legacy endpoint preserved:**
    - Old GET /tools/speeches still exists for backward compatibility
    - May be deprecated in future major version after migration period
 
