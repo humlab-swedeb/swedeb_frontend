@@ -4,6 +4,7 @@ import { metaDataStore } from "./metaDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import { downloadDataStore } from "./downloadDataStore";
+import i18n from "src/i18n/sv/index.js";
 
 const DEFAULT_PAGE_SIZE = 50;
 const TICKET_POLL_INTERVAL_MS = 1000;
@@ -178,8 +179,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.speechesErrorMessage =
-            "Resultaten har gått ut. Vänligen gör en ny sökning.";
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
           this.resetSpeechesTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);

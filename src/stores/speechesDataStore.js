@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import axios from "axios";
+import i18n from "src/i18n/sv/index.js";
 
 const DEFAULT_PAGE_SIZE = 50;
 const TICKET_POLL_INTERVAL_MS = 1000;
@@ -142,8 +143,7 @@ export const speechesDataStore = defineStore("speechesData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.errorMessage =
-            "Resultaten har gått ut. Vänligen gör en ny sökning.";
+          this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);

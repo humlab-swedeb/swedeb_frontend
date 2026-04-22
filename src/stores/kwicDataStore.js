@@ -5,6 +5,7 @@ import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
+import i18n from "src/i18n/sv/index.js";
 
 const DEFAULT_ROWS_PER_PAGE = 10;
 const DEFAULT_SORT_BY = "protocol";
@@ -209,7 +210,7 @@ export const kwicDataStore = defineStore("kwicData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.errorMessage = "Sökresultaten har gått ut. Vänligen gör en ny sökning.";
+          this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
@@ -282,7 +283,7 @@ export const kwicDataStore = defineStore("kwicData", {
         const response = await api.post(
           "/tools/kwic/query",
           this.buildKwicTicketPayload(normalizedSearch),
-          { cancelToken: this.cancelTokenSource.token }
+          { cancelToken: this.cancelTokenSource.token },
         );
 
         if (requestId !== this.requestSequence) {
@@ -337,7 +338,7 @@ export const kwicDataStore = defineStore("kwicData", {
       };
       const queryString = metaDataStore().getSelectedParamsAtSearch(
         "kwic",
-        additionalParams
+        additionalParams,
       );
       const response = await api.get(`${path}?${queryString}`);
 
@@ -396,9 +397,9 @@ export const kwicDataStore = defineStore("kwicData", {
           .map((obj) =>
             Object.keys(this.columnNames)
               .map(
-                (key) => `"${(obj[key] ?? "").toString().replace(/"/g, '""')}"`
+                (key) => `"${(obj[key] ?? "").toString().replace(/"/g, '""')}"`,
               )
-              .join(",")
+              .join(","),
           )
           .join("\n");
 
