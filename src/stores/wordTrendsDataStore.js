@@ -102,7 +102,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       this.speechesData = [];
       this.speechesTotalHits = 0;
       this.speechesTotalPages = 0;
-      this.speechesErrorMessage = "";
       this.speechesPagination = {
         ...this.speechesPagination,
         page: 1,

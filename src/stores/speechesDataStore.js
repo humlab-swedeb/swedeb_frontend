@@ -66,7 +66,6 @@ export const speechesDataStore = defineStore("speechesData", {
       this.speechesData = [];
       this.totalHits = 0;
       this.totalPages = 0;
-      this.errorMessage = "";
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -172,9 +171,7 @@ export const speechesDataStore = defineStore("speechesData", {
 
       try {
         const queryString = metaDataStore().getSelectedParams();
-        const response = await api.post(
-          `/tools/speeches/query?${queryString}`,
-        );
+        const response = await api.post(`/tools/speeches/query?${queryString}`);
 
         if (requestId !== this.requestSequence) {
           return;
