@@ -4,6 +4,7 @@ import { metaDataStore } from "./metaDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import { downloadDataStore } from "./downloadDataStore";
+import i18n from "src/i18n/sv/index.js";
 
 const DEFAULT_PAGE_SIZE = 50;
 const TICKET_POLL_INTERVAL_MS = 1000;
@@ -80,6 +81,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
+    /**
+     * @deprecated Use getWordTrendsSpeechesTicket() instead for server-side pagination
+     * Legacy method that fetches all speeches in a single request
+     */
     async getWordTrendsSpeeches(search) {
       try {
         const path = `/tools/word_trend_speeches/${search}`;
@@ -98,7 +103,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       this.speechesData = [];
       this.speechesTotalHits = 0;
       this.speechesTotalPages = 0;
-      this.speechesErrorMessage = "";
       this.speechesPagination = {
         ...this.speechesPagination,
         page: 1,
@@ -123,7 +127,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           if (response.data.total_hits != null) {
             this.speechesTotalHits = response.data.total_hits;
           }
-          if (status === "completed") {
+          if (status === "ready") {
             return true;
           }
           if (status === "error") {
@@ -175,12 +179,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.speechesErrorMessage = "Resultaten har gått ut. Vänligen gör en ny sökning.";
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
           this.resetSpeechesTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
         } else {
-          this.speechesErrorMessage = error?.response?.data?.detail || error?.message || "Kunde inte hämta anföranden";
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden";
         }
         console.error("Error fetching speeches page:", error);
         return null;
