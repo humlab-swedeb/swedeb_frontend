@@ -2,7 +2,7 @@
   <q-card flat class="q-px-md background q-pt-sm q-pb-md">
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("wordTrendsIntroTitle")
-    }}</q-item-label>
+      }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
 
@@ -88,12 +88,12 @@ watchEffect(async () => {
     loadingSpeeches.value = true;
     showData.value = false;
     showDataTable.value = false;
-    
+
     const textString = wtStore.generateStringOfSelected();
 
     // Start both API requests in parallel (don't await yet)
     const trendsPromise = wtStore.getWordTrendsResult(textString);
-    const speechesPromise = wtStore.getWordTrendsSpeeches(textString);
+    const speechesPromise = wtStore.getWordTrendsSpeechesTicket(textString);
 
     // Show trends chart/table as soon as trends data arrives (~2s)
     trendsPromise.then(() => {

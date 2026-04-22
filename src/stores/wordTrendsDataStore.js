@@ -80,6 +80,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
+    /**
+     * @deprecated Use getWordTrendsSpeechesTicket() instead for server-side pagination
+     * Legacy method that fetches all speeches in a single request
+     */
     async getWordTrendsSpeeches(search) {
       try {
         const path = `/tools/word_trend_speeches/${search}`;
@@ -175,12 +179,16 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.speechesErrorMessage = "Resultaten har gått ut. Vänligen gör en ny sökning.";
+          this.speechesErrorMessage =
+            "Resultaten har gått ut. Vänligen gör en ny sökning.";
           this.resetSpeechesTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
         } else {
-          this.speechesErrorMessage = error?.response?.data?.detail || error?.message || "Kunde inte hämta anföranden";
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden";
         }
         console.error("Error fetching speeches page:", error);
         return null;
