@@ -127,7 +127,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           if (response.data.total_hits != null) {
             this.speechesTotalHits = response.data.total_hits;
           }
-          if (status === "completed") {
+          if (status === "ready") {
             return true;
           }
           if (status === "error") {
