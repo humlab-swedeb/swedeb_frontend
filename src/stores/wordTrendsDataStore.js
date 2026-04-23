@@ -254,7 +254,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         { params: { format: "csv" }, responseType: "blob" },
       );
       downloadDataStore().setupDownload(
-        "word_trend_speeches.csv",
+        "word_trend_speeches.zip",
         response.data,
       );
     },
