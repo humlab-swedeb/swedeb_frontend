@@ -632,7 +632,7 @@ export default {
     swerik_persons:
       "SWERIK-persons: https://github.com/swerik-project/riksdagen-persons",
     swedeb_ref:
-      "Nedladdat från: https://riksdagsdebatter.se.se/public/index.html#/",
+      "Nedladdat från: https://riksdagsdebatter.se/",
   },
 
   //ACCessibility ------------------------------------------------
