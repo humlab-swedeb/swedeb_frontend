@@ -53,7 +53,7 @@ import wordTrendsSpeechTable from "src/components/wordTrendsSpeechTable.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import i18n from "src/i18n/sv";
 
 const store = metaDataStore();
@@ -81,49 +81,56 @@ onMounted(() => {
 });
 
 
-watchEffect(async () => {
-  if (store.submitEventWT) {
-    // Start loading indicators for both tabs
+watch(
+  () => store.submitEventWT,
+  async (submitRequested) => {
+    if (!submitRequested) {
+      return;
+    }
+
     loadingChart.value = true;
     loadingSpeeches.value = true;
     showData.value = false;
     showDataTable.value = false;
 
-    const textString = wtStore.generateStringOfSelected();
+    const textString = wtStore.generateStringOfSelected().trim();
 
-    // Start both API requests in parallel (don't await yet)
+    if (!textString) {
+      loadingChart.value = false;
+      loadingSpeeches.value = false;
+      store.cancelSubmitWTEvent();
+      return;
+    }
+
     const trendsPromise = wtStore.getWordTrendsResult(textString);
     const speechesPromise = wtStore.getWordTrendsSpeechesTicket(textString);
 
     showData.value = true;
 
-    // Show trends chart/table as soon as trends data arrives (~2s)
     trendsPromise.then(() => {
       showDataTable.value = true;
       dataLoadedTable.value = true;
-      loadingChart.value = false;  // Diagram and Table tabs ready!
+      loadingChart.value = false;
     }).catch((error) => {
       console.error("Error loading trends:", error);
       loadingChart.value = false;
     });
 
-    // Show speeches table as soon as speeches data arrives (~30s)
     speechesPromise.then(() => {
       dataLoaded.value = true;
-      loadingSpeeches.value = false;  // Speech tab ready!
+      loadingSpeeches.value = false;
     }).catch((error) => {
       console.error("Error loading speeches:", error);
       loadingSpeeches.value = false;
     });
 
-    // Wait for both to complete, then reset submit event
     try {
       await Promise.all([trendsPromise, speechesPromise]);
     } finally {
       store.cancelSubmitWTEvent();
     }
-  }
-});
+  },
+);
 </script>
 
 <style scoped></style>

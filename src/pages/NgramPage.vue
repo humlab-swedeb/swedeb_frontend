@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import i18n from "src/i18n/sv";
 import nGramsTable from "src/components/nGramsTable.vue";
 import ShowData from "src/components/ShowData.vue";
@@ -43,14 +43,19 @@ onMounted(() => {
  }
 });
 
-watchEffect(async () => {
-  if (metaStore.submitEventNgrams) {
+watch(
+  () => metaStore.submitEventNgrams,
+  async (submitRequested) => {
+    if (!submitRequested) {
+      return;
+    }
+
     showData.value = false;
     loading.value = true;
     await nGramStore.getNGramsResult(nGramStore.searchText);
     showData.value = true;
     loading.value = false;
     metaStore.cancelSubmitNgramsEvent();
-  }
-});
+  },
+);
 </script>

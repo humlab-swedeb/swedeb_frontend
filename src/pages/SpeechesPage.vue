@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore.js";
 import speechesTable from "src/components/speechesTable.vue";
@@ -39,8 +39,13 @@ onMounted(() => {
   }
 });
 
-watchEffect(async () => {
-  if (metaStore.submitEventSpeeches) {
+watch(
+  () => metaStore.submitEventSpeeches,
+  async (submitRequested) => {
+    if (!submitRequested) {
+      return;
+    }
+
     showData.value = false;
     loading.value = true;
     await speechStore.getSpeechesTicketResult();
@@ -49,6 +54,6 @@ watchEffect(async () => {
       showData.value = true;
     }, 400);
     metaStore.cancelSubmitSpeechesEvent();
-  }
-});
+  },
+);
 </script>
