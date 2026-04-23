@@ -65,10 +65,12 @@ jobs:
             NOTES="See CHANGELOG.md for details"
           else
             # For staging/test, use package.json version with branch suffix
+            # and a namespaced release tag so it does not collide with the
+            # branch name in local git clones.
             VERSION=$(pnpm pkg get version | tr -d '"')
             IS_NEW_RELEASE="true"
             TARBALL="frontend-${BRANCH}.tar.gz"
-            RELEASE_TAG="${BRANCH}"
+            RELEASE_TAG="frontend-${BRANCH}"
             PRERELEASE="true"
             TITLE="${BRANCH^} Build"
             NOTES="Latest ${BRANCH} build (version ${VERSION})"
