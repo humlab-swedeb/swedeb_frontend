@@ -4,9 +4,10 @@
             {{ speechesStore.errorMessage }}
         </q-banner>
     </template>
-    <template v-else-if="
-        speechesStore.speechesData.length > 0 || speechesStore.isPageLoading
-    ">
+    <template v-else-if="showLoadingIndicator">
+        <loadingIcon size="64" />
+    </template>
+    <template v-else-if="speechesStore.speechesData.length > 0">
         <div>
             <div class="row q-py-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
@@ -14,27 +15,21 @@
                     <b>{{ speechesStore.totalHits }}</b>
                     {{ $t("searchResult2") }}
                 </q-item-label>
-                <q-btn-dropdown
-          no-caps
-          icon="download"
-          class="text-grey-8 col-3"
-          color="secondary"
-          :label="$t('downloadSpeech')"
-          style="width: fit-content"
-        >
-          <q-list>
-            <q-item clickable v-close-popup @click="downloadCSV">
-              <q-item-section>
-                <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-close-popup @click="downloadJSON">
-              <q-item-section>
-                <q-item-label>{{ $t("downloadJSON") }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+                <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
+                    :label="$t('downloadSpeech')" style="width: fit-content">
+                    <q-list>
+                        <q-item clickable v-close-popup @click="downloadCSV">
+                            <q-item-section>
+                                <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                        <q-item clickable v-close-popup @click="downloadJSON">
+                            <q-item-section>
+                                <q-item-label>{{ $t("downloadJSON") }}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-btn-dropdown>
             </div>
 
             <q-table ref="SpeechTable" bordered flat :rows="rows" :columns="columns" row-key="id"
@@ -63,7 +58,7 @@
                                 {{
                                     col.value === "[-]"
                                         ? $t("accessibility.metadataMissing")
-                                : col.value
+                                        : col.value
                                 }}
                                 <q-tooltip v-if="col.value !== '[-]'" class="text-subtitle2">
                                     {{ props.row.party_full }}
@@ -99,6 +94,7 @@ import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
+import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
 
 const metaStore = metaDataStore();
@@ -113,6 +109,16 @@ const pagination = computed({
         speechesStore.pagination = value;
     },
 });
+
+const showLoadingIndicator = computed(
+    () =>
+        speechesStore.isLoading ||
+        speechesStore.isPageLoading ||
+        (!!speechesStore.ticketId &&
+            speechesStore.totalHits > 0 &&
+            speechesStore.speechesData.length === 0 &&
+            !speechesStore.errorMessage),
+);
 
 const expandRow = (props) => {
     props.expand = !props.expand;

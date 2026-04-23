@@ -4,9 +4,10 @@
       {{ wtStore.speechesErrorMessage }}
     </q-banner>
   </template>
-  <template
-    v-else-if="wtStore.speechesData.length > 0 || wtStore.speechesIsPageLoading"
-  >
+  <template v-else-if="showLoadingIndicator">
+    <loadingIcon size="64" />
+  </template>
+  <template v-else-if="wtStore.speechesData.length > 0">
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label class="col-9 q-mt-md">
@@ -14,14 +15,8 @@
           <b>{{ wtStore.speechesTotalHits }}</b>
           {{ $t("searchResult2") }}
         </q-item-label>
-        <q-btn-dropdown
-          no-caps
-          icon="download"
-          class="text-grey-8 col-3"
-          color="secondary"
-          :label="$t('downloadSpeech')"
-          style="width: fit-content"
-        >
+        <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
+          :label="$t('downloadSpeech')" style="width: fit-content">
           <q-list>
             <q-item clickable v-close-popup @click="downloadCSV">
               <q-item-section>
@@ -37,29 +32,14 @@
         </q-btn-dropdown>
       </div>
 
-      <q-table
-        ref="SpeechTable"
-        bordered
-        flat
-        :rows="rows"
-        :columns="columns"
-        row-key="id"
-        :rows-per-page-options="[10, 20, 50]"
-        v-model:pagination="pagination"
-        :loading="wtStore.speechesIsLoading || wtStore.speechesIsPageLoading"
-        class="bg-grey-2"
-        @request="onRequest"
-      >
+      <q-table ref="SpeechTable" bordered flat :rows="rows" :columns="columns" row-key="id"
+        :rows-per-page-options="[10, 20, 50]" v-model:pagination="pagination"
+        :loading="wtStore.speechesIsLoading || wtStore.speechesIsPageLoading" class="bg-grey-2" @request="onRequest">
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.label }}
-              <q-icon
-                v-if="col.label === 'Anförande'"
-                name="info_outline"
-                color="accent"
-                class="q-mb-md q-ml-xs"
-              >
+              <q-icon v-if="col.label === 'Anförande'" name="info_outline" color="accent" class="q-mb-md q-ml-xs">
                 <q-tooltip>
                   {{ $t("accessibility.tooltipSpeechID") }}
                 </q-tooltip>
@@ -69,20 +49,10 @@
         </template>
         <template v-slot:body="props">
           <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-            <q-td
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="bg-white"
-              :class="props.expand ? 'bg-grey-3' : ''"
-            >
-              <q-item-label
-                v-if="col.name === 'party'"
-                :class="
-                  col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
-                "
-                :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
-              >
+            <q-td v-for="col in props.cols" :key="col.name" :props="props" class="bg-white"
+              :class="props.expand ? 'bg-grey-3' : ''">
+              <q-item-label v-if="col.name === 'party'" :class="col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
+                " :style="{ color: metaStore.getPartyAbbrevColor(col.value) }">
                 {{
                   col.value === "[-]"
                     ? $t("accessibility.metadataMissing")
@@ -92,37 +62,19 @@
                   {{ props.row.party_full }}
                 </q-tooltip>
               </q-item-label>
-              <q-item-label
-                v-else-if="col.name === 'node_word'"
-                class="text-bold"
-              >
+              <q-item-label v-else-if="col.name === 'node_word'" class="text-bold">
                 {{ col.value }}
               </q-item-label>
-              <q-item-label
-                v-else-if="col.value === 'Okänd' || col.value === 'Okänt'"
-                class="text-italic text-grey-6"
-              >
+              <q-item-label v-else-if="col.value === 'Okänd' || col.value === 'Okänt'" class="text-italic text-grey-6">
                 {{ $t("accessibility.metadataMissing") }}
               </q-item-label>
               <q-item-label v-else>
                 {{ col.value }}
               </q-item-label>
             </q-td>
-            <q-td
-              auto-width
-              class="bg-white"
-              :class="props.expand ? 'bg-grey-3' : ''"
-            >
-              <q-btn
-                size="sm"
-                color="accent"
-                round
-                dense
-                flat
-                :icon="
-                  props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
-                "
-              />
+            <q-td auto-width class="bg-white" :class="props.expand ? 'bg-grey-3' : ''">
+              <q-btn size="sm" color="accent" round dense flat :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                " />
             </q-td>
           </q-tr>
           <expandingTableRow :props="props" />
@@ -140,6 +92,7 @@ import { computed, ref } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
+import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
 
 const metaStore = metaDataStore();
@@ -153,6 +106,16 @@ const pagination = computed({
     wtStore.speechesPagination = value;
   },
 });
+
+const showLoadingIndicator = computed(
+  () =>
+    wtStore.speechesIsLoading ||
+    wtStore.speechesIsPageLoading ||
+    (!!wtStore.ticketId &&
+      wtStore.speechesTotalHits > 0 &&
+      wtStore.speechesData.length === 0 &&
+      !wtStore.speechesErrorMessage),
+);
 
 const expandRow = (props) => {
   props.expand = !props.expand;
