@@ -127,6 +127,8 @@ export default {
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
+  nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
+  allHits: "Alla träffar",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
