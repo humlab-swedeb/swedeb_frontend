@@ -219,12 +219,18 @@ All GitHub releases are now created in the workflow using `gh` CLI for consisten
      - References CHANGELOG.md for release notes
    - For **staging/test branches**:
      - Uses package.json version with branch suffix
-     - Creates/updates pre-release with branch name as tag
+     - Creates/updates pre-release with namespaced tags (`frontend-staging`, `frontend-test`)
      - Includes branch-specific build metadata
 
 2. **Create or update GitHub release** step:
    - For **main**: Creates new versioned release with `--latest` flag
    - For **staging/test**: Creates or updates pre-release with `--prerelease` flag
+
+**Pre-release Tag Naming**:
+- Staging: `frontend-staging`
+- Test: `frontend-test`
+
+These names are intentionally different from the `staging` and `test` branch names to avoid ambiguous local git refs such as `warning: refname 'staging' is ambiguous.`
 
 **Asset Naming**:
 - Main: `frontend-{VERSION}.tar.gz` (e.g., `frontend-1.2.3.tar.gz`)
@@ -263,7 +269,7 @@ FRONTEND_VERSION=latest  # or 'staging', 'test', or specific version like 'v1.2.
 2. Checks if frontend assets exist and match requested version
 3. If needed, downloads tarball from GitHub releases:
    - `latest`: Fetches most recent tagged release
-   - `staging`/`test`: Fetches from pre-release tags
+   - `staging`/`test`: Fetches from pre-release tags `frontend-staging` / `frontend-test`
    - Specific version: Fetches that version's release
 4. Extracts tarball to `/app/public`
 5. Starts API server
@@ -321,9 +327,9 @@ Note: `packages: write` permission is no longer required as we no longer push Do
 - **GitHub Releases**: Versioned with changelog and tarball assets
   - **Production** (main branch): Versioned releases with tags like `v1.2.3`
     - Asset: `frontend-1.2.3.tar.gz`
-  - **Staging** (staging branch): Pre-release with tag `staging`
+  - **Staging** (staging branch): Pre-release with tag `frontend-staging`
     - Asset: `frontend-staging.tar.gz` (no version, always latest)
-  - **Test** (test branch): Pre-release with tag `test`
+  - **Test** (test branch): Pre-release with tag `frontend-test`
     - Asset: `frontend-test.tar.gz` (no version, always latest)
 - **Tarball Assets**: Contain compiled SPA files from `dist/spa/`
 
