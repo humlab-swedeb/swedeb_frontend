@@ -360,9 +360,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     },
 
     generateStringOfSelected() {
-      this.searchString = [...this.wordHitsSelected];
-      this.searchString = this.searchString.join(",");
-      return this.searchString;
+      return this.wordHitsSelected.join(",");
     },
 
     getUniqueWords() {
