@@ -141,7 +141,13 @@ const downloadCSV = async () => {
             `/tools/speeches/download/${speechesStore.ticketId}`,
             { params: { format: "csv" }, responseType: "blob" },
         );
-        downloadStore.setupDownload("speeches.csv", response.data, "text/csv");
+        downloadStore.setupDownload(
+            downloadStore.getFilenameFromDisposition(
+                response.headers,
+                `speeches_${speechesStore.ticketId}.zip`,
+            ),
+            response.data,
+        );
     } catch (error) {
         console.error("Error downloading speeches CSV:", error);
     }
@@ -155,9 +161,11 @@ const downloadJSON = async () => {
             { params: { format: "json" }, responseType: "blob" },
         );
         downloadStore.setupDownload(
-            "speeches.json",
+            downloadStore.getFilenameFromDisposition(
+                response.headers,
+                `speeches_${speechesStore.ticketId}.zip`,
+            ),
             response.data,
-            "application/json",
         );
     } catch (error) {
         console.error("Error downloading speeches JSON:", error);

@@ -260,7 +260,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         { params: { format: "csv" }, responseType: "blob" },
       );
       downloadDataStore().setupDownload(
-        "word_trend_speeches.csv",
+        downloadDataStore().getFilenameFromDisposition(
+          response.headers,
+          `word_trend_speeches_${this.ticketId}.zip`,
+        ),
         response.data,
       );
     },
@@ -269,9 +272,11 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       if (!this.ticketId) return;
       const response = await api.get(
         `/tools/word_trend_speeches/download/${this.ticketId}`,
-        { params: { format: "json" } },
+        { params: { format: "json" }, responseType: "blob" },
       );
-      const speechList = response.data.speech_list || [];
+      const speechList = await downloadDataStore().extractJsonPayloadFromZip(
+        response.data,
+      );
       if (speechList.length === 0) return;
       const headers = [
         "year",

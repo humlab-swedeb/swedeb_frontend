@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
 
@@ -42,6 +43,26 @@ export const downloadDataStore = defineStore("downloadData", {
       }, 1000);
     },
 
+    getFilenameFromDisposition(headers, fallbackName) {
+      const disposition = headers?.["content-disposition"];
+      const match = disposition?.match(/filename="?([^";]+)"?/i);
+      return match?.[1] || fallbackName;
+    },
+
+    async extractJsonPayloadFromZip(blob) {
+      const archive = await JSZip.loadAsync(blob);
+      const payloadName = Object.keys(archive.files).find(
+        (name) => name.endsWith(".json") && name !== "manifest.json",
+      );
+
+      if (!payloadName) {
+        return [];
+      }
+
+      const payload = await archive.file(payloadName).async("string");
+      return JSON.parse(payload);
+    },
+
     async downloadCurrentSpeechText(text, currentMetadata) {
       try {
         const filename = this.formatFileName(currentMetadata);
@@ -74,15 +95,17 @@ export const downloadDataStore = defineStore("downloadData", {
 
     async downloadSpeechesZipByTicket(ticketId) {
       try {
-        const response = await api.post(
-          `tools/speeches/download?ticket_id=${encodeURIComponent(ticketId)}`,
-          null,
+        const response = await api.get(
+          `/tools/speeches/archive/${encodeURIComponent(ticketId)}`,
           {
             responseType: "blob",
-          }
+          },
         );
 
-        this.setupDownload("tal.zip", new Blob([response.data]));
+        this.setupDownload(
+          this.getFilenameFromDisposition(response.headers, `speeches_${ticketId}.zip`),
+          response.data,
+        );
       } catch (error) {
         console.error("Error fetching ticket download:", error);
       }
