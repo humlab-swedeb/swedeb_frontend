@@ -181,6 +181,8 @@ export default {
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
   downloadJSON: "Ladda ner JSON",
+  downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
+  downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
   downloadSpeech: "Tal",
 

@@ -270,38 +270,53 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
 
     async downloadSpeechesExcel() {
       if (!this.ticketId) return;
-      const response = await api.get(
-        `/tools/word_trend_speeches/download/${this.ticketId}`,
-        { params: { format: "json" }, responseType: "blob" },
-      );
-      const speechList = await downloadDataStore().extractJsonPayloadFromZip(
-        response.data,
-      );
-      if (speechList.length === 0) return;
-      const headers = [
-        "year",
-        "name",
-        "party_abbrev",
-        "document_name",
-        "node_word",
-      ];
-      const data = speechList.map((row) => {
-        const newObj = {};
-        headers.forEach((key) => {
-          newObj[key] = row[key] ?? "";
+      this.speechesErrorMessage = "";
+
+      try {
+        const response = await api.get(
+          `/tools/word_trend_speeches/download/${this.ticketId}`,
+          { params: { format: "json" }, responseType: "blob" },
+        );
+        const speechList = await downloadDataStore().extractJsonPayloadFromZip(
+          response.data,
+        );
+        if (speechList.length === 0) return;
+        const headers = [
+          "year",
+          "name",
+          "party_abbrev",
+          "document_name",
+          "node_word",
+        ];
+        const data = speechList.map((row) => {
+          const newObj = {};
+          headers.forEach((key) => {
+            newObj[key] = row[key] ?? "";
+          });
+          return newObj;
         });
-        return newObj;
-      });
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Sheet1");
-      worksheet.columns = headers.map((h) => ({ header: h, key: h }));
-      data.forEach((row) => worksheet.addRow(row));
-      const buffer = await workbook.xlsx.writeBuffer();
-      const zip = new JSZip();
-      zip.file("word_trend_speeches.xlsx", buffer);
-      zip.generateAsync({ type: "blob" }).then((content) => {
-        downloadDataStore().setupDownload("word_trend_speeches.zip", content);
-      });
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Sheet1");
+        worksheet.columns = headers.map((h) => ({ header: h, key: h }));
+        data.forEach((row) => worksheet.addRow(row));
+        const buffer = await workbook.xlsx.writeBuffer();
+        const zip = new JSZip();
+        zip.file("word_trend_speeches.xlsx", buffer);
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          downloadDataStore().setupDownload("word_trend_speeches.zip", content);
+        });
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.resetSpeechesTicketState();
+        } else {
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        console.error("Error downloading word trend speeches Excel:", error);
+      }
     },
 
     async getWordHits(search) {

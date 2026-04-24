@@ -43,24 +43,68 @@ export const downloadDataStore = defineStore("downloadData", {
       }, 1000);
     },
 
+    sanitizeDownloadFilename(filename) {
+      return filename?.replace(/[\\/]/g, "_");
+    },
+
+    decodeRfc5987Value(value) {
+      const match = value?.match(/^([^']*)'([^']*)'(.*)$/);
+      const encodedValue = match ? match[3] : value;
+
+      try {
+        return decodeURIComponent(encodedValue);
+      } catch {
+        return encodedValue;
+      }
+    },
+
     getFilenameFromDisposition(headers, fallbackName) {
       const disposition = headers?.["content-disposition"];
-      const match = disposition?.match(/filename="?([^";]+)"?/i);
-      return match?.[1] || fallbackName;
+
+      const extendedMatch = disposition?.match(/filename\*\s*=\s*([^;]+)/i);
+      if (extendedMatch?.[1]) {
+        const extendedFilename = this.decodeRfc5987Value(
+          extendedMatch[1].trim().replace(/^"(.*)"$/, "$1"),
+        );
+        const sanitizedExtendedFilename = this.sanitizeDownloadFilename(
+          extendedFilename,
+        );
+
+        if (sanitizedExtendedFilename) {
+          return sanitizedExtendedFilename;
+        }
+      }
+
+      const match = disposition?.match(
+        /filename\s*=\s*"([^"]+)"|filename\s*=\s*([^;]+)/i,
+      );
+      const filename = match?.[1] || match?.[2]?.trim();
+
+      return this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName;
     },
 
     async extractJsonPayloadFromZip(blob) {
-      const archive = await JSZip.loadAsync(blob);
-      const payloadName = Object.keys(archive.files).find(
-        (name) => name.endsWith(".json") && name !== "manifest.json",
-      );
+      try {
+        const archive = await JSZip.loadAsync(blob);
+        const payloadName = Object.keys(archive.files).find(
+          (name) => name.endsWith(".json") && name !== "manifest.json",
+        );
 
-      if (!payloadName) {
+        if (!payloadName) {
+          return [];
+        }
+
+        const payloadFile = archive.file(payloadName);
+        if (!payloadFile) {
+          return [];
+        }
+
+        const payload = await payloadFile.async("string");
+        return JSON.parse(payload);
+      } catch (error) {
+        console.error("Error extracting JSON payload from zip:", error);
         return [];
       }
-
-      const payload = await archive.file(payloadName).async("string");
-      return JSON.parse(payload);
     },
 
     async downloadCurrentSpeechText(text, currentMetadata) {

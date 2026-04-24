@@ -18,14 +18,14 @@
                 <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
                     :label="$t('downloadSpeech')" style="width: fit-content">
                     <q-list>
-                        <q-item clickable v-close-popup @click="downloadCSV">
+                        <q-item clickable v-close-popup @click="downloadCsvArchive">
                             <q-item-section>
-                                <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+                                <q-item-label>{{ $t("downloadSpeechCsvArchive") }}</q-item-label>
                             </q-item-section>
                         </q-item>
-                        <q-item clickable v-close-popup @click="downloadJSON">
+                        <q-item clickable v-close-popup @click="downloadJsonArchive">
                             <q-item-section>
-                                <q-item-label>{{ $t("downloadJSON") }}</q-item-label>
+                                <q-item-label>{{ $t("downloadSpeechJsonArchive") }}</q-item-label>
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -134,7 +134,7 @@ const onRequest = async ({ pagination }) => {
     });
 };
 
-const downloadCSV = async () => {
+const downloadCsvArchive = async () => {
     if (!speechesStore.ticketId) return;
     try {
         const response = await api.get(
@@ -149,11 +149,11 @@ const downloadCSV = async () => {
             response.data,
         );
     } catch (error) {
-        console.error("Error downloading speeches CSV:", error);
+        console.error("Error downloading speeches CSV archive:", error);
     }
 };
 
-const downloadJSON = async () => {
+const downloadJsonArchive = async () => {
     if (!speechesStore.ticketId) return;
     try {
         const response = await api.get(
@@ -168,7 +168,7 @@ const downloadJSON = async () => {
             response.data,
         );
     } catch (error) {
-        console.error("Error downloading speeches JSON:", error);
+        console.error("Error downloading speeches JSON archive:", error);
     }
 };
 
