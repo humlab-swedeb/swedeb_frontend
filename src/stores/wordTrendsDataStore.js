@@ -1,14 +1,17 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import axios from "axios";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import { downloadDataStore } from "./downloadDataStore";
 import i18n from "src/i18n/sv/index.js";
+import {
+  getTicketPollDelayMs,
+  TICKET_POLL_MAX_ATTEMPTS,
+} from "./ticketPolling";
 
 const DEFAULT_PAGE_SIZE = 50;
-const TICKET_POLL_INTERVAL_MS = 1000;
-const TICKET_POLL_MAX_ATTEMPTS = 120;
 
 const SORT_FIELD_MAP = {
   speaker: "name",
@@ -115,9 +118,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         if (requestId !== this.requestSequence) {
           return false;
         }
-        await new Promise((resolve) =>
-          setTimeout(resolve, TICKET_POLL_INTERVAL_MS),
-        );
         try {
           const response = await api.get(
             `/tools/word_trend_speeches/status/${this.ticketId}`,
@@ -135,6 +135,12 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
               response.data.error || "Okänt fel vid hämtning av anföranden.";
             return false;
           }
+
+          const delayMs = getTicketPollDelayMs(
+            attempt,
+            response.headers?.["retry-after"],
+          );
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
         } catch (error) {
           console.error("Error polling speeches ticket status:", error);
           return false;
@@ -254,7 +260,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         { params: { format: "csv" }, responseType: "blob" },
       );
       downloadDataStore().setupDownload(
-        "word_trend_speeches.zip",
+        "word_trend_speeches.csv",
         response.data,
       );
     },

@@ -6,11 +6,13 @@ import { downloadDataStore } from "./downloadDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import i18n from "src/i18n/sv/index.js";
+import {
+  getTicketPollDelayMs,
+  TICKET_POLL_MAX_ATTEMPTS,
+} from "./ticketPolling";
 
 const DEFAULT_ROWS_PER_PAGE = 10;
 const DEFAULT_SORT_BY = "protocol";
-const TICKET_POLL_INTERVAL_MS = 1000;
-const TICKET_POLL_MAX_ATTEMPTS = 120;
 
 const SORT_FIELD_MAP = {
   left_word: "left_word",
@@ -140,8 +142,12 @@ export const kwicDataStore = defineStore("kwicData", {
           throw new Error(response.data.error || "KWIC query failed");
         }
 
+        const delayMs = getTicketPollDelayMs(
+          attempt,
+          response.headers?.["retry-after"],
+        );
         await new Promise((resolve) => {
-          window.setTimeout(resolve, TICKET_POLL_INTERVAL_MS);
+          window.setTimeout(resolve, delayMs);
         });
       }
 
