@@ -372,9 +372,17 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     async downloadKWICTableExcel(selectedMetadata) {
-      const exportRows = await this.getExportRows();
+      this.errorMessage = "";
 
-      if (exportRows.length > 0) {
+      try {
+        const exportRows = await this.getExportRows();
+
+        if (exportRows.length === 0) {
+          this.errorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
+
         const data = exportRows.map((obj) => {
           let newObj = {};
           Object.keys(this.columnNames).forEach((key) => {
@@ -399,16 +407,33 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("kwicData.xlsx", buffer);
         zip.file("metadata.txt", selectedMetadata);
 
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          downloadDataStore().setupDownload("kwicExcel.zip", content);
-        });
+        const content = await zip.generateAsync({ type: "blob" });
+        downloadDataStore().setupDownload("kwicExcel.zip", content);
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        console.error("Error downloading KWIC Excel:", error);
+        return false;
       }
     },
 
     async downloadKWICTableCSV(selectedMetadata) {
-      const exportRows = await this.getExportRows();
+      this.errorMessage = "";
 
-      if (exportRows.length > 0) {
+      try {
+        const exportRows = await this.getExportRows();
+
+        if (exportRows.length === 0) {
+          this.errorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
+
         const headerRow = Object.values(this.columnNames).join(",");
 
         const dataRows = exportRows
@@ -427,9 +452,18 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("kwicData.csv", csvContent);
         zip.file("metadata.txt", selectedMetadata);
 
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          downloadDataStore().setupDownload("kwicCSV.zip", content);
-        });
+        const content = await zip.generateAsync({ type: "blob" });
+        downloadDataStore().setupDownload("kwicCSV.zip", content);
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        console.error("Error downloading KWIC CSV:", error);
+        return false;
       }
     },
   },

@@ -1,11 +1,125 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import JSZip from "jszip";
+import { Notify } from "quasar";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
 
 export const downloadDataStore = defineStore("downloadData", {
+  state: () => ({
+    activeDownloads: {},
+  }),
+
   actions: {
+    isDownloadActive(downloadKey) {
+      return Boolean(this.activeDownloads[downloadKey]);
+    },
+
+    setDownloadActive(downloadKey, isActive) {
+      if (!downloadKey) {
+        return;
+      }
+
+      if (isActive) {
+        this.activeDownloads = {
+          ...this.activeDownloads,
+          [downloadKey]: true,
+        };
+        return;
+      }
+
+      const nextActiveDownloads = { ...this.activeDownloads };
+      delete nextActiveDownloads[downloadKey];
+      this.activeDownloads = nextActiveDownloads;
+    },
+
+    getDownloadFeedbackMessages() {
+      return {
+        preparing:
+          i18n.downloadFeedback?.preparing || "Förbereder nedladdning...",
+        success: i18n.downloadFeedback?.success || "Nedladdningen har startat.",
+        error:
+          i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.",
+      };
+    },
+
+    getDownloadErrorMessage(error, fallbackMessage) {
+      return error?.response?.data?.detail || error?.message || fallbackMessage;
+    },
+
+    async runTrackedDownload(downloadKey, task, options = {}) {
+      if (!downloadKey || this.isDownloadActive(downloadKey)) {
+        return false;
+      }
+
+      const messages = this.getDownloadFeedbackMessages();
+      const preparingMessage = options.preparingMessage || messages.preparing;
+      const successMessage = options.successMessage || messages.success;
+      const resolveErrorMessage = () => {
+        const optionErrorMessage =
+          typeof options.getErrorMessage === "function"
+            ? options.getErrorMessage()
+            : options.errorMessage;
+
+        return optionErrorMessage || messages.error;
+      };
+
+      let dismissPreparingNotify = null;
+      let taskError = null;
+      let wasSuccessful = false;
+
+      this.setDownloadActive(downloadKey, true);
+      dismissPreparingNotify = Notify.create({
+        spinner: true,
+        message: preparingMessage,
+        timeout: 0,
+        position: "top",
+      });
+
+      try {
+        const result = await task();
+        wasSuccessful = result !== false;
+      } catch (error) {
+        taskError = error;
+      } finally {
+        if (typeof dismissPreparingNotify === "function") {
+          dismissPreparingNotify();
+        }
+        this.setDownloadActive(downloadKey, false);
+      }
+
+      if (taskError) {
+        Notify.create({
+          type: "negative",
+          message: this.getDownloadErrorMessage(
+            taskError,
+            resolveErrorMessage(),
+          ),
+          timeout: 3000,
+          position: "top",
+        });
+        return false;
+      }
+
+      if (!wasSuccessful) {
+        Notify.create({
+          type: "negative",
+          message: resolveErrorMessage(),
+          timeout: 3000,
+          position: "top",
+        });
+        return false;
+      }
+
+      Notify.create({
+        type: "positive",
+        message: successMessage,
+        timeout: 1500,
+        position: "top",
+      });
+      return true;
+    },
+
     formatProps(currentProps) {
       const speaker = `Talare: ${currentProps.speaker}`;
       const hit = `Sökord ${currentProps.node_word}`;
@@ -66,9 +180,8 @@ export const downloadDataStore = defineStore("downloadData", {
         const extendedFilename = this.decodeRfc5987Value(
           extendedMatch[1].trim().replace(/^"(.*)"$/, "$1"),
         );
-        const sanitizedExtendedFilename = this.sanitizeDownloadFilename(
-          extendedFilename,
-        );
+        const sanitizedExtendedFilename =
+          this.sanitizeDownloadFilename(extendedFilename);
 
         if (sanitizedExtendedFilename) {
           return sanitizedExtendedFilename;
@@ -80,7 +193,9 @@ export const downloadDataStore = defineStore("downloadData", {
       );
       const filename = match?.[1] || match?.[2]?.trim();
 
-      return this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName;
+      return (
+        this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName
+      );
     },
 
     async extractJsonPayloadFromZip(blob) {
@@ -132,8 +247,10 @@ export const downloadDataStore = defineStore("downloadData", {
         });
 
         this.setupDownload("tal.zip", new Blob([response.data]));
+        return true;
       } catch (error) {
         console.error("Error fetching data for download:", error);
+        return false;
       }
     },
 
@@ -147,11 +264,16 @@ export const downloadDataStore = defineStore("downloadData", {
         );
 
         this.setupDownload(
-          this.getFilenameFromDisposition(response.headers, `speeches_${ticketId}.zip`),
+          this.getFilenameFromDisposition(
+            response.headers,
+            `speeches_${ticketId}.zip`,
+          ),
           response.data,
         );
+        return true;
       } catch (error) {
         console.error("Error fetching ticket download:", error);
+        return false;
       }
     },
   },

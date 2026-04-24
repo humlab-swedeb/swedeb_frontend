@@ -185,6 +185,11 @@ export default {
   downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
   downloadSpeech: "Tal",
+  downloadFeedback: {
+    preparing: "Förbereder nedladdning...",
+    success: "Nedladdningen har startat.",
+    error: "Kunde inte starta nedladdningen.",
+  },
 
   kwicLable: {
     left_word: "Vänster",
