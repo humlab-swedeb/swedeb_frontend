@@ -330,6 +330,17 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     async fetchKwicExportData() {
+      if (this.useTicketFlow && this.ticketId) {
+        const response = await api.get(
+          `/tools/kwic/download/${this.ticketId}`,
+          {
+            params: { format: "json" },
+            responseType: "blob",
+          },
+        );
+        return downloadDataStore().extractJsonPayloadFromZip(response.data);
+      }
+
       const normalizedSearch = this.normalizeSearch(this.searchText);
 
       if (!normalizedSearch) {
@@ -357,7 +368,7 @@ export const kwicDataStore = defineStore("kwicData", {
         return this.fetchKwicExportData();
       }
 
-      return this.kwicData;
+      return this.kwicData || [];
     },
 
     async downloadKWICTableExcel(selectedMetadata) {

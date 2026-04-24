@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
 
@@ -42,6 +43,70 @@ export const downloadDataStore = defineStore("downloadData", {
       }, 1000);
     },
 
+    sanitizeDownloadFilename(filename) {
+      return filename?.replace(/[\\/]/g, "_");
+    },
+
+    decodeRfc5987Value(value) {
+      const match = value?.match(/^([^']*)'([^']*)'(.*)$/);
+      const encodedValue = match ? match[3] : value;
+
+      try {
+        return decodeURIComponent(encodedValue);
+      } catch {
+        return encodedValue;
+      }
+    },
+
+    getFilenameFromDisposition(headers, fallbackName) {
+      const disposition = headers?.["content-disposition"];
+
+      const extendedMatch = disposition?.match(/filename\*\s*=\s*([^;]+)/i);
+      if (extendedMatch?.[1]) {
+        const extendedFilename = this.decodeRfc5987Value(
+          extendedMatch[1].trim().replace(/^"(.*)"$/, "$1"),
+        );
+        const sanitizedExtendedFilename = this.sanitizeDownloadFilename(
+          extendedFilename,
+        );
+
+        if (sanitizedExtendedFilename) {
+          return sanitizedExtendedFilename;
+        }
+      }
+
+      const match = disposition?.match(
+        /filename\s*=\s*"([^"]+)"|filename\s*=\s*([^;]+)/i,
+      );
+      const filename = match?.[1] || match?.[2]?.trim();
+
+      return this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName;
+    },
+
+    async extractJsonPayloadFromZip(blob) {
+      try {
+        const archive = await JSZip.loadAsync(blob);
+        const payloadName = Object.keys(archive.files).find(
+          (name) => name.endsWith(".json") && name !== "manifest.json",
+        );
+
+        if (!payloadName) {
+          return [];
+        }
+
+        const payloadFile = archive.file(payloadName);
+        if (!payloadFile) {
+          return [];
+        }
+
+        const payload = await payloadFile.async("string");
+        return JSON.parse(payload);
+      } catch (error) {
+        console.error("Error extracting JSON payload from zip:", error);
+        return [];
+      }
+    },
+
     async downloadCurrentSpeechText(text, currentMetadata) {
       try {
         const filename = this.formatFileName(currentMetadata);
@@ -74,15 +139,17 @@ export const downloadDataStore = defineStore("downloadData", {
 
     async downloadSpeechesZipByTicket(ticketId) {
       try {
-        const response = await api.post(
-          `tools/speeches/download?ticket_id=${encodeURIComponent(ticketId)}`,
-          null,
+        const response = await api.get(
+          `/tools/speeches/archive/${encodeURIComponent(ticketId)}`,
           {
             responseType: "blob",
-          }
+          },
         );
 
-        this.setupDownload("tal.zip", new Blob([response.data]));
+        this.setupDownload(
+          this.getFilenameFromDisposition(response.headers, `speeches_${ticketId}.zip`),
+          response.data,
+        );
       } catch (error) {
         console.error("Error fetching ticket download:", error);
       }
