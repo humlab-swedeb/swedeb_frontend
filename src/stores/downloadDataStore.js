@@ -69,14 +69,14 @@ export const downloadDataStore = defineStore("downloadData", {
       let wasSuccessful = false;
 
       this.setDownloadActive(downloadKey, true);
-      dismissPreparingNotify = Notify.create({
-        spinner: true,
-        message: preparingMessage,
-        timeout: 0,
-        position: "top",
-      });
 
       try {
+        dismissPreparingNotify = Notify.create({
+          spinner: true,
+          message: preparingMessage,
+          timeout: 0,
+          position: "top",
+        });
         const result = await task();
         wasSuccessful = result !== false;
       } catch (error) {
