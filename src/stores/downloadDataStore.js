@@ -37,11 +37,9 @@ export const downloadDataStore = defineStore("downloadData", {
       return {
         preparing:
           i18n.downloadFeedback?.preparing || "Förbereder nedladdning...",
-        success:
-          i18n.downloadFeedback?.success || "Nedladdningen har startat.",
+        success: i18n.downloadFeedback?.success || "Nedladdningen har startat.",
         error:
-          i18n.downloadFeedback?.error ||
-          "Kunde inte starta nedladdningen.",
+          i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.",
       };
     },
 
@@ -66,45 +64,60 @@ export const downloadDataStore = defineStore("downloadData", {
         return optionErrorMessage || messages.error;
       };
 
+      let dismissPreparingNotify = null;
+      let taskError = null;
+      let wasSuccessful = false;
+
       this.setDownloadActive(downloadKey, true);
-      Notify.create({
+      dismissPreparingNotify = Notify.create({
         spinner: true,
         message: preparingMessage,
-        timeout: 1200,
+        timeout: 0,
         position: "top",
       });
 
       try {
         const result = await task();
-
-        if (result === false) {
-          Notify.create({
-            type: "negative",
-            message: resolveErrorMessage(),
-            timeout: 3000,
-            position: "top",
-          });
-          return false;
-        }
-
-        Notify.create({
-          type: "positive",
-          message: successMessage,
-          timeout: 1500,
-          position: "top",
-        });
-        return true;
+        wasSuccessful = result !== false;
       } catch (error) {
+        taskError = error;
+      } finally {
+        if (typeof dismissPreparingNotify === "function") {
+          dismissPreparingNotify();
+        }
+        this.setDownloadActive(downloadKey, false);
+      }
+
+      if (taskError) {
         Notify.create({
           type: "negative",
-          message: this.getDownloadErrorMessage(error, resolveErrorMessage()),
+          message: this.getDownloadErrorMessage(
+            taskError,
+            resolveErrorMessage(),
+          ),
           timeout: 3000,
           position: "top",
         });
         return false;
-      } finally {
-        this.setDownloadActive(downloadKey, false);
       }
+
+      if (!wasSuccessful) {
+        Notify.create({
+          type: "negative",
+          message: resolveErrorMessage(),
+          timeout: 3000,
+          position: "top",
+        });
+        return false;
+      }
+
+      Notify.create({
+        type: "positive",
+        message: successMessage,
+        timeout: 1500,
+        position: "top",
+      });
+      return true;
     },
 
     formatProps(currentProps) {
@@ -167,9 +180,8 @@ export const downloadDataStore = defineStore("downloadData", {
         const extendedFilename = this.decodeRfc5987Value(
           extendedMatch[1].trim().replace(/^"(.*)"$/, "$1"),
         );
-        const sanitizedExtendedFilename = this.sanitizeDownloadFilename(
-          extendedFilename,
-        );
+        const sanitizedExtendedFilename =
+          this.sanitizeDownloadFilename(extendedFilename);
 
         if (sanitizedExtendedFilename) {
           return sanitizedExtendedFilename;
@@ -181,7 +193,9 @@ export const downloadDataStore = defineStore("downloadData", {
       );
       const filename = match?.[1] || match?.[2]?.trim();
 
-      return this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName;
+      return (
+        this.sanitizeDownloadFilename(filename || fallbackName) || fallbackName
+      );
     },
 
     async extractJsonPayloadFromZip(blob) {
@@ -250,7 +264,10 @@ export const downloadDataStore = defineStore("downloadData", {
         );
 
         this.setupDownload(
-          this.getFilenameFromDisposition(response.headers, `speeches_${ticketId}.zip`),
+          this.getFilenameFromDisposition(
+            response.headers,
+            `speeches_${ticketId}.zip`,
+          ),
           response.data,
         );
         return true;
