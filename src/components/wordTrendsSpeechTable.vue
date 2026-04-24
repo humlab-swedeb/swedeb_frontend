@@ -18,14 +18,20 @@
         <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
           :label="$t('downloadSpeech')" style="width: fit-content">
           <q-list>
-            <q-item clickable v-close-popup @click="downloadCSV">
+            <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.csv)" @click="downloadCSV">
               <q-item-section>
-                <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+                <q-item-label class="row items-center no-wrap">
+                  <q-spinner-tail v-if="isDownloadActive(downloadKeys.csv)" size="16px" class="q-mr-sm" />
+                  {{ $t("downloadCSV") }}
+                </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup @click="downloadExcel">
+            <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.excel)" @click="downloadExcel">
               <q-item-section>
-                <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+                <q-item-label class="row items-center no-wrap">
+                  <q-spinner-tail v-if="isDownloadActive(downloadKeys.excel)" size="16px" class="q-mr-sm" />
+                  {{ $t("downloadExcel") }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -89,14 +95,21 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
 
+const downloadStore = downloadDataStore();
 const metaStore = metaDataStore();
 const wtStore = wordTrendsDataStore();
+
+const downloadKeys = {
+  csv: "word-trends-speeches-csv",
+  excel: "word-trends-speeches-excel",
+};
 
 const SpeechTable = ref(null);
 
@@ -131,12 +144,21 @@ const onRequest = async ({ pagination }) => {
   });
 };
 
+const isDownloadActive = (downloadKey) =>
+  downloadStore.isDownloadActive(downloadKey);
+
 const downloadCSV = async () => {
-  await wtStore.downloadSpeechesCSV();
+  await downloadStore.runTrackedDownload(downloadKeys.csv, () =>
+    wtStore.downloadSpeechesCSV(), {
+    getErrorMessage: () => wtStore.speechesErrorMessage,
+  });
 };
 
 const downloadExcel = async () => {
-  await wtStore.downloadSpeechesExcel();
+  await downloadStore.runTrackedDownload(downloadKeys.excel, () =>
+    wtStore.downloadSpeechesExcel(), {
+    getErrorMessage: () => wtStore.speechesErrorMessage,
+  });
 };
 
 const rows = computed(() =>

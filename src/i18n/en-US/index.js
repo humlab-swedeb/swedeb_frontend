@@ -7,6 +7,11 @@ export default {
   kwicFetchError: "Could not load KWIC results.",
   downloadSpeechCsvArchive: "Download CSV archive (.zip)",
   downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+  downloadFeedback: {
+    preparing: "Preparing download...",
+    success: "The download has started.",
+    error: "Could not start the download.",
+  },
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",

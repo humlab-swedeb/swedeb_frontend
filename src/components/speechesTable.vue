@@ -18,14 +18,20 @@
                 <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
                     :label="$t('downloadSpeech')" style="width: fit-content">
                     <q-list>
-                        <q-item clickable v-close-popup @click="downloadCsvArchive">
+                        <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.csv)" @click="downloadCsvArchive">
                             <q-item-section>
-                                <q-item-label>{{ $t("downloadSpeechCsvArchive") }}</q-item-label>
+                                <q-item-label class="row items-center no-wrap">
+                                    <q-spinner-tail v-if="isDownloadActive(downloadKeys.csv)" size="16px" class="q-mr-sm" />
+                                    {{ $t("downloadSpeechCsvArchive") }}
+                                </q-item-label>
                             </q-item-section>
                         </q-item>
-                        <q-item clickable v-close-popup @click="downloadJsonArchive">
+                        <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.json)" @click="downloadJsonArchive">
                             <q-item-section>
-                                <q-item-label>{{ $t("downloadSpeechJsonArchive") }}</q-item-label>
+                                <q-item-label class="row items-center no-wrap">
+                                    <q-spinner-tail v-if="isDownloadActive(downloadKeys.json)" size="16px" class="q-mr-sm" />
+                                    {{ $t("downloadSpeechJsonArchive") }}
+                                </q-item-label>
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -90,6 +96,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { api } from "boot/axios";
+import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -100,6 +107,11 @@ import noResults from "src/components/noResults.vue";
 const metaStore = metaDataStore();
 const speechesStore = speechesDataStore();
 const downloadStore = downloadDataStore();
+
+const downloadKeys = {
+    csv: "speeches-archive-csv",
+    json: "speeches-archive-json",
+};
 
 const SpeechTable = ref(null);
 
@@ -134,42 +146,52 @@ const onRequest = async ({ pagination }) => {
     });
 };
 
-const downloadCsvArchive = async () => {
+const isDownloadActive = (downloadKey) =>
+    downloadStore.isDownloadActive(downloadKey);
+
+const downloadArchive = async (downloadKey, format) => {
     if (!speechesStore.ticketId) return;
-    try {
-        const response = await api.get(
-            `/tools/speeches/download/${speechesStore.ticketId}`,
-            { params: { format: "csv" }, responseType: "blob" },
-        );
-        downloadStore.setupDownload(
-            downloadStore.getFilenameFromDisposition(
-                response.headers,
-                `speeches_${speechesStore.ticketId}.zip`,
-            ),
-            response.data,
-        );
-    } catch (error) {
-        console.error("Error downloading speeches CSV archive:", error);
-    }
+
+    await downloadStore.runTrackedDownload(downloadKey, async () => {
+        speechesStore.errorMessage = "";
+
+        try {
+            const response = await api.get(
+                `/tools/speeches/download/${speechesStore.ticketId}`,
+                { params: { format }, responseType: "blob" },
+            );
+            downloadStore.setupDownload(
+                downloadStore.getFilenameFromDisposition(
+                    response.headers,
+                    `speeches_${speechesStore.ticketId}.zip`,
+                ),
+                response.data,
+            );
+            return true;
+        } catch (error) {
+            if (error.response?.status === 404) {
+                speechesStore.errorMessage = i18n.accessibility.ticketExpired;
+                speechesStore.resetTicketState();
+            } else {
+                speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(
+                    error,
+                    "Kunde inte hämta anföranden.",
+                );
+            }
+            console.error(`Error downloading speeches ${format} archive:`, error);
+            return false;
+        }
+    }, {
+        getErrorMessage: () => speechesStore.errorMessage,
+    });
+};
+
+const downloadCsvArchive = async () => {
+    await downloadArchive(downloadKeys.csv, "csv");
 };
 
 const downloadJsonArchive = async () => {
-    if (!speechesStore.ticketId) return;
-    try {
-        const response = await api.get(
-            `/tools/speeches/download/${speechesStore.ticketId}`,
-            { params: { format: "json" }, responseType: "blob" },
-        );
-        downloadStore.setupDownload(
-            downloadStore.getFilenameFromDisposition(
-                response.headers,
-                `speeches_${speechesStore.ticketId}.zip`,
-            ),
-            response.data,
-        );
-    } catch (error) {
-        console.error("Error downloading speeches JSON archive:", error);
-    }
+    await downloadArchive(downloadKeys.json, "json");
 };
 
 const rows = computed(() =>

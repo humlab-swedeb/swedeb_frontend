@@ -12,19 +12,28 @@
       <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary" :label="$t('downloadKWIC')"
         style="width: fit-content">
         <q-list>
-          <q-item clickable v-close-popup @click="downloadKWICTableAsCSV">
+          <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.csv)" @click="downloadKWICTableAsCSV">
             <q-item-section>
-              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail v-if="isDownloadActive(downloadKeys.csv)" size="16px" class="q-mr-sm" />
+                {{ $t("downloadCSV") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
-          <q-item clickable v-close-popup @click="downloadKWICTableAsExcel">
+          <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.excel)" @click="downloadKWICTableAsExcel">
             <q-item-section>
-              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail v-if="isDownloadActive(downloadKeys.excel)" size="16px" class="q-mr-sm" />
+                {{ $t("downloadExcel") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
-          <q-item clickable v-close-popup @click="downloadKWICAsSpeeches">
+          <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.speeches)" @click="downloadKWICAsSpeeches">
             <q-item-section>
-              <q-item-label>{{ $t("downloadSpeech") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail v-if="isDownloadActive(downloadKeys.speeches)" size="16px" class="q-mr-sm" />
+                {{ $t("downloadSpeech") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -112,6 +121,12 @@ const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
 
+const downloadKeys = {
+  csv: "kwic-csv",
+  excel: "kwic-excel",
+  speeches: "kwic-speeches",
+};
+
 const KWICTable = ref(null);
 
 const pagination = computed({
@@ -152,22 +167,37 @@ const getParamString = () => {
   return metaStore.selectedMetadataToText("kwic");
 };
 
+const isDownloadActive = (downloadKey) =>
+  downloadStore.isDownloadActive(downloadKey);
+
 const downloadKWICTableAsExcel = async () => {
-  await kwicStore.downloadKWICTableExcel(getParamString());
+  await downloadStore.runTrackedDownload(downloadKeys.excel, () =>
+    kwicStore.downloadKWICTableExcel(getParamString()), {
+    getErrorMessage: () => kwicStore.errorMessage,
+  });
 };
 
 const downloadKWICTableAsCSV = async () => {
-  await kwicStore.downloadKWICTableCSV(getParamString());
+  await downloadStore.runTrackedDownload(downloadKeys.csv, () =>
+    kwicStore.downloadKWICTableCSV(getParamString()), {
+    getErrorMessage: () => kwicStore.errorMessage,
+  });
 };
 
-const downloadKWICAsSpeeches = () => {
+const downloadKWICAsSpeeches = async () => {
   if (kwicStore.useTicketFlow && kwicStore.ticketId) {
-    downloadStore.downloadSpeechesZipByTicket(kwicStore.ticketId);
+    await downloadStore.runTrackedDownload(downloadKeys.speeches, () =>
+      downloadStore.downloadSpeechesZipByTicket(kwicStore.ticketId), {
+      getErrorMessage: () => kwicStore.errorMessage,
+    });
     return;
   }
 
   const allIds = rows.value.map((row) => row.id);
-  downloadStore.downloadSpeechesZip(allIds);
+  await downloadStore.runTrackedDownload(downloadKeys.speeches, () =>
+    downloadStore.downloadSpeechesZip(allIds), {
+    getErrorMessage: () => kwicStore.errorMessage,
+  });
 };
 
 const rows = computed(() =>

@@ -254,22 +254,39 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     },
 
     async downloadSpeechesCSV() {
-      if (!this.ticketId) return;
-      const response = await api.get(
-        `/tools/word_trend_speeches/download/${this.ticketId}`,
-        { params: { format: "csv" }, responseType: "blob" },
-      );
-      downloadDataStore().setupDownload(
-        downloadDataStore().getFilenameFromDisposition(
-          response.headers,
-          `word_trend_speeches_${this.ticketId}.zip`,
-        ),
-        response.data,
-      );
+      if (!this.ticketId) return false;
+      this.speechesErrorMessage = "";
+
+      try {
+        const response = await api.get(
+          `/tools/word_trend_speeches/download/${this.ticketId}`,
+          { params: { format: "csv" }, responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            response.headers,
+            `word_trend_speeches_${this.ticketId}.zip`,
+          ),
+          response.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.resetSpeechesTicketState();
+        } else {
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        console.error("Error downloading word trend speeches CSV:", error);
+        return false;
+      }
     },
 
     async downloadSpeechesExcel() {
-      if (!this.ticketId) return;
+      if (!this.ticketId) return false;
       this.speechesErrorMessage = "";
 
       try {
@@ -280,7 +297,11 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const speechList = await downloadDataStore().extractJsonPayloadFromZip(
           response.data,
         );
-        if (speechList.length === 0) return;
+        if (speechList.length === 0) {
+          this.speechesErrorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
         const headers = [
           "year",
           "name",
@@ -302,9 +323,9 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const buffer = await workbook.xlsx.writeBuffer();
         const zip = new JSZip();
         zip.file("word_trend_speeches.xlsx", buffer);
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          downloadDataStore().setupDownload("word_trend_speeches.zip", content);
-        });
+        const content = await zip.generateAsync({ type: "blob" });
+        downloadDataStore().setupDownload("word_trend_speeches.zip", content);
+        return true;
       } catch (error) {
         if (error.response?.status === 404) {
           this.speechesErrorMessage = i18n.accessibility.ticketExpired;
@@ -316,6 +337,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
             "Kunde inte hämta anföranden.";
         }
         console.error("Error downloading word trend speeches Excel:", error);
+        return false;
       }
     },
 

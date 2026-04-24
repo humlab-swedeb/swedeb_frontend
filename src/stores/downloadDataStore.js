@@ -1,11 +1,112 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import JSZip from "jszip";
+import { Notify } from "quasar";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
 
 export const downloadDataStore = defineStore("downloadData", {
+  state: () => ({
+    activeDownloads: {},
+  }),
+
   actions: {
+    isDownloadActive(downloadKey) {
+      return Boolean(this.activeDownloads[downloadKey]);
+    },
+
+    setDownloadActive(downloadKey, isActive) {
+      if (!downloadKey) {
+        return;
+      }
+
+      if (isActive) {
+        this.activeDownloads = {
+          ...this.activeDownloads,
+          [downloadKey]: true,
+        };
+        return;
+      }
+
+      const nextActiveDownloads = { ...this.activeDownloads };
+      delete nextActiveDownloads[downloadKey];
+      this.activeDownloads = nextActiveDownloads;
+    },
+
+    getDownloadFeedbackMessages() {
+      return {
+        preparing:
+          i18n.downloadFeedback?.preparing || "Förbereder nedladdning...",
+        success:
+          i18n.downloadFeedback?.success || "Nedladdningen har startat.",
+        error:
+          i18n.downloadFeedback?.error ||
+          "Kunde inte starta nedladdningen.",
+      };
+    },
+
+    getDownloadErrorMessage(error, fallbackMessage) {
+      return error?.response?.data?.detail || error?.message || fallbackMessage;
+    },
+
+    async runTrackedDownload(downloadKey, task, options = {}) {
+      if (!downloadKey || this.isDownloadActive(downloadKey)) {
+        return false;
+      }
+
+      const messages = this.getDownloadFeedbackMessages();
+      const preparingMessage = options.preparingMessage || messages.preparing;
+      const successMessage = options.successMessage || messages.success;
+      const resolveErrorMessage = () => {
+        const optionErrorMessage =
+          typeof options.getErrorMessage === "function"
+            ? options.getErrorMessage()
+            : options.errorMessage;
+
+        return optionErrorMessage || messages.error;
+      };
+
+      this.setDownloadActive(downloadKey, true);
+      Notify.create({
+        spinner: true,
+        message: preparingMessage,
+        timeout: 1200,
+        position: "top",
+      });
+
+      try {
+        const result = await task();
+
+        if (result === false) {
+          Notify.create({
+            type: "negative",
+            message: resolveErrorMessage(),
+            timeout: 3000,
+            position: "top",
+          });
+          return false;
+        }
+
+        Notify.create({
+          type: "positive",
+          message: successMessage,
+          timeout: 1500,
+          position: "top",
+        });
+        return true;
+      } catch (error) {
+        Notify.create({
+          type: "negative",
+          message: this.getDownloadErrorMessage(error, resolveErrorMessage()),
+          timeout: 3000,
+          position: "top",
+        });
+        return false;
+      } finally {
+        this.setDownloadActive(downloadKey, false);
+      }
+    },
+
     formatProps(currentProps) {
       const speaker = `Talare: ${currentProps.speaker}`;
       const hit = `Sökord ${currentProps.node_word}`;
@@ -132,8 +233,10 @@ export const downloadDataStore = defineStore("downloadData", {
         });
 
         this.setupDownload("tal.zip", new Blob([response.data]));
+        return true;
       } catch (error) {
         console.error("Error fetching data for download:", error);
+        return false;
       }
     },
 
@@ -150,8 +253,10 @@ export const downloadDataStore = defineStore("downloadData", {
           this.getFilenameFromDisposition(response.headers, `speeches_${ticketId}.zip`),
           response.data,
         );
+        return true;
       } catch (error) {
         console.error("Error fetching ticket download:", error);
+        return false;
       }
     },
   },
