@@ -6,11 +6,13 @@ import { downloadDataStore } from "./downloadDataStore";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import i18n from "src/i18n/sv/index.js";
+import {
+  getTicketPollDelayMs,
+  TICKET_POLL_MAX_ATTEMPTS,
+} from "./ticketPolling";
 
 const DEFAULT_ROWS_PER_PAGE = 10;
 const DEFAULT_SORT_BY = "protocol";
-const TICKET_POLL_INTERVAL_MS = 1000;
-const TICKET_POLL_MAX_ATTEMPTS = 120;
 
 const SORT_FIELD_MAP = {
   left_word: "left_word",
@@ -140,8 +142,12 @@ export const kwicDataStore = defineStore("kwicData", {
           throw new Error(response.data.error || "KWIC query failed");
         }
 
+        const delayMs = getTicketPollDelayMs(
+          attempt,
+          response.headers?.["retry-after"],
+        );
         await new Promise((resolve) => {
-          window.setTimeout(resolve, TICKET_POLL_INTERVAL_MS);
+          window.setTimeout(resolve, delayMs);
         });
       }
 
@@ -324,6 +330,17 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     async fetchKwicExportData() {
+      if (this.useTicketFlow && this.ticketId) {
+        const response = await api.get(
+          `/tools/kwic/download/${this.ticketId}`,
+          {
+            params: { format: "json" },
+            responseType: "blob",
+          },
+        );
+        return downloadDataStore().extractJsonPayloadFromZip(response.data);
+      }
+
       const normalizedSearch = this.normalizeSearch(this.searchText);
 
       if (!normalizedSearch) {
@@ -351,13 +368,21 @@ export const kwicDataStore = defineStore("kwicData", {
         return this.fetchKwicExportData();
       }
 
-      return this.kwicData;
+      return this.kwicData || [];
     },
 
     async downloadKWICTableExcel(selectedMetadata) {
-      const exportRows = await this.getExportRows();
+      this.errorMessage = "";
 
-      if (exportRows.length > 0) {
+      try {
+        const exportRows = await this.getExportRows();
+
+        if (exportRows.length === 0) {
+          this.errorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
+
         const data = exportRows.map((obj) => {
           let newObj = {};
           Object.keys(this.columnNames).forEach((key) => {
@@ -382,16 +407,33 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("kwicData.xlsx", buffer);
         zip.file("metadata.txt", selectedMetadata);
 
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          downloadDataStore().setupDownload("kwicExcel.zip", content);
-        });
+        const content = await zip.generateAsync({ type: "blob" });
+        downloadDataStore().setupDownload("kwicExcel.zip", content);
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        console.error("Error downloading KWIC Excel:", error);
+        return false;
       }
     },
 
     async downloadKWICTableCSV(selectedMetadata) {
-      const exportRows = await this.getExportRows();
+      this.errorMessage = "";
 
-      if (exportRows.length > 0) {
+      try {
+        const exportRows = await this.getExportRows();
+
+        if (exportRows.length === 0) {
+          this.errorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
+
         const headerRow = Object.values(this.columnNames).join(",");
 
         const dataRows = exportRows
@@ -410,9 +452,18 @@ export const kwicDataStore = defineStore("kwicData", {
         zip.file("kwicData.csv", csvContent);
         zip.file("metadata.txt", selectedMetadata);
 
-        zip.generateAsync({ type: "blob" }).then((content) => {
-          downloadDataStore().setupDownload("kwicCSV.zip", content);
-        });
+        const content = await zip.generateAsync({ type: "blob" });
+        downloadDataStore().setupDownload("kwicCSV.zip", content);
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        console.error("Error downloading KWIC CSV:", error);
+        return false;
       }
     },
   },

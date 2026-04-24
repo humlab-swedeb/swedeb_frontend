@@ -1,14 +1,17 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import axios from "axios";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import { downloadDataStore } from "./downloadDataStore";
 import i18n from "src/i18n/sv/index.js";
+import {
+  getTicketPollDelayMs,
+  TICKET_POLL_MAX_ATTEMPTS,
+} from "./ticketPolling";
 
 const DEFAULT_PAGE_SIZE = 50;
-const TICKET_POLL_INTERVAL_MS = 1000;
-const TICKET_POLL_MAX_ATTEMPTS = 120;
 
 const SORT_FIELD_MAP = {
   speaker: "name",
@@ -115,9 +118,6 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         if (requestId !== this.requestSequence) {
           return false;
         }
-        await new Promise((resolve) =>
-          setTimeout(resolve, TICKET_POLL_INTERVAL_MS),
-        );
         try {
           const response = await api.get(
             `/tools/word_trend_speeches/status/${this.ticketId}`,
@@ -135,6 +135,12 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
               response.data.error || "Okänt fel vid hämtning av anföranden.";
             return false;
           }
+
+          const delayMs = getTicketPollDelayMs(
+            attempt,
+            response.headers?.["retry-after"],
+          );
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
         } catch (error) {
           console.error("Error polling speeches ticket status:", error);
           return false;
@@ -248,49 +254,91 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     },
 
     async downloadSpeechesCSV() {
-      if (!this.ticketId) return;
-      const response = await api.get(
-        `/tools/word_trend_speeches/download/${this.ticketId}`,
-        { params: { format: "csv" }, responseType: "blob" },
-      );
-      downloadDataStore().setupDownload(
-        "word_trend_speeches.zip",
-        response.data,
-      );
+      if (!this.ticketId) return false;
+      this.speechesErrorMessage = "";
+
+      try {
+        const response = await api.get(
+          `/tools/word_trend_speeches/download/${this.ticketId}`,
+          { params: { format: "csv" }, responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            response.headers,
+            `word_trend_speeches_${this.ticketId}.zip`,
+          ),
+          response.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.resetSpeechesTicketState();
+        } else {
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        console.error("Error downloading word trend speeches CSV:", error);
+        return false;
+      }
     },
 
     async downloadSpeechesExcel() {
-      if (!this.ticketId) return;
-      const response = await api.get(
-        `/tools/word_trend_speeches/download/${this.ticketId}`,
-        { params: { format: "json" } },
-      );
-      const speechList = response.data.speech_list || [];
-      if (speechList.length === 0) return;
-      const headers = [
-        "year",
-        "name",
-        "party_abbrev",
-        "document_name",
-        "node_word",
-      ];
-      const data = speechList.map((row) => {
-        const newObj = {};
-        headers.forEach((key) => {
-          newObj[key] = row[key] ?? "";
+      if (!this.ticketId) return false;
+      this.speechesErrorMessage = "";
+
+      try {
+        const response = await api.get(
+          `/tools/word_trend_speeches/download/${this.ticketId}`,
+          { params: { format: "json" }, responseType: "blob" },
+        );
+        const speechList = await downloadDataStore().extractJsonPayloadFromZip(
+          response.data,
+        );
+        if (speechList.length === 0) {
+          this.speechesErrorMessage =
+            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+          return false;
+        }
+        const headers = [
+          "year",
+          "name",
+          "party_abbrev",
+          "document_name",
+          "node_word",
+        ];
+        const data = speechList.map((row) => {
+          const newObj = {};
+          headers.forEach((key) => {
+            newObj[key] = row[key] ?? "";
+          });
+          return newObj;
         });
-        return newObj;
-      });
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet("Sheet1");
-      worksheet.columns = headers.map((h) => ({ header: h, key: h }));
-      data.forEach((row) => worksheet.addRow(row));
-      const buffer = await workbook.xlsx.writeBuffer();
-      const zip = new JSZip();
-      zip.file("word_trend_speeches.xlsx", buffer);
-      zip.generateAsync({ type: "blob" }).then((content) => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Sheet1");
+        worksheet.columns = headers.map((h) => ({ header: h, key: h }));
+        data.forEach((row) => worksheet.addRow(row));
+        const buffer = await workbook.xlsx.writeBuffer();
+        const zip = new JSZip();
+        zip.file("word_trend_speeches.xlsx", buffer);
+        const content = await zip.generateAsync({ type: "blob" });
         downloadDataStore().setupDownload("word_trend_speeches.zip", content);
-      });
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.resetSpeechesTicketState();
+        } else {
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        console.error("Error downloading word trend speeches Excel:", error);
+        return false;
+      }
     },
 
     async getWordHits(search) {
