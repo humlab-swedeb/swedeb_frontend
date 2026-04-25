@@ -341,6 +341,38 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
+    async downloadSpeechesZip() {
+      if (!this.ticketId) return false;
+      this.speechesErrorMessage = "";
+
+      try {
+        const response = await api.get(
+          `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}`,
+          { responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            response.headers,
+            `word_trend_speeches_archive_${this.ticketId}.zip`,
+          ),
+          response.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.resetSpeechesTicketState();
+        } else {
+          this.speechesErrorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        console.error("Error downloading word trend speeches ZIP:", error);
+        return false;
+      }
+    },
+
     async getWordHits(search) {
       const terms = search.split(",");
 

@@ -15,22 +15,63 @@
           <b>{{ wtStore.speechesTotalHits }}</b>
           {{ $t("searchResult2") }}
         </q-item-label>
-        <q-btn-dropdown no-caps icon="download" class="text-grey-8 col-3" color="secondary"
-          :label="$t('downloadSpeech')" style="width: fit-content">
+        <q-btn-dropdown
+          no-caps
+          icon="download"
+          class="text-grey-8 col-3"
+          color="secondary"
+          :label="$t('downloadSpeech')"
+          style="width: fit-content"
+        >
           <q-list>
-            <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.csv)" @click="downloadCSV">
+            <q-item
+              clickable
+              v-close-popup
+              :disable="isDownloadActive(downloadKeys.csv)"
+              @click="downloadCSV"
+            >
               <q-item-section>
                 <q-item-label class="row items-center no-wrap">
-                  <q-spinner-tail v-if="isDownloadActive(downloadKeys.csv)" size="16px" class="q-mr-sm" />
+                  <q-spinner-tail
+                    v-if="isDownloadActive(downloadKeys.csv)"
+                    size="16px"
+                    class="q-mr-sm"
+                  />
                   {{ $t("downloadCSV") }}
                 </q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.excel)" @click="downloadExcel">
+            <q-item
+              clickable
+              v-close-popup
+              :disable="isDownloadActive(downloadKeys.excel)"
+              @click="downloadExcel"
+            >
               <q-item-section>
                 <q-item-label class="row items-center no-wrap">
-                  <q-spinner-tail v-if="isDownloadActive(downloadKeys.excel)" size="16px" class="q-mr-sm" />
+                  <q-spinner-tail
+                    v-if="isDownloadActive(downloadKeys.excel)"
+                    size="16px"
+                    class="q-mr-sm"
+                  />
                   {{ $t("downloadExcel") }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              v-close-popup
+              :disable="isDownloadActive(downloadKeys.zip)"
+              @click="downloadZip"
+            >
+              <q-item-section>
+                <q-item-label class="row items-center no-wrap">
+                  <q-spinner-tail
+                    v-if="isDownloadActive(downloadKeys.zip)"
+                    size="16px"
+                    class="q-mr-sm"
+                  />
+                  {{ $t("downloadSpeechTextArchive") }}
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -38,14 +79,29 @@
         </q-btn-dropdown>
       </div>
 
-      <q-table ref="SpeechTable" bordered flat :rows="rows" :columns="columns" row-key="id"
-        :rows-per-page-options="[10, 20, 50]" v-model:pagination="pagination"
-        :loading="wtStore.speechesIsLoading || wtStore.speechesIsPageLoading" class="bg-grey-2" @request="onRequest">
+      <q-table
+        ref="SpeechTable"
+        bordered
+        flat
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+        :rows-per-page-options="[10, 20, 50]"
+        v-model:pagination="pagination"
+        :loading="wtStore.speechesIsLoading || wtStore.speechesIsPageLoading"
+        class="bg-grey-2"
+        @request="onRequest"
+      >
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.label }}
-              <q-icon v-if="col.label === 'Anförande'" name="info_outline" color="accent" class="q-mb-md q-ml-xs">
+              <q-icon
+                v-if="col.label === 'Anförande'"
+                name="info_outline"
+                color="accent"
+                class="q-mb-md q-ml-xs"
+              >
                 <q-tooltip>
                   {{ $t("accessibility.tooltipSpeechID") }}
                 </q-tooltip>
@@ -55,10 +111,20 @@
         </template>
         <template v-slot:body="props">
           <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
-            <q-td v-for="col in props.cols" :key="col.name" :props="props" class="bg-white"
-              :class="props.expand ? 'bg-grey-3' : ''">
-              <q-item-label v-if="col.name === 'party'" :class="col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
-                " :style="{ color: metaStore.getPartyAbbrevColor(col.value) }">
+            <q-td
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+              class="bg-white"
+              :class="props.expand ? 'bg-grey-3' : ''"
+            >
+              <q-item-label
+                v-if="col.name === 'party'"
+                :class="
+                  col.value === '[-]' ? 'text-italic text-grey-6' : 'text-bold'
+                "
+                :style="{ color: metaStore.getPartyAbbrevColor(col.value) }"
+              >
                 {{
                   col.value === "[-]"
                     ? $t("accessibility.metadataMissing")
@@ -68,19 +134,37 @@
                   {{ props.row.party_full }}
                 </q-tooltip>
               </q-item-label>
-              <q-item-label v-else-if="col.name === 'node_word'" class="text-bold">
+              <q-item-label
+                v-else-if="col.name === 'node_word'"
+                class="text-bold"
+              >
                 {{ col.value }}
               </q-item-label>
-              <q-item-label v-else-if="col.value === 'Okänd' || col.value === 'Okänt'" class="text-italic text-grey-6">
+              <q-item-label
+                v-else-if="col.value === 'Okänd' || col.value === 'Okänt'"
+                class="text-italic text-grey-6"
+              >
                 {{ $t("accessibility.metadataMissing") }}
               </q-item-label>
               <q-item-label v-else>
                 {{ col.value }}
               </q-item-label>
             </q-td>
-            <q-td auto-width class="bg-white" :class="props.expand ? 'bg-grey-3' : ''">
-              <q-btn size="sm" color="accent" round dense flat :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
-                " />
+            <q-td
+              auto-width
+              class="bg-white"
+              :class="props.expand ? 'bg-grey-3' : ''"
+            >
+              <q-btn
+                size="sm"
+                color="accent"
+                round
+                dense
+                flat
+                :icon="
+                  props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                "
+              />
             </q-td>
           </q-tr>
           <expandingTableRow :props="props" />
@@ -109,6 +193,7 @@ const wtStore = wordTrendsDataStore();
 const downloadKeys = {
   csv: "word-trends-speeches-csv",
   excel: "word-trends-speeches-excel",
+  zip: "word-trends-speeches-zip",
 };
 
 const SpeechTable = ref(null);
@@ -148,17 +233,33 @@ const isDownloadActive = (downloadKey) =>
   downloadStore.isDownloadActive(downloadKey);
 
 const downloadCSV = async () => {
-  await downloadStore.runTrackedDownload(downloadKeys.csv, () =>
-    wtStore.downloadSpeechesCSV(), {
-    getErrorMessage: () => wtStore.speechesErrorMessage,
-  });
+  await downloadStore.runTrackedDownload(
+    downloadKeys.csv,
+    () => wtStore.downloadSpeechesCSV(),
+    {
+      getErrorMessage: () => wtStore.speechesErrorMessage,
+    },
+  );
 };
 
 const downloadExcel = async () => {
-  await downloadStore.runTrackedDownload(downloadKeys.excel, () =>
-    wtStore.downloadSpeechesExcel(), {
-    getErrorMessage: () => wtStore.speechesErrorMessage,
-  });
+  await downloadStore.runTrackedDownload(
+    downloadKeys.excel,
+    () => wtStore.downloadSpeechesExcel(),
+    {
+      getErrorMessage: () => wtStore.speechesErrorMessage,
+    },
+  );
+};
+
+const downloadZip = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.zip,
+    () => wtStore.downloadSpeechesZip(),
+    {
+      getErrorMessage: () => wtStore.speechesErrorMessage,
+    },
+  );
 };
 
 const rows = computed(() =>
