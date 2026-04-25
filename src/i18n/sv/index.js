@@ -9,7 +9,7 @@ export default {
     humlab: "https://umu.se/humlab",
     huminfra: "https://www.huminfra.se/",
     swedebGithub: "https://github.com/humlab-swedeb",
-    dhnb: "https://journals.uio.no/dhnbpub/article/view/13135"
+    dhnb: "https://journals.uio.no/dhnbpub/article/view/13135",
   },
 
   dataVersion: "Data-version:",
@@ -184,6 +184,7 @@ export default {
   downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
   downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
+  downloadSpeechTextArchive: "Ladda ner tal (.zip)",
   downloadSpeech: "Tal",
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
@@ -211,13 +212,15 @@ export default {
   avgränsa anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   // PDF PAGE ------------------------------------------------
-  pageNrInfoText: "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
+  pageNrInfoText:
+    "OBS, det kan vara nödvändigt att bläddra ett par sidor för att komma till rätt anförande",
   nextPage: "Nästa sida",
   previousPage: "Föregående sida",
   zoomIn: "Zooma in",
   zoomOut: "Zooma ut",
   closeSpeech: "Stäng anförande",
-  riksdagenLinkText: "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
+  riksdagenLinkText:
+    "För mer information om riksdagsprotokollet och andra relaterade dokument, se",
   riksdagenLink: "https://www.riksdagen.se",
 
   // ABOUT PAGE ------------------------------------------------
@@ -613,7 +616,6 @@ export default {
     10: {
       q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
 
-
       a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
 
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
@@ -638,8 +640,7 @@ export default {
       "SWERIK-records: https://github.com/swerik-project/riksdagen-records",
     swerik_persons:
       "SWERIK-persons: https://github.com/swerik-project/riksdagen-persons",
-    swedeb_ref:
-      "Nedladdat från: https://riksdagsdebatter.se/",
+    swedeb_ref: "Nedladdat från: https://riksdagsdebatter.se/",
   },
 
   //ACCessibility ------------------------------------------------

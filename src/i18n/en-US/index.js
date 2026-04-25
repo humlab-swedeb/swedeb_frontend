@@ -7,6 +7,7 @@ export default {
   kwicFetchError: "Could not load KWIC results.",
   downloadSpeechCsvArchive: "Download CSV archive (.zip)",
   downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+  downloadSpeechTextArchive: "Download speeches (.zip)",
   downloadFeedback: {
     preparing: "Preparing download...",
     success: "The download has started.",
