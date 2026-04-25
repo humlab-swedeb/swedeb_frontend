@@ -8,6 +8,7 @@ export default {
   downloadSpeechCsvArchive: "Download CSV archive (.zip)",
   downloadSpeechJsonArchive: "Download JSON archive (.zip)",
   downloadSpeechTextArchive: "Download speeches (.zip)",
+  downloadSpeech: "Download speeches",
   downloadFeedback: {
     preparing: "Preparing download...",
     success: "The download has started.",

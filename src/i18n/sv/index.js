@@ -185,7 +185,6 @@ export default {
   downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
   downloadSpeechTextArchive: "Ladda ner tal (.zip)",
-  downloadSpeech: "Tal",
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     success: "Nedladdningen har startat.",
