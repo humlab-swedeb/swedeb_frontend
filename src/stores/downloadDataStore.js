@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
+import { useQuasar } from "quasar";
 import JSZip from "jszip";
-import { Notify } from "quasar";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
 
@@ -52,6 +52,7 @@ export const downloadDataStore = defineStore("downloadData", {
         return false;
       }
 
+      const $q = useQuasar();
       const messages = this.getDownloadFeedbackMessages();
       const preparingMessage = options.preparingMessage || messages.preparing;
       const successMessage = options.successMessage || messages.success;
@@ -69,14 +70,14 @@ export const downloadDataStore = defineStore("downloadData", {
       let wasSuccessful = false;
 
       this.setDownloadActive(downloadKey, true);
-      dismissPreparingNotify = Notify.create({
-        spinner: true,
-        message: preparingMessage,
-        timeout: 0,
-        position: "top",
-      });
 
       try {
+        dismissPreparingNotify = $q.notify({
+          spinner: true,
+          message: preparingMessage,
+          timeout: 0,
+          position: "top",
+        });
         const result = await task();
         wasSuccessful = result !== false;
       } catch (error) {
@@ -89,7 +90,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
 
       if (taskError) {
-        Notify.create({
+        $q.notify({
           type: "negative",
           message: this.getDownloadErrorMessage(
             taskError,
@@ -102,7 +103,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
 
       if (!wasSuccessful) {
-        Notify.create({
+        $q.notify({
           type: "negative",
           message: resolveErrorMessage(),
           timeout: 3000,
@@ -111,7 +112,7 @@ export const downloadDataStore = defineStore("downloadData", {
         return false;
       }
 
-      Notify.create({
+      $q.notify({
         type: "positive",
         message: successMessage,
         timeout: 1500,
