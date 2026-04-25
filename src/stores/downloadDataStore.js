@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import { useQuasar } from "quasar";
+import { Notify } from "quasar";
 import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
@@ -52,7 +52,6 @@ export const downloadDataStore = defineStore("downloadData", {
         return false;
       }
 
-      const $q = useQuasar();
       const messages = this.getDownloadFeedbackMessages();
       const preparingMessage = options.preparingMessage || messages.preparing;
       const successMessage = options.successMessage || messages.success;
@@ -72,7 +71,7 @@ export const downloadDataStore = defineStore("downloadData", {
       this.setDownloadActive(downloadKey, true);
 
       try {
-        dismissPreparingNotify = $q.notify({
+        dismissPreparingNotify = Notify.create({
           spinner: true,
           message: preparingMessage,
           timeout: 0,
@@ -90,7 +89,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
 
       if (taskError) {
-        $q.notify({
+        Notify.create({
           type: "negative",
           message: this.getDownloadErrorMessage(
             taskError,
@@ -103,7 +102,7 @@ export const downloadDataStore = defineStore("downloadData", {
       }
 
       if (!wasSuccessful) {
-        $q.notify({
+        Notify.create({
           type: "negative",
           message: resolveErrorMessage(),
           timeout: 3000,
@@ -112,7 +111,7 @@ export const downloadDataStore = defineStore("downloadData", {
         return false;
       }
 
-      $q.notify({
+      Notify.create({
         type: "positive",
         message: successMessage,
         timeout: 1500,
