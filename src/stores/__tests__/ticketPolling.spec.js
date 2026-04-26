@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   getTicketPollDelayMs,
-  INITIAL_TICKET_POLL_INTERVAL_MS,
-  MAX_TICKET_POLL_INTERVAL_MS,
+  TICKET_POLL_INTERVAL_MS,
+  TICKET_POLL_MAX_ATTEMPTS,
 } from "../ticketPolling";
 
 describe("getTicketPollDelayMs", () => {
@@ -12,23 +12,20 @@ describe("getTicketPollDelayMs", () => {
     expect(getTicketPollDelayMs(10, "1")).toBe(1000);
   });
 
-  it("falls back to exponential backoff when Retry-After is missing or invalid", () => {
-    expect(getTicketPollDelayMs(0, undefined)).toBe(
-      INITIAL_TICKET_POLL_INTERVAL_MS,
-    );
-    expect(getTicketPollDelayMs(0, "abc")).toBe(
-      INITIAL_TICKET_POLL_INTERVAL_MS,
-    );
-    expect(getTicketPollDelayMs(0, "0")).toBe(INITIAL_TICKET_POLL_INTERVAL_MS);
-    expect(getTicketPollDelayMs(0, "-1")).toBe(INITIAL_TICKET_POLL_INTERVAL_MS);
+  it("falls back to a fixed interval when Retry-After is missing or invalid", () => {
+    expect(getTicketPollDelayMs(0, undefined)).toBe(TICKET_POLL_INTERVAL_MS);
+    expect(getTicketPollDelayMs(0, "abc")).toBe(TICKET_POLL_INTERVAL_MS);
+    expect(getTicketPollDelayMs(0, "0")).toBe(TICKET_POLL_INTERVAL_MS);
+    expect(getTicketPollDelayMs(0, "-1")).toBe(TICKET_POLL_INTERVAL_MS);
   });
 
-  it("doubles every four attempts and caps at the configured maximum", () => {
-    expect(getTicketPollDelayMs(0)).toBe(2000);
-    expect(getTicketPollDelayMs(3)).toBe(2000);
-    expect(getTicketPollDelayMs(4)).toBe(4000);
-    expect(getTicketPollDelayMs(7)).toBe(4000);
-    expect(getTicketPollDelayMs(8)).toBe(MAX_TICKET_POLL_INTERVAL_MS);
-    expect(getTicketPollDelayMs(20)).toBe(MAX_TICKET_POLL_INTERVAL_MS);
+  it("keeps the fallback interval fixed across attempts", () => {
+    expect(getTicketPollDelayMs(0)).toBe(TICKET_POLL_INTERVAL_MS);
+    expect(getTicketPollDelayMs(4)).toBe(TICKET_POLL_INTERVAL_MS);
+    expect(getTicketPollDelayMs(20)).toBe(TICKET_POLL_INTERVAL_MS);
+  });
+
+  it("allows 180 seconds of polling when Retry-After is 2 seconds", () => {
+    expect(TICKET_POLL_MAX_ATTEMPTS * 2).toBe(180);
   });
 });

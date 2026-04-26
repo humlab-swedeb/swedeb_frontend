@@ -11,7 +11,6 @@
   </q-banner>
   <div v-if="loading" class="column items-center q-py-lg q-gutter-sm">
     <loadingIcon size="100" />
-    <q-item-label>{{ $t("accessibility.loadingResults") }}</q-item-label>
   </div>
   <div v-show="showData">
     <div class="q-pb-md">
