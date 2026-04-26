@@ -3,9 +3,11 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-
       { path: "pdf", component: () => import("pages/PdfPage.vue") },
-      { path: "pdf-pagewise", component: () => import("pages/PdfPageWise.vue") },
+      {
+        path: "pdf-pagewise",
+        component: () => import("pages/PdfPageWise.vue"),
+      },
 
       {
         path: "",
@@ -22,7 +24,11 @@ const routes = [
         component: () => import("pages/FAQPage.vue"),
         meta: { title: "FAQ" },
       },
-
+      {
+        path: "download/:archiveTicketId",
+        component: () => import("pages/DownloadRetrievalPage.vue"),
+        meta: { title: "Hämta arkiv" },
+      },
     ],
   },
   {

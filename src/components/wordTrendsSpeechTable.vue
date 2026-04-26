@@ -77,6 +77,22 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        <q-btn
+          v-if="
+            wtStore.archiveRetrievalUrl && isDownloadActive(downloadKeys.zip)
+          "
+          flat
+          no-caps
+          dense
+          icon="link"
+          class="q-ml-sm text-grey-7"
+          :label="
+            linkCopied
+              ? $t('downloadRetrievalPage.linkCopied')
+              : $t('downloadRetrievalPage.copyLink')
+          "
+          @click="copyRetrievalLink"
+        />
       </div>
 
       <q-table
@@ -179,6 +195,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -197,6 +214,8 @@ const downloadKeys = {
 };
 
 const SpeechTable = ref(null);
+const { linkCopied, copyToClipboard } = useClipboardCopy();
+const copyRetrievalLink = () => copyToClipboard(wtStore.archiveRetrievalUrl);
 
 const pagination = computed({
   get: () => wtStore.speechesPagination,

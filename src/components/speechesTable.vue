@@ -77,6 +77,23 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        <q-btn
+          v-if="
+            downloadStore.archiveRetrievalUrl &&
+            isDownloadActive(downloadKeys.zip)
+          "
+          flat
+          no-caps
+          dense
+          icon="link"
+          class="q-ml-sm text-grey-7"
+          :label="
+            linkCopied
+              ? $t('downloadRetrievalPage.linkCopied')
+              : $t('downloadRetrievalPage.copyLink')
+          "
+          @click="copyRetrievalLink"
+        />
       </div>
 
       <q-table
@@ -174,6 +191,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { api } from "boot/axios";
+import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore";
@@ -193,6 +211,9 @@ const downloadKeys = {
 };
 
 const SpeechTable = ref(null);
+const { linkCopied, copyToClipboard } = useClipboardCopy();
+const copyRetrievalLink = () =>
+  copyToClipboard(downloadStore.archiveRetrievalUrl);
 
 const pagination = computed({
   get: () => speechesStore.pagination,
