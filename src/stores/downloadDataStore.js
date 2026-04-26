@@ -273,7 +273,7 @@ export const downloadDataStore = defineStore("downloadData", {
         return true;
       } catch (error) {
         console.error("Error fetching ticket download:", error);
-        return false;
+        throw error;
       }
     },
   },
