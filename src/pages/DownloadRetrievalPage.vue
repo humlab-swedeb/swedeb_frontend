@@ -88,6 +88,7 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "boot/axios";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 
 const POLL_INTERVAL_MS = 5000;
 
@@ -162,17 +163,12 @@ async function triggerDownload() {
     const response = await api.get(`/downloads/${archiveTicketId}/download`, {
       responseType: "blob",
     });
-    const disposition = response.headers["content-disposition"] || "";
-    const match = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-    const filename = match
-      ? match[1].replace(/['"]/g, "")
-      : `archive_${archiveTicketId}.zip`;
-    const url = URL.createObjectURL(response.data);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
+    const store = downloadDataStore();
+    const filename = store.getFilenameFromDisposition(
+      response.headers,
+      `archive_${archiveTicketId}.zip`,
+    );
+    store.setupDownload(filename, response.data);
   } catch (error) {
     if (error.response?.status === 404 || error.response?.status === 410) {
       state.value = "expired";
