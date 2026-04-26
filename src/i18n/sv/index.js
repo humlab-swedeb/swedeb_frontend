@@ -189,6 +189,8 @@ export default {
     preparing: "Förbereder nedladdning...",
     success: "Nedladdningen har startat.",
     error: "Kunde inte starta nedladdningen.",
+    archiveGenerationFailed: "Arkivgenerering misslyckades.",
+    archiveGenerationTimeout: "Tidsgränsen för arkivgenerering uppnåddes.",
   },
 
   kwicLable: {

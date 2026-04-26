@@ -13,6 +13,8 @@ export default {
     preparing: "Preparing download...",
     success: "The download has started.",
     error: "Could not start the download.",
+    archiveGenerationFailed: "Archive generation failed.",
+    archiveGenerationTimeout: "Archive generation timed out.",
   },
   accessibility: {
     loadingResults: "Loading results, please wait...",
