@@ -42,6 +42,14 @@
     <q-table ref="KWICTable" :rows="rows" :columns="columns" row-key="unique_id" :rows-per-page-options="[10, 20, 50]"
       v-model:pagination="pagination" :loading="kwicStore.isLoading || kwicStore.isPageLoading" class="bg-grey-2"
       @request="onRequest">
+      <template v-slot:loading>
+        <q-inner-loading showing class="kwic-table-loading-overlay">
+          <q-spinner-tail size="48px" color="accent" :thickness="5" />
+          <q-item-label caption class="text-center text-bold q-mt-md">
+            {{ $t("accessibility.loadingResults") }}
+          </q-item-label>
+        </q-inner-loading>
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -138,8 +146,7 @@ const pagination = computed({
 
 const showLoadingIndicator = computed(
   () =>
-    kwicStore.isLoading ||
-    kwicStore.isPageLoading ||
+    (kwicStore.isLoading && kwicStore.kwicData.length === 0) ||
     (!!kwicStore.ticketId &&
       kwicStore.totalHits > 0 &&
       kwicStore.kwicData.length === 0 &&
@@ -279,4 +286,9 @@ const columns = [
 ];
 </script>
 
-<style></style>
+<style scoped>
+.kwic-table-loading-overlay {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(1px);
+}
+</style>
