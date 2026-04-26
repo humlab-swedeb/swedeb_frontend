@@ -265,35 +265,41 @@ export const downloadDataStore = defineStore("downloadData", {
     async downloadSpeechesZipByTicket(ticketId) {
       this.resetArchiveTicketState();
 
-      // 1. Request archive ticket
-      const prepareResponse = await api.post(
-        `/tools/speeches/archive/${encodeURIComponent(ticketId)}?archive_format=zip`,
-      );
-      const archiveTicketId = prepareResponse.data.archive_ticket_id;
-      this.archiveTicketId = archiveTicketId;
-      this.archiveTicketStatus = "pending";
+      try {
+        // 1. Request archive ticket
+        const prepareResponse = await api.post(
+          `/tools/speeches/archive/${encodeURIComponent(ticketId)}?archive_format=zip`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
 
-      // 2. Poll until ready
-      await pollArchiveTicket(api, {
-        statusUrl: `/tools/speeches/archive/status/${archiveTicketId}`,
-        onStatus: (status) => {
-          this.archiveTicketStatus = status;
-        },
-      });
+        // 2. Poll until ready
+        await pollArchiveTicket(api, {
+          statusUrl: `/tools/speeches/archive/status/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
 
-      // 3. Download the artifact
-      const downloadResponse = await api.get(
-        `/tools/speeches/archive/download/${archiveTicketId}`,
-        { responseType: "blob" },
-      );
-      this.setupDownload(
-        this.getFilenameFromDisposition(
-          downloadResponse.headers,
-          `speeches_${ticketId}.zip`,
-        ),
-        downloadResponse.data,
-      );
-      return true;
+        // 3. Download the artifact
+        const downloadResponse = await api.get(
+          `/tools/speeches/archive/download/${archiveTicketId}`,
+          { responseType: "blob" },
+        );
+        this.setupDownload(
+          this.getFilenameFromDisposition(
+            downloadResponse.headers,
+            `speeches_${ticketId}.zip`,
+          ),
+          downloadResponse.data,
+        );
+        return true;
+      } catch (error) {
+        console.error("Error downloading speeches zip by ticket:", error);
+        this.resetArchiveTicketState();
+        return false;
+      }
     },
   },
 });
