@@ -4,15 +4,23 @@ import { Notify } from "quasar";
 import JSZip from "jszip";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "./metaDataStore";
+import { pollArchiveTicket } from "./ticketPolling";
 
 export const downloadDataStore = defineStore("downloadData", {
   state: () => ({
     activeDownloads: {},
+    archiveTicketId: null,
+    archiveTicketStatus: null,
   }),
 
   actions: {
     isDownloadActive(downloadKey) {
       return Boolean(this.activeDownloads[downloadKey]);
+    },
+
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
     },
 
     setDownloadActive(downloadKey, isActive) {
@@ -255,26 +263,37 @@ export const downloadDataStore = defineStore("downloadData", {
     },
 
     async downloadSpeechesZipByTicket(ticketId) {
-      try {
-        const response = await api.get(
-          `/tools/speeches/archive/${encodeURIComponent(ticketId)}`,
-          {
-            responseType: "blob",
-          },
-        );
+      this.resetArchiveTicketState();
 
-        this.setupDownload(
-          this.getFilenameFromDisposition(
-            response.headers,
-            `speeches_${ticketId}.zip`,
-          ),
-          response.data,
-        );
-        return true;
-      } catch (error) {
-        console.error("Error fetching ticket download:", error);
-        throw error;
-      }
+      // 1. Request archive ticket
+      const prepareResponse = await api.post(
+        `/tools/speeches/archive/${encodeURIComponent(ticketId)}?archive_format=zip`,
+      );
+      const archiveTicketId = prepareResponse.data.archive_ticket_id;
+      this.archiveTicketId = archiveTicketId;
+      this.archiveTicketStatus = "pending";
+
+      // 2. Poll until ready
+      await pollArchiveTicket(api, {
+        statusUrl: `/tools/speeches/archive/status/${archiveTicketId}`,
+        onStatus: (status) => {
+          this.archiveTicketStatus = status;
+        },
+      });
+
+      // 3. Download the artifact
+      const downloadResponse = await api.get(
+        `/tools/speeches/archive/download/${archiveTicketId}`,
+        { responseType: "blob" },
+      );
+      this.setupDownload(
+        this.getFilenameFromDisposition(
+          downloadResponse.headers,
+          `speeches_${ticketId}.zip`,
+        ),
+        downloadResponse.data,
+      );
+      return true;
     },
   },
 });
