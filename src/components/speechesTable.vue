@@ -34,6 +34,14 @@
                                 </q-item-label>
                             </q-item-section>
                         </q-item>
+                        <q-item clickable v-close-popup :disable="isDownloadActive(downloadKeys.zip)" @click="downloadSpeechTextArchive">
+                            <q-item-section>
+                                <q-item-label class="row items-center no-wrap">
+                                    <q-spinner-tail v-if="isDownloadActive(downloadKeys.zip)" size="16px" class="q-mr-sm" />
+                                    {{ $t("downloadSpeechTextArchive") }}
+                                </q-item-label>
+                            </q-item-section>
+                        </q-item>
                     </q-list>
                 </q-btn-dropdown>
             </div>
@@ -111,6 +119,7 @@ const downloadStore = downloadDataStore();
 const downloadKeys = {
     csv: "speeches-archive-csv",
     json: "speeches-archive-json",
+    zip: "speeches-archive-zip",
 };
 
 const SpeechTable = ref(null);
@@ -192,6 +201,34 @@ const downloadCsvArchive = async () => {
 
 const downloadJsonArchive = async () => {
     await downloadArchive(downloadKeys.json, "json");
+};
+
+const downloadSpeechTextArchive = async () => {
+    if (!speechesStore.ticketId) return;
+    await downloadStore.runTrackedDownload(downloadKeys.zip, async () => {
+        speechesStore.errorMessage = "";
+        try {
+            const result = await downloadStore.downloadSpeechesZipByTicket(speechesStore.ticketId);
+            if (!result) {
+                speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(null, "Kunde inte hämta anföranden.");
+            }
+            return result;
+        } catch (error) {
+            if (error.response?.status === 404) {
+                speechesStore.errorMessage = i18n.accessibility.ticketExpired;
+                speechesStore.resetTicketState();
+            } else {
+                speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(
+                    error,
+                    "Kunde inte hämta anföranden.",
+                );
+            }
+            console.error("Error downloading speech text archive:", error);
+            return false;
+        }
+    }, {
+        getErrorMessage: () => speechesStore.errorMessage,
+    });
 };
 
 const rows = computed(() =>
