@@ -92,7 +92,7 @@ import { api } from "boot/axios";
 const POLL_INTERVAL_MS = 5000;
 
 const route = useRoute();
-const archiveTicketId = route.params.archiveTicketId;
+const archiveTicketId = encodeURIComponent(route.params.archiveTicketId);
 
 const state = ref("pending"); // "pending" | "ready" | "failed" | "expired"
 const ticketStatus = ref(null);
