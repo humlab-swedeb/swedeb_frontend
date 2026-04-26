@@ -3,11 +3,10 @@ import { api } from "boot/axios";
 import axios from "axios";
 import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
-import JSZip from "jszip";
-import ExcelJS from "exceljs";
 import i18n from "src/i18n/sv/index.js";
 import {
   getTicketPollDelayMs,
+  pollArchiveTicket,
   TICKET_POLL_MAX_ATTEMPTS,
 } from "./ticketPolling";
 
@@ -52,6 +51,7 @@ export const kwicDataStore = defineStore("kwicData", {
     expiresAt: null,
     errorMessage: "",
     hasSubmittedQuery: false,
+    archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
     requestSequence: 0,
@@ -92,6 +92,7 @@ export const kwicDataStore = defineStore("kwicData", {
       this.totalHits = 0;
       this.totalPages = 0;
       this.expiresAt = null;
+      this.archiveRetrievalUrl = null;
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -371,44 +372,36 @@ export const kwicDataStore = defineStore("kwicData", {
       return this.kwicData || [];
     },
 
-    async downloadKWICTableExcel(selectedMetadata) {
+    async downloadKwicArchive(format = "jsonl_gz") {
+      if (!this.ticketId) return false;
       this.errorMessage = "";
+      this.archiveRetrievalUrl = null;
 
       try {
-        const exportRows = await this.getExportRows();
+        // 1. Request archive ticket
+        const prepareResponse = await api.post(
+          `/tools/kwic/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(format)}`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
-        if (exportRows.length === 0) {
-          this.errorMessage =
-            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
-          return false;
-        }
-
-        const data = exportRows.map((obj) => {
-          let newObj = {};
-          Object.keys(this.columnNames).forEach((key) => {
-            newObj[this.columnNames[key]] = obj[key] ?? "";
-          });
-          return newObj;
+        // 2. Poll until ready via generic downloads endpoint
+        await pollArchiveTicket(api, {
+          statusUrl: `/downloads/${archiveTicketId}`,
         });
 
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Sheet1");
-
-        worksheet.columns = Object.values(this.columnNames).map((header) => ({
-          header,
-          key: header,
-        }));
-
-        data.forEach((row) => worksheet.addRow(row));
-
-        const buffer = await workbook.xlsx.writeBuffer();
-
-        const zip = new JSZip();
-        zip.file("kwicData.xlsx", buffer);
-        zip.file("metadata.txt", selectedMetadata);
-
-        const content = await zip.generateAsync({ type: "blob" });
-        downloadDataStore().setupDownload("kwicExcel.zip", content);
+        // 3. Download the artifact
+        const downloadResponse = await api.get(
+          `/downloads/${archiveTicketId}/download`,
+          { responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            downloadResponse.headers,
+            `kwic_archive_${this.ticketId}.${format}`,
+          ),
+          downloadResponse.data,
+        );
         return true;
       } catch (error) {
         if (error.response?.status === 404) {
@@ -417,54 +410,17 @@ export const kwicDataStore = defineStore("kwicData", {
         } else {
           this.errorMessage = this.getErrorMessage(error);
         }
-        console.error("Error downloading KWIC Excel:", error);
+        console.error("Error downloading KWIC archive:", error);
         return false;
       }
     },
 
-    async downloadKWICTableCSV(selectedMetadata) {
-      this.errorMessage = "";
+    async downloadKWICTableExcel() {
+      return this.downloadKwicArchive("xlsx");
+    },
 
-      try {
-        const exportRows = await this.getExportRows();
-
-        if (exportRows.length === 0) {
-          this.errorMessage =
-            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
-          return false;
-        }
-
-        const headerRow = Object.values(this.columnNames).join(",");
-
-        const dataRows = exportRows
-          .map((obj) =>
-            Object.keys(this.columnNames)
-              .map(
-                (key) => `"${(obj[key] ?? "").toString().replace(/"/g, '""')}"`,
-              )
-              .join(","),
-          )
-          .join("\n");
-
-        const csvContent = headerRow + "\n" + dataRows;
-
-        const zip = new JSZip();
-        zip.file("kwicData.csv", csvContent);
-        zip.file("metadata.txt", selectedMetadata);
-
-        const content = await zip.generateAsync({ type: "blob" });
-        downloadDataStore().setupDownload("kwicCSV.zip", content);
-        return true;
-      } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
-          this.resetTicketState();
-        } else {
-          this.errorMessage = this.getErrorMessage(error);
-        }
-        console.error("Error downloading KWIC CSV:", error);
-        return false;
-      }
+    async downloadKWICTableCSV() {
+      return this.downloadKwicArchive("csv_gz");
     },
   },
 });

@@ -71,6 +71,25 @@
           </q-item>
         </q-list>
       </q-btn-dropdown>
+
+      <q-btn
+        v-if="
+          kwicStore.archiveRetrievalUrl &&
+          (isDownloadActive(downloadKeys.excel) ||
+            isDownloadActive(downloadKeys.csv))
+        "
+        flat
+        no-caps
+        dense
+        icon="link"
+        class="q-ml-sm text-grey-7"
+        :label="
+          linkCopied
+            ? $t('downloadRetrievalPage.linkCopied')
+            : $t('downloadRetrievalPage.copyLink')
+        "
+        @click="copyRetrievalLink"
+      />
     </div>
     <q-table
       ref="KWICTable"
@@ -194,6 +213,7 @@ import { computed, ref } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
+import { useClipboardCopy } from "src/composables/useClipboardCopy";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
@@ -201,6 +221,9 @@ import noResults from "src/components/noResults.vue";
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
+const { linkCopied, copyToClipboard } = useClipboardCopy();
+
+const copyRetrievalLink = () => copyToClipboard(kwicStore.archiveRetrievalUrl);
 
 const downloadKeys = {
   csv: "kwic-csv",
@@ -253,7 +276,7 @@ const isDownloadActive = (downloadKey) =>
 const downloadKWICTableAsExcel = async () => {
   await downloadStore.runTrackedDownload(
     downloadKeys.excel,
-    () => kwicStore.downloadKWICTableExcel(getParamString()),
+    () => kwicStore.downloadKWICTableExcel(),
     {
       getErrorMessage: () => kwicStore.errorMessage,
     },
@@ -263,7 +286,7 @@ const downloadKWICTableAsExcel = async () => {
 const downloadKWICTableAsCSV = async () => {
   await downloadStore.runTrackedDownload(
     downloadKeys.csv,
-    () => kwicStore.downloadKWICTableCSV(getParamString()),
+    () => kwicStore.downloadKWICTableCSV(),
     {
       getErrorMessage: () => kwicStore.errorMessage,
     },
