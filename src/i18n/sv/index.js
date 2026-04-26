@@ -192,6 +192,22 @@ export default {
     archiveGenerationFailed: "Arkivgenerering misslyckades.",
     archiveGenerationTimeout: "Tidsgränsen för arkivgenerering uppnåddes.",
   },
+  downloadRetrievalPage: {
+    pending: "Förbereder ditt arkiv…",
+    pendingHint:
+      "Sidan uppdateras automatiskt. Du kan bokmärka länken och återkomma senare.",
+    readyTitle: "Ditt arkiv är klart",
+    readyDescription: "Klicka på knappen nedan för att ladda ned ditt arkiv.",
+    expiresAt: "Tillgängligt till:",
+    downloadButton: "Ladda ned arkiv",
+    failed: "Arkivgenerering misslyckades",
+    expiredTitle: "Länken har gått ut",
+    expired:
+      "Den här arkivlänken har gått ut eller är inte längre tillgänglig. Gör en ny sökning för att generera ett nytt arkiv.",
+    backToSearch: "Tillbaka till sökning",
+    copyLink: "Kopiera hämtningslänk",
+    linkCopied: "Länk kopierad!",
+  },
 
   kwicLable: {
     left_word: "Vänster",

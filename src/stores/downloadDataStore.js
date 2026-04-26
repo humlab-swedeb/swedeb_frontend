@@ -11,6 +11,7 @@ export const downloadDataStore = defineStore("downloadData", {
     activeDownloads: {},
     archiveTicketId: null,
     archiveTicketStatus: null,
+    archiveRetrievalUrl: null,
   }),
 
   actions: {
@@ -21,6 +22,7 @@ export const downloadDataStore = defineStore("downloadData", {
     resetArchiveTicketState() {
       this.archiveTicketId = null;
       this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
     },
 
     setDownloadActive(downloadKey, isActive) {
@@ -273,6 +275,7 @@ export const downloadDataStore = defineStore("downloadData", {
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
         this.archiveTicketId = archiveTicketId;
         this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
         // 2. Poll until ready
         await pollArchiveTicket(api, {

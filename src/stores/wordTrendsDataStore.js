@@ -39,6 +39,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     // Archive ticket state
     archiveTicketId: null,
     archiveTicketStatus: null,
+    archiveRetrievalUrl: null,
     speechesTotalHits: 0,
     speechesTotalPages: 0,
     speechesErrorMessage: "",
@@ -120,6 +121,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     resetArchiveTicketState() {
       this.archiveTicketId = null;
       this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
     },
 
     async waitForSpeechesTicketReady(requestId) {
@@ -363,6 +365,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
         this.archiveTicketId = archiveTicketId;
         this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
         // 2. Poll until ready
         await pollArchiveTicket(api, {

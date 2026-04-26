@@ -77,6 +77,22 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        <q-btn
+          v-if="
+            wtStore.archiveRetrievalUrl && isDownloadActive(downloadKeys.zip)
+          "
+          flat
+          no-caps
+          dense
+          icon="link"
+          class="q-ml-sm text-grey-7"
+          :label="
+            linkCopied
+              ? $t('downloadRetrievalPage.linkCopied')
+              : $t('downloadRetrievalPage.copyLink')
+          "
+          @click="copyRetrievalLink"
+        />
       </div>
 
       <q-table
@@ -197,6 +213,20 @@ const downloadKeys = {
 };
 
 const SpeechTable = ref(null);
+const linkCopied = ref(false);
+
+const copyRetrievalLink = async () => {
+  if (!wtStore.archiveRetrievalUrl) return;
+  try {
+    await navigator.clipboard.writeText(wtStore.archiveRetrievalUrl);
+    linkCopied.value = true;
+    setTimeout(() => {
+      linkCopied.value = false;
+    }, 2000);
+  } catch {
+    // fallback: ignore clipboard errors silently
+  }
+};
 
 const pagination = computed({
   get: () => wtStore.speechesPagination,
