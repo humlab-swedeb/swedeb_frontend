@@ -100,6 +100,7 @@ const errorDetail = ref(null);
 const isDownloading = ref(false);
 
 let pollTimer = null;
+let pollingActive = false;
 
 const formattedExpiry = computed(() => {
   if (!ticketStatus.value?.expires_at) return "";
@@ -135,14 +136,22 @@ async function fetchStatus() {
   }
 }
 
+async function schedulePoll() {
+  await fetchStatus();
+  if (pollingActive) {
+    pollTimer = setTimeout(schedulePoll, POLL_INTERVAL_MS);
+  }
+}
+
 function startPolling() {
-  fetchStatus();
-  pollTimer = setInterval(fetchStatus, POLL_INTERVAL_MS);
+  pollingActive = true;
+  schedulePoll();
 }
 
 function stopPolling() {
+  pollingActive = false;
   if (pollTimer !== null) {
-    clearInterval(pollTimer);
+    clearTimeout(pollTimer);
     pollTimer = null;
   }
 }
