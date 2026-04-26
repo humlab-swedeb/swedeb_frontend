@@ -195,6 +195,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
@@ -213,20 +214,8 @@ const downloadKeys = {
 };
 
 const SpeechTable = ref(null);
-const linkCopied = ref(false);
-
-const copyRetrievalLink = async () => {
-  if (!wtStore.archiveRetrievalUrl) return;
-  try {
-    await navigator.clipboard.writeText(wtStore.archiveRetrievalUrl);
-    linkCopied.value = true;
-    setTimeout(() => {
-      linkCopied.value = false;
-    }, 2000);
-  } catch {
-    // fallback: ignore clipboard errors silently
-  }
-};
+const { linkCopied, copyToClipboard } = useClipboardCopy();
+const copyRetrievalLink = () => copyToClipboard(wtStore.archiveRetrievalUrl);
 
 const pagination = computed({
   get: () => wtStore.speechesPagination,

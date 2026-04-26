@@ -191,6 +191,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { api } from "boot/axios";
+import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore";
@@ -210,20 +211,9 @@ const downloadKeys = {
 };
 
 const SpeechTable = ref(null);
-const linkCopied = ref(false);
-
-const copyRetrievalLink = async () => {
-  if (!downloadStore.archiveRetrievalUrl) return;
-  try {
-    await navigator.clipboard.writeText(downloadStore.archiveRetrievalUrl);
-    linkCopied.value = true;
-    setTimeout(() => {
-      linkCopied.value = false;
-    }, 2000);
-  } catch {
-    // fallback: ignore clipboard errors silently
-  }
-};
+const { linkCopied, copyToClipboard } = useClipboardCopy();
+const copyRetrievalLink = () =>
+  copyToClipboard(downloadStore.archiveRetrievalUrl);
 
 const pagination = computed({
   get: () => speechesStore.pagination,
