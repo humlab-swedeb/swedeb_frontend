@@ -73,7 +73,7 @@
       </q-btn-dropdown>
 
       <q-btn
-        v-if="kwicStore.archiveRetrievalUrl"
+        v-if="kwicStore.archiveTicketId"
         flat
         no-caps
         dense
@@ -219,7 +219,8 @@ const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
 const { linkCopied, copyToClipboard } = useClipboardCopy();
 
-const copyRetrievalLink = () => copyToClipboard(kwicStore.archiveRetrievalUrl);
+const copyRetrievalLink = () =>
+  copyToClipboard(window.location.origin + '/download/' + kwicStore.archiveTicketId);
 
 const downloadKeys = {
   csv: "kwic-csv",
