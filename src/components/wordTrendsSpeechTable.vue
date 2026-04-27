@@ -78,9 +78,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-btn
-          v-if="
-            wtStore.archiveRetrievalUrl && isDownloadActive(downloadKeys.zip)
-          "
+          v-if="wtStore.archiveRetrievalUrl"
           flat
           no-caps
           dense

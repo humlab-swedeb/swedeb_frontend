@@ -78,10 +78,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-btn
-          v-if="
-            downloadStore.archiveRetrievalUrl &&
-            isDownloadActive(downloadKeys.zip)
-          "
+          v-if="downloadStore.archiveRetrievalUrl"
           flat
           no-caps
           dense

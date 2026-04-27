@@ -73,11 +73,7 @@
       </q-btn-dropdown>
 
       <q-btn
-        v-if="
-          kwicStore.archiveRetrievalUrl &&
-          (isDownloadActive(downloadKeys.excel) ||
-            isDownloadActive(downloadKeys.csv))
-        "
+        v-if="kwicStore.archiveRetrievalUrl"
         flat
         no-caps
         dense
