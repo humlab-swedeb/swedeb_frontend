@@ -78,7 +78,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-btn
-          v-if="downloadStore.archiveRetrievalUrl"
+          v-if="downloadStore.archiveTicketId"
           flat
           no-caps
           dense
@@ -210,7 +210,7 @@ const downloadKeys = {
 const SpeechTable = ref(null);
 const { linkCopied, copyToClipboard } = useClipboardCopy();
 const copyRetrievalLink = () =>
-  copyToClipboard(downloadStore.archiveRetrievalUrl);
+  copyToClipboard(window.location.origin + '/download/' + downloadStore.archiveTicketId);
 
 const pagination = computed({
   get: () => speechesStore.pagination,

@@ -78,7 +78,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-btn
-          v-if="wtStore.archiveRetrievalUrl"
+          v-if="wtStore.archiveTicketId"
           flat
           no-caps
           dense
@@ -213,7 +213,8 @@ const downloadKeys = {
 
 const SpeechTable = ref(null);
 const { linkCopied, copyToClipboard } = useClipboardCopy();
-const copyRetrievalLink = () => copyToClipboard(wtStore.archiveRetrievalUrl);
+const copyRetrievalLink = () =>
+  copyToClipboard(window.location.origin + '/download/' + wtStore.archiveTicketId);
 
 const pagination = computed({
   get: () => wtStore.speechesPagination,

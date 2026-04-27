@@ -51,6 +51,7 @@ export const kwicDataStore = defineStore("kwicData", {
     expiresAt: null,
     errorMessage: "",
     hasSubmittedQuery: false,
+    archiveTicketId: null,
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
@@ -92,6 +93,7 @@ export const kwicDataStore = defineStore("kwicData", {
       this.totalHits = 0;
       this.totalPages = 0;
       this.expiresAt = null;
+      this.archiveTicketId = null;
       this.archiveRetrievalUrl = null;
       this.pagination = {
         ...this.pagination,
@@ -332,11 +334,13 @@ export const kwicDataStore = defineStore("kwicData", {
 
     async downloadKwicArchive(format = "jsonl_gz") {
       if (!this.ticketId) {
+        this.archiveTicketId = null;
         this.archiveRetrievalUrl = null;
         this.errorMessage = i18n.accessibility.ticketExpired;
         return false;
       }
       this.errorMessage = "";
+      this.archiveTicketId = null;
       this.archiveRetrievalUrl = null;
 
       try {
@@ -345,6 +349,7 @@ export const kwicDataStore = defineStore("kwicData", {
           `/tools/kwic/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(format)}`,
         );
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
         // 2. Poll until ready via generic downloads endpoint
