@@ -187,6 +187,7 @@ export default {
   downloadSpeechTextArchive: "Ladda ner tal (.zip)",
   downloadSpeechJsonlGzArchive: "Ladda ner tal (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Ladda ner tal (.csv.gz)",
+  downloadKwicJsonlGzArchive: "Ladda ner KWIC (.jsonl.gz)",
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",

@@ -31,7 +31,24 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadCSV") }}
+                {{ $t('downloadCSV') }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.jsonlgz)"
+            @click="downloadKWICTableAsJsonlGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.jsonlgz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t('downloadKwicJsonlGzArchive') }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -48,7 +65,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadExcel") }}
+                {{ $t('downloadExcel') }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -65,27 +82,12 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadSpeech") }}
+                {{ $t('downloadSpeechTextArchive') }}
               </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-btn-dropdown>
-
-      <q-btn
-        v-if="kwicStore.archiveTicketId"
-        flat
-        no-caps
-        dense
-        icon="link"
-        class="q-ml-sm text-grey-7"
-        :label="
-          linkCopied
-            ? $t('downloadRetrievalPage.linkCopied')
-            : $t('downloadRetrievalPage.copyLink')
-        "
-        @click="copyRetrievalLink"
-      />
     </div>
     <q-table
       ref="KWICTable"
@@ -209,7 +211,6 @@ import { computed, ref } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
-import { useClipboardCopy } from "src/composables/useClipboardCopy";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
@@ -217,13 +218,10 @@ import noResults from "src/components/noResults.vue";
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
-const { linkCopied, copyToClipboard } = useClipboardCopy();
-
-const copyRetrievalLink = () =>
-  copyToClipboard(window.location.origin + '/download/' + kwicStore.archiveTicketId);
 
 const downloadKeys = {
   csv: "kwic-csv",
+  jsonlgz: "kwic-jsonlgz",
   excel: "kwic-excel",
   speeches: "kwic-speeches",
 };
@@ -267,34 +265,19 @@ const isDownloadActive = (downloadKey) =>
   downloadStore.isDownloadActive(downloadKey);
 
 const downloadKWICTableAsExcel = async () => {
-  await downloadStore.runTrackedDownload(
-    downloadKeys.excel,
-    () => kwicStore.downloadKWICTableExcel(),
-    {
-      getErrorMessage: () => kwicStore.errorMessage,
-    },
-  );
+  await kwicStore.downloadKwicExcel(downloadKeys.excel);
 };
 
 const downloadKWICTableAsCSV = async () => {
-  await downloadStore.runTrackedDownload(
-    downloadKeys.csv,
-    () => kwicStore.downloadKWICTableCSV(),
-    {
-      getErrorMessage: () => kwicStore.errorMessage,
-    },
-  );
+  await kwicStore.downloadKwicCsvGz(downloadKeys.csv);
+};
+
+const downloadKWICTableAsJsonlGz = async () => {
+  await kwicStore.downloadKwicJsonlGz(downloadKeys.jsonlgz);
 };
 
 const downloadKWICAsSpeeches = async () => {
-  if (!kwicStore.ticketId) return;
-  await downloadStore.runTrackedDownload(
-    downloadKeys.speeches,
-    () => downloadStore.downloadSpeechesZipByTicket(kwicStore.ticketId),
-    {
-      getErrorMessage: () => kwicStore.errorMessage,
-    },
-  );
+  await kwicStore.downloadKwicSpeechesZip(downloadKeys.speeches);
 };
 
 const rows = computed(() =>
