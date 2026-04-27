@@ -352,7 +352,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
-    async downloadSpeechesZip() {
+    async _downloadSpeechesArchive(archiveFormat, fallbackFilename) {
       if (!this.ticketId) return false;
       this.speechesErrorMessage = "";
       this.resetArchiveTicketState();
@@ -360,7 +360,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       try {
         // 1. Request archive ticket
         const prepareResponse = await api.post(
-          `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=zip`,
+          `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
         );
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
         this.archiveTicketId = archiveTicketId;
@@ -383,7 +383,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         downloadDataStore().setupDownload(
           downloadDataStore().getFilenameFromDisposition(
             downloadResponse.headers,
-            `word_trend_speeches_archive_${this.ticketId}.zip`,
+            fallbackFilename,
           ),
           downloadResponse.data,
         );
@@ -398,9 +398,21 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
             error?.message ||
             "Kunde inte hämta anföranden.";
         }
-        console.error("Error downloading word trend speeches ZIP:", error);
+        console.error(`Error downloading word trend speeches archive (${archiveFormat}):`, error);
         return false;
       }
+    },
+
+    async downloadSpeechesZip() {
+      return this._downloadSpeechesArchive("zip", `word_trend_speeches_archive_${this.ticketId}.zip`);
+    },
+
+    async downloadSpeechesJsonlGz() {
+      return this._downloadSpeechesArchive("jsonl_gz", `word_trend_speeches_archive_${this.ticketId}.jsonl.gz`);
+    },
+
+    async downloadSpeechesCsvGz() {
+      return this._downloadSpeechesArchive("csv_gz", `word_trend_speeches_archive_${this.ticketId}.csv.gz`);
     },
 
     async getWordHits(search) {

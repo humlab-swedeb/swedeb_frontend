@@ -75,6 +75,40 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
+            <q-item
+              clickable
+              v-close-popup
+              :disable="isDownloadActive(downloadKeys.jsonlgz)"
+              @click="downloadJsonlGz"
+            >
+              <q-item-section>
+                <q-item-label class="row items-center no-wrap">
+                  <q-spinner-tail
+                    v-if="isDownloadActive(downloadKeys.jsonlgz)"
+                    size="16px"
+                    class="q-mr-sm"
+                  />
+                  {{ $t("downloadSpeechJsonlGzArchive") }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              v-close-popup
+              :disable="isDownloadActive(downloadKeys.csvgz)"
+              @click="downloadCsvGz"
+            >
+              <q-item-section>
+                <q-item-label class="row items-center no-wrap">
+                  <q-spinner-tail
+                    v-if="isDownloadActive(downloadKeys.csvgz)"
+                    size="16px"
+                    class="q-mr-sm"
+                  />
+                  {{ $t("downloadSpeechCsvGzArchive") }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
           </q-list>
         </q-btn-dropdown>
         <q-btn
@@ -209,6 +243,8 @@ const downloadKeys = {
   csv: "word-trends-speeches-csv",
   excel: "word-trends-speeches-excel",
   zip: "word-trends-speeches-zip",
+  jsonlgz: "word-trends-speeches-jsonlgz",
+  csvgz: "word-trends-speeches-csvgz",
 };
 
 const SpeechTable = ref(null);
@@ -274,6 +310,26 @@ const downloadZip = async () => {
   await downloadStore.runTrackedDownload(
     downloadKeys.zip,
     () => wtStore.downloadSpeechesZip(),
+    {
+      getErrorMessage: () => wtStore.speechesErrorMessage,
+    },
+  );
+};
+
+const downloadJsonlGz = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.jsonlgz,
+    () => wtStore.downloadSpeechesJsonlGz(),
+    {
+      getErrorMessage: () => wtStore.speechesErrorMessage,
+    },
+  );
+};
+
+const downloadCsvGz = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.csvgz,
+    () => wtStore.downloadSpeechesCsvGz(),
     {
       getErrorMessage: () => wtStore.speechesErrorMessage,
     },
