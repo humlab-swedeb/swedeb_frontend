@@ -9,6 +9,7 @@ import i18n from "src/i18n/sv/index.js";
 import {
   getTicketPollDelayMs,
   TICKET_POLL_MAX_ATTEMPTS,
+  pollArchiveTicket,
 } from "./ticketPolling";
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -35,6 +36,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     // Ticket-based speeches state
     ticketId: null,
     ticketStatus: null,
+    // Archive ticket state
+    archiveTicketId: null,
+    archiveTicketStatus: null,
+    archiveRetrievalUrl: null,
     speechesTotalHits: 0,
     speechesTotalPages: 0,
     speechesErrorMessage: "",
@@ -111,6 +116,12 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         page: 1,
         rowsNumber: 0,
       };
+    },
+
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
     },
 
     async waitForSpeechesTicketReady(requestId) {
@@ -344,18 +355,37 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     async downloadSpeechesZip() {
       if (!this.ticketId) return false;
       this.speechesErrorMessage = "";
+      this.resetArchiveTicketState();
 
       try {
-        const response = await api.get(
-          `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}`,
+        // 1. Request archive ticket
+        const prepareResponse = await api.post(
+          `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=zip`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        // 2. Poll until ready
+        await pollArchiveTicket(api, {
+          statusUrl: `/tools/word_trend_speeches/archive/status/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
+
+        // 3. Download the artifact
+        const downloadResponse = await api.get(
+          `/tools/word_trend_speeches/archive/download/${archiveTicketId}`,
           { responseType: "blob" },
         );
         downloadDataStore().setupDownload(
           downloadDataStore().getFilenameFromDisposition(
-            response.headers,
+            downloadResponse.headers,
             `word_trend_speeches_archive_${this.ticketId}.zip`,
           ),
-          response.data,
+          downloadResponse.data,
         );
         return true;
       } catch (error) {
