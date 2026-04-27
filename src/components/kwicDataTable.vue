@@ -266,10 +266,6 @@ const onRequest = async ({ pagination }) => {
   });
 };
 
-const getParamString = () => {
-  return metaStore.selectedMetadataToText("kwic");
-};
-
 const isDownloadActive = (downloadKey) =>
   downloadStore.isDownloadActive(downloadKey);
 

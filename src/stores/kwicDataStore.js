@@ -330,50 +330,12 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
-    async fetchKwicExportData() {
-      if (this.useTicketFlow && this.ticketId) {
-        const response = await api.get(
-          `/tools/kwic/download/${this.ticketId}`,
-          {
-            params: { format: "json" },
-            responseType: "blob",
-          },
-        );
-        return downloadDataStore().extractJsonPayloadFromZip(response.data);
-      }
-
-      const normalizedSearch = this.normalizeSearch(this.searchText);
-
-      if (!normalizedSearch) {
-        return [];
-      }
-
-      const path = this.getKwicResultsPath(normalizedSearch);
-      const additionalParams = {
-        words_before: this.wordsLeft,
-        words_after: this.wordsRight,
-        lemmatized: this.lemmatizeSearch,
-        ...(this.cutOff !== null && { cut_off: this.cutOff }),
-      };
-      const queryString = metaDataStore().getSelectedParamsAtSearch(
-        "kwic",
-        additionalParams,
-      );
-      const response = await api.get(`${path}?${queryString}`);
-
-      return response.data.kwic_list || [];
-    },
-
-    async getExportRows() {
-      if (this.useTicketFlow && this.ticketId) {
-        return this.fetchKwicExportData();
-      }
-
-      return this.kwicData || [];
-    },
-
     async downloadKwicArchive(format = "jsonl_gz") {
-      if (!this.ticketId) return false;
+      if (!this.ticketId) {
+        this.archiveRetrievalUrl = null;
+        this.errorMessage = i18n.accessibility.ticketExpired;
+        return false;
+      }
       this.errorMessage = "";
       this.archiveRetrievalUrl = null;
 
@@ -395,10 +357,12 @@ export const kwicDataStore = defineStore("kwicData", {
           `/downloads/${archiveTicketId}/download`,
           { responseType: "blob" },
         );
+        const archiveExtensions = { csv_gz: "csv.gz", jsonl_gz: "jsonl.gz" };
+        const fileExtension = archiveExtensions[format] ?? format;
         downloadDataStore().setupDownload(
           downloadDataStore().getFilenameFromDisposition(
             downloadResponse.headers,
-            `kwic_archive_${this.ticketId}.${format}`,
+            `kwic_archive_${this.ticketId}.${fileExtension}`,
           ),
           downloadResponse.data,
         );
