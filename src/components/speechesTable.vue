@@ -27,34 +27,34 @@
             <q-item
               clickable
               v-close-popup
-              :disable="isDownloadActive(downloadKeys.csv)"
-              @click="downloadCsvArchive"
+              :disable="isDownloadActive(downloadKeys.csvgz)"
+              @click="downloadCsvGzArchive"
             >
               <q-item-section>
                 <q-item-label class="row items-center no-wrap">
                   <q-spinner-tail
-                    v-if="isDownloadActive(downloadKeys.csv)"
+                    v-if="isDownloadActive(downloadKeys.csvgz)"
                     size="16px"
                     class="q-mr-sm"
                   />
-                  {{ $t("downloadSpeechCsvArchive") }}
+                  {{ $t("downloadSpeechCsvGzArchive") }}
                 </q-item-label>
               </q-item-section>
             </q-item>
             <q-item
               clickable
               v-close-popup
-              :disable="isDownloadActive(downloadKeys.json)"
-              @click="downloadJsonArchive"
+              :disable="isDownloadActive(downloadKeys.jsonlgz)"
+              @click="downloadJsonlGzArchive"
             >
               <q-item-section>
                 <q-item-label class="row items-center no-wrap">
                   <q-spinner-tail
-                    v-if="isDownloadActive(downloadKeys.json)"
+                    v-if="isDownloadActive(downloadKeys.jsonlgz)"
                     size="16px"
                     class="q-mr-sm"
                   />
-                  {{ $t("downloadSpeechJsonArchive") }}
+                  {{ $t("downloadSpeechJsonlGzArchive") }}
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -62,7 +62,7 @@
               clickable
               v-close-popup
               :disable="isDownloadActive(downloadKeys.zip)"
-              @click="downloadSpeechTextArchive"
+              @click="downloadZipArchive"
             >
               <q-item-section>
                 <q-item-label class="row items-center no-wrap">
@@ -77,20 +77,6 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn
-          v-if="downloadStore.archiveTicketId"
-          flat
-          no-caps
-          dense
-          icon="link"
-          class="q-ml-sm text-grey-7"
-          :label="
-            linkCopied
-              ? $t('downloadRetrievalPage.linkCopied')
-              : $t('downloadRetrievalPage.copyLink')
-          "
-          @click="copyRetrievalLink"
-        />
       </div>
 
       <q-table
@@ -187,9 +173,6 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { api } from "boot/axios";
-import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
-import i18n from "src/i18n/sv/index.js";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -202,15 +185,12 @@ const speechesStore = speechesDataStore();
 const downloadStore = downloadDataStore();
 
 const downloadKeys = {
-  csv: "speeches-archive-csv",
-  json: "speeches-archive-json",
+  csvgz: "speeches-archive-csvgz",
+  jsonlgz: "speeches-archive-jsonlgz",
   zip: "speeches-archive-zip",
 };
 
 const SpeechTable = ref(null);
-const { linkCopied, copyToClipboard } = useClipboardCopy();
-const copyRetrievalLink = () =>
-  copyToClipboard(window.location.origin + '/download/' + downloadStore.archiveTicketId);
 
 const pagination = computed({
   get: () => speechesStore.pagination,
@@ -246,90 +226,16 @@ const onRequest = async ({ pagination }) => {
 const isDownloadActive = (downloadKey) =>
   downloadStore.isDownloadActive(downloadKey);
 
-const downloadArchive = async (downloadKey, format) => {
-  if (!speechesStore.ticketId) return;
-
-  await downloadStore.runTrackedDownload(
-    downloadKey,
-    async () => {
-      speechesStore.errorMessage = "";
-
-      try {
-        const response = await api.get(
-          `/tools/speeches/download/${speechesStore.ticketId}`,
-          { params: { format }, responseType: "blob" },
-        );
-        downloadStore.setupDownload(
-          downloadStore.getFilenameFromDisposition(
-            response.headers,
-            `speeches_${speechesStore.ticketId}.zip`,
-          ),
-          response.data,
-        );
-        return true;
-      } catch (error) {
-        if (error.response?.status === 404) {
-          speechesStore.errorMessage = i18n.accessibility.ticketExpired;
-          speechesStore.resetTicketState();
-        } else {
-          speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(
-            error,
-            "Kunde inte hämta anföranden.",
-          );
-        }
-        console.error(`Error downloading speeches ${format} archive:`, error);
-        return false;
-      }
-    },
-    {
-      getErrorMessage: () => speechesStore.errorMessage,
-    },
-  );
+const downloadCsvGzArchive = async () => {
+  await speechesStore.downloadSpeechesCsvGz(downloadKeys.csvgz);
 };
 
-const downloadCsvArchive = async () => {
-  await downloadArchive(downloadKeys.csv, "csv");
+const downloadJsonlGzArchive = async () => {
+  await speechesStore.downloadSpeechesJsonlGz(downloadKeys.jsonlgz);
 };
 
-const downloadJsonArchive = async () => {
-  await downloadArchive(downloadKeys.json, "json");
-};
-
-const downloadSpeechTextArchive = async () => {
-  if (!speechesStore.ticketId) return;
-  await downloadStore.runTrackedDownload(
-    downloadKeys.zip,
-    async () => {
-      speechesStore.errorMessage = "";
-      try {
-        const result = await downloadStore.downloadSpeechesZipByTicket(
-          speechesStore.ticketId,
-        );
-        if (!result) {
-          speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(
-            null,
-            "Kunde inte hämta anföranden.",
-          );
-        }
-        return result;
-      } catch (error) {
-        if (error.response?.status === 404) {
-          speechesStore.errorMessage = i18n.accessibility.ticketExpired;
-          speechesStore.resetTicketState();
-        } else {
-          speechesStore.errorMessage = downloadStore.getDownloadErrorMessage(
-            error,
-            "Kunde inte hämta anföranden.",
-          );
-        }
-        console.error("Error downloading speech text archive:", error);
-        return false;
-      }
-    },
-    {
-      getErrorMessage: () => speechesStore.errorMessage,
-    },
-  );
+const downloadZipArchive = async () => {
+  await speechesStore.downloadSpeechesZip(downloadKeys.zip);
 };
 
 const rows = computed(() =>

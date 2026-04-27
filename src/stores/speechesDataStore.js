@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
+import { downloadDataStore } from "./downloadDataStore";
 import axios from "axios";
+import { Notify, copyToClipboard } from "quasar";
 import i18n from "src/i18n/sv/index.js";
 import {
   getTicketPollDelayMs,
+  pollArchiveTicket,
   TICKET_POLL_MAX_ATTEMPTS,
 } from "./ticketPolling";
 
@@ -30,6 +33,9 @@ export const speechesDataStore = defineStore("speechesData", {
     isPageLoading: false,
     requestSequence: 0,
     pageRequestSequence: 0,
+    archiveTicketId: null,
+    archiveTicketStatus: null,
+    archiveRetrievalUrl: null,
     pagination: {
       sortBy: "year",
       descending: true,
@@ -61,6 +67,12 @@ export const speechesDataStore = defineStore("speechesData", {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+    },
+
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
     },
 
     resetTicketState() {
@@ -207,6 +219,158 @@ export const speechesDataStore = defineStore("speechesData", {
           this.isLoading = false;
         }
       }
+    },
+    async _downloadSpeechesArchive(archiveFormat, fallbackFilename, downloadKey) {
+      if (!this.ticketId) return false;
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) return false;
+
+      this.errorMessage = "";
+      this.resetArchiveTicketState();
+      downloadDataStore().setDownloadActive(downloadKey, true);
+
+      let dismissLinkNotify = null;
+      let abortedByUser = false;
+
+      try {
+        const prepareResponse = await api.post(
+          `/tools/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        const retrievalUrl = window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint =
+          i18n.downloadFeedback?.archiveBuildingHint ||
+          "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        dismissLinkNotify = Notify.create({
+          message:
+            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") + " " + buildingHint,
+          color: "blue-8",
+          icon: "hourglass_top",
+          timeout: 0,
+          position: "top",
+          multiLine: true,
+          actions: [
+            {
+              label: i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              color: "yellow",
+              handler: () => {
+                const prevDismiss = dismissLinkNotify;
+                copyToClipboard(retrievalUrl);
+                const copiedHint =
+                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  "Länk kopierad — stäng för att hämta senare, eller vänta här.";
+                dismissLinkNotify = Notify.create({
+                  message: copiedHint,
+                  color: "blue-8",
+                  icon: "check",
+                  timeout: 0,
+                  position: "top",
+                  multiLine: true,
+                  actions: [
+                    {
+                      icon: "close",
+                      color: "white",
+                      round: true,
+                      handler: () => {
+                        abortedByUser = true;
+                        if (typeof dismissLinkNotify === "function") {
+                          dismissLinkNotify();
+                          dismissLinkNotify = null;
+                        }
+                      },
+                    },
+                  ],
+                });
+                if (typeof prevDismiss === "function") prevDismiss();
+              },
+            },
+          ],
+        });
+
+        await pollArchiveTicket(api, {
+          statusUrl: `/tools/speeches/archive/status/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
+
+        if (abortedByUser) {
+          Notify.create({
+            message:
+              i18n.downloadFeedback?.archiveAborted ||
+              "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
+            color: "info",
+            icon: "link",
+            timeout: 6000,
+            position: "top",
+          });
+          return true;
+        }
+
+        const downloadResponse = await api.get(
+          `/tools/speeches/archive/download/${archiveTicketId}`,
+          { responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            downloadResponse.headers,
+            fallbackFilename,
+          ),
+          downloadResponse.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage =
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Kunde inte hämta anföranden.";
+        }
+        Notify.create({
+          type: "negative",
+          message: this.errorMessage,
+          timeout: 4000,
+          position: "top",
+        });
+        console.error(`Error downloading speeches archive (${archiveFormat}):`, error);
+        return false;
+      } finally {
+        if (typeof dismissLinkNotify === "function") {
+          dismissLinkNotify();
+          dismissLinkNotify = null;
+        }
+        downloadDataStore().setDownloadActive(downloadKey, false);
+      }
+    },
+
+    async downloadSpeechesZip(downloadKey) {
+      return this._downloadSpeechesArchive(
+        "zip",
+        `speeches_${this.ticketId}.zip`,
+        downloadKey,
+      );
+    },
+
+    async downloadSpeechesCsvGz(downloadKey) {
+      return this._downloadSpeechesArchive(
+        "csv_gz",
+        `speeches_${this.ticketId}.csv.gz`,
+        downloadKey,
+      );
+    },
+
+    async downloadSpeechesJsonlGz(downloadKey) {
+      return this._downloadSpeechesArchive(
+        "jsonl_gz",
+        `speeches_${this.ticketId}.jsonl.gz`,
+        downloadKey,
+      );
     },
   },
 });

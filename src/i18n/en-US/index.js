@@ -10,6 +10,7 @@ export default {
   downloadSpeechTextArchive: "Download speeches (.zip)",
   downloadSpeechJsonlGzArchive: "Download speeches (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Download speeches (.csv.gz)",
+  downloadKwicJsonlGzArchive: "Download KWIC (.jsonl.gz)",
   downloadSpeech: "Download speeches",
   downloadFeedback: {
     preparing: "Preparing download...",
