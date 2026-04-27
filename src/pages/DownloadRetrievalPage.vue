@@ -30,7 +30,7 @@
         </q-card-section>
         <q-card-actions vertical align="left">
           <q-btn
-            color="primary"
+            color="accent"
             icon="download"
             no-caps
             :label="$t('downloadRetrievalPage.downloadButton')"
