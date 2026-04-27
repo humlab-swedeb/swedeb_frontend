@@ -13,6 +13,10 @@ export default {
   downloadSpeech: "Download speeches",
   downloadFeedback: {
     preparing: "Preparing download...",
+    archiveBuilding: "Building archive…",
+    archiveBuildingHint: "Keep this open to wait, or copy the link and close to fetch later.",
+    archiveLinkCopiedClose: "Link copied — close to fetch later, or keep waiting here.",
+    archiveAborted: "Link saved — open it to download the archive when it is ready.",
     success: "The download has started.",
     error: "Could not start the download.",
     archiveGenerationFailed: "Archive generation failed.",

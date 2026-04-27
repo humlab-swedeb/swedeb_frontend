@@ -307,33 +307,15 @@ const downloadExcel = async () => {
 };
 
 const downloadZip = async () => {
-  await downloadStore.runTrackedDownload(
-    downloadKeys.zip,
-    () => wtStore.downloadSpeechesZip(),
-    {
-      getErrorMessage: () => wtStore.speechesErrorMessage,
-    },
-  );
+  await wtStore.downloadSpeechesZip(downloadKeys.zip);
 };
 
 const downloadJsonlGz = async () => {
-  await downloadStore.runTrackedDownload(
-    downloadKeys.jsonlgz,
-    () => wtStore.downloadSpeechesJsonlGz(),
-    {
-      getErrorMessage: () => wtStore.speechesErrorMessage,
-    },
-  );
+  await wtStore.downloadSpeechesJsonlGz(downloadKeys.jsonlgz);
 };
 
 const downloadCsvGz = async () => {
-  await downloadStore.runTrackedDownload(
-    downloadKeys.csvgz,
-    () => wtStore.downloadSpeechesCsvGz(),
-    {
-      getErrorMessage: () => wtStore.speechesErrorMessage,
-    },
-  );
+  await wtStore.downloadSpeechesCsvGz(downloadKeys.csvgz);
 };
 
 const rows = computed(() =>
