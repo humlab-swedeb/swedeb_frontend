@@ -379,7 +379,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const buildingHint = i18n.downloadFeedback?.archiveBuildingHint || "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message: (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") + " " + buildingHint,
-          color: "primary",
+          color: "blue-8",
           icon: "hourglass_top",
           timeout: 0,
           position: "top",
@@ -395,7 +395,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
                 const copiedHint = i18n.downloadFeedback?.archiveLinkCopiedClose || "Länk kopierad — stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
-                  color: "primary",
+                  color: "blue-8",
                   icon: "check",
                   timeout: 0,
                   position: "top",
