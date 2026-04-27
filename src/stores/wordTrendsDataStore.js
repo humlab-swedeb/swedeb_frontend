@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { Notify, copyToClipboard } from "quasar";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import axios from "axios";
@@ -352,13 +353,19 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
-    async _downloadSpeechesArchive(archiveFormat, fallbackFilename) {
+    async _downloadSpeechesArchive(archiveFormat, fallbackFilename, downloadKey) {
       if (!this.ticketId) return false;
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) return false;
+
       this.speechesErrorMessage = "";
       this.resetArchiveTicketState();
+      downloadDataStore().setDownloadActive(downloadKey, true);
+
+      let dismissLinkNotify = null;
+      let abortedByUser = false;
 
       try {
-        // 1. Request archive ticket
+        // 1. Request archive ticket (~200ms round-trip)
         const prepareResponse = await api.post(
           `/tools/word_trend_speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
         );
@@ -367,7 +374,54 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         this.archiveTicketStatus = "pending";
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
-        // 2. Poll until ready
+        // 2. Immediately show a persistent notification with the retrieval link
+        const retrievalUrl = window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint = i18n.downloadFeedback?.archiveBuildingHint || "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        dismissLinkNotify = Notify.create({
+          message: (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") + " " + buildingHint,
+          color: "primary",
+          icon: "hourglass_top",
+          timeout: 0,
+          position: "top",
+          multiLine: true,
+          actions: [
+            {
+              label: i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              color: "yellow",
+              handler: () => {
+                const prevDismiss = dismissLinkNotify;
+                copyToClipboard(retrievalUrl);
+                // Replace notification: now shows copied message + X to abort
+                const copiedHint = i18n.downloadFeedback?.archiveLinkCopiedClose || "Länk kopierad — stäng för att hämta senare, eller vänta här.";
+                dismissLinkNotify = Notify.create({
+                  message: copiedHint,
+                  color: "primary",
+                  icon: "check",
+                  timeout: 0,
+                  position: "top",
+                  multiLine: true,
+                  actions: [
+                    {
+                      icon: "close",
+                      color: "white",
+                      round: true,
+                      handler: () => {
+                        abortedByUser = true;
+                        if (typeof dismissLinkNotify === "function") {
+                          dismissLinkNotify();
+                          dismissLinkNotify = null;
+                        }
+                      },
+                    },
+                  ],
+                });
+                if (typeof prevDismiss === "function") prevDismiss();
+              },
+            },
+          ],
+        });
+
+        // 3. Poll until ready (continues even if user closed the notification)
         await pollArchiveTicket(api, {
           statusUrl: `/tools/word_trend_speeches/archive/status/${archiveTicketId}`,
           onStatus: (status) => {
@@ -375,7 +429,18 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           },
         });
 
-        // 3. Download the artifact
+        // 4. Download the artifact — skip if user said "I'll fetch it later"
+        if (abortedByUser) {
+          Notify.create({
+            message: i18n.downloadFeedback?.archiveAborted || "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
+            color: "info",
+            icon: "link",
+            timeout: 6000,
+            position: "top",
+          });
+          return true;
+        }
+
         const downloadResponse = await api.get(
           `/tools/word_trend_speeches/archive/download/${archiveTicketId}`,
           { responseType: "blob" },
@@ -398,21 +463,33 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
             error?.message ||
             "Kunde inte hämta anföranden.";
         }
+        Notify.create({
+          type: "negative",
+          message: this.speechesErrorMessage,
+          timeout: 4000,
+          position: "top",
+        });
         console.error(`Error downloading word trend speeches archive (${archiveFormat}):`, error);
         return false;
+      } finally {
+        if (typeof dismissLinkNotify === "function") {
+          dismissLinkNotify();
+          dismissLinkNotify = null;
+        }
+        downloadDataStore().setDownloadActive(downloadKey, false);
       }
     },
 
-    async downloadSpeechesZip() {
-      return this._downloadSpeechesArchive("zip", `word_trend_speeches_archive_${this.ticketId}.zip`);
+    async downloadSpeechesZip(downloadKey) {
+      return this._downloadSpeechesArchive("zip", `word_trend_speeches_archive_${this.ticketId}.zip`, downloadKey);
     },
 
-    async downloadSpeechesJsonlGz() {
-      return this._downloadSpeechesArchive("jsonl_gz", `word_trend_speeches_archive_${this.ticketId}.jsonl.gz`);
+    async downloadSpeechesJsonlGz(downloadKey) {
+      return this._downloadSpeechesArchive("jsonl_gz", `word_trend_speeches_archive_${this.ticketId}.jsonl.gz`, downloadKey);
     },
 
-    async downloadSpeechesCsvGz() {
-      return this._downloadSpeechesArchive("csv_gz", `word_trend_speeches_archive_${this.ticketId}.csv.gz`);
+    async downloadSpeechesCsvGz(downloadKey) {
+      return this._downloadSpeechesArchive("csv_gz", `word_trend_speeches_archive_${this.ticketId}.csv.gz`, downloadKey);
     },
 
     async getWordHits(search) {
