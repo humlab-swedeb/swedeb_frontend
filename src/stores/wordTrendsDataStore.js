@@ -353,9 +353,14 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       }
     },
 
-    async _downloadSpeechesArchive(archiveFormat, fallbackFilename, downloadKey) {
+    async _downloadSpeechesArchive(
+      archiveFormat,
+      fallbackFilename,
+      downloadKey,
+    ) {
       if (!this.ticketId) return false;
-      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) return false;
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey))
+        return false;
 
       this.speechesErrorMessage = "";
       this.resetArchiveTicketState();
@@ -375,10 +380,16 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
         // 2. Immediately show a persistent notification with the retrieval link
-        const retrievalUrl = window.location.origin + "/download/" + archiveTicketId;
-        const buildingHint = i18n.downloadFeedback?.archiveBuildingHint || "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        const retrievalUrl =
+          window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint =
+          i18n.downloadFeedback?.archiveBuildingHint ||
+          "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
-          message: (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") + " " + buildingHint,
+          message:
+            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            " " +
+            buildingHint,
           color: "blue-8",
           icon: "hourglass_top",
           timeout: 0,
@@ -386,13 +397,16 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           multiLine: true,
           actions: [
             {
-              label: i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              label:
+                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
                 copyToClipboard(retrievalUrl);
                 // Replace notification: now shows copied message + X to abort
-                const copiedHint = i18n.downloadFeedback?.archiveLinkCopiedClose || "Länk kopierad — stäng för att hämta senare, eller vänta här.";
+                const copiedHint =
+                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  "Länk kopierad — stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
                   color: "blue-8",
@@ -432,7 +446,9 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         // 4. Download the artifact — skip if user said "I'll fetch it later"
         if (abortedByUser) {
           Notify.create({
-            message: i18n.downloadFeedback?.archiveAborted || "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
+            message:
+              i18n.downloadFeedback?.archiveAborted ||
+              "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
             color: "info",
             icon: "link",
             timeout: 6000,
@@ -469,7 +485,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           timeout: 4000,
           position: "top",
         });
-        console.error(`Error downloading word trend speeches archive (${archiveFormat}):`, error);
+        console.error(
+          `Error downloading word trend speeches archive (${archiveFormat}):`,
+          error,
+        );
         return false;
       } finally {
         if (typeof dismissLinkNotify === "function") {
@@ -481,15 +500,27 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
     },
 
     async downloadSpeechesZip(downloadKey) {
-      return this._downloadSpeechesArchive("zip", `word_trend_speeches_archive_${this.ticketId}.zip`, downloadKey);
+      return this._downloadSpeechesArchive(
+        "zip",
+        `word_trend_speeches_archive_${this.ticketId}.zip`,
+        downloadKey,
+      );
     },
 
     async downloadSpeechesJsonlGz(downloadKey) {
-      return this._downloadSpeechesArchive("jsonl_gz", `word_trend_speeches_archive_${this.ticketId}.jsonl.gz`, downloadKey);
+      return this._downloadSpeechesArchive(
+        "jsonl_gz",
+        `word_trend_speeches_archive_${this.ticketId}.jsonl.gz`,
+        downloadKey,
+      );
     },
 
     async downloadSpeechesCsvGz(downloadKey) {
-      return this._downloadSpeechesArchive("csv_gz", `word_trend_speeches_archive_${this.ticketId}.csv.gz`, downloadKey);
+      return this._downloadSpeechesArchive(
+        "csv_gz",
+        `word_trend_speeches_archive_${this.ticketId}.csv.gz`,
+        downloadKey,
+      );
     },
 
     async getWordHits(search) {
