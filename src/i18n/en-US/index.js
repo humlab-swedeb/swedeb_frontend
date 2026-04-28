@@ -48,4 +48,5 @@ export default {
     kwicTicketTimeout: "The search timed out. Please try again.",
     kwicQueryFailed: "KWIC query failed.",
   },
+  kwicShardProgress: "{complete} of {total} shards loaded",
 };

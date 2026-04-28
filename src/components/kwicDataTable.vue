@@ -53,6 +53,17 @@
     <q-table ref="KWICTable" :rows="rows" :columns="columns" row-key="unique_id" :rows-per-page-options="[10, 20, 50]"
       v-model:pagination="pagination" :loading="kwicStore.isLoading || kwicStore.isPageLoading" class="bg-grey-2"
       @request="onRequest">
+      <template v-slot:top-row v-if="kwicStore.isPartial">
+        <q-tr>
+          <q-td :colspan="columns.length + 1" class="q-pa-none">
+            <q-linear-progress :value="kwicStore.shardsTotal > 0 ? kwicStore.shardsComplete / kwicStore.shardsTotal : 0"
+              color="accent" track-color="grey-3" class="q-mb-none" style="height: 6px" />
+            <q-item-label caption class="q-px-sm q-pt-xs text-grey-7">
+              {{ $t('kwicShardProgress', { complete: kwicStore.shardsComplete, total: kwicStore.shardsTotal }) }}
+            </q-item-label>
+          </q-td>
+        </q-tr>
+      </template>
       <template v-slot:loading>
         <q-inner-loading showing class="kwic-table-loading-overlay">
           <q-spinner-tail size="48px" color="accent" :thickness="5" />
@@ -171,6 +182,15 @@ const expandRow = async (props) => {
 
 const onRequest = async ({ pagination }) => {
   if (!kwicStore.useTicketFlow || !kwicStore.ticketId) {
+    return;
+  }
+
+  // Ignore sort changes while results are still loading (PARTIAL)
+  if (
+    kwicStore.isPartial &&
+    (pagination.sortBy !== kwicStore.pagination.sortBy ||
+      pagination.descending !== kwicStore.pagination.descending)
+  ) {
     return;
   }
 

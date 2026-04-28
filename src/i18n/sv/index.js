@@ -702,4 +702,5 @@ export default {
   reportText:
     "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
   githubLink: "Gå vidare till SWERIK:s GitHub-sida",
+  kwicShardProgress: "{complete} av {total} delar inladdade",
 };

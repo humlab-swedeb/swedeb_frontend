@@ -54,6 +54,9 @@ export const kwicDataStore = defineStore("kwicData", {
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
+    shardsComplete: 0,
+    shardsTotal: 0,
+    isPartial: false,
     requestSequence: 0,
     pageRequestSequence: 0,
     pagination: {
@@ -93,6 +96,9 @@ export const kwicDataStore = defineStore("kwicData", {
       this.totalPages = 0;
       this.expiresAt = null;
       this.archiveRetrievalUrl = null;
+      this.shardsComplete = 0;
+      this.shardsTotal = 0;
+      this.isPartial = false;
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -133,16 +139,34 @@ export const kwicDataStore = defineStore("kwicData", {
           return false;
         }
 
-        this.expiresAt = response.data.expires_at;
+        const data = response.data;
+        this.expiresAt = data.expires_at;
 
-        if (response.data.status === "ready") {
+        if (data.status === "ready") {
+          this.isPartial = false;
+          this.shardsComplete = data.shards_complete ?? this.shardsTotal;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
           return true;
         }
 
-        if (response.data.status === "error") {
-          throw new Error(
-            response.data.error || i18n.accessibility.kwicQueryFailed,
-          );
+        if (data.status === "error") {
+          throw new Error(data.error || i18n.accessibility.kwicQueryFailed);
+        }
+
+        if (data.status === "partial") {
+          this.isPartial = true;
+          this.shardsComplete = data.shards_complete ?? this.shardsComplete;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
+          if (data.total_hits != null) {
+            this.totalHits = data.total_hits;
+          }
+          // Show available rows; ignore failures (more shards may be in flight)
+          this.fetchKwicPage({
+            page: 1,
+            rowsPerPage: this.pagination.rowsPerPage,
+            sortBy: this.pagination.sortBy,
+            descending: this.pagination.descending,
+          }).catch(() => {});
         }
 
         const delayMs = getTicketPollDelayMs(
@@ -204,20 +228,24 @@ export const kwicDataStore = defineStore("kwicData", {
           return null;
         }
 
-        this.kwicData = response.data.kwic_list;
-        this.totalHits = response.data.total_hits;
-        this.totalPages = response.data.total_pages;
-        this.expiresAt = response.data.expires_at;
+        const pageData = response.data;
+        this.kwicData = pageData.kwic_list;
+        this.totalHits = pageData.total_hits;
+        this.totalPages = pageData.total_pages;
+        this.expiresAt = pageData.expires_at;
+        this.isPartial = pageData.status === "partial";
+        this.shardsComplete = pageData.shards_complete ?? this.shardsComplete;
+        this.shardsTotal = pageData.shards_total ?? this.shardsTotal;
         this.pagination = {
           ...this.pagination,
           page,
           rowsPerPage,
           sortBy,
           descending,
-          rowsNumber: response.data.total_hits,
+          rowsNumber: pageData.total_hits,
         };
 
-        return response.data;
+        return pageData;
       } catch (error) {
         if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
