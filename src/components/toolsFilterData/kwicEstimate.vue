@@ -1,18 +1,11 @@
 <template>
   <div v-if="show" class="q-mt-sm">
-    <q-banner
-      v-if="!kwicStore.inVocabulary"
-      dense
-      class="bg-grey-2 text-grey-7 text-caption"
-    >
+    <q-banner v-if="!kwicStore.inVocabulary" dense class="bg-grey-2 text-grey-7 text-caption">
       {{ $t("kwicEstimateNotInVocabulary") }}
     </q-banner>
-    <q-banner
-      v-else-if="isHighCount"
-      dense
-      class="bg-orange-1 text-orange-9 text-caption"
-    >
-      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }} – {{ $t("kwicEstimateHighWarning") }}
+    <q-banner v-else-if="isHighCount" dense class="bg-orange-1 text-orange-9 text-caption">
+      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }} – {{
+        $t("kwicEstimateHighWarning") }}
     </q-banner>
     <q-banner v-else dense class="bg-green-1 text-green-9 text-caption">
       {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }}
