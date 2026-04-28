@@ -129,9 +129,10 @@ export default {
   nrOfWordsRight: "Höger",
   nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
   allHits: "Alla träffar",
-  kwicEstimateHits: "Uppskattade träffar",
+  kwicEstimateHitsPrefix: "Cirka",
+  kwicEstimateHits: "uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  kwicEstimateHighWarning: "Sökningen kan ta lång tid",
+  kwicEstimateHighWarning: "sökningen kan ta en stund.",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 

@@ -12,11 +12,10 @@
       dense
       class="bg-orange-1 text-orange-9 text-caption"
     >
-      ~{{ formattedHits }} {{ $t("kwicEstimateHits") }} —
-      {{ $t("kwicEstimateHighWarning") }}
+      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }} – {{ $t("kwicEstimateHighWarning") }}
     </q-banner>
     <q-banner v-else dense class="bg-green-1 text-green-9 text-caption">
-      ~{{ formattedHits }} {{ $t("kwicEstimateHits") }}
+      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }}
     </q-banner>
   </div>
 </template>

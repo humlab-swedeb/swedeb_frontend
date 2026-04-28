@@ -42,9 +42,10 @@ export default {
     copyLink: "Copy retrieval link",
     linkCopied: "Link copied!",
   },
+  kwicEstimateHitsPrefix: "Approx.",
   kwicEstimateHits: "estimated hits",
   kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
-  kwicEstimateHighWarning: "The search may take a long time",
+  kwicEstimateHighWarning: "the search may take a while.",
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
