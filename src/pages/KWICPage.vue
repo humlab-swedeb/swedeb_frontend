@@ -27,8 +27,8 @@
     >
       {{
         $t("kwicDisplayLimitBanner", {
-          total: kwicStore.totalHits.toLocaleString("sv-SE"),
-          limit: kwicStore.displayLimit.toLocaleString("sv-SE"),
+          total: formattedTotalHits,
+          limit: formattedDisplayLimit,
         })
       }}
     </q-banner>
@@ -56,10 +56,19 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { locale } = useI18n();
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
+
+const formattedTotalHits = computed(() =>
+  kwicStore.totalHits != null ? kwicStore.totalHits.toLocaleString(locale.value) : "",
+);
+const formattedDisplayLimit = computed(() =>
+  kwicStore.displayLimit != null ? kwicStore.displayLimit.toLocaleString(locale.value) : "",
+);
 
 const formattedIntro = i18n.kwicIntro;
 
