@@ -253,7 +253,10 @@ export const kwicDataStore = defineStore("kwicData", {
           rowsPerPage,
           sortBy,
           descending,
-          rowsNumber: response.data.total_hits,
+          rowsNumber:
+            response.data.display_limited && response.data.display_limit != null
+              ? Math.min(response.data.total_hits, response.data.display_limit)
+              : response.data.total_hits,
         };
 
         return response.data;
