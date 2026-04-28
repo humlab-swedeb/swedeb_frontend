@@ -5,8 +5,11 @@
   <template v-else-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="kwicStore.totalHits > 0">
-        {{ $t("searchResult1") }} <b>{{ kwicStore.totalHits }}</b>
+        {{ $t("searchResult1") }} <b>{{ formattedTotalHits }}</b>
         {{ $t("searchResult2") }}
+        <span v-if="kwicStore.displayLimited" class="text-orange-9">
+          {{ $t("kwicDisplayCapNote", { limit: formattedDisplayLimit }) }}
+        </span>
       </q-item-label>
 
       <q-btn-dropdown
@@ -208,6 +211,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
@@ -215,9 +219,17 @@ import expandingTableRow from "src/components/expandingTableRow.vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import noResults from "src/components/noResults.vue";
 
+const { locale } = useI18n();
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
 const downloadStore = downloadDataStore();
+
+const formattedTotalHits = computed(() =>
+  kwicStore.totalHits != null ? kwicStore.totalHits.toLocaleString(locale.value) : "",
+);
+const formattedDisplayLimit = computed(() =>
+  kwicStore.displayLimit != null ? kwicStore.displayLimit.toLocaleString(locale.value) : "",
+);
 
 const downloadKeys = {
   csv: "kwic-csv",

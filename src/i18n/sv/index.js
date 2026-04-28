@@ -130,8 +130,7 @@ export default {
   kwicEstimateHits: "Uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   kwicEstimateHighWarning: "Sökningen kan ta lång tid",
-  kwicDisplayLimitBanner:
-    "Sökningen har ~{total} träffar. Tabellen visar de första {limit}. Ladda ner för att hämta alla.",
+  kwicDisplayCapNote: "Tabellen visar de första {limit}.",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
