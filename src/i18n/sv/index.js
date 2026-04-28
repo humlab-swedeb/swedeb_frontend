@@ -129,6 +129,9 @@ export default {
   nrOfWordsRight: "Höger",
   nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
   allHits: "Alla träffar",
+  kwicEstimateHits: "Uppskattade träffar",
+  kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
+  kwicEstimateHighWarning: "Sökningen kan ta lång tid",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 

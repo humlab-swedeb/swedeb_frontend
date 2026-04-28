@@ -57,6 +57,9 @@ export const kwicDataStore = defineStore("kwicData", {
     shardsComplete: 0,
     shardsTotal: 0,
     isPartial: false,
+    estimatedHits: null,
+    inVocabulary: null,
+    estimateRequestSequence: 0,
     requestSequence: 0,
     pageRequestSequence: 0,
     pagination: {
@@ -112,9 +115,40 @@ export const kwicDataStore = defineStore("kwicData", {
         lemmatized: this.lemmatizeSearch,
         words_before: this.wordsLeft,
         words_after: this.wordsRight,
-        cut_off: this.cutOff,
+        ...(this.cutOff !== null && { cut_off: this.cutOff }),
         filters: metaDataStore().getSelectedKwicTicketFilters(),
       };
+    },
+
+    async fetchEstimate(word) {
+      if (!word || !word.trim()) {
+        this.estimatedHits = null;
+        this.inVocabulary = null;
+        return;
+      }
+
+      const requestId = ++this.estimateRequestSequence;
+      const filters = metaDataStore().getSelectedKwicTicketFilters();
+      const params = { word: word.trim() };
+
+      if (filters.from_year != null) params.from_year = filters.from_year;
+      if (filters.to_year != null) params.to_year = filters.to_year;
+      if (filters.party_id?.length) params.party_id = filters.party_id;
+      if (filters.who?.length) params.who = filters.who;
+      if (filters.gender_id?.length) params.gender_id = filters.gender_id;
+      if (filters.chamber_abbrev?.length)
+        params.chamber_abbrev = filters.chamber_abbrev;
+
+      try {
+        const response = await api.get("/tools/kwic/estimate", { params });
+        if (requestId !== this.estimateRequestSequence) return;
+        this.estimatedHits = response.data.estimated_hits;
+        this.inVocabulary = response.data.in_vocabulary;
+      } catch {
+        if (requestId !== this.estimateRequestSequence) return;
+        this.estimatedHits = null;
+        this.inVocabulary = null;
+      }
     },
 
     getKwicResultsPath(search) {
@@ -160,12 +194,14 @@ export const kwicDataStore = defineStore("kwicData", {
           if (data.total_hits != null) {
             this.totalHits = data.total_hits;
           }
-          // Show available rows; ignore failures (more shards may be in flight)
+          // Show available rows for the user's current view; ignore failures
+          // because more shards may still be in flight.
           this.fetchKwicPage({
-            page: 1,
+            page: this.pagination.page,
             rowsPerPage: this.pagination.rowsPerPage,
             sortBy: this.pagination.sortBy,
             descending: this.pagination.descending,
+            silent: true,
           }).catch(() => {});
         }
 
@@ -186,6 +222,7 @@ export const kwicDataStore = defineStore("kwicData", {
       rowsPerPage = this.pagination.rowsPerPage,
       sortBy = this.pagination.sortBy,
       descending = this.pagination.descending,
+      silent = false,
     } = {}) {
       if (!this.ticketId) {
         return null;
@@ -193,7 +230,9 @@ export const kwicDataStore = defineStore("kwicData", {
 
       const requestId = this.requestSequence;
       const pageRequestId = ++this.pageRequestSequence;
-      this.isPageLoading = true;
+      if (!silent) {
+        this.isPageLoading = true;
+      }
 
       try {
         const params = {
@@ -218,7 +257,13 @@ export const kwicDataStore = defineStore("kwicData", {
             return null;
           }
 
-          return this.fetchKwicPage({ page, rowsPerPage, sortBy, descending });
+          return this.fetchKwicPage({
+            page,
+            rowsPerPage,
+            sortBy,
+            descending,
+            silent,
+          });
         }
 
         if (
@@ -258,7 +303,7 @@ export const kwicDataStore = defineStore("kwicData", {
         console.error("Error fetching KWIC page:", error);
         return null;
       } finally {
-        if (pageRequestId === this.pageRequestSequence) {
+        if (!silent && pageRequestId === this.pageRequestSequence) {
           this.isPageLoading = false;
         }
       }
