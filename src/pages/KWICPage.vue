@@ -10,8 +10,7 @@
     rounded
     class="bg-red-1 text-negative q-mt-md"
   >
-    {{ $t("kwicFetchError") }}
-    <span v-if="kwicStore.errorMessage"> {{ kwicStore.errorMessage }}</span>
+    {{ kwicStore.errorMessage }}
   </q-banner>
   <div v-if="loading" class="column items-center q-py-lg q-gutter-sm">
     <loadingIcon size="100" />
