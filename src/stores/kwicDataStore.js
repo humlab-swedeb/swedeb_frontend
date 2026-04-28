@@ -28,7 +28,6 @@ export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     wordsLeft: 5,
     wordsRight: 5,
-    cutOff: 100000,
     kwicData: [],
     searchText: "",
     columnNames: {
@@ -56,6 +55,8 @@ export const kwicDataStore = defineStore("kwicData", {
     isPageLoading: false,
     estimatedHits: null,
     inVocabulary: null,
+    displayLimited: false,
+    displayLimit: null,
     requestSequence: 0,
     estimateRequestSequence: 0,
     pageRequestSequence: 0,
@@ -96,6 +97,8 @@ export const kwicDataStore = defineStore("kwicData", {
       this.totalPages = 0;
       this.expiresAt = null;
       this.archiveRetrievalUrl = null;
+      this.displayLimited = false;
+      this.displayLimit = null;
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -109,7 +112,6 @@ export const kwicDataStore = defineStore("kwicData", {
         lemmatized: this.lemmatizeSearch,
         words_before: this.wordsLeft,
         words_after: this.wordsRight,
-        cut_off: this.cutOff,
         filters: metaDataStore().getSelectedKwicTicketFilters(),
       };
     },
@@ -241,6 +243,8 @@ export const kwicDataStore = defineStore("kwicData", {
         this.kwicData = response.data.kwic_list;
         this.totalHits = response.data.total_hits;
         this.totalPages = response.data.total_pages;
+        this.displayLimited = response.data.display_limited ?? false;
+        this.displayLimit = response.data.display_limit ?? null;
         this.expiresAt = response.data.expires_at;
         this.pagination = {
           ...this.pagination,
@@ -248,7 +252,10 @@ export const kwicDataStore = defineStore("kwicData", {
           rowsPerPage,
           sortBy,
           descending,
-          rowsNumber: response.data.total_hits,
+          rowsNumber:
+            response.data.display_limited && response.data.display_limit != null
+              ? Math.min(response.data.total_hits, response.data.display_limit)
+              : response.data.total_hits,
         };
 
         return response.data;
@@ -280,7 +287,6 @@ export const kwicDataStore = defineStore("kwicData", {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
           lemmatized: this.lemmatizeSearch,
-          ...(this.cutOff !== null && { cut_off: this.cutOff }),
         };
 
         const queryString = metaDataStore().getSelectedParams(additionalParams);

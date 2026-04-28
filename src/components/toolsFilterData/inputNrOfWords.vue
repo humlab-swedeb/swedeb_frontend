@@ -43,29 +43,10 @@
       </q-input>
     </div>
   </q-card-section>
-  <q-select
-    v-model="kwicStore.cutOff"
-    :options="cutOffOptions"
-    emit-value
-    map-options
-    outlined
-    :label="$t('nrCutOffKWIC')"
-    class="bg-white q-mt-sm"
-    color="accent"
-  />
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
 import { kwicDataStore } from "src/stores/kwicDataStore.js";
 
-const { t } = useI18n();
 const kwicStore = kwicDataStore();
-
-const cutOffOptions = [
-  { label: "100 000", value: 100000 },
-  { label: "1 000 000", value: 1000000 },
-  { label: "10 000 000", value: 10000000 },
-  { label: t("allHits"), value: null },
-];
 </script>

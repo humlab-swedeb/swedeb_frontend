@@ -45,6 +45,8 @@ export default {
   kwicEstimateHits: "estimated hits",
   kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
   kwicEstimateHighWarning: "The search may take a long time",
+  kwicDisplayLimitBanner:
+    "The search has ~{total} hits. The table shows the first {limit}. Download to retrieve all.",
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
