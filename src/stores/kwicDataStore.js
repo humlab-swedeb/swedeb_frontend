@@ -28,6 +28,7 @@ export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     wordsLeft: 5,
     wordsRight: 5,
+    cutOff: 100000,
     kwicData: [],
     searchText: "",
     columnNames: {
@@ -53,12 +54,13 @@ export const kwicDataStore = defineStore("kwicData", {
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
+    shardsComplete: 0,
+    shardsTotal: 0,
+    isPartial: false,
     estimatedHits: null,
     inVocabulary: null,
-    displayLimited: false,
-    displayLimit: null,
-    requestSequence: 0,
     estimateRequestSequence: 0,
+    requestSequence: 0,
     pageRequestSequence: 0,
     pagination: {
       sortBy: DEFAULT_SORT_BY,
@@ -97,8 +99,9 @@ export const kwicDataStore = defineStore("kwicData", {
       this.totalPages = 0;
       this.expiresAt = null;
       this.archiveRetrievalUrl = null;
-      this.displayLimited = false;
-      this.displayLimit = null;
+      this.shardsComplete = 0;
+      this.shardsTotal = 0;
+      this.isPartial = false;
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -112,6 +115,7 @@ export const kwicDataStore = defineStore("kwicData", {
         lemmatized: this.lemmatizeSearch,
         words_before: this.wordsLeft,
         words_after: this.wordsRight,
+        ...(this.cutOff !== null && { cut_off: this.cutOff }),
         filters: metaDataStore().getSelectedKwicTicketFilters(),
       };
     },
@@ -169,16 +173,36 @@ export const kwicDataStore = defineStore("kwicData", {
           return false;
         }
 
-        this.expiresAt = response.data.expires_at;
+        const data = response.data;
+        this.expiresAt = data.expires_at;
 
-        if (response.data.status === "ready") {
+        if (data.status === "ready") {
+          this.isPartial = false;
+          this.shardsComplete = data.shards_complete ?? this.shardsTotal;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
           return true;
         }
 
-        if (response.data.status === "error") {
-          throw new Error(
-            response.data.error || i18n.accessibility.kwicQueryFailed,
-          );
+        if (data.status === "error") {
+          throw new Error(data.error || i18n.accessibility.kwicQueryFailed);
+        }
+
+        if (data.status === "partial") {
+          this.isPartial = true;
+          this.shardsComplete = data.shards_complete ?? this.shardsComplete;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
+          if (data.total_hits != null) {
+            this.totalHits = data.total_hits;
+          }
+          // Show available rows for the user's current view; ignore failures
+          // because more shards may still be in flight.
+          this.fetchKwicPage({
+            page: this.pagination.page,
+            rowsPerPage: this.pagination.rowsPerPage,
+            sortBy: this.pagination.sortBy,
+            descending: this.pagination.descending,
+            silent: true,
+          }).catch(() => {});
         }
 
         const delayMs = getTicketPollDelayMs(
@@ -198,6 +222,7 @@ export const kwicDataStore = defineStore("kwicData", {
       rowsPerPage = this.pagination.rowsPerPage,
       sortBy = this.pagination.sortBy,
       descending = this.pagination.descending,
+      silent = false,
     } = {}) {
       if (!this.ticketId) {
         return null;
@@ -205,7 +230,9 @@ export const kwicDataStore = defineStore("kwicData", {
 
       const requestId = this.requestSequence;
       const pageRequestId = ++this.pageRequestSequence;
-      this.isPageLoading = true;
+      if (!silent) {
+        this.isPageLoading = true;
+      }
 
       try {
         const params = {
@@ -230,7 +257,13 @@ export const kwicDataStore = defineStore("kwicData", {
             return null;
           }
 
-          return this.fetchKwicPage({ page, rowsPerPage, sortBy, descending });
+          return this.fetchKwicPage({
+            page,
+            rowsPerPage,
+            sortBy,
+            descending,
+            silent,
+          });
         }
 
         if (
@@ -240,25 +273,24 @@ export const kwicDataStore = defineStore("kwicData", {
           return null;
         }
 
-        this.kwicData = response.data.kwic_list;
-        this.totalHits = response.data.total_hits;
-        this.totalPages = response.data.total_pages;
-        this.displayLimited = response.data.display_limited ?? false;
-        this.displayLimit = response.data.display_limit ?? null;
-        this.expiresAt = response.data.expires_at;
+        const pageData = response.data;
+        this.kwicData = pageData.kwic_list;
+        this.totalHits = pageData.total_hits;
+        this.totalPages = pageData.total_pages;
+        this.expiresAt = pageData.expires_at;
+        this.isPartial = pageData.status === "partial";
+        this.shardsComplete = pageData.shards_complete ?? this.shardsComplete;
+        this.shardsTotal = pageData.shards_total ?? this.shardsTotal;
         this.pagination = {
           ...this.pagination,
           page,
           rowsPerPage,
           sortBy,
           descending,
-          rowsNumber:
-            response.data.display_limited && response.data.display_limit != null
-              ? Math.min(response.data.total_hits, response.data.display_limit)
-              : response.data.total_hits,
+          rowsNumber: pageData.total_hits,
         };
 
-        return response.data;
+        return pageData;
       } catch (error) {
         if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
@@ -271,7 +303,7 @@ export const kwicDataStore = defineStore("kwicData", {
         console.error("Error fetching KWIC page:", error);
         return null;
       } finally {
-        if (pageRequestId === this.pageRequestSequence) {
+        if (!silent && pageRequestId === this.pageRequestSequence) {
           this.isPageLoading = false;
         }
       }
@@ -287,6 +319,7 @@ export const kwicDataStore = defineStore("kwicData", {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
           lemmatized: this.lemmatizeSearch,
+          ...(this.cutOff !== null && { cut_off: this.cutOff }),
         };
 
         const queryString = metaDataStore().getSelectedParams(additionalParams);
