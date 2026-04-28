@@ -57,6 +57,7 @@ export const kwicDataStore = defineStore("kwicData", {
     estimatedHits: null,
     inVocabulary: null,
     requestSequence: 0,
+    estimateRequestSequence: 0,
     pageRequestSequence: 0,
     pagination: {
       sortBy: DEFAULT_SORT_BY,
@@ -120,6 +121,7 @@ export const kwicDataStore = defineStore("kwicData", {
         return;
       }
 
+      const requestId = ++this.estimateRequestSequence;
       const filters = metaDataStore().getSelectedKwicTicketFilters();
       const params = { word: word.trim() };
 
@@ -128,13 +130,16 @@ export const kwicDataStore = defineStore("kwicData", {
       if (filters.party_id?.length) params.party_id = filters.party_id;
       if (filters.who?.length) params.who = filters.who;
       if (filters.gender_id?.length) params.gender_id = filters.gender_id;
-      if (filters.chamber_abbrev?.length) params.chamber_abbrev = filters.chamber_abbrev;
+      if (filters.chamber_abbrev?.length)
+        params.chamber_abbrev = filters.chamber_abbrev;
 
       try {
         const response = await api.get("/tools/kwic/estimate", { params });
+        if (requestId !== this.estimateRequestSequence) return;
         this.estimatedHits = response.data.estimated_hits;
         this.inVocabulary = response.data.in_vocabulary;
       } catch {
+        if (requestId !== this.estimateRequestSequence) return;
         this.estimatedHits = null;
         this.inVocabulary = null;
       }
@@ -169,7 +174,9 @@ export const kwicDataStore = defineStore("kwicData", {
         }
 
         if (response.data.status === "error") {
-          throw new Error(response.data.error || i18n.accessibility.kwicQueryFailed);
+          throw new Error(
+            response.data.error || i18n.accessibility.kwicQueryFailed,
+          );
         }
 
         const delayMs = getTicketPollDelayMs(
