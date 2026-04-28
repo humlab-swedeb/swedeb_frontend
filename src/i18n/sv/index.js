@@ -127,10 +127,11 @@ export default {
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
+  nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
+  allHits: "Alla träffar",
   kwicEstimateHits: "Uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   kwicEstimateHighWarning: "Sökningen kan ta lång tid",
-  kwicDisplayCapNote: "Tabellen visar de första {limit}.",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
@@ -704,4 +705,5 @@ export default {
   reportText:
     "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
   githubLink: "Gå vidare till SWERIK:s GitHub-sida",
+  kwicShardProgress: "{complete} av {total} delar inladdade",
 };
