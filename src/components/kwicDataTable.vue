@@ -51,8 +51,7 @@
       </q-btn-dropdown>
     </div>
     <q-table ref="KWICTable" :rows="rows" :columns="columns" row-key="unique_id" :rows-per-page-options="[10, 20, 50]"
-      v-model:pagination="pagination" :loading="kwicStore.isLoading || kwicStore.isPageLoading" class="bg-grey-2"
-      @request="onRequest">
+      v-model:pagination="pagination" :loading="kwicStore.isPageLoading" class="bg-grey-2" @request="onRequest">
       <template v-slot:top-row v-if="kwicStore.isPartial">
         <q-tr>
           <q-td :colspan="columns.length + 1" class="q-pa-none">
