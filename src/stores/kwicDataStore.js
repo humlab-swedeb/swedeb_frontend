@@ -28,7 +28,6 @@ export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     wordsLeft: 5,
     wordsRight: 5,
-    cutOff: 100000,
     kwicData: [],
     searchText: "",
     columnNames: {
@@ -288,7 +287,6 @@ export const kwicDataStore = defineStore("kwicData", {
           words_before: this.wordsLeft,
           words_after: this.wordsRight,
           lemmatized: this.lemmatizeSearch,
-          ...(this.cutOff !== null && { cut_off: this.cutOff }),
         };
 
         const queryString = metaDataStore().getSelectedParams(additionalParams);
