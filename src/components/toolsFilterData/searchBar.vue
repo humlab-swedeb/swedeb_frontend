@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, watch, onBeforeUnmount } from "vue";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
@@ -63,6 +63,30 @@ const handleEnter = () => {
     }
   }
 };
+
+let estimateDebounceTimer = null;
+
+watch(
+  () => (route.path === "/tools/kwic" ? kwicStore.searchText : null),
+  (newWord) => {
+    if (route.path !== "/tools/kwic") return;
+    clearTimeout(estimateDebounceTimer);
+    kwicStore.estimatedHits = null;
+    kwicStore.inVocabulary = null;
+    if (!newWord || !newWord.trim()) {
+      return;
+    }
+    estimateDebounceTimer = setTimeout(() => {
+      if (route.path === "/tools/kwic") {
+        kwicStore.fetchEstimate(newWord);
+      }
+    }, 400);
+  },
+);
+
+onBeforeUnmount(() => {
+  clearTimeout(estimateDebounceTimer);
+});
 </script>
 
 <style scoped></style>

@@ -127,8 +127,11 @@ export default {
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
-  nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
-  allHits: "Alla träffar",
+  kwicEstimateHits: "Uppskattade träffar",
+  kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
+  kwicEstimateHighWarning: "Sökningen kan ta lång tid",
+  kwicDisplayLimitBanner:
+    "Sökningen har ~{total} träffar. Tabellen visar de första {limit}. Ladda ner för att hämta alla.",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
@@ -191,9 +194,12 @@ export default {
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",
-    archiveBuildingHint: "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.",
-    archiveLinkCopiedClose: "Länk kopierad — stäng för att hämta senare, eller vänta här.",
-    archiveAborted: "Länken är sparad — öppna den för att hämta arkivet när det är klart.",
+    archiveBuildingHint:
+      "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.",
+    archiveLinkCopiedClose:
+      "Länk kopierad — stäng för att hämta senare, eller vänta här.",
+    archiveAborted:
+      "Länken är sparad — öppna den för att hämta arkivet när det är klart.",
     success: "Nedladdningen har startat.",
     error: "Kunde inte starta nedladdningen.",
     archiveGenerationFailed: "Arkivgenerering misslyckades.",
@@ -682,6 +688,8 @@ export default {
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
+    kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
+    kwicQueryFailed: "KWIC-sökningen misslyckades.",
 
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",

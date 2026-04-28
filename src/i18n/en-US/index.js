@@ -15,9 +15,12 @@ export default {
   downloadFeedback: {
     preparing: "Preparing download...",
     archiveBuilding: "Building archive…",
-    archiveBuildingHint: "Keep this open to wait, or copy the link and close to fetch later.",
-    archiveLinkCopiedClose: "Link copied — close to fetch later, or keep waiting here.",
-    archiveAborted: "Link saved — open it to download the archive when it is ready.",
+    archiveBuildingHint:
+      "Keep this open to wait, or copy the link and close to fetch later.",
+    archiveLinkCopiedClose:
+      "Link copied — close to fetch later, or keep waiting here.",
+    archiveAborted:
+      "Link saved — open it to download the archive when it is ready.",
     success: "The download has started.",
     error: "Could not start the download.",
     archiveGenerationFailed: "Archive generation failed.",
@@ -39,8 +42,15 @@ export default {
     copyLink: "Copy retrieval link",
     linkCopied: "Link copied!",
   },
+  kwicEstimateHits: "estimated hits",
+  kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
+  kwicEstimateHighWarning: "The search may take a long time",
+  kwicDisplayLimitBanner:
+    "The search has ~{total} hits. The table shows the first {limit}. Download to retrieve all.",
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
+    kwicTicketTimeout: "The search timed out. Please try again.",
+    kwicQueryFailed: "KWIC query failed.",
   },
 };

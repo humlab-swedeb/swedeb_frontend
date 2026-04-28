@@ -5,7 +5,11 @@
     }}</q-item-label>
     <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
   </q-card>
-  <q-banner v-if="kwicStore.errorMessage" rounded class="bg-red-1 text-negative q-mt-md">
+  <q-banner
+    v-if="kwicStore.errorMessage"
+    rounded
+    class="bg-red-1 text-negative q-mt-md"
+  >
     {{ $t("kwicFetchError") }}
     <span v-if="kwicStore.errorMessage"> {{ kwicStore.errorMessage }}</span>
   </q-banner>
@@ -16,6 +20,18 @@
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
     </div>
+    <q-banner
+      v-if="kwicStore.displayLimited"
+      dense
+      class="bg-orange-1 text-orange-9 text-caption q-mb-sm"
+    >
+      {{
+        $t("kwicDisplayLimitBanner", {
+          total: formattedTotalHits,
+          limit: formattedDisplayLimit,
+        })
+      }}
+    </q-banner>
     <div v-if="!loading" class="q-pb-xl">
       <kwicDataTable />
     </div>
@@ -30,7 +46,6 @@
       />
       >
     </div> -->
-
   </div>
 </template>
 
@@ -41,11 +56,19 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
+import { useI18n } from "vue-i18n";
 
-
+const { locale } = useI18n();
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
+
+const formattedTotalHits = computed(() =>
+  kwicStore.totalHits != null ? kwicStore.totalHits.toLocaleString(locale.value) : "",
+);
+const formattedDisplayLimit = computed(() =>
+  kwicStore.displayLimit != null ? kwicStore.displayLimit.toLocaleString(locale.value) : "",
+);
 
 const formattedIntro = i18n.kwicIntro;
 
@@ -73,7 +96,7 @@ watch(
     loading.value = false;
 
     metaStore.cancelSubmitKwicEvent();
-  }
+  },
 );
 
 const cancelFetch = () => {
