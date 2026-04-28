@@ -20,6 +20,7 @@
   </q-card-section>
   <q-card-section v-else-if="currentPath === '/tools/kwic'">
     <searchBar />
+    <kwicEstimate />
     <toggleSwitch
       class="q-mt-md"
       :label="$t('lemmaResultLabel')"
@@ -62,6 +63,7 @@ import searchBarAdd from "src/components/toolsFilterData/searchBarAdd.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
+import kwicEstimate from "src/components/toolsFilterData/kwicEstimate.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
 import nGramWidth from "src/components/toolsFilterData/nGramWidth.vue";

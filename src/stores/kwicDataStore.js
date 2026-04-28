@@ -54,6 +54,8 @@ export const kwicDataStore = defineStore("kwicData", {
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
+    estimatedHits: null,
+    inVocabulary: null,
     requestSequence: 0,
     pageRequestSequence: 0,
     pagination: {
@@ -109,6 +111,33 @@ export const kwicDataStore = defineStore("kwicData", {
         cut_off: this.cutOff,
         filters: metaDataStore().getSelectedKwicTicketFilters(),
       };
+    },
+
+    async fetchEstimate(word) {
+      if (!word || !word.trim()) {
+        this.estimatedHits = null;
+        this.inVocabulary = null;
+        return;
+      }
+
+      const filters = metaDataStore().getSelectedKwicTicketFilters();
+      const params = { word: word.trim() };
+
+      if (filters.from_year != null) params.from_year = filters.from_year;
+      if (filters.to_year != null) params.to_year = filters.to_year;
+      if (filters.party_id?.length) params.party_id = filters.party_id;
+      if (filters.who?.length) params.who = filters.who;
+      if (filters.gender_id?.length) params.gender_id = filters.gender_id;
+      if (filters.chamber_abbrev?.length) params.chamber_abbrev = filters.chamber_abbrev;
+
+      try {
+        const response = await api.get("/tools/kwic/estimate", { params });
+        this.estimatedHits = response.data.estimated_hits;
+        this.inVocabulary = response.data.in_vocabulary;
+      } catch {
+        this.estimatedHits = null;
+        this.inVocabulary = null;
+      }
     },
 
     getKwicResultsPath(search) {
