@@ -12,14 +12,14 @@
   >
     {{ kwicStore.errorMessage }}
   </q-banner>
-  <div v-if="loading" class="column items-center q-py-lg q-gutter-sm">
+  <div v-if="loading && kwicStore.kwicData.length === 0" class="column items-center q-py-lg q-gutter-sm">
     <loadingIcon size="100" />
   </div>
   <div v-show="showData">
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
     </div>
-    <div v-if="!loading" class="q-pb-xl">
+    <div class="q-pb-xl">
       <kwicDataTable />
     </div>
 
@@ -67,7 +67,7 @@ watch(
       return;
     }
 
-    showData.value = false;
+    showData.value = true;
     loading.value = true;
     await kwicStore.getKwicResult(kwicStore.searchText);
     showData.value = true;
