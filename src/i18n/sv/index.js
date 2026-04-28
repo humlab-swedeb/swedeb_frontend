@@ -682,6 +682,8 @@ export default {
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
+    kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
+    kwicQueryFailed: "KWIC-sökningen misslyckades.",
 
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",

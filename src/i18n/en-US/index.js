@@ -42,5 +42,7 @@ export default {
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
+    kwicTicketTimeout: "The search timed out. Please try again.",
+    kwicQueryFailed: "KWIC query failed.",
   },
 };

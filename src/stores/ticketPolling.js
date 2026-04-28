@@ -1,7 +1,7 @@
 import i18n from "src/i18n/sv/index.js";
 
 export const TICKET_POLL_INTERVAL_MS = 2000;
-export const TICKET_POLL_MAX_ATTEMPTS = 90;
+export const TICKET_POLL_MAX_ATTEMPTS = 300;
 
 export function getTicketPollDelayMs(attempt, retryAfterHeader) {
   const retryAfterSeconds = Number.parseInt(retryAfterHeader, 10);
