@@ -127,10 +127,8 @@ export default {
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
-  kwicEstimateHits: "Uppskattade träffar",
-  kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  kwicEstimateHighWarning: "Sökningen kan ta lång tid",
-  kwicDisplayCapNote: "Tabellen visar de första {limit}.",
+  nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
+  allHits: "Alla träffar",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
