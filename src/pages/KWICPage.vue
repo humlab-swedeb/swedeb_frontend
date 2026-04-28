@@ -12,9 +12,6 @@
   >
     {{ kwicStore.errorMessage }}
   </q-banner>
-  <div v-if="loading && kwicStore.kwicData.length === 0" class="column items-center q-py-lg q-gutter-sm">
-    <loadingIcon size="100" />
-  </div>
   <div v-show="showData">
     <div class="q-pb-md">
       <ShowData :filterSelections="'KWIC'" />
@@ -39,7 +36,6 @@
 <script setup>
 import ShowData from "src/components/ShowData.vue";
 import kwicDataTable from "src/components/kwicDataTable.vue";
-import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
 import i18n from "src/i18n/sv";
@@ -51,12 +47,9 @@ const kwicStore = kwicDataStore();
 const formattedIntro = i18n.kwicIntro;
 
 const showData = ref(false);
-const loading = ref(false);
-
 onMounted(() => {
   if (kwicStore.hasSubmittedQuery) {
     showData.value = true;
-    loading.value = false;
   }
 });
 
@@ -68,10 +61,7 @@ watch(
     }
 
     showData.value = true;
-    loading.value = true;
     await kwicStore.getKwicResult(kwicStore.searchText);
-    showData.value = true;
-    loading.value = false;
 
     metaStore.cancelSubmitKwicEvent();
   },
