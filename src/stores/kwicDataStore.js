@@ -28,7 +28,7 @@ export const kwicDataStore = defineStore("kwicData", {
   state: () => ({
     wordsLeft: 5,
     wordsRight: 5,
-    cutOff: 100000,
+    cutOff: null,
     kwicData: [],
     searchText: "",
     columnNames: {
