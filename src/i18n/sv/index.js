@@ -266,17 +266,17 @@ export default {
   financiers: {
     0: {
       alt: "Umeå universitet logo",
-      src: "/public/images/umu-logo-left-SE.png",
+      src: "/images/umu-logo-left-SE.png",
       style: "width: 200px",
     },
     1: {
       alt: "Humlab logo",
-      src: "/public/images/humlab_logo_left_se.png",
+      src: "/images/humlab_logo_left_se.png",
       style: "width: 250px",
     },
     2: {
       alt: "Huminfra logo",
-      src: "/public/images/HumInfra_3_b.png",
+      src: "/images/HumInfra_3_b.png",
       style: "width: 150px",
     },
   },
@@ -394,7 +394,7 @@ export default {
       under 1800-talet) finns under kategorin ”Utan partibeteckning”. Det gör även flera
       ledamöter som hoppat av ett parti under mandatperioden.
 
-      <img src="/public/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
+      <img src="/images/parti.png" alt="Partiutveckling" style="width: 100%; margin-top: 20px;" />
 
 </br></br>
       Det är viktigt att känna till att ett parti på 1800-talet inte är samma sak som
