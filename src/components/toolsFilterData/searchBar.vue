@@ -84,6 +84,22 @@ watch(
   },
 );
 
+watch(
+  () => metaStore.getSelectedKwicTicketFilters(),
+  () => {
+    if (route.path !== "/tools/kwic") return;
+    const word = kwicStore.searchText;
+    if (!word || !word.trim()) return;
+    clearTimeout(estimateDebounceTimer);
+    estimateDebounceTimer = setTimeout(() => {
+      if (route.path === "/tools/kwic") {
+        kwicStore.fetchEstimate(word);
+      }
+    }, 400);
+  },
+  { deep: true },
+);
+
 onBeforeUnmount(() => {
   clearTimeout(estimateDebounceTimer);
 });
