@@ -242,11 +242,7 @@ const openPdf = () => {
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
   const clientRoutePath = isPagePdfSource(props.props.row.source) ? "/pdf-pagewise" : "/pdf";
-  const clientRouteHash = `#${clientRoutePath}`;
-  const spaPublicPath = '/public/';
-  const fullPathToIndexHtml = `${window.location.origin}${spaPublicPath}index.html`;
-  const finalUrlToOpen = `${fullPathToIndexHtml}${clientRouteHash}`;
-  window.open(finalUrlToOpen, "_blank");
+  window.open(clientRoutePath, "_blank");
 };
 
 const replaceNewLine = (str) => {
