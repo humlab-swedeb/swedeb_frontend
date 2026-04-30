@@ -3,44 +3,44 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("ngramIntroTitle")
     }}</q-item-label>
-    <div class="lineHeight" v-html="formattedIntro"/>
+    <div class="lineHeight" v-html="formattedIntro" />
   </q-card>
-    <loadingIcon v-if="loading" size="100" />
-    <div v-show="showData">
-      <div class="q-pb-md">
-        <ShowData :filterSelections="'Ngrams'" />
-      </div>
-      <div v-if="!loading" class="q-pb-xl">
-        <nGramsTable />
-      </div>
+  <loadingIcon v-if="nGramStore.isLoading" size="100" />
+  <div v-if="nGramStore.errorMessage && !nGramStore.isLoading" class="q-pa-md">
+    <q-banner class="bg-negative text-white">{{
+      nGramStore.errorMessage
+    }}</q-banner>
+  </div>
+  <div v-show="showData">
+    <div class="q-pb-md">
+      <ShowData :filterSelections="'Ngrams'" />
     </div>
+    <div v-if="!nGramStore.isLoading" class="q-pb-xl">
+      <nGramsTable />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import i18n from "src/i18n/sv";
 import nGramsTable from "src/components/nGramsTable.vue";
 import ShowData from "src/components/ShowData.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { nGramDataStore } from "src/stores/nGramDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
-import { onMounted } from "vue";
-
+import { ref, onMounted } from "vue";
 
 const formattedIntro = i18n.ngramIntro;
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
 
-const loading = ref(false);
 const showData = ref(false);
 
-
 onMounted(() => {
-
- if(nGramStore.nGrams && nGramStore.nGrams.length > 0){
-   showData.value = true
-
- }
+  if (nGramStore.nGrams && nGramStore.nGrams.length > 0) {
+    showData.value = true;
+  }
 });
 
 watch(
@@ -51,10 +51,8 @@ watch(
     }
 
     showData.value = false;
-    loading.value = true;
     await nGramStore.getNGramsResult(nGramStore.searchText);
     showData.value = true;
-    loading.value = false;
     metaStore.cancelSubmitNgramsEvent();
   },
 );

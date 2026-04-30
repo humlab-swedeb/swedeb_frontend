@@ -46,11 +46,18 @@ export default {
   kwicEstimateHits: "estimated hits",
   kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
   kwicEstimateHighWarning: "the search may take a while.",
+  ngramEstimateHitsPrefix: "Approx.",
+  ngramEstimateHits: "estimated hits",
+  ngramEstimateNotInVocabulary: "The word was not found in the vocabulary",
+  ngramEstimateHighWarning: "the search may take a while.",
+  ngramCountApproximate: "approximate",
   accessibility: {
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
     kwicTicketTimeout: "The search timed out. Please try again.",
     kwicQueryFailed: "KWIC query failed.",
+    ngramTicketTimeout: "The n-gram search timed out. Please try again.",
+    ngramQueryFailed: "N-gram query failed.",
   },
   kwicShardProgress: "{complete} of {total} shards loaded",
 };
