@@ -85,17 +85,45 @@ watch(
 );
 
 watch(
-  () => metaStore.getSelectedKwicTicketFilters(),
-  () => {
-    if (route.path !== "/tools/kwic") return;
-    const word = kwicStore.searchText;
-    if (!word || !word.trim()) return;
+  () => (route.path === "/tools/ngram" ? nGramStore.searchText : null),
+  (newWord) => {
+    if (route.path !== "/tools/ngram") return;
     clearTimeout(estimateDebounceTimer);
+    nGramStore.estimatedHits = null;
+    nGramStore.inVocabulary = null;
+    if (!newWord || !newWord.trim()) {
+      return;
+    }
     estimateDebounceTimer = setTimeout(() => {
-      if (route.path === "/tools/kwic") {
-        kwicStore.fetchEstimate(word);
+      if (route.path === "/tools/ngram") {
+        nGramStore.fetchEstimate(newWord);
       }
     }, 400);
+  },
+);
+
+watch(
+  () => metaStore.getSelectedKwicTicketFilters(),
+  () => {
+    if (route.path === "/tools/kwic") {
+      const word = kwicStore.searchText;
+      if (!word || !word.trim()) return;
+      clearTimeout(estimateDebounceTimer);
+      estimateDebounceTimer = setTimeout(() => {
+        if (route.path === "/tools/kwic") {
+          kwicStore.fetchEstimate(word);
+        }
+      }, 400);
+    } else if (route.path === "/tools/ngram") {
+      const word = nGramStore.searchText;
+      if (!word || !word.trim()) return;
+      clearTimeout(estimateDebounceTimer);
+      estimateDebounceTimer = setTimeout(() => {
+        if (route.path === "/tools/ngram") {
+          nGramStore.fetchEstimate(word);
+        }
+      }, 400);
+    }
   },
   { deep: true },
 );
