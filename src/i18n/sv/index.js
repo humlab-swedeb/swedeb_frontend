@@ -133,6 +133,11 @@ export default {
   kwicEstimateHits: "uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   kwicEstimateHighWarning: "sökningen kan ta en stund.",
+  ngramEstimateHitsPrefix: "Cirka",
+  ngramEstimateHits: "uppskattade träffar",
+  ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
+  ngramEstimateHighWarning: "sökningen kan ta en stund.",
+  ngramCountApproximate: "preliminär",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
@@ -691,6 +696,9 @@ export default {
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
     kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
     kwicQueryFailed: "KWIC-sökningen misslyckades.",
+    ngramTicketTimeout:
+      "N-gram-sökningen tog för lång tid. Vänligen försök igen.",
+    ngramQueryFailed: "N-gram-sökningen misslyckades.",
 
     errorMessage404: "Hoppsan, här fanns inget!",
     errorMessageButton: "Tillbaka till startsidan",

@@ -31,6 +31,7 @@
   </q-card-section>
   <q-card-section v-if="currentPath === '/tools/ngram'">
     <searchBar />
+    <ngramEstimate />
     <div class="row">
       <q-item-label caption class="text-bold q-mt-lg text-grey-8 col-11">
         {{ $t("ngramSizePlaceLabel") }}
@@ -64,6 +65,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import searchBar from "src/components/toolsFilterData/searchBar.vue";
 import kwicEstimate from "src/components/toolsFilterData/kwicEstimate.vue";
+import ngramEstimate from "src/components/toolsFilterData/ngramEstimate.vue";
 import inputNrOfWords from "src/components/toolsFilterData/inputNrOfWords.vue";
 import toggleSwitch from "src/components/toolsFilterData/toggleSwitch.vue";
 import nGramWidth from "src/components/toolsFilterData/nGramWidth.vue";
