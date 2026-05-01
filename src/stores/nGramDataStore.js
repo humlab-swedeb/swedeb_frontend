@@ -50,8 +50,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
     // Pagination (synced with q-table)
     pagination: {
-      sortBy: null,
-      descending: false,
+      sortBy: "count",
+      descending: true,
       page: 1,
       rowsPerPage: DEFAULT_ROWS_PER_PAGE,
       rowsNumber: 0,
@@ -229,6 +229,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
             sortBy,
             descending,
             silent,
+            startPoller,
           });
         }
 
@@ -363,7 +364,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           descending: this.pagination.descending,
         });
 
-        this.searchString = this.searchText;
+        this.searchString = normalizedSearch;
       } catch (error) {
         this.nGrams = [];
         this.totalHits = 0;

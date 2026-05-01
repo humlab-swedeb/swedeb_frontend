@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
@@ -151,29 +151,12 @@ const rows = computed(() =>
   })),
 );
 
-// Pagination model kept in sync with store
-const paginationModel = ref({
-  page: nGramStore.pagination.page,
-  rowsPerPage: nGramStore.pagination.rowsPerPage,
-  rowsNumber: nGramStore.totalHits,
-  sortBy: nGramStore.pagination.sortBy,
-  descending: nGramStore.pagination.descending,
-});
-
-watch(
-  () => nGramStore.pagination,
-  (p) => {
-    paginationModel.value = {
-      ...paginationModel.value,
-      page: p.page,
-      rowsPerPage: p.rowsPerPage,
-      rowsNumber: nGramStore.totalHits,
-      sortBy: p.sortBy,
-      descending: p.descending,
-    };
+const paginationModel = computed({
+  get: () => nGramStore.pagination,
+  set: (value) => {
+    nGramStore.pagination = value;
   },
-  { deep: true },
-);
+});
 
 const onRequest = async ({ pagination }) => {
   await nGramStore.fetchNgramPage({
@@ -189,14 +172,23 @@ const formatSearch = (value) => {
   if (searchString.includes(".*")) {
     searchString = searchString.replace(".*", "");
   }
-  if (
-    searchString &&
-    value.toLowerCase().includes(searchString.toLowerCase())
-  ) {
-    const regex = new RegExp(searchString, "gi");
-    return value.replace(regex, (match) => `<b>${match}</b>`);
+  if (!searchString) return value;
+
+  const lowerValue = value.toLowerCase();
+  const lowerSearchString = searchString.toLowerCase();
+  let startIndex = 0;
+  let matchIndex = lowerValue.indexOf(lowerSearchString, startIndex);
+  let formattedValue = "";
+
+  while (matchIndex !== -1) {
+    formattedValue += value.slice(startIndex, matchIndex);
+    formattedValue += `<b>${value.slice(matchIndex, matchIndex + searchString.length)}</b>`;
+    startIndex = matchIndex + searchString.length;
+    matchIndex = lowerValue.indexOf(lowerSearchString, startIndex);
   }
-  return value;
+
+  formattedValue += value.slice(startIndex);
+  return formattedValue;
 };
 
 const downloadNgram = () => {
@@ -252,7 +244,7 @@ const columns = [
     label: "Antal anföranden",
     align: "left",
     field: "speeches",
-    sortable: true,
+    sortable: false,
   },
 ];
 </script>
