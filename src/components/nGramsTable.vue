@@ -1,5 +1,8 @@
 <template>
-  <template v-if="nGramStore.nGrams && nGramStore.nGrams.length > 0">
+  <template v-if="showLoadingIndicator">
+    <loadingIcon size="64" />
+  </template>
+  <template v-else-if="nGramStore.nGrams && nGramStore.nGrams.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0">
         {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
@@ -41,6 +44,22 @@
       v-if="!loading"
       class="bg-grey-2"
     >
+      <template v-slot:top-row v-if="nGramStore.ticketStatus === 'partial'">
+        <q-tr>
+          <q-td :colspan="columns.length + 1" class="q-pa-none">
+            <q-linear-progress
+              indeterminate
+              color="accent"
+              track-color="grey-3"
+              class="q-mb-none"
+              style="height: 6px"
+            />
+            <q-item-label caption class="q-px-sm q-pt-xs text-grey-7">
+              {{ $t("accessibility.loadingResults") }}
+            </q-item-label>
+          </q-td>
+        </q-tr>
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -123,7 +142,7 @@
     </q-table>
   </template>
   <template v-else>
-    <!-- Show a message when there's no data -->
+    <!-- Show a message when there's no data and not loading -->
     <noResults />
   </template>
 </template>
@@ -136,6 +155,10 @@ import { nGramDataStore } from "src/stores/nGramDataStore";
 import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
+
+const showLoadingIndicator = computed(
+  () => nGramStore.isLoading && nGramStore.nGrams.length === 0,
+);
 
 const loading = ref(false);
 const innerLoading = ref({});
