@@ -141,7 +141,7 @@
       </template>
     </q-table>
   </template>
-  <template v-else>
+  <template v-else-if="nGramStore.hasSubmittedQuery">
     <!-- Show a message when there's no data and not loading -->
     <noResults />
   </template>
