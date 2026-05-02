@@ -2,7 +2,7 @@
   <template v-if="showLoadingIndicator">
     <loadingIcon size="64" />
   </template>
-  <template v-else-if="nGramStore.nGrams && nGramStore.nGrams.length > 0">
+  <template v-else-if="hasNGramRows">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0">
         {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
@@ -141,7 +141,7 @@
       </template>
     </q-table>
   </template>
-  <template v-else-if="nGramStore.hasSubmittedQuery">
+  <template v-else-if="showNoResults">
     <!-- Show a message when there's no data and not loading -->
     <noResults />
   </template>
@@ -156,8 +156,31 @@ import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
 
-const showLoadingIndicator = computed(
-  () => nGramStore.isLoading && nGramStore.nGrams.length === 0,
+const hasNGramRows = computed(
+  () => nGramStore.nGrams && nGramStore.nGrams.length > 0,
+);
+
+const isWaitingForInitialResults = computed(
+  () =>
+    nGramStore.hasSubmittedQuery &&
+    !hasNGramRows.value &&
+    (nGramStore.isLoading ||
+      nGramStore.isPageLoading ||
+      nGramStore.ticketStatus === "pending" ||
+      nGramStore.ticketStatus === "partial"),
+);
+
+const showLoadingIndicator = computed(() => isWaitingForInitialResults.value);
+
+const showNoResults = computed(
+  () =>
+    nGramStore.hasSubmittedQuery &&
+    !hasNGramRows.value &&
+    !nGramStore.isLoading &&
+    !nGramStore.isPageLoading &&
+    !nGramStore.errorMessage &&
+    nGramStore.ticketStatus === "ready" &&
+    nGramStore.totalHits === 0,
 );
 
 const loading = ref(false);
