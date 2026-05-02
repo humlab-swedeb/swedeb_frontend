@@ -66,6 +66,20 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       return search;
     },
 
+    _isPhraseSearch(search) {
+      return search.trim().split(/\s+/).length > 1;
+    },
+
+    canEstimateSearch(search) {
+      return Boolean(search && search.trim() && !this._isPhraseSearch(search));
+    },
+
+    clearEstimate() {
+      this.estimateRequestSequence += 1;
+      this.estimatedHits = null;
+      this.inVocabulary = null;
+    },
+
     resetTicketState() {
       this.nGrams = [];
       this.ticketId = null;
@@ -97,9 +111,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async fetchEstimate(word) {
-      if (!word || !word.trim()) {
-        this.estimatedHits = null;
-        this.inVocabulary = null;
+      if (!this.canEstimateSearch(word)) {
+        this.clearEstimate();
         return;
       }
 
