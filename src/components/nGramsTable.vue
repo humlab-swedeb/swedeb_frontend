@@ -4,7 +4,10 @@
   </template>
   <template v-else-if="hasNGramRows">
     <div class="row q-py-md justify-between">
-      <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'">
+      <q-item-label
+        class="col-9 q-mt-md"
+        v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'"
+      >
         {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
         {{ $t("searchResult2ngram") }}
       </q-item-label>
@@ -48,14 +51,23 @@
         <q-tr>
           <q-td :colspan="columns.length + 1" class="q-pa-none">
             <q-linear-progress
-              indeterminate
+              :value="
+                nGramStore.shardsTotal > 0
+                  ? nGramStore.shardsComplete / nGramStore.shardsTotal
+                  : 0
+              "
               color="accent"
               track-color="grey-3"
               class="q-mb-none"
               style="height: 6px"
             />
             <q-item-label caption class="q-px-sm q-pt-xs text-grey-7">
-              {{ $t("accessibility.loadingResults") }}
+              {{
+                $t("ngramShardProgress", {
+                  complete: nGramStore.shardsComplete,
+                  total: nGramStore.shardsTotal,
+                })
+              }}
             </q-item-label>
           </q-td>
         </q-tr>

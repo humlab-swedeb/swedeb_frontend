@@ -42,6 +42,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     hasSubmittedQuery: false,
     requestSequence: 0,
     pageRequestSequence: 0,
+    shardsComplete: 0,
+    shardsTotal: 0,
 
     // Estimate state
     estimatedHits: null,
@@ -89,6 +91,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       this.totalPages = 0;
       this.expiresAt = null;
       this.archiveRetrievalUrl = null;
+      this.shardsComplete = 0;
+      this.shardsTotal = 0;
       this.pagination = {
         ...this.pagination,
         page: 1,
@@ -173,6 +177,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         if (data.status === "partial") {
           this.ticketStatus = "partial";
           this.aggregateVersion = data.aggregate_version ?? 0;
+          this.shardsComplete = data.shards_complete ?? this.shardsComplete;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
           return true;
         }
 
@@ -261,6 +267,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         this.ticketStatus = pageData.status ?? this.ticketStatus;
         this.aggregateVersion =
           pageData.aggregate_version ?? this.aggregateVersion;
+        this.shardsComplete = pageData.shards_complete ?? this.shardsComplete;
+        this.shardsTotal = pageData.shards_total ?? this.shardsTotal;
         this.pagination = {
           ...this.pagination,
           page,
@@ -313,6 +321,9 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         try {
           const response = await api.get(`/tools/ngrams/status/${ticketId}`);
           const data = response.data;
+
+          this.shardsComplete = data.shards_complete ?? this.shardsComplete;
+          this.shardsTotal = data.shards_total ?? this.shardsTotal;
 
           if (data.aggregate_version > this.aggregateVersion) {
             this.aggregateVersion = data.aggregate_version;

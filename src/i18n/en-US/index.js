@@ -60,4 +60,5 @@ export default {
     ngramQueryFailed: "N-gram query failed.",
   },
   kwicShardProgress: "{complete} of {total} shards loaded",
+  ngramShardProgress: "{complete} of {total} shards loaded",
 };
