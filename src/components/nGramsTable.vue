@@ -4,7 +4,7 @@
   </template>
   <template v-else-if="hasNGramRows">
     <div class="row q-py-md justify-between">
-      <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0">
+      <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'">
         {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
         {{ $t("searchResult2ngram") }}
       </q-item-label>
