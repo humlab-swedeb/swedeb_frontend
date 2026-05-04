@@ -461,5 +461,21 @@ export const kwicDataStore = defineStore("kwicData", {
     async downloadKWICTableCSV() {
       return this.downloadKwicArchive("csv_gz");
     },
+
+    async downloadKwicExcel(_downloadKey) {
+      return this.downloadKwicArchive("xlsx");
+    },
+
+    async downloadKwicCsvGz(_downloadKey) {
+      return this.downloadKwicArchive("csv_gz");
+    },
+
+    async downloadKwicJsonlGz(_downloadKey) {
+      return this.downloadKwicArchive("jsonl_gz");
+    },
+
+    async downloadKwicSpeechesZip(_downloadKey) {
+      return this.downloadKwicArchive("zip");
+    },
   },
 });
