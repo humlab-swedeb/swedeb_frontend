@@ -106,11 +106,8 @@ export default {
   searchAdd: "Lägg till ord och klicka på +",
   searchClear: "Ta bort alla ord",
   searchAddedWords: "Valda ord:",
-  searchDropdownOfHits1:
-    "Här visas de 5 vanligaste orden relaterade till söktermen med",
-  searchDropdownOfHits2: "*",
-  searchDropdownOfHits3: "Det finns ytterligare",
-  searchDropdownOfHits4: "ord att lägga till för att förfina sökningen.",
+  searchDropdownOfHitsInfo:
+    "Här visas de 5 vanligaste orden relaterade till söktermen med {asterisk} Det finns ytterligare {count} ord att lägga till för att förfina sökningen.",
 
   normalizeResultTooltip:
     "Antalet träffar på sökordet delas med det totala antalet ord per år",
@@ -129,18 +126,19 @@ export default {
   nrOfWordsRight: "Höger",
   nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
   allHits: "Alla träffar",
-  kwicEstimateHitsPrefix: "Cirka",
-  kwicEstimateHits: "uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  kwicEstimateHighWarning: "sökningen kan ta en stund.",
-  ngramEstimateHitsPrefix: "Ordet förekommer ungefär",
-  ngramEstimateHits: "gånger",
+  kwicEstimateHitsInfo: "Cirka {hits} uppskattade träffar.",
+  kwicEstimateHitsWarning: "Cirka {hits} uppskattade träffar - sökningen kan ta en stund.",
   ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   ngramEstimateHighWarning: "generering av n-grams kan ta en stund.",
   ngramCountApproximate: "preliminär",
-
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
+  ngramsEstimateHitsInfo:
+    "Cirka {hits} uppskattade träffar.",
+
+  ngramsEstimateHitsWarning:
+    "Ordet förekommer ungefär {hits} gånger - generering av n-grams kan ta en stund.",
   // Introduction to tool
 
   // WORDTRENDS PAGE & COMPONENTS ----------------------------------------

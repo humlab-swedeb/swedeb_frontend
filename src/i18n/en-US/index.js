@@ -42,14 +42,14 @@ export default {
     copyLink: "Copy retrieval link",
     linkCopied: "Link copied!",
   },
-  kwicEstimateHitsPrefix: "Approx.",
-  kwicEstimateHits: "estimated hits",
   kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
-  kwicEstimateHighWarning: "the search may take a while.",
-  ngramEstimateHitsPrefix: "The word occurs approximately",
-  ngramEstimateHits: "times",
+  kwicEstimateHitsInfo: "Approx. {hits} estimated hits.",
+  kwicEstimateHitsWarning: "Approx. {hits} estimated hits - the search may take a while.",
   ngramEstimateNotInVocabulary: "The word was not found in the vocabulary",
   ngramEstimateHighWarning: "generating n-grams may take a while.",
+  ngramsEstimateHitsInfo: "Approx. {hits} estimated hits.",
+  ngramsEstimateHitsWarning:
+    "The word occurs approximately {hits} times - generating n-grams may take a while.",
   ngramCountApproximate: "approximate",
   accessibility: {
     loadingResults: "Loading results, please wait...",
@@ -61,4 +61,6 @@ export default {
   },
   kwicShardProgress: "{complete} of {total} shards loaded",
   ngramShardProgress: "{complete} of {total} shards loaded",
+  searchDropdownOfHitsInfo:
+    "The 5 most common words related to the search term with {asterisk} are shown here. There are {count} more words to add to refine the search.",
 };

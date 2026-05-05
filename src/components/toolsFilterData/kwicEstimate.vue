@@ -4,11 +4,10 @@
       {{ $t("kwicEstimateNotInVocabulary") }}
     </q-banner>
     <q-banner v-else-if="isHighCount" dense class="bg-orange-1 text-orange-9 text-caption">
-      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }} – {{
-        $t("kwicEstimateHighWarning") }}
+      {{ $t("kwicEstimateHitsWarning", { hits: formattedHits }) }}
     </q-banner>
     <q-banner v-else dense class="bg-green-1 text-green-9 text-caption">
-      {{ $t("kwicEstimateHitsPrefix") }} {{ formattedHits }} {{ $t("kwicEstimateHits") }}
+      {{ $t("kwicEstimateHitsInfo", { hits: formattedHits }) }}
     </q-banner>
   </div>
 </template>

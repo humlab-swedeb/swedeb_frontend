@@ -61,12 +61,15 @@
         @update:model-value="toggleSingleLine"
       /> -->
     </div>
-    <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
-      >{{ $t("searchDropdownOfHits1") }}
-      <b class="text-subtitle2">{{ $t("searchDropdownOfHits2") }} </b>
-      {{ $t("searchDropdownOfHits3") }}
-      <b>{{ wtStore.wordHits.length - wtStore.wordHitsSelected.length }}</b>
-      {{ $t("searchDropdownOfHits4") }}
+    <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk">
+      <i18n-t keypath="searchDropdownOfHitsInfo" tag="span">
+        <template #asterisk>
+          <b class="text-subtitle2">*</b>
+        </template>
+        <template #count>
+          <b>{{ remainingWordHitsCount }}</b>
+        </template>
+      </i18n-t>
     </q-item-label>
 
     <div class="row items-center justify-between">
@@ -135,7 +138,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, watch } from "vue";
+import { computed, ref, watchEffect, watch } from "vue";
 import { useRoute } from "vue-router";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
@@ -144,6 +147,9 @@ const wtStore = wordTrendsDataStore();
 const route = useRoute();
 const loading = ref(false);
 const selectAll = ref(false);
+const remainingWordHitsCount = computed(
+  () => wtStore.wordHits.length - wtStore.wordHitsSelected.length
+);
 
 // Funktionen för att slå ihop alla ord till en enda linje
 const toggleSingleLine = (value) => {
