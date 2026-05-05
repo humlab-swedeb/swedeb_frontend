@@ -133,10 +133,10 @@ export default {
   kwicEstimateHits: "uppskattade träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   kwicEstimateHighWarning: "sökningen kan ta en stund.",
-  ngramEstimateHitsPrefix: "Cirka",
-  ngramEstimateHits: "uppskattade träffar",
+  ngramEstimateHitsPrefix: "Ordet förekommer ungefär",
+  ngramEstimateHits: "gånger",
   ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  ngramEstimateHighWarning: "sökningen kan ta en stund.",
+  ngramEstimateHighWarning: "generering av n-grams kan ta en stund.",
   ngramCountApproximate: "preliminär",
 
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
