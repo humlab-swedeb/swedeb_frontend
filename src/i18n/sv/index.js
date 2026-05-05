@@ -150,10 +150,10 @@ export default {
   <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
   anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
-  wordtrendsResult1: "Här visas resultatet i en",
-  wordtrendsResult2: "för de ord och metadata som valts.",
-  wordtrendsResult3: "Här visas alla",
-  wordtrendsResult4: "i en tabell kopplat till de ord och metadata som valts.",
+  wordtrendsResultInfo:
+    "Här visas resultatet i en {resultType} för de ord och metadata som valts.",
+  wordtrendsResultSpeechInfo:
+    "Här visas alla {resultType} i en tabell kopplat till de ord och metadata som valts.",
   wordtrendsResultLine: "trendlinje",
   wordtrendsResultTable: "tabell",
   wordtrendsResultSpeech: "anföranden",
@@ -608,7 +608,7 @@ export default {
     },
     9: {
       q: "Hur mycket data och material bygger Riksdagsdebatter.se på?",
-      a: `Alla anföranden och information om riksdagsledamöter som avänds i Riksdagdebatter.se
+      a: `Alla anföranden och information om riksdagsledamöter som används i Riksdagsdebatter.se
       kommer ursprungligen från de svenska riksdagsprotokollen och andra källor som riksdagen
       har varit med och producerat. Med hjälp av automatiska maskininlärningsmodeller och manuellt
       kontrollarbete har alla protokoll har processats av SWERIK-projektet för att identifiera
@@ -648,7 +648,7 @@ export default {
       },
     },
     10: {
-      q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
+      q: "Varför är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
 
       a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
 

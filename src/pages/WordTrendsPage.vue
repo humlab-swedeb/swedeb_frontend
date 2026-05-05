@@ -19,16 +19,22 @@
   <q-tab-panels v-model="tabs" class="background">
     <q-tab-panel name="diagram">
       <div class="q-py-md text-grey-8">
-        {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultLine") }}</b>
-        {{ $t("wordtrendsResult2") }}
+        <i18n-t keypath="wordtrendsResultInfo" tag="span">
+          <template #resultType>
+            <b>{{ $t("wordtrendsResultLine") }}</b>
+          </template>
+        </i18n-t>
       </div>
       <loadingIcon v-if="loadingChart" size="100" />
       <lineChart v-else-if="showDataTable" />
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">
-        {{ $t("wordtrendsResult1") }} <b>{{ $t("wordtrendsResultTable") }}</b>
-        {{ $t("wordtrendsResult2") }}
+        <i18n-t keypath="wordtrendsResultInfo" tag="span">
+          <template #resultType>
+            <b>{{ $t("wordtrendsResultTable") }}</b>
+          </template>
+        </i18n-t>
       </div>
       <loadingIcon v-if="loadingChart" size="100" />
       <div v-else-if="showDataTable">
@@ -37,8 +43,11 @@
     </q-tab-panel>
     <q-tab-panel name="speech">
       <div class="q-py-md text-grey-8">
-        {{ $t("wordtrendsResult3") }} <b>{{ $t("wordtrendsResultSpeech") }}</b>
-        {{ $t("wordtrendsResult4") }}
+        <i18n-t keypath="wordtrendsResultSpeechInfo" tag="span">
+          <template #resultType>
+            <b>{{ $t("wordtrendsResultSpeech") }}</b>
+          </template>
+        </i18n-t>
       </div>
       <loadingIcon v-if="loadingSpeeches" size="100" />
       <wordTrendsSpeechTable v-else />

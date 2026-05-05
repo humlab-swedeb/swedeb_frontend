@@ -63,4 +63,11 @@ export default {
   ngramShardProgress: "{complete} of {total} shards loaded",
   searchDropdownOfHitsInfo:
     "The 5 most common words related to the search term with {asterisk} are shown here. There are {count} more words to add to refine the search.",
+  wordtrendsResultInfo:
+    "The result is shown as a {resultType} for the selected words and metadata.",
+  wordtrendsResultSpeechInfo:
+    "All {resultType} are shown in a table linked to the selected words and metadata.",
+  wordtrendsResultLine: "trend line",
+  wordtrendsResultTable: "table",
+  wordtrendsResultSpeech: "speeches",
 };
