@@ -75,6 +75,19 @@ export const speechesDataStore = defineStore("speechesData", {
       this.archiveRetrievalUrl = null;
     },
 
+    async retainCopiedArchiveRetrievalLink(archiveTicketId) {
+      try {
+        const response = await api.post(
+          `/downloads/${encodeURIComponent(archiveTicketId)}/copy-link`,
+        );
+        this.archiveTicketStatus = response.data.status;
+        return response.data;
+      } catch (error) {
+        console.error("Error retaining copied archive retrieval link:", error);
+        return null;
+      }
+    },
+
     resetTicketState() {
       this.ticketId = null;
       this.ticketStatus = null;
@@ -220,9 +233,14 @@ export const speechesDataStore = defineStore("speechesData", {
         }
       }
     },
-    async _downloadSpeechesArchive(archiveFormat, fallbackFilename, downloadKey) {
+    async _downloadSpeechesArchive(
+      archiveFormat,
+      fallbackFilename,
+      downloadKey,
+    ) {
       if (!this.ticketId) return false;
-      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) return false;
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey))
+        return false;
 
       this.errorMessage = "";
       this.resetArchiveTicketState();
@@ -240,13 +258,16 @@ export const speechesDataStore = defineStore("speechesData", {
         this.archiveTicketStatus = "pending";
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
-        const retrievalUrl = window.location.origin + "/download/" + archiveTicketId;
+        const retrievalUrl =
+          window.location.origin + "/download/" + archiveTicketId;
         const buildingHint =
           i18n.downloadFeedback?.archiveBuildingHint ||
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") + " " + buildingHint,
+            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            " " +
+            buildingHint,
           color: "blue-8",
           icon: "hourglass_top",
           timeout: 0,
@@ -254,11 +275,21 @@ export const speechesDataStore = defineStore("speechesData", {
           multiLine: true,
           actions: [
             {
-              label: i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              label:
+                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
-                copyToClipboard(retrievalUrl);
+                copyToClipboard(retrievalUrl)
+                  .then(() =>
+                    this.retainCopiedArchiveRetrievalLink(archiveTicketId),
+                  )
+                  .catch((error) => {
+                    console.error(
+                      "Error copying archive retrieval link:",
+                      error,
+                    );
+                  });
                 const copiedHint =
                   i18n.downloadFeedback?.archiveLinkCopiedClose ||
                   "Länk kopierad — stäng för att hämta senare, eller vänta här.";
@@ -338,7 +369,10 @@ export const speechesDataStore = defineStore("speechesData", {
           timeout: 4000,
           position: "top",
         });
-        console.error(`Error downloading speeches archive (${archiveFormat}):`, error);
+        console.error(
+          `Error downloading speeches archive (${archiveFormat}):`,
+          error,
+        );
         return false;
       } finally {
         if (typeof dismissLinkNotify === "function") {
