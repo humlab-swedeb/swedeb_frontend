@@ -45,7 +45,6 @@ export const kwicDataStore = defineStore("kwicData", {
     },
     lemmatizeSearch: false,
     cancelTokenSource: null,
-    useTicketFlow: true,
     ticketId: null,
     totalHits: 0,
     totalPages: 0,
@@ -171,10 +170,6 @@ export const kwicDataStore = defineStore("kwicData", {
         this.estimatedHits = null;
         this.inVocabulary = null;
       }
-    },
-
-    getKwicResultsPath(search) {
-      return `/tools/kwic/${search}`;
     },
 
     getErrorMessage(error) {
@@ -331,46 +326,7 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
-    async getKwicResultLegacy(search) {
-      const normalizedSearch = this.normalizeSearch(search);
-      this.cancelTokenSource = axios.CancelToken.source();
-
-      try {
-        const path = this.getKwicResultsPath(normalizedSearch);
-        const additionalParams = {
-          words_before: this.wordsLeft,
-          words_after: this.wordsRight,
-          lemmatized: this.lemmatizeSearch,
-          ...(this.cutOff !== null && { cut_off: this.cutOff }),
-        };
-
-        const queryString = metaDataStore().getSelectedParams(additionalParams);
-        const response = await api.get(`${path}?${queryString}`, {
-          cancelToken: this.cancelTokenSource.token,
-        });
-        this.kwicData = response.data.kwic_list;
-        this.totalHits = response.data.kwic_list.length;
-        this.totalPages = 1;
-        this.pagination = {
-          ...this.pagination,
-          page: 1,
-          sortBy: DEFAULT_SORT_BY,
-          descending: false,
-          rowsNumber: response.data.kwic_list.length,
-        };
-      } catch (error) {
-        this.kwicData = [];
-        if (axios.isCancel(error)) {
-          console.log("Request canceled", error.message);
-        } else console.error("Error fetching data:", error);
-      }
-    },
-
     async getKwicResult(search) {
-      if (!this.useTicketFlow) {
-        return this.getKwicResultLegacy(search);
-      }
-
       const normalizedSearch = this.normalizeSearch(search);
       const requestId = ++this.requestSequence;
       this.pageRequestSequence = 0;
