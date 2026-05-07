@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { Notify, copyToClipboard } from "quasar";
 import { api } from "boot/axios";
 import axios from "axios";
 import { metaDataStore } from "./metaDataStore";
@@ -51,6 +52,8 @@ export const kwicDataStore = defineStore("kwicData", {
     expiresAt: null,
     errorMessage: "",
     hasSubmittedQuery: false,
+    archiveTicketId: null,
+    archiveTicketStatus: null,
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
@@ -107,6 +110,25 @@ export const kwicDataStore = defineStore("kwicData", {
         page: 1,
         rowsNumber: 0,
       };
+    },
+
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
+    },
+
+    async retainCopiedArchiveRetrievalLink(archiveTicketId) {
+      try {
+        const response = await api.post(
+          `/downloads/${encodeURIComponent(archiveTicketId)}/copy-link`,
+        );
+        this.archiveTicketStatus = response.data.status;
+        return response.data;
+      } catch (error) {
+        console.error("Error retaining copied archive retrieval link:", error);
+        return null;
+      }
     },
 
     buildKwicTicketPayload(search) {
@@ -407,12 +429,12 @@ export const kwicDataStore = defineStore("kwicData", {
 
     async downloadKwicArchive(format = "jsonl_gz") {
       if (!this.ticketId) {
-        this.archiveRetrievalUrl = null;
+        this.resetArchiveTicketState();
         this.errorMessage = i18n.accessibility.ticketExpired;
         return false;
       }
       this.errorMessage = "";
-      this.archiveRetrievalUrl = null;
+      this.resetArchiveTicketState();
 
       try {
         // 1. Request archive ticket
@@ -420,11 +442,16 @@ export const kwicDataStore = defineStore("kwicData", {
           `/tools/kwic/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(format)}`,
         );
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
         // 2. Poll until ready via generic downloads endpoint
         await pollArchiveTicket(api, {
           statusUrl: `/downloads/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
         });
 
         // 3. Download the artifact
@@ -454,6 +481,150 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
+    async downloadKwicSpeechArchive(downloadKey) {
+      if (!this.ticketId) {
+        this.resetArchiveTicketState();
+        this.errorMessage = i18n.accessibility.ticketExpired;
+        return false;
+      }
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey))
+        return false;
+
+      this.errorMessage = "";
+      this.resetArchiveTicketState();
+      downloadDataStore().setDownloadActive(downloadKey, true);
+
+      let dismissLinkNotify = null;
+      let abortedByUser = false;
+
+      try {
+        const prepareResponse = await api.post(
+          `/tools/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=zip`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        const retrievalUrl =
+          window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint =
+          i18n.downloadFeedback?.archiveBuildingHint ||
+          "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        dismissLinkNotify = Notify.create({
+          message:
+            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            " " +
+            buildingHint,
+          color: "blue-8",
+          icon: "hourglass_top",
+          timeout: 0,
+          position: "top",
+          multiLine: true,
+          actions: [
+            {
+              label:
+                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              color: "yellow",
+              handler: () => {
+                const prevDismiss = dismissLinkNotify;
+                copyToClipboard(retrievalUrl)
+                  .then(() =>
+                    this.retainCopiedArchiveRetrievalLink(archiveTicketId),
+                  )
+                  .catch((error) => {
+                    console.error(
+                      "Error copying archive retrieval link:",
+                      error,
+                    );
+                  });
+                const copiedHint =
+                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  "Länk kopierad — stäng för att hämta senare, eller vänta här.";
+                dismissLinkNotify = Notify.create({
+                  message: copiedHint,
+                  color: "blue-8",
+                  icon: "check",
+                  timeout: 0,
+                  position: "top",
+                  multiLine: true,
+                  actions: [
+                    {
+                      icon: "close",
+                      color: "white",
+                      round: true,
+                      handler: () => {
+                        abortedByUser = true;
+                        if (typeof dismissLinkNotify === "function") {
+                          dismissLinkNotify();
+                          dismissLinkNotify = null;
+                        }
+                      },
+                    },
+                  ],
+                });
+                if (typeof prevDismiss === "function") prevDismiss();
+              },
+            },
+          ],
+        });
+
+        await pollArchiveTicket(api, {
+          statusUrl: `/downloads/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
+
+        if (abortedByUser) {
+          Notify.create({
+            message:
+              i18n.downloadFeedback?.archiveAborted ||
+              "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
+            color: "info",
+            icon: "link",
+            timeout: 6000,
+            position: "top",
+          });
+          return true;
+        }
+
+        const downloadResponse = await api.get(
+          `/downloads/${archiveTicketId}/download`,
+          { responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            downloadResponse.headers,
+            `speeches_archive_${this.ticketId}.zip`,
+          ),
+          downloadResponse.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        Notify.create({
+          type: "negative",
+          message: this.errorMessage,
+          timeout: 4000,
+          position: "top",
+        });
+        console.error("Error downloading KWIC speech archive:", error);
+        return false;
+      } finally {
+        if (typeof dismissLinkNotify === "function") {
+          dismissLinkNotify();
+          dismissLinkNotify = null;
+        }
+        downloadDataStore().setDownloadActive(downloadKey, false);
+      }
+    },
+
     async downloadKWICTableExcel() {
       return this.downloadKwicArchive("xlsx");
     },
@@ -475,7 +646,7 @@ export const kwicDataStore = defineStore("kwicData", {
     },
 
     async downloadKwicSpeechesZip(_downloadKey) {
-      return this.downloadKwicArchive("zip");
+      return this.downloadKwicSpeechArchive(_downloadKey);
     },
   },
 });
