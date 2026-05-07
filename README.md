@@ -73,6 +73,12 @@ To set up the project for local development, follow these steps.
     ```
     The application will be available at `http://localhost:9000` (or another port specified by Quasar).
 
+5. To start dev server with proxy to Swedeb API
+
+```bash
+export USE_API_PROXY=1 pnpm dev
+```
+
 ### Configuration
 
 The frontend connects to the backend API through configuration in `quasar.config.js`. By default, the development server proxies API requests to `http://localhost:8000`.
