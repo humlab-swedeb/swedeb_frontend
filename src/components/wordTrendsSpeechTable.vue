@@ -11,9 +11,11 @@
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label class="col-9 q-mt-md">
-          {{ $t("searchResult1") }}
-          <b>{{ wtStore.speechesTotalHits }}</b>
-          {{ $t("searchResult2") }}
+          <i18n-t keypath="searchResultHits" tag="span">
+            <template #count>
+              <b>{{ wtStore.speechesTotalHits }}</b>
+            </template>
+          </i18n-t>
         </q-item-label>
         <q-btn-dropdown
           no-caps
@@ -250,7 +252,9 @@ const downloadKeys = {
 const SpeechTable = ref(null);
 const { linkCopied, copyToClipboard } = useClipboardCopy();
 const copyRetrievalLink = () =>
-  copyToClipboard(window.location.origin + '/download/' + wtStore.archiveTicketId);
+  copyToClipboard(
+    window.location.origin + "/download/" + wtStore.archiveTicketId,
+  );
 
 const pagination = computed({
   get: () => wtStore.speechesPagination,

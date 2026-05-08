@@ -17,9 +17,11 @@
             $route.path === '/tools/wordtrends'
           "
         >
-          {{ $t("searchResult1") }}
-          <b>{{ wtStore.speechesData.length }}</b>
-          {{ $t("searchResult2") }}
+          <i18n-t keypath="searchResultHits" tag="span">
+            <template #count>
+              <b>{{ wtStore.speechesData.length }}</b>
+            </template>
+          </i18n-t>
         </q-item-label>
         <q-item-label
           class="col-9 q-mt-md"
@@ -28,8 +30,11 @@
             speechStore.speechesData.length > 0
           "
         >
-          {{ $t("searchResult1") }}
-          <b>{{ speechStore.speechesData.length }}</b> {{ $t("searchResult2") }}
+          <i18n-t keypath="searchResultHits" tag="span">
+            <template #count>
+              <b>{{ speechStore.speechesData.length }}</b>
+            </template>
+          </i18n-t>
         </q-item-label>
         <q-btn
           no-caps
@@ -198,7 +203,7 @@ async function onRequest(table_props) {
       props.rowID - 1,
       props.ngram,
       page,
-      rowsPerPage
+      rowsPerPage,
     );
     if (reqId !== currentReqId.value) return;
 

@@ -99,8 +99,6 @@ export default {
   ngramWidth: "Bredd",
   ngramSizePlaceLabel:
     "Välj storlek på N-gram och var sökordet ska vara placerat:",
-  tooltipNgramSize:
-    "För närvarande räknas även skiljetecken som ord, till exempel . , : –. \n",
 
   searchInput: "Sök på ett ord eller en fras",
   searchAdd: "Lägg till ord och klicka på +",
@@ -119,7 +117,7 @@ export default {
 
   nrOfWordsIntro:
     "Välj hur många ord som ska visas till vänster och höger om sökorden:",
-  tooltipKWIC:
+  tooltipDelimiterCountedAsTokenKWIC:
     "För närvarande räknas även skiljetecken som ord, till exempel . , : –",
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
@@ -128,14 +126,14 @@ export default {
   allHits: "Alla träffar",
   kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   kwicEstimateHitsInfo: "Cirka {hits} uppskattade träffar.",
-  kwicEstimateHitsWarning: "Cirka {hits} uppskattade träffar - sökningen kan ta en stund.",
+  kwicEstimateHitsWarning:
+    "Cirka {hits} uppskattade träffar - sökningen kan ta en stund.",
   ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   ngramEstimateHighWarning: "generering av n-grams kan ta en stund.",
   ngramCountApproximate: "preliminär",
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
-  ngramsEstimateHitsInfo:
-    "Cirka {hits} uppskattade träffar.",
+  ngramsEstimateHitsInfo: "Cirka {hits} uppskattade träffar.",
 
   ngramsEstimateHitsWarning:
     "Ordet förekommer ungefär {hits} gånger - generering av n-grams kan ta en stund.",
@@ -181,10 +179,8 @@ export default {
   Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
   annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
-  searchResult1: "Sökningen resulterade i ",
-
-  searchResult2: "träffar.",
-  searchResult2ngram: "unika träffar.",
+  searchResultHits: "Sökningen resulterade i {count} träffar.",
+  searchResultUniqueHits: "Sökningen resulterade i {count} unika träffar.",
   downloadKWIC: "Ladda ner KWIC",
   downloadCSV: "Ladda ner CSV",
   downloadJSON: "Ladda ner JSON",
@@ -195,7 +191,7 @@ export default {
   downloadSpeechJsonlGzArchive: "Ladda ner tal (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Ladda ner tal (.csv.gz)",
   downloadKwicJsonlGzArchive: "Ladda ner KWIC (.jsonl.gz)",
-  downloadFeedback: { 
+  downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",
     archiveBuildingHint:

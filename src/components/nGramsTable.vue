@@ -8,8 +8,11 @@
         class="col-9 q-mt-md"
         v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'"
       >
-        {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
-        {{ $t("searchResult2ngram") }}
+        <i18n-t keypath="searchResultUniqueHits" tag="span">
+          <template #count>
+            <b>{{ nGramStore.totalHits }}</b>
+          </template>
+        </i18n-t>
       </q-item-label>
 
       <q-btn-dropdown
@@ -204,8 +207,11 @@
               </q-item-label>
               <div class="row q-pb-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
-                  {{ $t("searchResult1") }}
-                  <b>{{ props.row.speeches }}</b> {{ $t("searchResult2") }}
+                  <i18n-t keypath="searchResultHits" tag="span">
+                    <template #count>
+                      <b>{{ props.row.speeches }}</b>
+                    </template>
+                  </i18n-t>
                 </q-item-label>
               </div>
               <!-- SECOND TABLE -->

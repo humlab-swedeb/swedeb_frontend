@@ -12,6 +12,8 @@ export default {
   downloadSpeechCsvGzArchive: "Download speeches (.csv.gz)",
   downloadKwicJsonlGzArchive: "Download KWIC (.jsonl.gz)",
   downloadSpeech: "Download speeches",
+  searchResultHits: "The search returned {count} hits.",
+  searchResultUniqueHits: "The search returned {count} unique hits.",
   downloadFeedback: {
     preparing: "Preparing download...",
     archiveBuilding: "Building archive…",
@@ -44,7 +46,8 @@ export default {
   },
   kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
   kwicEstimateHitsInfo: "Approx. {hits} estimated hits.",
-  kwicEstimateHitsWarning: "Approx. {hits} estimated hits - the search may take a while.",
+  kwicEstimateHitsWarning:
+    "Approx. {hits} estimated hits - the search may take a while.",
   ngramEstimateNotInVocabulary: "The word was not found in the vocabulary",
   ngramEstimateHighWarning: "generating n-grams may take a while.",
   ngramsEstimateHitsInfo: "Approx. {hits} estimated hits.",

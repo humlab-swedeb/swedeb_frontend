@@ -42,7 +42,7 @@
         class="q-mt-lg"
         style="margin-left: -10px"
       >
-        <q-tooltip>{{ $t("tooltipNgramSize") }}</q-tooltip>
+        <q-tooltip>{{ $t("tooltipDelimiterCountedAsTokenKWIC") }}</q-tooltip>
       </q-icon>
     </div>
     <q-card-section horizontal class="q-px-none">

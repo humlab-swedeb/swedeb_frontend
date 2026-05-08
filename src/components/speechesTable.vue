@@ -11,9 +11,11 @@
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label class="col-9 q-mt-md">
-          {{ $t("searchResult1") }}
-          <b>{{ speechesStore.totalHits }}</b>
-          {{ $t("searchResult2") }}
+          <i18n-t keypath="searchResultHits" tag="span">
+            <template #count>
+              <b>{{ speechesStore.totalHits }}</b>
+            </template>
+          </i18n-t>
         </q-item-label>
         <q-btn-dropdown
           no-caps
