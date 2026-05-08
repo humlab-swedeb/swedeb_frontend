@@ -437,7 +437,11 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
-    async downloadKwicSpeechArchive(downloadKey) {
+    async downloadKwicSpeechArchive(
+      downloadKey,
+      archiveFormat = "zip",
+      fallbackFilename = `speeches_archive_${this.ticketId}.zip`,
+    ) {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
         this.errorMessage = i18n.accessibility.ticketExpired;
@@ -455,7 +459,7 @@ export const kwicDataStore = defineStore("kwicData", {
 
       try {
         const prepareResponse = await api.post(
-          `/tools/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=zip`,
+          `/tools/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
         );
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
         this.archiveTicketId = archiveTicketId;
@@ -552,7 +556,7 @@ export const kwicDataStore = defineStore("kwicData", {
         downloadDataStore().setupDownload(
           downloadDataStore().getFilenameFromDisposition(
             downloadResponse.headers,
-            `speeches_archive_${this.ticketId}.zip`,
+            fallbackFilename,
           ),
           downloadResponse.data,
         );
@@ -603,6 +607,22 @@ export const kwicDataStore = defineStore("kwicData", {
 
     async downloadKwicSpeechesZip(_downloadKey) {
       return this.downloadKwicSpeechArchive(_downloadKey);
+    },
+
+    async downloadKwicSpeechesJsonlGz(_downloadKey) {
+      return this.downloadKwicSpeechArchive(
+        _downloadKey,
+        "jsonl_gz",
+        `speeches_archive_${this.ticketId}.jsonl.gz`,
+      );
+    },
+
+    async downloadKwicSpeechesCsvGz(_downloadKey) {
+      return this.downloadKwicSpeechArchive(
+        _downloadKey,
+        "csv_gz",
+        `speeches_archive_${this.ticketId}.csv.gz`,
+      );
     },
   },
 });

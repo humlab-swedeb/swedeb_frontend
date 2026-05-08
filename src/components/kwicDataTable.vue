@@ -86,6 +86,40 @@
               </q-item-label>
             </q-item-section>
           </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesJsonlgz)"
+            @click="downloadKWICAsSpeechesJsonlGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesJsonlgz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechJsonlGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesCsvgz)"
+            @click="downloadKWICAsSpeechesCsvGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesCsvgz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechCsvGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-btn-dropdown>
     </div>
@@ -249,6 +283,8 @@ const downloadKeys = {
   jsonlgz: "kwic-jsonlgz",
   excel: "kwic-excel",
   speeches: "kwic-speeches",
+  speechesJsonlgz: "kwic-speeches-jsonlgz",
+  speechesCsvgz: "kwic-speeches-csvgz",
 };
 
 const KWICTable = ref(null);
@@ -312,6 +348,14 @@ const downloadKWICTableAsJsonlGz = async () => {
 
 const downloadKWICAsSpeeches = async () => {
   await kwicStore.downloadKwicSpeechesZip(downloadKeys.speeches);
+};
+
+const downloadKWICAsSpeechesJsonlGz = async () => {
+  await kwicStore.downloadKwicSpeechesJsonlGz(downloadKeys.speechesJsonlgz);
+};
+
+const downloadKWICAsSpeechesCsvGz = async () => {
+  await kwicStore.downloadKwicSpeechesCsvGz(downloadKeys.speechesCsvgz);
 };
 
 const rows = computed(() =>
