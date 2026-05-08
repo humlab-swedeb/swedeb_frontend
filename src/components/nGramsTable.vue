@@ -21,14 +21,90 @@
         style="width: fit-content"
       >
         <q-list>
-          <q-item clickable v-close-popup @click="downloadNgram">
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.csv)"
+            @click="downloadNgram"
+          >
             <q-item-section>
-              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.csv)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadCSV") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
-          <q-item clickable v-close-popup @click="downloadNgramExcel">
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.excel)"
+            @click="downloadNgramExcel"
+          >
             <q-item-section>
-              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.excel)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadExcel") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesZip)"
+            @click="downloadNgramSpeechesZip"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesZip)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechTextArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesJsonlGz)"
+            @click="downloadNgramSpeechesJsonlGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesJsonlGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechJsonlGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesCsvGz)"
+            @click="downloadNgramSpeechesCsvGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesCsvGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechCsvGzArchive") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -164,9 +240,19 @@ import { ref, computed } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
+const downloadStore = downloadDataStore();
+
+const downloadKeys = {
+  csv: "ngram-csv",
+  excel: "ngram-excel",
+  speechesZip: "ngram-speeches-zip",
+  speechesJsonlGz: "ngram-speeches-jsonlgz",
+  speechesCsvGz: "ngram-speeches-csvgz",
+};
 
 const hasNGramRows = computed(
   () => nGramStore.nGrams && nGramStore.nGrams.length > 0,
@@ -249,12 +335,39 @@ const formatSearch = (value) => {
   return formattedValue;
 };
 
-const downloadNgram = () => {
-  nGramStore.downloadNGramTableCSV();
+const isDownloadActive = (downloadKey) =>
+  downloadStore.isDownloadActive(downloadKey);
+
+const downloadNgram = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.csv,
+    () => nGramStore.downloadNGramTableCSV(),
+    {
+      getErrorMessage: () => nGramStore.errorMessage,
+    },
+  );
 };
 
-const downloadNgramExcel = () => {
-  nGramStore.downloadNGramTableExcel();
+const downloadNgramExcel = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.excel,
+    () => nGramStore.downloadNGramTableExcel(),
+    {
+      getErrorMessage: () => nGramStore.errorMessage,
+    },
+  );
+};
+
+const downloadNgramSpeechesZip = async () => {
+  await nGramStore.downloadNGramSpeechesZip(downloadKeys.speechesZip);
+};
+
+const downloadNgramSpeechesJsonlGz = async () => {
+  await nGramStore.downloadNGramSpeechesJsonlGz(downloadKeys.speechesJsonlGz);
+};
+
+const downloadNgramSpeechesCsvGz = async () => {
+  await nGramStore.downloadNGramSpeechesCsvGz(downloadKeys.speechesCsvGz);
 };
 
 const getNumberDocHits = (props) => {

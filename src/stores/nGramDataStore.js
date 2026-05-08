@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { Notify, copyToClipboard } from "quasar";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
@@ -35,6 +36,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     totalHits: 0,
     totalPages: 0,
     expiresAt: null,
+    archiveTicketId: null,
+    archiveTicketStatus: null,
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
@@ -90,7 +93,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       this.totalHits = 0;
       this.totalPages = 0;
       this.expiresAt = null;
-      this.archiveRetrievalUrl = null;
+      this.resetArchiveTicketState();
       this.shardsComplete = 0;
       this.shardsTotal = 0;
       this.pagination = {
@@ -98,6 +101,25 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         page: 1,
         rowsNumber: 0,
       };
+    },
+
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
+    },
+
+    async retainCopiedArchiveRetrievalLink(archiveTicketId) {
+      try {
+        const response = await api.post(
+          `/downloads/${encodeURIComponent(archiveTicketId)}/copy-link`,
+        );
+        this.archiveTicketStatus = response.data.status;
+        return response.data;
+      } catch (error) {
+        console.error("Error retaining copied archive retrieval link:", error);
+        return null;
+      }
     },
 
     _buildTicketPayload(normalizedSearch) {
@@ -508,6 +530,185 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
     async downloadNGramTableExcel() {
       return this.downloadNgramArchive("xlsx");
+    },
+
+    async _downloadNgramSpeechesArchive(
+      archiveFormat,
+      fallbackFilename,
+      downloadKey,
+    ) {
+      if (!this.ticketId) {
+        this.resetArchiveTicketState();
+        this.errorMessage =
+          i18n.accessibility?.ticketExpired || "Results expired";
+        return false;
+      }
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) {
+        return false;
+      }
+
+      this.errorMessage = "";
+      this.resetArchiveTicketState();
+      downloadDataStore().setDownloadActive(downloadKey, true);
+
+      let dismissLinkNotify = null;
+      let abortedByUser = false;
+
+      try {
+        const prepareResponse = await api.post(
+          `/tools/ngrams/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        const retrievalUrl =
+          window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint =
+          i18n.downloadFeedback?.archiveBuildingHint ||
+          "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        dismissLinkNotify = Notify.create({
+          message:
+            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs...") +
+            " " +
+            buildingHint,
+          color: "blue-8",
+          icon: "hourglass_top",
+          timeout: 0,
+          position: "top",
+          multiLine: true,
+          actions: [
+            {
+              label:
+                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+              color: "yellow",
+              handler: () => {
+                const prevDismiss = dismissLinkNotify;
+                copyToClipboard(retrievalUrl)
+                  .then(() =>
+                    this.retainCopiedArchiveRetrievalLink(archiveTicketId),
+                  )
+                  .catch((error) => {
+                    console.error(
+                      "Error copying archive retrieval link:",
+                      error,
+                    );
+                  });
+                const copiedHint =
+                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  "Länk kopierad - stäng för att hämta senare, eller vänta här.";
+                dismissLinkNotify = Notify.create({
+                  message: copiedHint,
+                  color: "blue-8",
+                  icon: "check",
+                  timeout: 0,
+                  position: "top",
+                  multiLine: true,
+                  actions: [
+                    {
+                      icon: "close",
+                      color: "white",
+                      round: true,
+                      handler: () => {
+                        abortedByUser = true;
+                        if (typeof dismissLinkNotify === "function") {
+                          dismissLinkNotify();
+                          dismissLinkNotify = null;
+                        }
+                      },
+                    },
+                  ],
+                });
+                if (typeof prevDismiss === "function") prevDismiss();
+              },
+            },
+          ],
+        });
+
+        await pollArchiveTicket(api, {
+          statusUrl: `/downloads/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
+
+        if (abortedByUser) {
+          Notify.create({
+            message:
+              i18n.downloadFeedback?.archiveAborted ||
+              "Länken är sparad - öppna den för att hämta arkivet när det är klart.",
+            color: "info",
+            icon: "link",
+            timeout: 6000,
+            position: "top",
+          });
+          return true;
+        }
+
+        const downloadResponse = await api.get(
+          `/downloads/${archiveTicketId}/download`,
+          { responseType: "blob" },
+        );
+        const dlStore = downloadDataStore();
+        dlStore.setupDownload(
+          dlStore.getFilenameFromDisposition(
+            downloadResponse.headers,
+            fallbackFilename,
+          ),
+          downloadResponse.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage =
+            i18n.accessibility?.ticketExpired || "Results expired";
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this._getErrorMessage(error);
+        }
+        Notify.create({
+          type: "negative",
+          message: this.errorMessage,
+          timeout: 4000,
+          position: "top",
+        });
+        console.error(
+          `Error downloading n-gram speeches archive (${archiveFormat}):`,
+          error,
+        );
+        return false;
+      } finally {
+        if (typeof dismissLinkNotify === "function") {
+          dismissLinkNotify();
+          dismissLinkNotify = null;
+        }
+        downloadDataStore().setDownloadActive(downloadKey, false);
+      }
+    },
+
+    async downloadNGramSpeechesZip(downloadKey) {
+      return this._downloadNgramSpeechesArchive(
+        "zip",
+        `ngram_speeches_archive_${this.ticketId}.zip`,
+        downloadKey,
+      );
+    },
+
+    async downloadNGramSpeechesJsonlGz(downloadKey) {
+      return this._downloadNgramSpeechesArchive(
+        "jsonl_gz",
+        `ngram_speeches_archive_${this.ticketId}.jsonl.gz`,
+        downloadKey,
+      );
+    },
+
+    async downloadNGramSpeechesCsvGz(downloadKey) {
+      return this._downloadNgramSpeechesArchive(
+        "csv_gz",
+        `ngram_speeches_archive_${this.ticketId}.csv.gz`,
+        downloadKey,
+      );
     },
   },
 });
