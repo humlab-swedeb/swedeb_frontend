@@ -195,13 +195,13 @@ export default {
   downloadSpeechJsonlGzArchive: "Ladda ner tal (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Ladda ner tal (.csv.gz)",
   downloadKwicJsonlGzArchive: "Ladda ner KWIC (.jsonl.gz)",
-  downloadFeedback: {
+  downloadFeedback: { 
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",
     archiveBuildingHint:
       "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.",
     archiveLinkCopiedClose:
-      "Länk kopierad — stäng för att hämta senare, eller vänta här.",
+      "Länk kopierad — stäng för att hämta senare inom 24 timmar, eller vänta här.",
     archiveAborted:
       "Länken är sparad — öppna den för att hämta arkivet när det är klart.",
     success: "Nedladdningen har startat.",
