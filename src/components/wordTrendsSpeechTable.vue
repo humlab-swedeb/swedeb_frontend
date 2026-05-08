@@ -39,7 +39,7 @@
                     size="16px"
                     class="q-mr-sm"
                   />
-                  {{ $t("downloadCSV") }}
+                  {{ $t("downloadWordTrendsCsvGz") }}
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -56,7 +56,7 @@
                     size="16px"
                     class="q-mr-sm"
                   />
-                  {{ $t("downloadExcel") }}
+                  {{ $t("downloadWordTrendsExcel") }}
                 </q-item-label>
               </q-item-section>
             </q-item>

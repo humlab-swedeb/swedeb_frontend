@@ -34,7 +34,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadCSV") }}
+                {{ $t("downloadKwicCsvGz") }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -51,7 +51,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadKwicJsonlGzArchive") }}
+                {{ $t("downloadKwicJsonlGz") }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -68,7 +68,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadExcel") }}
+                {{ $t("downloadKwicExcel") }}
               </q-item-label>
             </q-item-section>
           </q-item>

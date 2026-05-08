@@ -37,7 +37,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadCSV") }}
+                {{ $t("downloadNGramCsvGz") }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -54,7 +54,7 @@
                   size="16px"
                   class="q-mr-sm"
                 />
-                {{ $t("downloadExcel") }}
+                {{ $t("downloadNGramExcel") }}
               </q-item-label>
             </q-item-section>
           </q-item>

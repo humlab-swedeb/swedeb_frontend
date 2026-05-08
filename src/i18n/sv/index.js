@@ -181,16 +181,37 @@ export default {
 
   searchResultHits: "Sökningen resulterade i {count} träffar.",
   searchResultUniqueHits: "Sökningen resulterade i {count} unika träffar.",
+
+  download: "Ladda ner",
+  downloadAll: "Ladda ner alla",
+
+  downloadSpeech: "Ladda ner anföranden",
+  downloadWordtrends: "Ladda ner ordtrender",
+  downloadNgram: "Ladda ner N-gram",
   downloadKWIC: "Ladda ner KWIC",
+
   downloadCSV: "Ladda ner CSV",
   downloadJSON: "Ladda ner JSON",
-  downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
-  downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
+  // downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
+  // downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
+
   downloadSpeechTextArchive: "Ladda ner tal (.zip)",
   downloadSpeechJsonlGzArchive: "Ladda ner tal (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Ladda ner tal (.csv.gz)",
-  downloadKwicJsonlGzArchive: "Ladda ner KWIC (.jsonl.gz)",
+
+  downloadKwicJsonlGz: "Ladda ner KWIC (.jsonl.gz)",
+  downloadKwicCsvGz: "Ladda ner KWIC (.csv.gz)",
+  downloadKwicExcel: "Ladda ner KWIC (.xlsx)",
+
+  // downloadNGramJsonlGz: "Ladda ner N-gram (.jsonl.gz)",
+  downloadNGramCsvGz: "Ladda ner N-gram (.csv.gz)",
+  downloadNGramExcel: "Ladda ner N-gram (.xlsx)",
+
+  // downloadWordTrendsJsonlGz: "Ladda ner ordtrender (.jsonl.gz)",
+  downloadWordTrendsCsvGz: "Ladda ner ordtrender (.csv.gz)",
+  downloadWordTrendsExcel: "Ladda ner ordtrender (.xlsx)",
+
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",
@@ -657,11 +678,6 @@ export default {
   searchWordLabel: "Sökord:",
   wikidata: "Wikidata",
   openSource: "Öppna källa",
-  download: "Ladda ner",
-  downloadAll: "Ladda ner alla",
-  downloadSpeech: "Ladda ner anföranden",
-  downloadWordtrends: "Ladda ner ordtrender",
-  downloadNgram: "Ladda ner N-gram",
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {

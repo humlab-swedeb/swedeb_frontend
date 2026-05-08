@@ -5,12 +5,25 @@ export default {
   failed: "Action failed",
   success: "Action was successful",
   kwicFetchError: "Could not load KWIC results.",
-  downloadSpeechCsvArchive: "Download CSV archive (.zip)",
-  downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+  // downloadSpeechCsvArchive: "Download CSV archive (.zip)",
+  // downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+
   downloadSpeechTextArchive: "Download speeches (.zip)",
   downloadSpeechJsonlGzArchive: "Download speeches (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Download speeches (.csv.gz)",
-  downloadKwicJsonlGzArchive: "Download KWIC (.jsonl.gz)",
+
+  downloadKwicCsvGz: "Download KWIC (.csv.gz)",
+  downloadKwicJsonlGz: "Download KWIC (.jsonl.gz)",
+  downloadKwicExcel: "Download KWIC (.xlsx)",
+
+  downloadNGramJsonlGz: "Download N-gram (.jsonl.gz)",
+  downloadNGramCsvGz: "Download N-gram (.csv.gz)",
+  downloadNGramExcel: "Download N-gram (.xlsx)",
+
+  downloadWordTrendsJsonlGz: "Download word trends (.jsonl.gz)",
+  downloadWordTrendsCsvGz: "Download word trends (.csv.gz)",
+  downloadWordTrendsExcel: "Download word trends (.xlsx)",
+
   downloadSpeech: "Download speeches",
   searchResultHits: "The search returned {count} hits.",
   searchResultUniqueHits: "The search returned {count} unique hits.",
