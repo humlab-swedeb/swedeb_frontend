@@ -1,5 +1,6 @@
 <template>
   <q-input
+    data-test="search-bar"
     v-model="searchText"
     rounded
     outlined
