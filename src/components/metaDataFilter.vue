@@ -139,6 +139,7 @@
             kwicStore.searchText.length < 1 ||
             kwicStore.searchText.includes(',')
           "
+          data-test="search-button-kwic"
         >
           <!-- Tooltip for search for words or sentences -->
           <q-tooltip
@@ -173,6 +174,7 @@
             ngramStore.searchText.length < 1 ||
             ngramStore.searchText.includes(',')
           "
+          data-test="search-button-ngram"
         >
           <q-tooltip
             v-if="ngramStore.searchText.length < 1"

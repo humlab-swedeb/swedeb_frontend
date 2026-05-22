@@ -112,7 +112,7 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+          <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer" data-test="table-row">
             <q-td
               v-for="col in props.cols"
               :key="col.name"

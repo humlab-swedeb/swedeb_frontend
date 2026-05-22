@@ -125,6 +125,7 @@
       :loading="nGramStore.isPageLoading"
       v-if="!loading"
       class="bg-grey-2"
+      data-test="ngram-table"
     >
       <template v-slot:top-row v-if="nGramStore.ticketStatus === 'partial'">
         <q-tr>

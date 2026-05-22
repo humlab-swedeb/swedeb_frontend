@@ -1,6 +1,6 @@
 <!-- ExpandingRow.vue -->
 <template>
-  <q-tr v-show="props.props.expand" :props="props.props">
+  <q-tr v-show="props.props.expand" :props="props.props" data-test="expanded-row-content">
     <q-td
       :colspan="
         $q.screen.lt.sm
@@ -92,6 +92,7 @@
                 target="_blank"
                 class="text-grey-8 fit"
                 color="secondary"
+                data-test="wikidata-button"
               >
                 <q-icon left name="person_search" color="accent" />
                 <q-item-label>{{ $t("wikidata") }}</q-item-label>
@@ -101,6 +102,7 @@
                 @click="openPdf"
                 class="text-grey-8"
                 color="white"
+                data-test="open-source-button"
               >
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }}</q-item-label>
@@ -111,6 +113,7 @@
                 class="text-grey-8"
                 color="accent"
                 @click="downloadCurrentSpeech"
+                data-test="download-button"
               >
                 <q-icon left name="download" color="accent" />
                 <q-item-label>{{ $t("download") }}</q-item-label>
@@ -144,6 +147,7 @@
                 target="_blank"
                 class="full-width items-start text-grey-8"
                 color="secondary"
+                data-test="wikidata-button"
               >
                 <q-icon left name="person_search" color="accent" />
                 <q-item-label>{{ $t("wikidata") }}</q-item-label>
@@ -156,6 +160,7 @@
                 class="full-width items-start text-grey-8"
                 color="white"
                 :disabled="false"
+                data-test="open-source-button"
               >
 
                 <q-icon left name="open_in_new" color="accent" />
@@ -167,6 +172,7 @@
                 class="full-width items-start text-grey-8"
                 color="accent"
                 @click="downloadCurrentSpeech"
+                data-test="download-button"
               >
                 <q-icon left name="download" color="accent" />
                 <q-item-label>{{ $t("download") }}</q-item-label>
