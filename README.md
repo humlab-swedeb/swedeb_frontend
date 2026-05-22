@@ -1,4 +1,3 @@
-
 # Riksdagsdebatter.se Frontend
 
 This repository contains the frontend application for [Riksdagsdebatter.se](https://riksdagsdebatter.se/), a website for searching and analyzing the debates of the Swedish Parliament 1867-2022.
@@ -18,12 +17,12 @@ This repository contains the frontend application for [Riksdagsdebatter.se](http
 
 This project is a modern single-page application (SPA) built with a focus on rich data visualization and a responsive user interface. The core technologies used are:
 
-*   **[Vue.js (v3)](https://vuejs.org/)**: A progressive JavaScript framework for building user interfaces.
-*   **[Quasar Framework (v2)](https://quasar.dev/)**: A high-performance Vue.js framework that allows us to build a responsive SPA, with a rich set of pre-built UI components.
-*   **[Pinia](https://pinia.vuejs.org/)**: The official state management library for Vue.js, used to manage application-wide state in a simple and intuitive way.
-*   **[Axios](https://axios-http.com/)**: A promise-based HTTP client used for all communication with the backend API to fetch debate data and metadata.
-*   **[Highcharts](https://www.highcharts.com/) & [ApexCharts](https://apexcharts.com/)**: Two powerful charting libraries used to create interactive and visually appealing data visualizations, such as timelines and statistical charts.
-*   **[pnpm](https://pnpm.io/)**: A fast, disk space-efficient package manager for Node.js.
+- **[Vue.js (v3)](https://vuejs.org/)**: A progressive JavaScript framework for building user interfaces.
+- **[Quasar Framework (v2)](https://quasar.dev/)**: A high-performance Vue.js framework that allows us to build a responsive SPA, with a rich set of pre-built UI components.
+- **[Pinia](https://pinia.vuejs.org/)**: The official state management library for Vue.js, used to manage application-wide state in a simple and intuitive way.
+- **[Axios](https://axios-http.com/)**: A promise-based HTTP client used for all communication with the backend API to fetch debate data and metadata.
+- **[Highcharts](https://www.highcharts.com/) & [ApexCharts](https://apexcharts.com/)**: Two powerful charting libraries used to create interactive and visually appealing data visualizations, such as timelines and statistical charts.
+- **[pnpm](https://pnpm.io/)**: A fast, disk space-efficient package manager for Node.js.
 
 ## CI/CD and Releases
 
@@ -50,6 +49,7 @@ For detailed information about the CI/CD workflow, release process, branch strat
 To set up the project for local development, follow these steps.
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/humlab-swedeb/swedeb_frontend.git
     cd swedeb_frontend
@@ -57,23 +57,27 @@ To set up the project for local development, follow these steps.
 
 2.  **Install pnpm:**
     If you don't have pnpm, install it globally:
+
     ```bash
     npm install -g pnpm
     ```
 
 3.  **Install dependencies:**
+
     ```bash
     pnpm install
     ```
 
 4.  **Run the development server:**
     This command starts the Quasar development server with hot-reloading.
+
     ```bash
     pnpm dev
     ```
+
     The application will be available at `http://localhost:9000` (or another port specified by Quasar).
 
-5. To start dev server with proxy to Swedeb API
+5.  To start dev server with proxy to Swedeb API
 
 ```bash
 export USE_API_PROXY=1 pnpm dev
@@ -109,11 +113,13 @@ src/
 ### Available Scripts
 
 ```bash
-pnpm dev      # Start development server with hot-reload
-pnpm build    # Build production bundle
-pnpm lint     # Lint code with ESLint
-pnpm format   # Format code with Prettier
-pnpm test     # Run test suite (currently in development)
+pnpm dev          # Start development server with hot-reload
+pnpm build        # Build production bundle
+pnpm lint         # Lint code with ESLint
+pnpm format       # Format code with Prettier
+pnpm test         # Run unit tests with Vitest
+pnpm cypress open # Open Cypress Test Runner (E2E tests)
+pnpm cypress run  # Run Cypress tests in headless mode
 ```
 
 ### Dependencies
@@ -124,11 +130,60 @@ See [package.json](package.json) for the complete dependency list.
 
 ## Testing
 
+This project uses **Cypress** for end-to-end (E2E) testing.
+
+### Running Tests
+
+**Interactive Mode** (recommended for development):
+
 ```bash
-pnpm test
+pnpm cypress open
 ```
 
-**Note:** The test suite is currently in development. We welcome contributions to improve test coverage!
+Opens the Cypress Test Runner for running tests in a browser.
+
+**Headless Mode** (for CI/CD):
+
+```bash
+pnpm cypress run
+```
+
+Runs all tests in headless mode and outputs results to the terminal.
+
+### Test Structure
+
+```
+cypress/
+├── e2e/              # E2E test specs
+│   ├── kwic.cy.js    # KWIC tool tests
+│   ├── start.cy.js   # Landing page tests
+│   └── ...
+├── fixtures/         # Test data and fixtures
+└── support/          # Custom commands and configuration
+    ├── commands.js   # Custom Cypress commands (e.g., getByData)
+    └── e2e.js        # E2E support file
+```
+
+### What's Tested
+Tests are under development.
+Current test coverage includes:
+
+- **KWIC Tool**: Search functionality, results display, row expansion, and action buttons
+- **User Interactions**: Clicking, filtering, and data display
+- **Navigation**: Link validation and window management
+- **Downloads**: File download triggers (without actual file creation)
+
+### Writing Tests
+
+Tests follow Cypress best practices:
+
+- Use `data-test` attributes for stable element selection
+- Leverage custom commands like `cy.getByData()`
+- Stub external interactions (`window.open()`, `URL.createObjectURL()`)
+
+For detailed Cypress documentation, visit [docs.cypress.io](https://docs.cypress.io).
+
+**Note:** Unit testing with Vitest is also available via `pnpm test`. Both test suites are actively being expanded.
 
 ## Contributing
 
