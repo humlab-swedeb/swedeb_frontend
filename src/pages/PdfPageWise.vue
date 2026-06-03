@@ -43,7 +43,7 @@
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf row justify-center bg-white q-ma-none">
         <div v-if="pdfSrc">
-          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWith" />
+          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWidth" />
         </div>
         <div v-else>
           <p>PDF is not available.</p>
@@ -150,7 +150,7 @@ const page = ref(1);
 const firstPage = ref(1);
 const lastPage = ref(1);
 const pdfSrc = ref(null);
-const docWith = ref(600);
+const docWidth = ref(600);
 
 const parsePagePdfSource = (source) => {
   if (!source) {
@@ -246,12 +246,12 @@ const prevPage = () => {
 };
 
 const zoomIn = () => {
-  docWith.value += 30;
+  docWidth.value += 30;
 };
 
 const zoomOut = () => {
-  if (docWith.value > 200) {
-    docWith.value -= 30;
+  if (docWidth.value > 200) {
+    docWidth.value -= 30;
   }
 };
 
