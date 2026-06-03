@@ -37,8 +37,8 @@
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomIn") }}</q-btn>
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomOut") }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomIn") }}</q-btn>
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomOut") }}</q-btn>
         </q-card-section>
       </q-card-section>
       <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }} </div>
