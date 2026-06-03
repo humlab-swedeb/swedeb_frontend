@@ -306,9 +306,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
         return pageData;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage =
-            i18n.accessibility?.ticketExpired || "Results expired";
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility?.ticketExpired || "Results expired";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -512,7 +514,10 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage =
             i18n.accessibility?.ticketExpired || "Results expired";
           this.resetTicketState();
@@ -660,9 +665,11 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage =
-            i18n.accessibility?.ticketExpired || "Results expired";
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
+          this.errorMessage = i18n.accessibility?.ticketExpired || "Results expired";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);

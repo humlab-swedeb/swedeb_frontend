@@ -703,6 +703,7 @@ export default {
     noResults: "Inga resultat för sökningen.",
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+    tooManyRequests: "För många sökningar just nu. Vänligen försök igen senare.",
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
     kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
     kwicQueryFailed: "KWIC-sökningen misslyckades.",

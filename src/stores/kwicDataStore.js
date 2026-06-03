@@ -309,7 +309,10 @@ export const kwicDataStore = defineStore("kwicData", {
 
         return pageData;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
@@ -426,7 +429,10 @@ export const kwicDataStore = defineStore("kwicData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else {
@@ -564,6 +570,9 @@ export const kwicDataStore = defineStore("kwicData", {
       } catch (error) {
         if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
+          this.resetTicketState();
+        } else if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests  ;
           this.resetTicketState();
         } else {
           this.errorMessage = this.getErrorMessage(error);

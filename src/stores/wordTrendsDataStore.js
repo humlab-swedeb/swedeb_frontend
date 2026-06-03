@@ -196,7 +196,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         };
         return response.data;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.accessibility.tooManyRequests;
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
           this.speechesErrorMessage = i18n.accessibility.ticketExpired;
           this.resetSpeechesTicketState();
         } else if (axios.isCancel(error)) {
@@ -283,7 +286,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.accessibility.tooManyRequests;
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
           this.speechesErrorMessage = i18n.accessibility.ticketExpired;
           this.resetSpeechesTicketState();
         } else {
@@ -470,7 +476,10 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.accessibility.tooManyRequests;
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
           this.speechesErrorMessage = i18n.accessibility.ticketExpired;
           this.resetSpeechesTicketState();
         } else {

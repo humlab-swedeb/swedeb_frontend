@@ -172,7 +172,10 @@ export const speechesDataStore = defineStore("speechesData", {
         };
         return response.data;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
@@ -354,7 +357,10 @@ export const speechesDataStore = defineStore("speechesData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage = i18n.accessibility.ticketExpired;
           this.resetTicketState();
         } else {
