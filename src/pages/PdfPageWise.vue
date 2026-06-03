@@ -41,8 +41,8 @@
       </q-card-section>
       <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }}</div>
       <q-separator size="2px" color="grey-5" />
-      <q-card-section class="pdf row justify-center bg-white q-ma-none">
-        <div v-if="pdfSrc">
+      <q-card-section class="pdf-viewport bg-white q-ma-none">
+        <div v-if="pdfSrc" class="pdf-inner">
           <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWidth" />
         </div>
         <div v-else>
@@ -297,5 +297,22 @@ onMounted(async () => {
 .textbox {
   max-height: 800px;
   overflow: auto;
+}
+
+.pdf-viewport {
+  width: 100%;
+  max-width: 800px;
+  height: 80vh;
+  max-height: 1200px;
+  overflow: auto;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.pdf-inner {
+  width: max-content;
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>
