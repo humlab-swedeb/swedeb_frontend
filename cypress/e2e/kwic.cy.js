@@ -4,6 +4,63 @@ describe("KWIC Tool", () => {
     cy.visit("/tools/kwic");
   });
 
+  it("KWIC tool specific settings - window", () => {
+    cy.getByData("kwic-word-window").within(() => {
+      cy.contains(
+        "Välj hur många ord som ska visas till vänster och höger om sökorden",
+      );
+    });
+    cy.getByData("kwic-window-left")
+      .clear()
+      .type("{uparrow}")
+      .should("have.value", "1");
+    cy.getByData("kwic-window-left")
+      .type("{downarrow}{downarrow}")
+      .should("have.value", "1");
+    cy.getByData("kwic-window-left")
+      .clear()
+      .type("20")
+      .should("have.value", "20");
+    cy.getByData("kwic-window-left")
+      .type("{uparrow}")
+      .should("have.value", "20");
+  });
+
+  it("KWIC tool specific settins - lemmatization toogle", () => {
+    cy.getByData("kwic-lemma-toggle").should("contain", "Lemma");
+    cy.getByData("kwic-lemma-toggle")
+      .children()
+      .find('[role="switch"]')
+      .click();
+    cy.getByData("kwic-lemma-toggle").children().find('[aria-checked="true"]');
+    cy.getByData("kwic-lemma-toggle")
+      .children()
+      .find('[role="switch"]')
+      .click();
+    cy.getByData("kwic-lemma-toggle").children().find('[aria-checked="false"]');
+  });
+
+  it("Metadatadisplay is visible after search", () => {
+    cy.getByData("kwic-show-data").as("showData").should("not.be.visible");
+    cy.getByData("search-bar").type("månsken");
+    cy.getByData("search-button-kwic").click();
+    cy.get("@showData", { timeout: 10000 }).should("be.visible");
+    cy.get("@showData").within(() => {
+      cy.contains("År");
+      cy.contains("Talare");
+      cy.contains("Kammare");
+      cy.contains("Parti");
+      cy.contains("Kön");
+      cy.contains("Data-version");
+      cy.contains("SWERIK-records")
+        .should("have.attr", "href")
+        .and("include", "https://github.com/swerik-project/riksdagen-records");
+      cy.contains("SWERIK-persons")
+        .should("have.attr", "href")
+        .and("include", "https://github.com/swerik-project/riksdagen-persons");
+    });
+  });
+
   it("Kwic search → displays results", () => {
     cy.getByData("search-bar").type("hundskatt");
 
@@ -14,7 +71,7 @@ describe("KWIC Tool", () => {
       .should("exist");
   });
 
-  it.only("Click first row → expands and shows speech details", () => {
+  it("Click first row → expands and shows speech details and buttons", () => {
     cy.getByData("search-bar").type("hundskatt");
     cy.getByData("search-button-kwic").click();
     cy.getByData("kwic-results-table", { timeout: 10000 }).should("exist");
@@ -29,23 +86,17 @@ describe("KWIC Tool", () => {
 
     cy.get("@firstExpandedRow").within(() => {
       // :visible required due to different buttons with different view size
-      cy.getByData("wikidata-button").filter(":visible").should("exist");
-      cy.getByData("open-source-button").filter(":visible").should("exist");
-      cy.getByData("download-button").filter(":visible").should("exist");
+      cy.getByData("wikidata-button").should("exist");
+      cy.getByData("open-source-button").should("exist");
+      cy.getByData("download-button").should("exist");
 
-      // Verify the wikidata link href
       cy.getByData("wikidata-button")
-        .filter(":visible")
         .should("have.attr", "href")
         .and("include", "wikidata.org");
 
-      // Verify target="_blank" attribute (opens in new tab)
-      cy.getByData("wikidata-button")
-        .filter(":visible")
-        .should("have.attr", "target", "_blank");
+      cy.getByData("wikidata-button").should("have.attr", "target", "_blank");
 
-      // Test open-source button (uses window.open, not href)
-      cy.getByData("open-source-button").filter(":visible").click();
+      cy.getByData("open-source-button").click();
     });
 
     // Verify window.open was called with correct path and target
@@ -75,7 +126,7 @@ describe("KWIC Tool", () => {
         cy.stub(win.URL, "revokeObjectURL");
       });
 
-      cy.getByData("download-button").filter(":visible").click();
+      cy.getByData("download-button").click();
 
       // Verify the download was triggered (createObjectURL was called)
       cy.window().then((win) => {

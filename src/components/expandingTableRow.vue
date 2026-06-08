@@ -92,7 +92,7 @@
                 target="_blank"
                 class="text-grey-8 fit"
                 color="secondary"
-                data-test="wikidata-button"
+                data-test="wikidata-button-small"
               >
                 <q-icon left name="person_search" color="accent" />
                 <q-item-label>{{ $t("wikidata") }}</q-item-label>
@@ -102,7 +102,7 @@
                 @click="openPdf"
                 class="text-grey-8"
                 color="white"
-                data-test="open-source-button"
+                data-test="open-source-button-small"
               >
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }}</q-item-label>
@@ -113,7 +113,7 @@
                 class="text-grey-8"
                 color="accent"
                 @click="downloadCurrentSpeech"
-                data-test="download-button"
+                data-test="download-button-small"
               >
                 <q-icon left name="download" color="accent" />
                 <q-item-label>{{ $t("download") }}</q-item-label>
