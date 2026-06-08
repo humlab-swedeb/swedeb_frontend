@@ -8,7 +8,9 @@
     :class="$q.screen.lt.md ? '' : 'row justify-center q-px-xl'"
   >
     <q-card-section :class="$q.screen.lt.md ? 'q-pa-none' : 'col-7'">
-      <q-card-section class="row justify-center justify-between q-py-none full-width">
+      <q-card-section
+        class="row justify-center justify-between q-py-none full-width"
+      >
         <q-card-section class="q-pt-none">
           <q-btn
             class="q-mr-md q-pl-sm"
@@ -16,7 +18,7 @@
             no-caps
             @click="prevPage"
             icon="chevron_left"
-            :disable="page <= firstPage"
+            :disable="page <= 1"
           >
             {{ $t("previousPage") }}
           </q-btn>
@@ -35,11 +37,17 @@
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomIn") }}</q-btn>
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomOut") }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{
+            $t("zoomIn")
+          }}</q-btn>
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{
+            $t("zoomOut")
+          }}</q-btn>
         </q-card-section>
       </q-card-section>
-      <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }}</div>
+      <div class="q-ml-md q-pr-sm text-bold text-negative">
+        {{ $t("pageNrInfoText") }}
+      </div>
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf-viewport bg-white q-ma-none">
         <div v-if="pdfSrc" class="pdf-inner">
@@ -75,7 +83,11 @@
               <q-item-label
                 v-if="speakerData.speaker"
                 class="q-mt-xs"
-                :class="speakerData.speaker === 'Okänd' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.speaker === 'Okänd'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
               >
                 {{
                   speakerData.speaker === "Okänd"
@@ -86,7 +98,9 @@
               <q-item-label
                 v-if="speakerData.party"
                 class="q-mt-xs"
-                :class="speakerData.party === '[-]' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.party === '[-]' ? 'text-italic text-grey-6' : ''
+                "
               >
                 ({{
                   speakerData.party === "[-]"
@@ -97,7 +111,11 @@
               <q-item-label
                 v-if="speakerData.gender"
                 class="q-mt-xs"
-                :class="speakerData.gender === 'Okänt' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.gender === 'Okänt'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
               >
                 {{
                   speakerData.gender === "Okänt"
@@ -106,7 +124,9 @@
                 }}
               </q-item-label>
             </div>
-            <q-item-label caption class="text-bold">{{ speakerData.protocol }}</q-item-label>
+            <q-item-label caption class="text-bold">{{
+              speakerData.protocol
+            }}</q-item-label>
             <q-item-label class="q-pt-xs" v-if="speakerData.node_word">
               {{ $t("searchWordLabel") }}
               <b>{{ speakerData.node_word }}</b>
@@ -138,7 +158,8 @@ import { api } from "boot/axios";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
-const PAGE_PDF_PATH_RE = /\/(?<year>\d{4,8})\/(?<protocol>prot-[^/]+)\/(?<filename>prot-[^/]+)_(?<page>\d+)\.pdf$/;
+const PAGE_PDF_PATH_RE =
+  /\/(?<year>\d{4,8})\/(?<protocol>prot-[^/]+)\/(?<filename>prot-[^/]+)_(?<page>\d+)\.pdf$/;
 
 const pdfStore = pdfDataStore();
 const metaStore = metaDataStore();
@@ -147,7 +168,6 @@ const speakerData = ref({});
 const speechText = ref("");
 const speakerNote = ref("");
 const page = ref(1);
-const firstPage = ref(1);
 const lastPage = ref(1);
 const pdfSrc = ref(null);
 const docWidth = ref(600);
@@ -213,12 +233,10 @@ const loadPageRange = async (protocolName) => {
     });
 
     if (Array.isArray(response.data) && response.data.length === 2) {
-      firstPage.value = Number(response.data[0]);
       lastPage.value = Number(response.data[1]);
     }
   } catch (error) {
     console.error("Error fetching protocol page range:", error);
-    firstPage.value = page.value;
     lastPage.value = page.value;
   }
 };
@@ -240,7 +258,7 @@ const nextPage = () => {
 };
 
 const prevPage = () => {
-  if (page.value > firstPage.value) {
+  if (page.value > 1) {
     setPage(page.value - 1);
   }
 };
@@ -274,8 +292,7 @@ onMounted(async () => {
   pdfSrc.value = parsed.speakerData?.source ?? null;
 
   const pagePdfInfo = parsePagePdfSource(pdfSrc.value);
-  page.value = pagePdfInfo?.page ?? Number(parsed.page ?? 1);
-  firstPage.value = page.value;
+  page.value = parsed.page - 1; // To adjust for zero-indexing of pdf-files
   lastPage.value = page.value;
 
   if (pagePdfInfo?.protocolName) {
