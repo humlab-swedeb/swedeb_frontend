@@ -18,12 +18,12 @@
             no-caps
             @click="prevPage"
             icon="chevron_left"
-            :disable="page <= 1"
+            :disable="page <= 0"
           >
             {{ $t("previousPage") }}
           </q-btn>
           <span class="text-bold text-subtitle1">
-            {{ page }} / {{ lastPage }}
+            {{ page + 1}} / {{ lastPage }} 
           </span>
           <q-btn
             class="q-ml-md q-pr-sm"
@@ -258,7 +258,7 @@ const nextPage = () => {
 };
 
 const prevPage = () => {
-  if (page.value > 1) {
+  if (page.value >= 1) {
     setPage(page.value - 1);
   }
 };
@@ -292,7 +292,8 @@ onMounted(async () => {
   pdfSrc.value = parsed.speakerData?.source ?? null;
 
   const pagePdfInfo = parsePagePdfSource(pdfSrc.value);
-  page.value = parsed.page - 1; // To adjust for zero-indexing of pdf-files
+  page.value = parsed.page >= 1 ? parsed.page - 1 : parsed.page; // To adjust for zero-indexing of pdf-files
+
   lastPage.value = page.value;
 
   if (pagePdfInfo?.protocolName) {
