@@ -20,16 +20,6 @@
       <kwicDataTable />
     </div>
 
-    <!--     <div>
-      <q-btn
-        no-caps
-        v-show="loading"
-        @click="cancelFetch"
-        color="primary"
-        :label="$t('searchCancel')"
-      />
-      >
-    </div> -->
   </div>
 </template>
 
@@ -67,7 +57,5 @@ watch(
   },
 );
 
-const cancelFetch = () => {
-  kwicStore.cancelFetch();
-};
+
 </script>

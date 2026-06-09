@@ -74,17 +74,6 @@ export const kwicDataStore = defineStore("kwicData", {
   }),
 
   actions: {
-    cancelFetch() {
-      if (this.cancelTokenSource) {
-        this.cancelTokenSource.cancel("Sökning avbruten");
-        this.cancelTokenSource = null;
-      }
-
-      this.requestSequence += 1;
-      this.pageRequestSequence += 1;
-      this.isLoading = false;
-      this.isPageLoading = false;
-    },
 
     normalizeSearch(search) {
       if (search.endsWith("*") && !search.endsWith(".*")) {
