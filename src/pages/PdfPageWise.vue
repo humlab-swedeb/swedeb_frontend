@@ -154,7 +154,6 @@
 import { onMounted, ref } from "vue";
 import PdfEmbed from "vue-pdf-embed";
 
-import { api } from "boot/axios";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
