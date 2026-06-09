@@ -244,27 +244,20 @@ const persistPdfData = () => {
     page: page.value,
   };
 
-  pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
 };
 
 const loadPageRange = async (protocolName) => {
-  try {
-    const response = await api.get("/tools/protocol/page_range", {
-      params: { protocol_name: protocolName },
-    });
 
+      lastPage.value = await pdfStore.loadPageRange(protocolName);
 
-    if (Array.isArray(response.data) && response.data.length === 2) {
-      lastPage.value = Number(response.data[1]);
+      if (lastPage.value === null){
+        lastPage.value = page.value;
+      }
       if (lastPage.value == 1 && fourDigitYear.value) {
         lastPage.value = TMP_LAST_PAGE; // temp adjustment for protocols from four digit-years without range
       }
-    }
-  } catch (error) {
-    console.error("Error fetching protocol page range:", error);
-    lastPage.value = page.value;
-  }
+
 };
 
 const setPage = (nextPage) => {
@@ -324,7 +317,6 @@ onMounted(async () => {
   }
 
   const parsed = JSON.parse(storedData);
-  pdfStore.setRowData(parsed);
 
   speakerData.value = parsed.speakerData ?? {};
   speechText.value = parsed.speechText ?? "";
