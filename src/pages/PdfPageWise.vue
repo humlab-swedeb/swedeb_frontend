@@ -18,12 +18,12 @@
             no-caps
             @click="prevPage"
             icon="chevron_left"
-            :disable="page <= 0"
+            :disable="!previousPageExists()"
           >
             {{ $t("previousPage") }}
           </q-btn>
           <span class="text-bold text-subtitle1">
-            {{ page + 1}} / {{ lastPage }} 
+            {{ getDisplayPageNbr() }} / {{ lastPage }}
           </span>
           <q-btn
             class="q-ml-md q-pr-sm"
@@ -31,7 +31,7 @@
             no-caps
             icon-right="chevron_right"
             @click="nextPage"
-            :disable="page >= lastPage"
+            :disable="!nextPageExists()"
           >
             {{ $t("nextPage") }}
           </q-btn>
@@ -158,6 +158,9 @@ import { api } from "boot/axios";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
+const YEARS_WITH_FOUR_DIGIT_PAGES = ["199091", "199192", "199293", "199394"];
+const TMP_FIRST_PAGE = 1;
+const TMP_LAST_PAGE = 200;
 const PAGE_PDF_PATH_RE =
   /\/(?<year>\d{4,8})\/(?<protocol>prot-[^/]+)\/(?<filename>prot-[^/]+)_(?<page>\d+)\.pdf$/;
 
@@ -171,6 +174,22 @@ const page = ref(1);
 const lastPage = ref(1);
 const pdfSrc = ref(null);
 const docWidth = ref(600);
+const fourDigitYear = ref(false);
+
+const getDisplayPageNbr = () => {
+  if (fourDigitYear.value) {
+    return page.value;
+  }
+  return page.value + 1;
+};
+
+const checkFourDigitYear = (source) => {
+  YEARS_WITH_FOUR_DIGIT_PAGES.forEach((year, _) => {
+    if (source.indexOf(year) !== -1) {
+      fourDigitYear.value = true;
+    }
+  });
+};
 
 const parsePagePdfSource = (source) => {
   if (!source) {
@@ -200,10 +219,13 @@ const parsePagePdfSource = (source) => {
 };
 
 const replacePageNumberInSource = (source, nextPage) => {
-  const paddedPage = String(nextPage).padStart(3, "0");
+  const padLen = fourDigitYear.value ? 4 : 3;
+  const paddedPage = String(nextPage).padStart(padLen, "0");
 
   try {
     const url = new URL(source);
+    parsed = parsePagePdfSource(source);
+
     url.pathname = url.pathname.replace(/_\d+\.pdf$/, `_${paddedPage}.pdf`);
     return url.toString();
   } catch (error) {
@@ -232,8 +254,12 @@ const loadPageRange = async (protocolName) => {
       params: { protocol_name: protocolName },
     });
 
+
     if (Array.isArray(response.data) && response.data.length === 2) {
       lastPage.value = Number(response.data[1]);
+      if (lastPage.value == 1 && fourDigitYear.value) {
+        lastPage.value = TMP_LAST_PAGE; // temp adjustment for protocols from four digit-years without range
+      }
     }
   } catch (error) {
     console.error("Error fetching protocol page range:", error);
@@ -251,14 +277,28 @@ const setPage = (nextPage) => {
   persistPdfData();
 };
 
+const previousPageExists = () => {
+  if (fourDigitYear.value) {
+    return page.value > TMP_FIRST_PAGE;
+  }
+  return page.value >= TMP_FIRST_PAGE;
+};
+
+const nextPageExists = () => {
+  return (
+    (page.value < lastPage.value - 1 && !fourDigitYear.value) ||
+    (page.value < lastPage.value && fourDigitYear.value)
+  );
+};
+
 const nextPage = () => {
-  if (page.value < lastPage.value) {
+  if (nextPageExists()) {
     setPage(page.value + 1);
   }
 };
 
 const prevPage = () => {
-  if (page.value >= 1) {
+  if (previousPageExists()) {
     setPage(page.value - 1);
   }
 };
@@ -292,7 +332,11 @@ onMounted(async () => {
   pdfSrc.value = parsed.speakerData?.source ?? null;
 
   const pagePdfInfo = parsePagePdfSource(pdfSrc.value);
-  page.value = parsed.page >= 1 ? parsed.page - 1 : parsed.page; // To adjust for zero-indexing of pdf-files
+
+  checkFourDigitYear(pdfSrc.value);
+
+  page.value =
+    !fourDigitYear.value && parsed.page >= 1 ? parsed.page - 1 : parsed.page; // To adjust for zero-indexing of pdf-files
 
   lastPage.value = page.value;
 
