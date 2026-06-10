@@ -4,7 +4,8 @@ import { api } from "boot/axios";
 import axios from "axios";
 import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
+
 import {
   getTicketPollDelayMs,
   pollArchiveTicket,
@@ -74,7 +75,6 @@ export const kwicDataStore = defineStore("kwicData", {
   }),
 
   actions: {
-
     normalizeSearch(search) {
       if (search.endsWith("*") && !search.endsWith(".*")) {
         return search.slice(0, -1) + ".*";
@@ -190,7 +190,9 @@ export const kwicDataStore = defineStore("kwicData", {
         }
 
         if (data.status === "error") {
-          throw new Error(data.error || i18n.accessibility.kwicQueryFailed);
+          throw new Error(
+            data.error || i18n.global.t("accessibility.kwicQueryFailed"),
+          );
         }
 
         if (data.status === "partial") {
@@ -220,7 +222,7 @@ export const kwicDataStore = defineStore("kwicData", {
         });
       }
 
-      throw new Error(i18n.accessibility.kwicTicketTimeout);
+      throw new Error(i18n.global.t("accessibility.kwicTicketTimeout"));
     },
 
     async fetchKwicPage({
@@ -299,10 +301,10 @@ export const kwicDataStore = defineStore("kwicData", {
         return pageData;
       } catch (error) {
         if (error.response?.status === 429) {
-          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
@@ -378,7 +380,7 @@ export const kwicDataStore = defineStore("kwicData", {
     async downloadKwicArchive(format = "jsonl_gz") {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
-        this.errorMessage = i18n.accessibility.ticketExpired;
+        this.errorMessage = i18n.global.t("accessibility.ticketExpired");
         return false;
       }
       this.errorMessage = "";
@@ -419,10 +421,10 @@ export const kwicDataStore = defineStore("kwicData", {
         return true;
       } catch (error) {
         if (error.response?.status === 429) {
-          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else {
           this.errorMessage = this.getErrorMessage(error);
@@ -439,7 +441,7 @@ export const kwicDataStore = defineStore("kwicData", {
     ) {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
-        this.errorMessage = i18n.accessibility.ticketExpired;
+        this.errorMessage = i18n.global.t("accessibility.ticketExpired");
         return false;
       }
       if (downloadKey && downloadDataStore().isDownloadActive(downloadKey))
@@ -464,11 +466,11 @@ export const kwicDataStore = defineStore("kwicData", {
         const retrievalUrl =
           window.location.origin + "/download/" + archiveTicketId;
         const buildingHint =
-          i18n.downloadFeedback?.archiveBuildingHint ||
+          i18n.global.t("downloadFeedback.archiveBuildingHint") ||
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            (i18n.downloadFeedback.archiveBuilding || "Arkivet byggs…") +
             " " +
             buildingHint,
           color: "blue-8",
@@ -479,7 +481,8 @@ export const kwicDataStore = defineStore("kwicData", {
           actions: [
             {
               label:
-                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+                i18n.global.t("downloadRetrievalPage.copyLink") ||
+                "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
@@ -494,7 +497,7 @@ export const kwicDataStore = defineStore("kwicData", {
                     );
                   });
                 const copiedHint =
-                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  i18n.global.t("downloadFeedback.archiveLinkCopiedClose") ||
                   "Länk kopierad — stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
@@ -534,7 +537,7 @@ export const kwicDataStore = defineStore("kwicData", {
         if (abortedByUser) {
           Notify.create({
             message:
-              i18n.downloadFeedback?.archiveAborted ||
+              i18n.global.t("downloadFeedback.archiveAborted") ||
               "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
             color: "info",
             icon: "link",
@@ -558,10 +561,10 @@ export const kwicDataStore = defineStore("kwicData", {
         return true;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else if (error.response?.status === 429) {
-          this.errorMessage = i18n.accessibility.tooManyRequests  ;
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else {
           this.errorMessage = this.getErrorMessage(error);

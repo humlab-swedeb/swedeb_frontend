@@ -2,15 +2,35 @@
   <q-card flat class="q-px-md background q-pt-sm q-pb-md">
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("wordTrendsIntroTitle")
-      }}</q-item-label>
-    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
+    }}</q-item-label>
+    <i18n-t keypath="wordTrendsIntro" tag="div" class="word-trends-intro lineHeight">
+      <template #filterText>
+        <b>"{{ $t("filterOnMetadata") }}"</b>
+      </template>
+      <template #searchExample5>
+        <code>{{ $t("searchExample5") }}</code>
+      </template>
+      <template #searchExample3>
+        <code>{{ $t("searchExample3") }}</code>
+      </template>
+      <template #serachExample4>
+        <code>{{ $t("serachExample4") }}</code>
+      </template>
+    </i18n-t>
   </q-card>
 
   <div v-show="showData">
     <ShowData :filterSelections="'WordTrends'" />
     <br />
   </div>
-  <q-tabs v-model="tabs" inline-label no-caps active-color="accent" align="justify" class="q-mt-lg">
+  <q-tabs
+    v-model="tabs"
+    inline-label
+    no-caps
+    active-color="accent"
+    align="justify"
+    class="q-mt-lg"
+  >
     <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
     <q-tab name="table" icon="table_view" label="Tabell" />
     <q-tab name="speech" icon="groups" label="Anföranden" />
@@ -63,11 +83,9 @@ import loadingIcon from "src/components/loadingIcon.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import { ref, watch, onMounted } from "vue";
-import i18n from "src/i18n/sv";
 
 const store = metaDataStore();
 const wtStore = wordTrendsDataStore();
-const formattedIntro = i18n.wordTrendsIntro;
 
 const showData = ref(false);
 const dataLoaded = ref(false);
@@ -76,7 +94,6 @@ const loadingSpeeches = ref(false);
 const showDataTable = ref(false);
 const dataLoadedTable = ref(false);
 const tabs = ref("diagram");
-
 
 onMounted(() => {
   if (wtStore.wordTrends && wtStore.wordTrends.length > 0) {
@@ -88,7 +105,6 @@ onMounted(() => {
     dataLoaded.value = true;
   }
 });
-
 
 watch(
   () => store.submitEventWT,
@@ -116,22 +132,26 @@ watch(
 
     showData.value = true;
 
-    trendsPromise.then(() => {
-      showDataTable.value = true;
-      dataLoadedTable.value = true;
-      loadingChart.value = false;
-    }).catch((error) => {
-      console.error("Error loading trends:", error);
-      loadingChart.value = false;
-    });
+    trendsPromise
+      .then(() => {
+        showDataTable.value = true;
+        dataLoadedTable.value = true;
+        loadingChart.value = false;
+      })
+      .catch((error) => {
+        console.error("Error loading trends:", error);
+        loadingChart.value = false;
+      });
 
-    speechesPromise.then(() => {
-      dataLoaded.value = true;
-      loadingSpeeches.value = false;
-    }).catch((error) => {
-      console.error("Error loading speeches:", error);
-      loadingSpeeches.value = false;
-    });
+    speechesPromise
+      .then(() => {
+        dataLoaded.value = true;
+        loadingSpeeches.value = false;
+      })
+      .catch((error) => {
+        console.error("Error loading speeches:", error);
+        loadingSpeeches.value = false;
+      });
 
     try {
       await Promise.all([trendsPromise, speechesPromise]);

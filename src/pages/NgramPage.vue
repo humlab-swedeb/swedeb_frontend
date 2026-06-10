@@ -3,7 +3,28 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("ngramIntroTitle")
     }}</q-item-label>
-    <div class="lineHeight" v-html="formattedIntro" />
+    <i18n-t
+      keypath="ngramIntro"
+      tag="div"
+      class="word-trends-intro lineHeight"
+    >
+      <template #filterText>
+        <b>"{{ $t("filterOnMetadata") }}"</b>
+      </template>
+      <template #kwicTitleText>
+        <strong>{{ $t("kwicTitle") }}</strong>
+      </template>
+      <template #searchExample1>
+        <code>{{ $t("searchExample1") }}</code>
+      </template>
+            <template #searchExample2>
+        <code>{{ $t("searchExample2") }}</code>
+      </template>
+            <template #searchExample3>
+        <code>{{ $t("searchExample3") }}</code>
+      </template>
+
+    </i18n-t>
   </q-card>
   <loadingIcon v-if="nGramStore.isLoading" size="100" />
   <div v-if="nGramStore.errorMessage && !nGramStore.isLoading" class="q-pa-md">
@@ -23,7 +44,6 @@
 
 <script setup>
 import { watch } from "vue";
-import i18n from "src/i18n/sv";
 import nGramsTable from "src/components/nGramsTable.vue";
 import ShowData from "src/components/ShowData.vue";
 import { metaDataStore } from "src/stores/metaDataStore";
@@ -31,7 +51,6 @@ import { nGramDataStore } from "src/stores/nGramDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
 import { ref, onMounted } from "vue";
 
-const formattedIntro = i18n.ngramIntro;
 const metaStore = metaDataStore();
 const nGramStore = nGramDataStore();
 

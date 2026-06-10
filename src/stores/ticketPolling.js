@@ -1,4 +1,4 @@
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 
 export const TICKET_POLL_INTERVAL_MS = 2000;
 export const TICKET_POLL_MAX_ATTEMPTS = 300;
@@ -36,7 +36,9 @@ export async function pollArchiveTicket(
 
     if (status === "ready") return response.data;
     if (status === "error")
-      throw new Error(error || i18n.downloadFeedback?.archiveGenerationFailed);
+      throw new Error(
+        error || i18n.global.t("downloadFeedback.archiveGenerationFailed"),
+      );
 
     const delayMs = getTicketPollDelayMs(
       attempt,
@@ -44,5 +46,5 @@ export async function pollArchiveTicket(
     );
     await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
-  throw new Error(i18n.downloadFeedback?.archiveGenerationTimeout);
+  throw new Error(i18n.global.t("downloadFeedback.archiveGenerationTimeout"));
 }
