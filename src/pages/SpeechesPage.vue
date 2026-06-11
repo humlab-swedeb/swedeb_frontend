@@ -7,6 +7,7 @@
       keypath="speechesIntro"
       tag="div"
       class="word-trends-intro lineHeight"
+      scope="global"
     >
       <template #filterText>
         <b>"{{ $t("filterOnMetadata") }}"</b>

@@ -72,7 +72,7 @@
 <script setup>
 import peopleCard from "src/components/peopleCard.vue";
 import { useI18n } from "vue-i18n";
-const { tm } = useI18n();
+const { tm } = useI18n({ useScope: 'global' });
 
 const peopleDev = tm('peopleDevelopment');
 const peopleRef = tm('peopleReference');

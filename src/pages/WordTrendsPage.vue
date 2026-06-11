@@ -3,7 +3,12 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("wordTrendsIntroTitle")
     }}</q-item-label>
-    <i18n-t keypath="wordTrendsIntro" tag="div" class="word-trends-intro lineHeight">
+    <i18n-t
+      keypath="wordTrendsIntro"
+      tag="div"
+      class="word-trends-intro lineHeight"
+      scope="global"
+    >
       <template #filterText>
         <b>"{{ $t("filterOnMetadata") }}"</b>
       </template>
@@ -39,7 +44,7 @@
   <q-tab-panels v-model="tabs" class="background">
     <q-tab-panel name="diagram">
       <div class="q-py-md text-grey-8">
-        <i18n-t keypath="wordtrendsResultInfo" tag="span">
+        <i18n-t keypath="wordtrendsResultInfo" tag="span" scope="global">
           <template #resultType>
             <b>{{ $t("wordtrendsResultLine") }}</b>
           </template>
@@ -50,7 +55,7 @@
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">
-        <i18n-t keypath="wordtrendsResultInfo" tag="span">
+        <i18n-t keypath="wordtrendsResultInfo" tag="span" scope="global">
           <template #resultType>
             <b>{{ $t("wordtrendsResultTable") }}</b>
           </template>
@@ -63,7 +68,7 @@
     </q-tab-panel>
     <q-tab-panel name="speech">
       <div class="q-py-md text-grey-8">
-        <i18n-t keypath="wordtrendsResultSpeechInfo" tag="span">
+        <i18n-t keypath="wordtrendsResultSpeechInfo" tag="span" scope="global">
           <template #resultType>
             <b>{{ $t("wordtrendsResultSpeech") }}</b>
           </template>

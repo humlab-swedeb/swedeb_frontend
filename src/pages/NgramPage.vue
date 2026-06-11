@@ -7,6 +7,7 @@
       keypath="ngramIntro"
       tag="div"
       class="word-trends-intro lineHeight"
+      scope="global"
     >
       <template #filterText>
         <b>"{{ $t("filterOnMetadata") }}"</b>
@@ -17,13 +18,12 @@
       <template #searchExample1>
         <code>{{ $t("searchExample1") }}</code>
       </template>
-            <template #searchExample2>
+      <template #searchExample2>
         <code>{{ $t("searchExample2") }}</code>
       </template>
-            <template #searchExample3>
+      <template #searchExample3>
         <code>{{ $t("searchExample3") }}</code>
       </template>
-
     </i18n-t>
   </q-card>
   <loadingIcon v-if="nGramStore.isLoading" size="100" />

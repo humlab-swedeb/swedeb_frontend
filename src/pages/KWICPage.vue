@@ -3,7 +3,12 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("kwicIntroTitle")
     }}</q-item-label>
-    <i18n-t keypath="kwicIntro" tag="div" class="word-trends-intro lineHeight">
+    <i18n-t
+      keypath="kwicIntro"
+      tag="div"
+      class="word-trends-intro lineHeight"
+      scope="global"
+    >
       <template #filterText>
         <b>"{{ $t("filterOnMetadata") }}"</b>
       </template>
