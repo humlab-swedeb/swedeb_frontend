@@ -49,7 +49,7 @@
                 {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : "(" + props.props.row.party +")"
+                    : testa(props.props.row.party_full)
                 }},&nbsp;
               </q-item-label>
               <q-item-label
@@ -193,13 +193,12 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, defineProps } from "vue";
+import { ref, watchEffect, defineProps, computed} from "vue";
 import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
-import { nGramDataStore } from "src/stores/nGramDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
 import loadingIcon from "src/components/loadingIcon.vue";
@@ -209,9 +208,14 @@ const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
 const feedbackStore = feedbackDataStore();
-const nGramStore = nGramDataStore();
 const pdfStore = pdfDataStore();
 const route = useRoute();
+
+const testa = (fullParty) =>{
+  return "("+fullParty.split("(")[0].trim()+")"
+}
+
+
 
 const props = defineProps({
   props: Object,
