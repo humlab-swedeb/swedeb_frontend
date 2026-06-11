@@ -322,13 +322,17 @@ const downloadCsvGz = async () => {
   await wtStore.downloadSpeechesCsvGz(downloadKeys.csvgz);
 };
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 const rows = computed(() =>
   wtStore.speechesData.map((speech, index) => ({
     id: speech.speech_id,
     unique_id: `${wtStore.speechesPagination.page}-${index}-${speech.speech_id}`,
     protocol: speech.speech_name,
     node_word: speech.node_word,
-    speaker: speech.name,
+    speaker: customOptionName(speech.name),
     gender: speech.gender,
     party: speech.party_abbrev,
     party_full: speech.party,

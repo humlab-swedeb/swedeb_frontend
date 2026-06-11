@@ -49,7 +49,7 @@
                 {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : testa(props.props.row.party_full)
+                    : fullPartyNoYear(props.props.row.party_full)
                 }},&nbsp;
               </q-item-label>
               <q-item-label
@@ -96,12 +96,7 @@
                 <q-icon left name="person_search" color="accent" />
                 <q-item-label>{{ $t("wikidata") }}</q-item-label>
               </q-btn>
-              <q-btn
-                no-caps
-                @click="openPdf"
-                class="text-grey-8"
-                color="white"
-              >
+              <q-btn no-caps @click="openPdf" class="text-grey-8" color="white">
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }}</q-item-label>
               </q-btn>
@@ -150,14 +145,11 @@
               </q-btn>
               <q-btn
                 no-caps
-
                 @click="openPdf"
-
                 class="full-width items-start text-grey-8"
                 color="white"
                 :disabled="false"
               >
-
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
@@ -193,7 +185,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, defineProps, computed} from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
@@ -211,11 +203,9 @@ const feedbackStore = feedbackDataStore();
 const pdfStore = pdfDataStore();
 const route = useRoute();
 
-const testa = (fullParty) =>{
-  return "("+fullParty.split("(")[0].trim()+")"
-}
-
-
+const fullPartyNoYear = (fullParty) => {
+  return fullParty.split("(")[0].trim();
+};
 
 const props = defineProps({
   props: Object,
@@ -241,11 +231,13 @@ const openPdf = () => {
     speakerNote: speakerNote.value,
     speechText: speechText.value,
     speakerData: props.props.row,
-    page: page.value
+    page: page.value,
   };
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
-  const clientRoutePath = isPagePdfSource(props.props.row.source) ? "/pdf-pagewise" : "/pdf";
+  const clientRoutePath = isPagePdfSource(props.props.row.source)
+    ? "/pdf-pagewise"
+    : "/pdf";
   window.open(clientRoutePath, "_blank");
 };
 
@@ -277,7 +269,7 @@ const replaceNgramWithBoldTags = (str, ngram) => {
 const downloadCurrentSpeech = () => {
   downloadStore.downloadCurrentSpeechText(
     originalSpeechText.value,
-    props.props.row
+    props.props.row,
   );
 };
 
@@ -292,16 +284,15 @@ watchEffect(() => {
       originalSpeechText.value = speechData.speech_text;
       page.value = speechData.page_number;
 
-
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
-          props.props.row.node_word
+          props.props.row.node_word,
         );
       } else if (route.path === "/tools/ngram") {
         speechText.value = replaceNgramWithBoldTags(
           replaceNewLine(speechData.speech_text),
-          props.props.row.node_word
+          props.props.row.node_word,
         );
       } else {
         speechText.value = replaceNewLine(speechData.speech_text);

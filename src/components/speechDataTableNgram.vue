@@ -231,12 +231,16 @@ if (props.type === "wordTrends") {
   displayedData.value = nGramStore.nGramSpeeches;
 }
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 function mapSpeechesToRows(speeches) {
   return speeches.map((speech, idx) => ({
     id: speech.speech_id,
     protocol: speech.speech_name,
     node_word: speech.node_word,
-    speaker: speech.name,
+    speaker: customOptionName(speech.name),
     gender: speech.gender,
     party: speech.party_abbrev,
     party_full: speech.party,
