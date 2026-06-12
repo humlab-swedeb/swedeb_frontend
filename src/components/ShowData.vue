@@ -27,7 +27,7 @@
             {{
               value
                 .map(
-                  (chamber_id) => store.options.chamber[chamber_id].displayStr
+                  (chamber_id) => store.options.chamber[chamber_id].displayStr,
                 )
                 .join(", ")
             }}
@@ -71,23 +71,25 @@
 
 <script setup>
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { ref } from "vue";
-import i18n from "src/i18n/sv/index.js";
-import { onMounted } from "vue";
-import { watch } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n({ useScope: "global" });
+
 const store = metaDataStore();
 const displayedData = ref({});
 
-const customKeys = {
-  office: i18n.office,
-  subOffice: i18n.subOffice,
-  party: i18n.party,
-  gender: i18n.gender,
-  yearRange: i18n.year,
-  speakers: i18n.speakers,
-  chamber: i18n.chamber,
+const customKey = (key) => {
+  const keyMap = {
+    office: "office",
+    subOffice: "subOffice",
+    party: "party",
+    gender: "gender",
+    yearRange: "year",
+    speakers: "speakers",
+    chamber: "chamber",
+  };
+  return t(keyMap[key] || key);
 };
-const customKey = (key) => customKeys[key] || key;
 
 const props = defineProps({
   filterSelections: {
@@ -137,6 +139,6 @@ watch(
   },
   (newValue) => {
     displayedData.value = newValue;
-  }
+  },
 );
 </script>

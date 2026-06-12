@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 
 export const feedbackDataStore = defineStore("feedbackDataStore", {
   state: () => ({
@@ -18,16 +18,20 @@ export const feedbackDataStore = defineStore("feedbackDataStore", {
 
   actions: {
     getFeedbackVariables: (data) => {
+      const dataVersion = i18n.global.t("dataVersionLinkText");
+      const personsVersion = i18n.global.t("personVersionText");
+
       const feedbackVariables = {
-        Protokoll: data.protocol.substring(0, data.protocol.lastIndexOf(' ')),
+        Protokoll: data.protocol.substring(0, data.protocol.lastIndexOf(" ")),
         Kön: data.gender,
         Parti: data.party,
-        //source: data.source,
         År: data.year,
         Talare: data.speaker,
-        Data: `${i18n.dataVersionLinkText}, ${i18n.personVersionText}`,
+        Data: `${dataVersion} ${personsVersion}`,
       };
       return feedbackVariables;
     },
   },
 });
+
+//personVersionText

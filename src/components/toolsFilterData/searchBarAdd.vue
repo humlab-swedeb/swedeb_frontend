@@ -33,8 +33,8 @@
       class="resetStyle q-my-sm"
       @click="
         (wtStore.wordHitsSelected = []) &&
-          (wtStore.wordHits = []) &&
-          (wtStore.ifAsterisk = false)
+        (wtStore.wordHits = []) &&
+        (wtStore.ifAsterisk = false)
       "
     />
   </div>
@@ -42,7 +42,7 @@
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">{{ $t("searchAddedWords") }}</q-item-label>
     <div class="row items-center justify-between">
-<!--       <div class="row">
+      <!--       <div class="row">
         <q-item-label caption class="q-my-sm text-bold text-grey-8"
           >Visa alla
           <span class="text-black">{{ wtStore.wordHitsSelected.length }}</span>
@@ -52,7 +52,7 @@
           <q-tooltip>Slå ihop alla ord till en linje</q-tooltip>
         </q-icon>
       </div> -->
-<!--       <q-toggle
+      <!--       <q-toggle
         v-model="wtStore.singleLine"
         color="accent"
         keep-color
@@ -62,7 +62,7 @@
       /> -->
     </div>
     <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk">
-      <i18n-t keypath="searchDropdownOfHitsInfo" tag="span">
+      <i18n-t keypath="searchDropdownOfHitsInfo" tag="span" scope="global">
         <template #asterisk>
           <b class="text-subtitle2">*</b>
         </template>
@@ -148,7 +148,7 @@ const route = useRoute();
 const loading = ref(false);
 const selectAll = ref(false);
 const remainingWordHitsCount = computed(
-  () => wtStore.wordHits.length - wtStore.wordHitsSelected.length
+  () => wtStore.wordHits.length - wtStore.wordHitsSelected.length,
 );
 
 // Funktionen för att slå ihop alla ord till en enda linje
@@ -201,7 +201,7 @@ watch(
     // Kontrollera om alla ord är valda, och uppdatera selectAll
     selectAll.value =
       wtStore.wordHitsSelected.length === wtStore.wordHits.length;
-  }
+  },
 );
 </script>
 

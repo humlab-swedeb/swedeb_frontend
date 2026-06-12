@@ -3,7 +3,31 @@
     <q-item-label class="text-h6 q-pb-sm q-pt-none">{{
       $t("kwicIntroTitle")
     }}</q-item-label>
-    <div class="word-trends-intro lineHeight" v-html="formattedIntro"></div>
+    <i18n-t
+      keypath="kwicIntro"
+      tag="div"
+      class="word-trends-intro lineHeight"
+      scope="global"
+    >
+      <template #filterText>
+        <b>"{{ $t("filterOnMetadata") }}"</b>
+      </template>
+      <template #kwicTitleText>
+        <strong>{{ $t("kwicTitle") }}</strong>
+      </template>
+      <template #searchExample1>
+        <code>{{ $t("searchExample1") }}</code>
+      </template>
+      <template #searchExample2>
+        <code>{{ $t("searchExample2") }}</code>
+      </template>
+      <template #kwicExample3>
+        <code>{{ $t("searchExample3") }}</code>
+      </template>
+      <template #serachExample4>
+        <code>{{ $t("serachExample4") }}</code>
+      </template>
+    </i18n-t>
   </q-card>
   <q-banner
     v-if="kwicStore.errorMessage"
@@ -19,17 +43,6 @@
     <div class="q-pb-xl">
       <kwicDataTable />
     </div>
-
-    <!--     <div>
-      <q-btn
-        no-caps
-        v-show="loading"
-        @click="cancelFetch"
-        color="primary"
-        :label="$t('searchCancel')"
-      />
-      >
-    </div> -->
   </div>
 </template>
 
@@ -38,13 +51,10 @@ import ShowData from "src/components/ShowData.vue";
 import kwicDataTable from "src/components/kwicDataTable.vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
 import { kwicDataStore } from "src/stores/kwicDataStore";
-import i18n from "src/i18n/sv";
 import { ref, watch, onMounted } from "vue";
 
 const metaStore = metaDataStore();
 const kwicStore = kwicDataStore();
-
-const formattedIntro = i18n.kwicIntro;
 
 const showData = ref(false);
 onMounted(() => {
@@ -66,8 +76,4 @@ watch(
     metaStore.cancelSubmitKwicEvent();
   },
 );
-
-const cancelFetch = () => {
-  kwicStore.cancelFetch();
-};
 </script>

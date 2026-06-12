@@ -8,7 +8,7 @@
         class="col-9 q-mt-md"
         v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'"
       >
-        <i18n-t keypath="searchResultUniqueHits" tag="span">
+        <i18n-t keypath="searchResultUniqueHits" tag="span" scope="global">
           <template #count>
             <b>{{ nGramStore.totalHits }}</b>
           </template>
@@ -207,7 +207,7 @@
               </q-item-label>
               <div class="row q-pb-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
-                  <i18n-t keypath="searchResultHits" tag="span">
+                  <i18n-t keypath="searchResultHits" tag="span" scope="global">
                     <template #count>
                       <b>{{ props.row.speeches }}</b>
                     </template>

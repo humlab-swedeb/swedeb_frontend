@@ -4,7 +4,7 @@ import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
 import axios from "axios";
 import { Notify, copyToClipboard } from "quasar";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 import {
   getTicketPollDelayMs,
   pollArchiveTicket,
@@ -173,10 +173,10 @@ export const speechesDataStore = defineStore("speechesData", {
         return response.data;
       } catch (error) {
         if (error.response?.status === 429) {
-          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
@@ -264,11 +264,12 @@ export const speechesDataStore = defineStore("speechesData", {
         const retrievalUrl =
           window.location.origin + "/download/" + archiveTicketId;
         const buildingHint =
-          i18n.downloadFeedback?.archiveBuildingHint ||
+          i18n.global.t("downloadFeedback.archiveBuildingHint") ||
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            (i18n.global.t("downloadFeedback.archiveBuilding") ||
+              "Arkivet byggs…") +
             " " +
             buildingHint,
           color: "blue-8",
@@ -279,7 +280,8 @@ export const speechesDataStore = defineStore("speechesData", {
           actions: [
             {
               label:
-                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+                i18n.global.t("downloadRetrievalPage.copyLink") ||
+                "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
@@ -294,7 +296,7 @@ export const speechesDataStore = defineStore("speechesData", {
                     );
                   });
                 const copiedHint =
-                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  i18n.global.t("downloadFeedback.archiveLinkCopiedClose") ||
                   "Länk kopierad — stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
@@ -334,7 +336,7 @@ export const speechesDataStore = defineStore("speechesData", {
         if (abortedByUser) {
           Notify.create({
             message:
-              i18n.downloadFeedback?.archiveAborted ||
+              i18n.global.t("downloadFeedback.archiveAborted") ||
               "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
             color: "info",
             icon: "link",
@@ -358,10 +360,10 @@ export const speechesDataStore = defineStore("speechesData", {
         return true;
       } catch (error) {
         if (error.response?.status === 429) {
-          this.errorMessage = i18n.accessibility.tooManyRequests;
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else {
           this.errorMessage =

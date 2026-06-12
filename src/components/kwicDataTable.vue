@@ -5,7 +5,7 @@
   <template v-else-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="kwicStore.totalHits > 0">
-        <i18n-t keypath="searchResultHits" tag="span">
+        <i18n-t keypath="searchResultHits" tag="span" scope="global">
           <template #count>
             <b>{{ kwicStore.totalHits }}</b>
           </template>

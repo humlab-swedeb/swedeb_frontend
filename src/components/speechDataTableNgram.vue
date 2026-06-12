@@ -17,7 +17,7 @@
             $route.path === '/tools/wordtrends'
           "
         >
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ wtStore.speechesData.length }}</b>
             </template>
@@ -30,7 +30,7 @@
             speechStore.speechesData.length > 0
           "
         >
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ speechStore.speechesData.length }}</b>
             </template>
