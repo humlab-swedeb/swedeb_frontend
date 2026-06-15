@@ -247,16 +247,14 @@ const persistPdfData = () => {
 };
 
 const loadPageRange = async (protocolName) => {
+  lastPage.value = await pdfStore.loadPageRange(protocolName);
 
-      lastPage.value = await pdfStore.loadPageRange(protocolName);
-
-      if (lastPage.value === null){
-        lastPage.value = page.value;
-      }
-      if (lastPage.value == 1 && fourDigitYear.value) {
-        lastPage.value = TMP_LAST_PAGE; // temp adjustment for protocols from four digit-years without range
-      }
-
+  if (lastPage.value === null) {
+    lastPage.value = page.value;
+  }
+  if (lastPage.value == 1 && fourDigitYear.value) {
+    lastPage.value = TMP_LAST_PAGE; // temp adjustment for protocols from four digit-years without range
+  }
 };
 
 const setPage = (nextPage) => {
@@ -326,11 +324,14 @@ onMounted(async () => {
 
   checkFourDigitYear(pdfSrc.value);
 
+  // To adjust for zero-indexing of pdf-files
   page.value =
-    !fourDigitYear.value && parsed.page >= 1 ? parsed.page - 1 : parsed.page; // To adjust for zero-indexing of pdf-files
+    !fourDigitYear.value && parsed.page >= 1 ? parsed.page - 1 : parsed.page;
+
+  // setting page in pdf link to mitigate issue with the link always being for page 1 for WT
+  setPage(page.value);
 
   lastPage.value = page.value;
-
   if (pagePdfInfo?.protocolName) {
     await loadPageRange(pagePdfInfo.protocolName);
   }
