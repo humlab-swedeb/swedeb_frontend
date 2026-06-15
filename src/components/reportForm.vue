@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineEmits } from "vue";
+import { ref, watch } from "vue";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
 
 const feedbackStore = feedbackDataStore();

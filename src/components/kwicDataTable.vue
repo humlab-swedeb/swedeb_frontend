@@ -361,6 +361,10 @@ const downloadKWICAsSpeechesCsvGz = async () => {
   await kwicStore.downloadKwicSpeechesCsvGz(downloadKeys.speechesCsvgz);
 };
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 const rows = computed(() =>
   kwicStore.kwicData.map((entry, index) => ({
     id: entry.speech_id,
@@ -369,7 +373,7 @@ const rows = computed(() =>
     node_word: entry.node_word,
     right_word: entry.right_word,
     year: entry.year,
-    speaker: entry.name,
+    speaker: customOptionName(entry.name),
     party: entry.party_abbrev,
     party_full: entry.party,
     gender: entry.gender,

@@ -124,16 +124,14 @@ export default {
   nrOfWordsRight: "Höger",
   nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
   allHits: "Alla träffar",
-  kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  kwicEstimateHitsInfo: "Cirka {hits} uppskattade träffar.",
+  estimateNotInVocabulary: "Ordet hittades inte i vokabulären",
+  estimateHitsInfo: "Cirka {hits} uppskattade träffar.",
   kwicEstimateHitsWarning:
     "Cirka {hits} uppskattade träffar - sökningen kan ta en stund.",
-  ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
   ngramEstimateHighWarning: "generering av n-grams kan ta en stund.",
   ngramCountApproximate: "preliminär",
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
-  ngramsEstimateHitsInfo: "Cirka {hits} uppskattade träffar.",
 
   ngramsEstimateHitsWarning:
     "Ordet förekommer ungefär {hits} gånger - generering av n-grams kan ta en stund.",
@@ -217,8 +215,8 @@ export default {
   downloadNGramExcel: "Ladda ner N-gram (.xlsx)",
 
   // downloadWordTrendsJsonlGz: "Ladda ner ordtrender (.jsonl.gz)",
-  downloadWordTrendsCsvGz: "Ladda ner ordtrender (.csv.gz)",
-  downloadWordTrendsExcel: "Ladda ner ordtrender (.xlsx)",
+  downloadWordTrendsCsvGz: "Ladda ner träfflistan som .csv",
+  downloadWordTrendsExcel: "Ladda ner träfflistan som .xlsx",
 
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",

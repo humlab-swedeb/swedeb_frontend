@@ -234,17 +234,7 @@ const $q = useQuasar();
 
 const { gtagEvent } = useGtagEvent();
 
-const handleNormalizeData = (newValue) => {
-  if (route.path === "/tools/wordtrends") {
-    wtStore.normalizeResults = newValue;
-  }
-};
 
-const lemmatizeSearch = (newValue) => {
-  if (route.path === "/tools/kwic") {
-    kwicStore.lemmatizeSearch = newValue;
-  }
-};
 
 const handleSubmit = async () => {
   if (route.path === "/tools/kwic") {

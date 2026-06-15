@@ -40,8 +40,8 @@ const loading = ref(false);
 const showData = ref(false);
 
 onMounted(() => {
-  showData.value = true;
   if (speechStore.speechesData && speechStore.speechesData.length > 0) {
+    showData.value = true;
     loading.value = false;
   }
 });
