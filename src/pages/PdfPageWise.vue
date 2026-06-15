@@ -51,7 +51,7 @@
       <q-separator size="2px" color="grey-5" />
       <q-card-section class="pdf-viewport bg-white q-ma-none">
         <div v-if="pdfSrc" class="pdf-inner">
-          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWidth" />
+          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWidth" @loading-failed="handleLoadingFail"/>
         </div>
         <div v-else>
           <p>PDF is not available.</p>
@@ -174,6 +174,7 @@ const lastPage = ref(1);
 const pdfSrc = ref(null);
 const docWidth = ref(600);
 const fourDigitYear = ref(false);
+const fallBackToFirstPage = ref(true)
 
 const getDisplayPageNbr = () => {
   if (fourDigitYear.value) {
@@ -181,6 +182,16 @@ const getDisplayPageNbr = () => {
   }
   return page.value + 1;
 };
+
+const handleLoadingFail = () => {
+  //If page not loadable from server
+  //display first page unless next page requested
+  if (fallBackToFirstPage.value){
+    setPage(0);
+    console.log(pdfSrc.value)
+  }
+
+}
 
 const checkFourDigitYear = (source) => {
   YEARS_WITH_FOUR_DIGIT_PAGES.forEach((year, _) => {
@@ -282,6 +293,7 @@ const nextPageExists = () => {
 };
 
 const nextPage = () => {
+  fallBackToFirstPage.value = false;
   if (nextPageExists()) {
     setPage(page.value + 1);
   }
@@ -308,6 +320,7 @@ const goBack = () => {
 };
 
 onMounted(async () => {
+  fallBackToFirstPage.value = true;
   const storedData = sessionStorage.getItem("pdfData");
   if (!storedData) {
     return;
@@ -337,6 +350,7 @@ onMounted(async () => {
   }
 
   persistPdfData();
+
 });
 </script>
 
