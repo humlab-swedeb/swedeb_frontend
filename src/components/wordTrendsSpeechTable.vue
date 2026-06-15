@@ -228,7 +228,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { metaDataStore } from "src/stores/metaDataStore.js";
@@ -249,7 +249,6 @@ const downloadKeys = {
   csvgz: "word-trends-speeches-csvgz",
 };
 
-const SpeechTable = ref(null);
 const { linkCopied, copyToClipboard } = useClipboardCopy();
 const copyRetrievalLink = () =>
   copyToClipboard(

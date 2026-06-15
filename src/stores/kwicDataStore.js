@@ -141,10 +141,23 @@ export const kwicDataStore = defineStore("kwicData", {
       };
     },
 
+    clearEstimate() {
+      this.estimateRequestSequence += 1;
+      this.estimatedHits = null;
+      this.inVocabulary = null;
+    },
+
+    _isPhraseSearch(search) {
+      return search.trim().split(/\s+/).length > 1;
+    },
+
+    canEstimateSearch(search) {
+      return Boolean(search && search.trim() && !this._isPhraseSearch(search));
+    },
+
     async fetchEstimate(word) {
-      if (!word || !word.trim()) {
-        this.estimatedHits = null;
-        this.inVocabulary = null;
+      if (!this.canEstimateSearch(word)) {
+        this.clearEstimate()
         return;
       }
 
