@@ -26,6 +26,7 @@
       :label="$t('lemmaResultLabel')"
       :tooltip="$t('lemmaResultTooltip')"
       v-model="kwicStore.lemmatizeSearch"
+      data-test="kwic-lemma-toggle"
     />
     <inputNrOfWords />
   </q-card-section>

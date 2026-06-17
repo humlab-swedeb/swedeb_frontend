@@ -37,7 +37,7 @@
     {{ kwicStore.errorMessage }}
   </q-banner>
   <div v-show="showData">
-    <div class="q-pb-md">
+    <div class="q-pb-md" data-test="kwic-show-data">
       <ShowData :filterSelections="'KWIC'" />
     </div>
     <div class="q-pb-xl">

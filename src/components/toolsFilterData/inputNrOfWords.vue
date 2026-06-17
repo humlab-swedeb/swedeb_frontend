@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" data-test="kwic-word-window">
     <q-item-label caption class="text-bold q-mb-sm q-mt-lg text-grey-8 col-11">
       {{ $t("nrOfWordsIntro") }}
     </q-item-label>
@@ -23,6 +23,7 @@
         color="accent"
         max="20"
         min="1"
+        data-test="kwic-window-left"
       >
       </q-input>
     </div>
@@ -39,6 +40,7 @@
         color="accent"
         max="20"
         min="1"
+        data-test="kwic-window-right"
       >
       </q-input>
     </div>
