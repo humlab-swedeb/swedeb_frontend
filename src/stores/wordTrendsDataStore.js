@@ -6,7 +6,7 @@ import axios from "axios";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import { downloadDataStore } from "./downloadDataStore";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 import {
   getTicketPollDelayMs,
   TICKET_POLL_MAX_ATTEMPTS,
@@ -196,8 +196,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         };
         return response.data;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.tooManyRequests",
+          );
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.ticketExpired",
+          );
           this.resetSpeechesTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
@@ -283,8 +290,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.tooManyRequests",
+          );
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.ticketExpired",
+          );
           this.resetSpeechesTicketState();
         } else {
           this.speechesErrorMessage =
@@ -311,7 +325,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         if (speechList.length === 0) {
           this.speechesErrorMessage =
-            i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.";
+            i18n.global.t("downloadFeedback.error") ||
+            "Kunde inte starta nedladdningen.";
           return false;
         }
         const headers = [
@@ -340,7 +355,9 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         return true;
       } catch (error) {
         if (error.response?.status === 404) {
-          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.ticketExpired",
+          );
           this.resetSpeechesTicketState();
         } else {
           this.speechesErrorMessage =
@@ -383,11 +400,12 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const retrievalUrl =
           window.location.origin + "/download/" + archiveTicketId;
         const buildingHint =
-          i18n.downloadFeedback?.archiveBuildingHint ||
+          i18n.global.t("downloadFeedback.archiveBuildingHint") ||
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs…") +
+            (i18n.global.t("downloadFeedback.archiveBuilding") ||
+              "Arkivet byggs…") +
             " " +
             buildingHint,
           color: "blue-8",
@@ -398,14 +416,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           actions: [
             {
               label:
-                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+                i18n.global.t("downloadRetrievalPage.copyLink") ||
+                "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
                 copyToClipboard(retrievalUrl);
                 // Replace notification: now shows copied message + X to abort
                 const copiedHint =
-                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  i18n.global.t("downloadFeedback.archiveLinkCopiedClose") ||
                   "Länk kopierad — stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
@@ -447,7 +466,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         if (abortedByUser) {
           Notify.create({
             message:
-              i18n.downloadFeedback?.archiveAborted ||
+              i18n.global.t("downloadFeedback.archiveAborted") ||
               "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
             color: "info",
             icon: "link",
@@ -470,8 +489,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.speechesErrorMessage = i18n.accessibility.ticketExpired;
+        if (error.response?.status === 429) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.tooManyRequests",
+          );
+          this.resetSpeechesTicketState();
+        } else if (error.response?.status === 404) {
+          this.speechesErrorMessage = i18n.global.t(
+            "accessibility.ticketExpired",
+          );
           this.resetSpeechesTicketState();
         } else {
           this.speechesErrorMessage =

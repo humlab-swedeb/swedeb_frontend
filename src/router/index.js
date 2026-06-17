@@ -19,22 +19,22 @@ import routes from "./routes";
 export default route(function (/* { store, ssrContext } */) {
   const createHistoryFunction = process.env.SERVER
     ? createMemoryHistory
-    : process.env.VUE_ROUTER_MODE === 'history'
+    : process.env.VUE_ROUTER_MODE === "history"
       ? createWebHistory
       : createWebHashHistory;
 
-  const routerBase = process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE;
+  const routerBase =
+    process.env.MODE === "ssr" ? void 0 : process.env.VUE_ROUTER_BASE;
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
     history: createHistoryFunction(routerBase),
   });
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach((to, from) => {
     document.title = to.meta.title
       ? `Riksdagsdebatter.se - ${to.meta.title}`
       : "Riksdagsdebatter.se - Riksdagens anföranden";
-    next();
   });
 
   return Router;

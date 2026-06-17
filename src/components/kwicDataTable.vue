@@ -5,7 +5,7 @@
   <template v-else-if="kwicStore.kwicData && kwicStore.kwicData.length > 0">
     <div class="row q-py-md justify-between">
       <q-item-label class="col-9 q-mt-md" v-if="kwicStore.totalHits > 0">
-        <i18n-t keypath="searchResultHits" tag="span">
+        <i18n-t keypath="searchResultHits" tag="span" scope="global">
           <template #count>
             <b>{{ kwicStore.totalHits }}</b>
           </template>
@@ -362,6 +362,10 @@ const downloadKWICAsSpeechesCsvGz = async () => {
   await kwicStore.downloadKwicSpeechesCsvGz(downloadKeys.speechesCsvgz);
 };
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 const rows = computed(() =>
   kwicStore.kwicData.map((entry, index) => ({
     id: entry.speech_id,
@@ -370,7 +374,7 @@ const rows = computed(() =>
     node_word: entry.node_word,
     right_word: entry.right_word,
     year: entry.year,
-    speaker: entry.name,
+    speaker: customOptionName(entry.name),
     party: entry.party_abbrev,
     party_full: entry.party,
     gender: entry.gender,

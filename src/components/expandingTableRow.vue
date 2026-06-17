@@ -49,7 +49,7 @@
                 {{
                   props.props.row.party === "[-]"
                     ? $t("accessibility.partyMissing")
-                    : "(" + props.props.row.party +")"
+                    : fullPartyNoYear(props.props.row.party_full)
                 }},&nbsp;
               </q-item-label>
               <q-item-label
@@ -154,15 +154,12 @@
               </q-btn>
               <q-btn
                 no-caps
-
                 @click="openPdf"
-
                 class="full-width items-start text-grey-8"
                 color="white"
                 :disabled="false"
                 data-test="open-source-button"
               >
-
                 <q-icon left name="open_in_new" color="accent" />
                 <q-item-label>{{ $t("openSource") }} </q-item-label>
               </q-btn>
@@ -199,13 +196,12 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, defineProps } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { speechesDataStore } from "src/stores/speechesDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
-import { nGramDataStore } from "src/stores/nGramDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
 import loadingIcon from "src/components/loadingIcon.vue";
@@ -215,9 +211,12 @@ const metaStore = metaDataStore();
 const speechStore = speechesDataStore();
 const downloadStore = downloadDataStore();
 const feedbackStore = feedbackDataStore();
-const nGramStore = nGramDataStore();
 const pdfStore = pdfDataStore();
 const route = useRoute();
+
+const fullPartyNoYear = (fullParty) => {
+  return fullParty.split("(")[0].trim();
+};
 
 const props = defineProps({
   props: Object,
@@ -243,11 +242,13 @@ const openPdf = () => {
     speakerNote: speakerNote.value,
     speechText: speechText.value,
     speakerData: props.props.row,
-    page: page.value
+    page: page.value,
   };
   pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
-  const clientRoutePath = isPagePdfSource(props.props.row.source) ? "/pdf-pagewise" : "/pdf";
+  const clientRoutePath = isPagePdfSource(props.props.row.source)
+    ? "/pdf-pagewise"
+    : "/pdf";
   window.open(clientRoutePath, "_blank");
 };
 
@@ -279,7 +280,7 @@ const replaceNgramWithBoldTags = (str, ngram) => {
 const downloadCurrentSpeech = () => {
   downloadStore.downloadCurrentSpeechText(
     originalSpeechText.value,
-    props.props.row
+    props.props.row,
   );
 };
 
@@ -294,16 +295,15 @@ watchEffect(() => {
       originalSpeechText.value = speechData.speech_text;
       page.value = speechData.page_number;
 
-
       if (route.path !== "/tools/speeches" && route.path !== "/tools/ngram") {
         speechText.value = replaceWordWithBoldTags(
           replaceNewLine(speechData.speech_text),
-          props.props.row.node_word
+          props.props.row.node_word,
         );
       } else if (route.path === "/tools/ngram") {
         speechText.value = replaceNgramWithBoldTags(
           replaceNewLine(speechData.speech_text),
-          props.props.row.node_word
+          props.props.row.node_word,
         );
       } else {
         speechText.value = replaceNewLine(speechData.speech_text);

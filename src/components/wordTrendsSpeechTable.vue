@@ -11,7 +11,7 @@
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label class="col-9 q-mt-md">
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ wtStore.speechesTotalHits }}</b>
             </template>
@@ -228,7 +228,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useClipboardCopy } from "src/composables/useClipboardCopy.js";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import { metaDataStore } from "src/stores/metaDataStore.js";
@@ -249,7 +249,6 @@ const downloadKeys = {
   csvgz: "word-trends-speeches-csvgz",
 };
 
-const SpeechTable = ref(null);
 const { linkCopied, copyToClipboard } = useClipboardCopy();
 const copyRetrievalLink = () =>
   copyToClipboard(
@@ -322,13 +321,17 @@ const downloadCsvGz = async () => {
   await wtStore.downloadSpeechesCsvGz(downloadKeys.csvgz);
 };
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 const rows = computed(() =>
   wtStore.speechesData.map((speech, index) => ({
     id: speech.speech_id,
     unique_id: `${wtStore.speechesPagination.page}-${index}-${speech.speech_id}`,
     protocol: speech.speech_name,
     node_word: speech.node_word,
-    speaker: speech.name,
+    speaker: customOptionName(speech.name),
     gender: speech.gender,
     party: speech.party_abbrev,
     party_full: speech.party,

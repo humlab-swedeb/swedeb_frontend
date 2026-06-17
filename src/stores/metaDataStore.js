@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "boot/axios";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 
 export const metaDataStore = defineStore("metaDataStore", {
   state: () => ({
@@ -153,7 +153,10 @@ export const metaDataStore = defineStore("metaDataStore", {
     addPartyParam(selected_params) {
       if (this.selected.party.length > 0) {
         this.selected.party.forEach((party) =>
-          selected_params.append("party_id", this.options.party[party].party_id)
+          selected_params.append(
+            "party_id",
+            this.options.party[party].party_id,
+          ),
         );
       }
     },
@@ -162,14 +165,14 @@ export const metaDataStore = defineStore("metaDataStore", {
       if (this.selected.speakers.length > 0) {
         // Get the list of valid speaker IDs from options.speakers
         const validSpeakerIds = this.options.speakers.map(
-          (speaker) => speaker.person_id
+          (speaker) => speaker.person_id,
         );
 
         // Filter the selected speakers to include only those with valid IDs
         this.selected.speakers
           .filter((speaker) => validSpeakerIds.includes(speaker.person_id))
           .forEach((speaker) =>
-            selected_params.append("who", speaker.person_id)
+            selected_params.append("who", speaker.person_id),
           );
       }
     },
@@ -183,8 +186,8 @@ export const metaDataStore = defineStore("metaDataStore", {
         this.selected.chamber.forEach((chamber) =>
           selected_params.append(
             "chamber_abbrev",
-            this.options.chamber[chamber].chamber_abbrev.toLowerCase()
-          )
+            this.options.chamber[chamber].chamber_abbrev.toLowerCase(),
+          ),
         );
       }
     },
@@ -233,7 +236,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
     filterSelectedSpeakers(selectedSpeakers) {
       return selectedSpeakers.filter((speaker) =>
-        this.getValidSpeakerIds().includes(speaker.person_id)
+        this.getValidSpeakerIds().includes(speaker.person_id),
       );
     },
 
@@ -243,50 +246,50 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
       const selected_years_end = selected_metadata.yearRange.max;
-      const year_string = `${i18n.yearInterval}: ${selected_years_start} - ${selected_years_end}`;
+      const year_string = `${yearInterval}: ${selected_years_start} - ${selected_years_end}`;
 
       const selected_parties = this.getMetaRow(
         selected_metadata.party,
-        `${i18n.parties}`
+        `${i18n.global.t("parties")}`,
       );
 
       const selectedValidSpeakers = this.filterSelectedSpeakers(
-        selected_metadata.speakers
+        selected_metadata.speakers,
       );
 
       const selected_speakers_as_string = selectedValidSpeakers.map((speaker) =>
-        this.getSpeakerAsString(speaker)
+        this.getSpeakerAsString(speaker),
       );
       const selected_speakers = this.getMetaRow(
         selected_speakers_as_string,
-        `${i18n.speakers}`.toLowerCase()
+        `${i18n.global.t("speakers")}`.toLowerCase(),
       );
 
       const selected_chambers_as_string = selected_metadata.chamber.map(
-        (chamber) => this.options.chamber[chamber].displayStr
+        (chamber) => this.options.chamber[chamber].displayStr,
       );
 
       const selected_genders_as_string = selected_metadata.gender.map(
-        (gender) => this.options.gender[gender].displayStr
+        (gender) => this.options.gender[gender].displayStr,
       );
 
       const selected_genders = this.getMetaRow(
         selected_genders_as_string,
-        `${i18n.gender}`.toLowerCase()
+        `${i18n.global.t("gender")}`.toLowerCase(),
       );
 
       const selected_chambers = this.getMetaRow(
         selected_chambers_as_string,
-        `${i18n.chamber}`.toLowerCase()
+        `${i18n.global.t("chamber")}`.toLowerCase(),
       );
 
       const selected_terms = this.getSearchTermsAsString(
-        selected_metadata.search
+        selected_metadata.search,
       );
-      const corpus_version = i18n.downLoadInfo.corpus_version;
-      const swerik_ref = i18n.downLoadInfo.swerik_ref;
-      const swerik_persons = i18n.downLoadInfo.swerik_persons;
-      const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
+      const corpus_version = i18n.global.t(".downLoadInfo.corpus_version");
+      const swerik_ref = i18n.global.t(".downLoadInfo.swerik_ref");
+      const swerik_persons = i18n.global.t(".downLoadInfo.swerik_persons");
+      const swedeb_ref = i18n.global.t(".downLoadInfo.swedeb_ref");
 
       return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swerik_persons}\n${swedeb_ref}`;
     },
@@ -298,7 +301,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       if (selected.party.length > 0) {
         filters.party_id = selected.party.map(
-          (party) => this.options.party[party].party_id
+          (party) => this.options.party[party].party_id,
         );
       }
 
@@ -312,7 +315,7 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       if (this.chamberFilter && selected.chamber.length > 0) {
         filters.chamber_abbrev = selected.chamber.map((chamber) =>
-          this.options.chamber[chamber].chamber_abbrev.toLowerCase()
+          this.options.chamber[chamber].chamber_abbrev.toLowerCase(),
         );
       }
 
@@ -336,20 +339,20 @@ export const metaDataStore = defineStore("metaDataStore", {
 
       if (selected.party.length > 0) {
         selected.party.forEach((party) =>
-          searchParams.append("party_id", this.options.party[party].party_id)
+          searchParams.append("party_id", this.options.party[party].party_id),
         );
       }
 
       const selectedSpeakers = this.filterSelectedSpeakers(selected.speakers);
       if (selectedSpeakers.length > 0) {
         selectedSpeakers.forEach((speaker) =>
-          searchParams.append("who", speaker.person_id)
+          searchParams.append("who", speaker.person_id),
         );
       }
 
       if (selected.genderFilter) {
         selected.gender.forEach((gender) =>
-          searchParams.append("gender_id", gender)
+          searchParams.append("gender_id", gender),
         );
       }
 
@@ -357,8 +360,8 @@ export const metaDataStore = defineStore("metaDataStore", {
         selected.chamber.forEach((chamber) =>
           searchParams.append(
             "chamber_abbrev",
-            this.options.chamber[chamber].chamber_abbrev.toLowerCase()
-          )
+            this.options.chamber[chamber].chamber_abbrev.toLowerCase(),
+          ),
         );
       }
 
@@ -390,7 +393,7 @@ export const metaDataStore = defineStore("metaDataStore", {
           genderFilter: this.genderFilter,
           chamberFilter: this.chamberFilter,
         },
-        additional_params
+        additional_params,
       );
     },
 
@@ -468,7 +471,7 @@ export const metaDataStore = defineStore("metaDataStore", {
             };
             return acc;
           },
-          {}
+          {},
         );
         this.selected.chamber = Object.keys(this.options.chamber);
       } catch (error) {
@@ -481,7 +484,7 @@ export const metaDataStore = defineStore("metaDataStore", {
         const path = "/metadata/office_types";
         const response = await api.get(path);
         this.options.office = response.data.office_type_list.map(
-          (office_type) => office_type.office
+          (office_type) => office_type.office,
         );
       } catch (error) {
         console.error("Error fetching office options:", error);
@@ -498,7 +501,9 @@ export const metaDataStore = defineStore("metaDataStore", {
                 gender.gender === "Okänt" ? "Metadata saknas" : gender.gender, // QUICK FIX OF OKÄNT TO METADATA SAKNAS!
             };
             return acc;
-          }, {});
+          },
+          {},
+        );
         this.selected.gender = Object.keys(this.options.gender);
       } catch (error) {
         console.error("Error fetching gender options:", error);

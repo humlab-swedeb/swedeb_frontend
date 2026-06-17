@@ -57,17 +57,16 @@ export default {
     copyLink: "Copy retrieval link",
     linkCopied: "Link copied!",
   },
-  kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
-  kwicEstimateHitsInfo: "Approx. {hits} estimated hits.",
+  estimateNotInVocabulary: "The word was not found in the vocabulary",
+  estimateHitsInfo: "Approx. {hits} estimated hits.",
   kwicEstimateHitsWarning:
     "Approx. {hits} estimated hits - the search may take a while.",
-  ngramEstimateNotInVocabulary: "The word was not found in the vocabulary",
   ngramEstimateHighWarning: "generating n-grams may take a while.",
-  ngramsEstimateHitsInfo: "Approx. {hits} estimated hits.",
   ngramsEstimateHitsWarning:
     "The word occurs approximately {hits} times - generating n-grams may take a while.",
   ngramCountApproximate: "approximate",
   accessibility: {
+    tooManyRequests: "Too many requests. Please wait a moment before trying again.",
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
     kwicTicketTimeout: "The search timed out. Please try again.",

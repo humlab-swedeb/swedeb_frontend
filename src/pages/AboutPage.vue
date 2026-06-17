@@ -71,11 +71,12 @@
 
 <script setup>
 import peopleCard from "src/components/peopleCard.vue";
-import i18n from "src/i18n/sv";
+import { useI18n } from "vue-i18n";
+const { tm } = useI18n({ useScope: 'global' });
 
-const peopleDev = i18n.peopleDevelopment;
-const peopleRef = i18n.peopleReference;
-const financiers = i18n.financiers;
+const peopleDev = tm('peopleDevelopment');
+const peopleRef = tm('peopleReference');
+const financiers = tm('financiers');
 </script>
 
 <style lang="scss" scoped>

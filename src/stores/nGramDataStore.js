@@ -3,7 +3,7 @@ import { Notify, copyToClipboard } from "quasar";
 import { api } from "boot/axios";
 import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 import {
   getTicketPollDelayMs,
   pollArchiveTicket,
@@ -207,7 +207,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         if (data.status === "error") {
           throw new Error(
             data.error ||
-              i18n.accessibility?.ngramQueryFailed ||
+              i18n.global.t("accessibility.ngramQueryFailed") ||
               "N-gram query failed",
           );
         }
@@ -223,7 +223,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
 
       throw new Error(
-        i18n.accessibility?.ngramTicketTimeout || "N-gram search timed out",
+        i18n.global.t("accessibility.ngramTicketTimeout") ||
+          "N-gram search timed out",
       );
     },
 
@@ -306,9 +307,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
 
         return pageData;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage =
-            i18n.accessibility?.ticketExpired || "Results expired";
+            i18n.global.t("accessibility.ticketExpired") || "Results expired";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -472,7 +476,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     async downloadNgramArchive(format = "csv_gz") {
       if (!this.ticketId) {
         this.errorMessage =
-          i18n.accessibility?.ticketExpired || "Results expired";
+          i18n.global.t("accessibility.ticketExpired") || "Results expired";
         return false;
       }
 
@@ -512,9 +516,13 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage =
-            i18n.accessibility?.ticketExpired || "Results expired";
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
+          this.errorMessage = i18n.global.t(
+            'accessibility.ticketExpired || "Results expired"',
+          );
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -539,8 +547,9 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     ) {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
-        this.errorMessage =
-          i18n.accessibility?.ticketExpired || "Results expired";
+        this.errorMessage = i18n.global.t(
+          'accessibility.ticketExpired || "Results expired"',
+        );
         return false;
       }
       if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) {
@@ -566,11 +575,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         const retrievalUrl =
           window.location.origin + "/download/" + archiveTicketId;
         const buildingHint =
-          i18n.downloadFeedback?.archiveBuildingHint ||
+          i18n.global.t("downloadFeedback.archiveBuildingHint") ||
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback?.archiveBuilding || "Arkivet byggs...") +
+            (i18n.global.t("downloadFeedback.archiveBuilding") ||
+              "Arkivet byggs...") +
             " " +
             buildingHint,
           color: "blue-8",
@@ -581,7 +591,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           actions: [
             {
               label:
-                i18n.downloadRetrievalPage?.copyLink || "Kopiera hämtningslänk",
+                i18n.global.t("downloadRetrievalPage.copyLink") ||
+                "Kopiera hämtningslänk",
               color: "yellow",
               handler: () => {
                 const prevDismiss = dismissLinkNotify;
@@ -596,7 +607,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
                     );
                   });
                 const copiedHint =
-                  i18n.downloadFeedback?.archiveLinkCopiedClose ||
+                  i18n.global.t("downloadFeedback.archiveLinkCopiedClose") ||
                   "Länk kopierad - stäng för att hämta senare, eller vänta här.";
                 dismissLinkNotify = Notify.create({
                   message: copiedHint,
@@ -636,7 +647,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         if (abortedByUser) {
           Notify.create({
             message:
-              i18n.downloadFeedback?.archiveAborted ||
+              i18n.global.t("downloadFeedback.archiveAborted") ||
               "Länken är sparad - öppna den för att hämta arkivet när det är klart.",
             color: "info",
             icon: "link",
@@ -660,9 +671,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
           this.errorMessage =
-            i18n.accessibility?.ticketExpired || "Results expired";
+            i18n.global.t("accessibility.ticketExpired") || "Results expired";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);

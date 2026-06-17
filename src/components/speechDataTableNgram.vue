@@ -17,7 +17,7 @@
             $route.path === '/tools/wordtrends'
           "
         >
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ wtStore.speechesData.length }}</b>
             </template>
@@ -30,7 +30,7 @@
             speechStore.speechesData.length > 0
           "
         >
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ speechStore.speechesData.length }}</b>
             </template>
@@ -231,12 +231,16 @@ if (props.type === "wordTrends") {
   displayedData.value = nGramStore.nGramSpeeches;
 }
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 function mapSpeechesToRows(speeches) {
   return speeches.map((speech, idx) => ({
     id: speech.speech_id,
     protocol: speech.speech_name,
     node_word: speech.node_word,
-    speaker: speech.name,
+    speaker: customOptionName(speech.name),
     gender: speech.gender,
     party: speech.party_abbrev,
     party_full: speech.party,

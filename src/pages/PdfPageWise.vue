@@ -8,7 +8,9 @@
     :class="$q.screen.lt.md ? '' : 'row justify-center q-px-xl'"
   >
     <q-card-section :class="$q.screen.lt.md ? 'q-pa-none' : 'col-7'">
-      <q-card-section class="row justify-center justify-between q-py-none full-width">
+      <q-card-section
+        class="row justify-center justify-between q-py-none full-width"
+      >
         <q-card-section class="q-pt-none">
           <q-btn
             class="q-mr-md q-pl-sm"
@@ -16,12 +18,12 @@
             no-caps
             @click="prevPage"
             icon="chevron_left"
-            :disable="page <= firstPage"
+            :disable="!previousPageExists()"
           >
             {{ $t("previousPage") }}
           </q-btn>
           <span class="text-bold text-subtitle1">
-            {{ page }} / {{ lastPage }}
+            {{ getDisplayPageNbr() }} / {{ lastPage }}
           </span>
           <q-btn
             class="q-ml-md q-pr-sm"
@@ -29,21 +31,27 @@
             no-caps
             icon-right="chevron_right"
             @click="nextPage"
-            :disable="page >= lastPage"
+            :disable="!nextPageExists()"
           >
             {{ $t("nextPage") }}
           </q-btn>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{ $t("zoomIn") }}</q-btn>
-          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{ $t("zoomOut") }}</q-btn>
+          <q-btn no-caps flat @click="zoomIn" icon="zoom_in">{{
+            $t("zoomIn")
+          }}</q-btn>
+          <q-btn no-caps flat @click="zoomOut" icon="zoom_out">{{
+            $t("zoomOut")
+          }}</q-btn>
         </q-card-section>
       </q-card-section>
-      <div class="q-ml-md q-pr-sm text-bold text-negative">{{ $t("pageNrInfoText") }}</div>
+      <div class="q-ml-md q-pr-sm text-bold text-negative">
+        {{ $t("pageNrInfoText") }}
+      </div>
       <q-separator size="2px" color="grey-5" />
-      <q-card-section class="pdf row justify-center bg-white q-ma-none">
-        <div v-if="pdfSrc">
-          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWith" />
+      <q-card-section class="pdf-viewport bg-white q-ma-none">
+        <div v-if="pdfSrc" class="pdf-inner">
+          <PdfEmbed :key="pdfSrc" :source="pdfSrc" :width="docWidth" @loading-failed="handleLoadingFail"/>
         </div>
         <div v-else>
           <p>PDF is not available.</p>
@@ -75,7 +83,11 @@
               <q-item-label
                 v-if="speakerData.speaker"
                 class="q-mt-xs"
-                :class="speakerData.speaker === 'Okänd' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.speaker === 'Okänd'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
               >
                 {{
                   speakerData.speaker === "Okänd"
@@ -86,7 +98,9 @@
               <q-item-label
                 v-if="speakerData.party"
                 class="q-mt-xs"
-                :class="speakerData.party === '[-]' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.party === '[-]' ? 'text-italic text-grey-6' : ''
+                "
               >
                 ({{
                   speakerData.party === "[-]"
@@ -97,7 +111,11 @@
               <q-item-label
                 v-if="speakerData.gender"
                 class="q-mt-xs"
-                :class="speakerData.gender === 'Okänt' ? 'text-italic text-grey-6' : ''"
+                :class="
+                  speakerData.gender === 'Okänt'
+                    ? 'text-italic text-grey-6'
+                    : ''
+                "
               >
                 {{
                   speakerData.gender === "Okänt"
@@ -106,7 +124,9 @@
                 }}
               </q-item-label>
             </div>
-            <q-item-label caption class="text-bold">{{ speakerData.protocol }}</q-item-label>
+            <q-item-label caption class="text-bold">{{
+              speakerData.protocol
+            }}</q-item-label>
             <q-item-label class="q-pt-xs" v-if="speakerData.node_word">
               {{ $t("searchWordLabel") }}
               <b>{{ speakerData.node_word }}</b>
@@ -134,11 +154,14 @@
 import { onMounted, ref } from "vue";
 import PdfEmbed from "vue-pdf-embed";
 
-import { api } from "boot/axios";
 import { metaDataStore } from "src/stores/metaDataStore";
 import { pdfDataStore } from "src/stores/pdfDataStore";
 
-const PAGE_PDF_PATH_RE = /\/(?<year>\d{4,8})\/(?<protocol>prot-[^/]+)\/(?<filename>prot-[^/]+)_(?<page>\d+)\.pdf$/;
+const YEARS_WITH_FOUR_DIGIT_PAGES = ["199091", "199192", "199293", "199394"];
+const TMP_FIRST_PAGE = 1;
+const TMP_LAST_PAGE = 200;
+const PAGE_PDF_PATH_RE =
+  /\/(?<year>\d{4,8})\/(?<protocol>prot-[^/]+)\/(?<filename>prot-[^/]+)_(?<page>\d+)\.pdf$/;
 
 const pdfStore = pdfDataStore();
 const metaStore = metaDataStore();
@@ -147,10 +170,36 @@ const speakerData = ref({});
 const speechText = ref("");
 const speakerNote = ref("");
 const page = ref(1);
-const firstPage = ref(1);
 const lastPage = ref(1);
 const pdfSrc = ref(null);
-const docWith = ref(600);
+const docWidth = ref(600);
+const fourDigitYear = ref(false);
+const fallBackToFirstPage = ref(true)
+
+const getDisplayPageNbr = () => {
+  if (fourDigitYear.value) {
+    return page.value;
+  }
+  return page.value + 1;
+};
+
+const handleLoadingFail = () => {
+  //If page not loadable from server
+  //display first page unless next page requested
+  if (fallBackToFirstPage.value){
+    setPage(0);
+    console.log(pdfSrc.value)
+  }
+
+}
+
+const checkFourDigitYear = (source) => {
+  YEARS_WITH_FOUR_DIGIT_PAGES.forEach((year, _) => {
+    if (source.indexOf(year) !== -1) {
+      fourDigitYear.value = true;
+    }
+  });
+};
 
 const parsePagePdfSource = (source) => {
   if (!source) {
@@ -180,10 +229,13 @@ const parsePagePdfSource = (source) => {
 };
 
 const replacePageNumberInSource = (source, nextPage) => {
-  const paddedPage = String(nextPage).padStart(3, "0");
+  const padLen = fourDigitYear.value ? 4 : 3;
+  const paddedPage = String(nextPage).padStart(padLen, "0");
 
   try {
     const url = new URL(source);
+    parsed = parsePagePdfSource(source);
+
     url.pathname = url.pathname.replace(/_\d+\.pdf$/, `_${paddedPage}.pdf`);
     return url.toString();
   } catch (error) {
@@ -202,24 +254,17 @@ const persistPdfData = () => {
     page: page.value,
   };
 
-  pdfStore.setRowData(data);
   sessionStorage.setItem("pdfData", JSON.stringify(data));
 };
 
 const loadPageRange = async (protocolName) => {
-  try {
-    const response = await api.get("/tools/protocol/page_range", {
-      params: { protocol_name: protocolName },
-    });
+  lastPage.value = await pdfStore.loadPageRange(protocolName);
 
-    if (Array.isArray(response.data) && response.data.length === 2) {
-      firstPage.value = Number(response.data[0]);
-      lastPage.value = Number(response.data[1]);
-    }
-  } catch (error) {
-    console.error("Error fetching protocol page range:", error);
-    firstPage.value = page.value;
+  if (lastPage.value === null) {
     lastPage.value = page.value;
+  }
+  if (lastPage.value == 1 && fourDigitYear.value) {
+    lastPage.value = TMP_LAST_PAGE; // temp adjustment for protocols from four digit-years without range
   }
 };
 
@@ -233,25 +278,40 @@ const setPage = (nextPage) => {
   persistPdfData();
 };
 
+const previousPageExists = () => {
+  if (fourDigitYear.value) {
+    return page.value > TMP_FIRST_PAGE;
+  }
+  return page.value >= TMP_FIRST_PAGE;
+};
+
+const nextPageExists = () => {
+  return (
+    (page.value < lastPage.value - 1 && !fourDigitYear.value) ||
+    (page.value < lastPage.value && fourDigitYear.value)
+  );
+};
+
 const nextPage = () => {
-  if (page.value < lastPage.value) {
+  fallBackToFirstPage.value = false;
+  if (nextPageExists()) {
     setPage(page.value + 1);
   }
 };
 
 const prevPage = () => {
-  if (page.value > firstPage.value) {
+  if (previousPageExists()) {
     setPage(page.value - 1);
   }
 };
 
 const zoomIn = () => {
-  docWith.value += 30;
+  docWidth.value += 30;
 };
 
 const zoomOut = () => {
-  if (docWith.value > 200) {
-    docWith.value -= 30;
+  if (docWidth.value > 200) {
+    docWidth.value -= 30;
   }
 };
 
@@ -260,13 +320,13 @@ const goBack = () => {
 };
 
 onMounted(async () => {
+  fallBackToFirstPage.value = true;
   const storedData = sessionStorage.getItem("pdfData");
   if (!storedData) {
     return;
   }
 
   const parsed = JSON.parse(storedData);
-  pdfStore.setRowData(parsed);
 
   speakerData.value = parsed.speakerData ?? {};
   speechText.value = parsed.speechText ?? "";
@@ -274,15 +334,23 @@ onMounted(async () => {
   pdfSrc.value = parsed.speakerData?.source ?? null;
 
   const pagePdfInfo = parsePagePdfSource(pdfSrc.value);
-  page.value = pagePdfInfo?.page ?? Number(parsed.page ?? 1);
-  firstPage.value = page.value;
-  lastPage.value = page.value;
 
+  checkFourDigitYear(pdfSrc.value);
+
+  // To adjust for zero-indexing of pdf-files
+  page.value =
+    !fourDigitYear.value && parsed.page >= 1 ? parsed.page - 1 : parsed.page;
+
+  // setting page in pdf link to mitigate issue with the link always being for page 1 for WT
+  setPage(page.value);
+
+  lastPage.value = page.value;
   if (pagePdfInfo?.protocolName) {
     await loadPageRange(pagePdfInfo.protocolName);
   }
 
   persistPdfData();
+
 });
 </script>
 
@@ -297,5 +365,22 @@ onMounted(async () => {
 .textbox {
   max-height: 800px;
   overflow: auto;
+}
+
+.pdf-viewport {
+  width: 100%;
+  max-width: 800px;
+  height: 80vh;
+  max-height: 1200px;
+  overflow: auto;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.pdf-inner {
+  width: max-content;
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

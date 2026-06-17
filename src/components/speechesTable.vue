@@ -11,7 +11,7 @@
     <div>
       <div class="row q-py-md justify-between">
         <q-item-label class="col-9 q-mt-md">
-          <i18n-t keypath="searchResultHits" tag="span">
+          <i18n-t keypath="searchResultHits" tag="span" scope="global">
             <template #count>
               <b>{{ speechesStore.totalHits }}</b>
             </template>
@@ -240,12 +240,16 @@ const downloadZipArchive = async () => {
   await speechesStore.downloadSpeechesZip(downloadKeys.zip);
 };
 
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
 const rows = computed(() =>
   speechesStore.speechesData.map((speech, index) => ({
     id: speech.speech_id,
     unique_id: `${speechesStore.pagination.page}-${index}-${speech.speech_id}`,
     protocol: speech.speech_name,
-    speaker: speech.name,
+    speaker: customOptionName(speech.name),
     gender: speech.gender,
     party: speech.party_abbrev,
     party_full: speech.party,
