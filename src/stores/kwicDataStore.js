@@ -483,7 +483,7 @@ export const kwicDataStore = defineStore("kwicData", {
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.downloadFeedback.archiveBuilding || "Arkivet byggs…") +
+            (i18n.global.t("downloadFeedback.archiveBuilding" || "Arkivet byggs…")) +
             " " +
             buildingHint,
           color: "blue-8",
