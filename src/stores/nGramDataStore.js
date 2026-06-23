@@ -10,7 +10,7 @@ import {
   TICKET_POLL_MAX_ATTEMPTS,
 } from "./ticketPolling";
 
-const DEFAULT_ROWS_PER_PAGE = 50;
+const DEFAULT_ROWS_PER_PAGE = 10;
 
 // Maps q-table column field names to backend sort_by values
 const SORT_FIELD_MAP = {

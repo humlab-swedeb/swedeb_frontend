@@ -187,6 +187,7 @@
             auto-width
             class="bg-white"
             :class="props.expand ? 'bg-grey-3' : ''"
+
           >
             <q-btn
               size="sm"
@@ -196,10 +197,9 @@
               flat
               :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
             />
-          </q-td>
+          </q-td >
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
-        <!--  -->
         <q-tr v-show="props.expand" class="bg-grey-1">
           <q-td :colspan="props.cols.length" no-hover>
             <div>

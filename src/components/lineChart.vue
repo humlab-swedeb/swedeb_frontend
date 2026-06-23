@@ -4,7 +4,7 @@
       Klicka på "Totalt" i legenden för att endast visa totalsumman av alla ord.
     </q-item-label>
     <div class="row justify-center q-mt-lg">
-      <div ref="chartContainer" id="chartContainer" class="fit"></div>
+      <div ref="chartContainer" id="chartContainer" class="fit" data-test="line-chart"></div>
     </div>
   </template>
   <template v-else>
@@ -182,27 +182,7 @@ const chartOptions = reactive({
   credits: {
     enabled: false,
   },
-  /* annotations: [
-    {
-      draggable: false,
-      labelOptions: {
-        x: 0,
-        y: 0,
-      },
-      labels: [
-        {
-          point: {
-            x: 1,
-            y: 0,
-            xAxis: 0,
-            yAxis: 0,
-          },
-          text: "1",
-        },
-      ],
-    },
-  ],
- */
+  
   responsive: {
     rules: [
       {

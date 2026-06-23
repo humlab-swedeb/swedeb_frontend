@@ -16,6 +16,7 @@
       :label="$t('normalizeResultLabel')"
       :tooltip="$t('normalizeResultTooltip')"
       v-model="wtStore.normalizeResults"
+      data-test="wt-normalize-toggle"
     />
   </q-card-section>
   <q-card-section v-else-if="currentPath === '/tools/kwic'">

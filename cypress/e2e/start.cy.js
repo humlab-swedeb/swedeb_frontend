@@ -12,7 +12,7 @@ describe('Start page has correct content', () => {
   })
 
   it('Visit KWIC', () => {
-      cy.contains("KWIC").click()
+      cy.contains("Key Words").click()
       cy.url().should("include", "kwic")
   })
 
@@ -38,10 +38,10 @@ describe('Start page has correct content', () => {
 
   })
 
-  it.only("NGram search", () => {
+  it("NGram search", () => {
 
     cy.contains("Ordtrender")
-    cy.contains("KWIC")
+    cy.contains("Key Words")
     cy.contains("Anföranden")
     cy.contains("N-Gram").click()
     cy.getByData("search-bar").type("månsken")
