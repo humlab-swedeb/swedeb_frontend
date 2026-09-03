@@ -236,6 +236,38 @@ export const downloadDataStore = defineStore("downloadData", {
       }
     },
 
+    async extractMetaFromPayloadZip(blob){
+      try {
+        const archive = await JSZip.loadAsync(blob);
+
+        const metaName = Object.keys(archive.files).find(
+          (name) => name === "metadata.txt"
+        );
+
+        console.log(metaName)
+
+        if (!metaName) {
+          return [];
+        }
+
+        const metaFile = archive.file(metaName)
+
+
+        const meta = await metaFile.async("string");
+        console.log(meta)
+
+        if (!meta){
+          return "";
+        }
+        return meta
+
+      } catch (error) {
+        console.error("Error extracting JSON payload from zip:", error);
+        return [];
+      }
+
+    },
+
     async downloadCurrentSpeechText(text, currentMetadata) {
       try {
         const filename = this.formatFileName(currentMetadata);

@@ -329,6 +329,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
             "Kunde inte starta nedladdningen.";
           return false;
         }
+        const metaData = await downloadDataStore().extractMetaFromPayloadZip(response.data);
+
         const headers = [
           "year",
           "name",
@@ -344,13 +346,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           return newObj;
         });
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Sheet1");
+        const worksheet = workbook.addWorksheet("Resultat");
         worksheet.columns = headers.map((h) => ({ header: h, key: h }));
         data.forEach((row) => worksheet.addRow(row));
         const buffer = await workbook.xlsx.writeBuffer();
         const zip = new JSZip();
         zip.file("word_trend_speeches.xlsx", buffer);
+        zip.file("metadata.txt", metaData)
         const content = await zip.generateAsync({ type: "blob" });
+
         downloadDataStore().setupDownload("word_trend_speeches.zip", content);
         return true;
       } catch (error) {
