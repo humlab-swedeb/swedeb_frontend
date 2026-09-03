@@ -36,9 +36,9 @@
     align="justify"
     class="q-mt-lg"
   >
-    <q-tab name="diagram" icon="show_chart" label="Trendlinje" />
-    <q-tab name="table" icon="table_view" label="Tabell" />
-    <q-tab name="speech" icon="groups" label="Anföranden" />
+<q-tab name="diagram" icon="show_chart" label="Trendlinje" data-test="wt-line-tab" />
+<q-tab name="table" icon="table_view" label="Tabell" data-test="wt-table-tab" />
+<q-tab name="speech" icon="groups" label="Anföranden" data-test="wt-speech-tab" />
   </q-tabs>
 
   <q-tab-panels v-model="tabs" class="background">
@@ -51,7 +51,7 @@
         </i18n-t>
       </div>
       <loadingIcon v-if="loadingChart" size="100" />
-      <lineChart v-else-if="showDataTable" />
+      <lineChart v-else-if="showDataTable"/>
     </q-tab-panel>
     <q-tab-panel name="table">
       <div class="q-py-md text-grey-8">

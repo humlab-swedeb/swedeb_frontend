@@ -8,6 +8,7 @@
         color="secondary"
         :label="$t('downloadWordtrends')"
         style="width: fit-content"
+
       >
         <q-list>
           <q-item clickable v-close-popup @click="downloadWTCountsCSV">
@@ -34,15 +35,17 @@
         separator="vertical"
         class="bg-grey-2 sticky-column"
         :rows-per-page-options="[10, 20, 50]"
+        data-test="wt-count-table"
       >
         <template v-slot:body="props">
-          <q-tr :props="props" class="bg-white">
+          <q-tr :props="props" class="bg-white" >
             <q-td
               v-for="col in props.cols"
               :key="col.name"
               :props="props"
               class="bg-white"
               :class="col.name === 'Year' ? 'bg-grey-1' : ''"
+              data-test="wt-table-content"
             >
               {{ formatValue(col.name, col.value) }}
             </q-td>

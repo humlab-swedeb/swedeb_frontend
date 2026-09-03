@@ -246,7 +246,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       const selected_metadata = this.getSelectedAtSearchMetadata(tool_type);
       const selected_years_start = selected_metadata.yearRange.min;
       const selected_years_end = selected_metadata.yearRange.max;
-      const year_string = `${yearInterval}: ${selected_years_start} - ${selected_years_end}`;
+      const year_string = `${i18n.global.t("yearInterval")}: ${selected_years_start} - ${selected_years_end}`;
 
       const selected_parties = this.getMetaRow(
         selected_metadata.party,

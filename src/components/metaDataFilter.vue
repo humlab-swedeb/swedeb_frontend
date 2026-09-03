@@ -13,6 +13,7 @@
             color="accent"
             size="sm"
             class="q-pr-sm"
+            data-test="meta-open-icon"
           />
           {{ $t("metaDataFilter") }}</q-card-section
         >
@@ -29,7 +30,6 @@
         />
       </q-card-section>
 
-      <!-- <q-slide-transition v-show="showing"> -->
       <q-slide-transition
         v-if="$route.path === '/tools/speeches' ? (showing = true) : showing"
       >
@@ -38,7 +38,7 @@
           <q-card-section class="q-px-none q-pb-none">
             <!-- PLACE METADATA FILTER COMPONENTS HERE -->
             <yearRange />
-            <dropdownSelection type="party" />
+            <dropdownSelection type="party" data-test="meta-party-filter"/>
             <!-- <q-card-section horizontal class="q-px-none"> -->
             <genderOfficeToggleCheckbox
               type="gender"
@@ -48,14 +48,7 @@
               type="chamber"
               :toggle_label="$t('toggleChamberLabel')"
             />
-            <!-- <genderOfficeCheckbox type="gender" /> -->
-            <!-- <q-card-section class="q-py-none"> -->
-            <!-- <genderOfficeCheckbox type="office" /> -->
-            <!-- </q-card-section> -->
-            <!-- </q-card-section> -->
-            <!-- Do not show sub office type as of now -->
-            <!-- <dropdownSelection type="subOffice" /> -->
-            <dropdownSelection type="speakers" />
+            <dropdownSelection type="speakers" data-test="meta-speaker-filter"/>
             <div class="column items-end">
               <q-btn
                 v-if="hasSelections"
@@ -96,6 +89,7 @@
                 (word) => word.includes(' ') || word.includes('*'),
               ))
           "
+          data-test="search-button-wt"
         >
           <!-- tooltip to put in search words -->
           <q-tooltip
@@ -203,6 +197,7 @@
           color="accent"
           :label="$t('searchButton')"
           v-else-if="$route.path === '/tools/speeches'"
+          data-test="search-button-speeches"
         >
         </q-btn>
       </div>

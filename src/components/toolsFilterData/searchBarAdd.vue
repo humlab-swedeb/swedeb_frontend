@@ -9,6 +9,7 @@
     bg-color="white"
     color="accent"
     @keydown.enter="addSearchWord"
+    data-test="search-bar-add"
   >
     <template v-slot:prepend>
       <q-icon name="query_stats" color="accent" />
