@@ -1,15 +1,18 @@
 describe("N-gram search", () => {
 
-    it("Search -> table is displayed and row is clickable", () => {
+    beforeEach(() => {
+    cy.visit("/tools/ngram");
+  });
 
-    cy.contains("Ordtrender")
-    cy.contains("Key Words")
-    cy.contains("Anföranden")
-    cy.contains("N-Gram").click()
-    cy.getByData("search-bar").type("månsken")
-    cy.getByData("search-button-ngram").click()
-    cy.getByData("ngram-table", { timeout: 10000 }).scrollIntoView().should("exist")
-    cy.getByData("ngram-table").find(".cursor-pointer").click()
+    it("Search -> table is displayed and row is clickable", () => {
+      cy.getByData("search-bar").type("leva på{enter}");
+      cy.getByData("ngram-table", { timeout: 10000})
+        .find("span")
+        .contains("leva på sin")
+        .as("levaRes")
+
+      cy.get("@levaRes").click()
+    
   })
 
 });
