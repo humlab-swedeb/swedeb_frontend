@@ -312,7 +312,9 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           this.resetTicketState();
         } else if (error.response?.status === 404) {
           this.errorMessage =
-            i18n.global.t("accessibility.ticketExpired") || "Results expired";
+            this.errorMessage = i18n.global.t(
+            "accessibility.ticketExpired" 
+          ) || "Results expired!";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -474,9 +476,12 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     },
 
     async downloadNgramArchive(format = "csv_gz") {
+
       if (!this.ticketId) {
         this.errorMessage =
-          i18n.global.t("accessibility.ticketExpired") || "Results expired";
+          this.errorMessage = i18n.global.t(
+            "accessibility.ticketExpired" 
+          ) || "Results expired!";
         return false;
       }
 
@@ -521,8 +526,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           this.resetTicketState();
         } else if (error.response?.status === 404) {
           this.errorMessage = i18n.global.t(
-            'accessibility.ticketExpired || "Results expired"',
-          );
+            "accessibility.ticketExpired" 
+          ) || "Results expired!";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -548,8 +553,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
         this.errorMessage = i18n.global.t(
-          'accessibility.ticketExpired || "Results expired"',
-        );
+            "accessibility.ticketExpired" 
+          ) || "Results expired!";
         return false;
       }
       if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) {

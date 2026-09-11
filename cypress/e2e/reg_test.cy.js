@@ -171,7 +171,7 @@ describe("Expected results compared to previous version", () => {
   context("N-gram (limited testing currently due to errors in previous version)", () => {
 
 
-    it.only("leva på sin -> 1010 hits, 831 speeches", () => {
+    it("leva på sin -> 1010 hits, 831 speeches", () => {
       cy.contains("N-Gram").click();
       cy.getByData("search-bar").type("leva på{enter}");
       cy.getByData("ngram-table", { timeout: 10000})
