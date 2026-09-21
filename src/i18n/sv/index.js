@@ -713,6 +713,7 @@ export default {
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
     kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
     kwicQueryFailed: "KWIC-sökningen misslyckades.",
+    innerQueryFailed: "N-gram talen kunde inte hämtas",
     ngramTicketTimeout:
       "N-gram-sökningen tog för lång tid. Vänligen försök igen.",
     ngramQueryFailed: "N-gram-sökningen misslyckades.",

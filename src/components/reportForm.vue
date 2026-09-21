@@ -62,7 +62,6 @@ const copyIcon = ref("content_copy");
 const copyLabel = ref("Kopiera metadata");
 
 const copy = () => {
-  console.log( feedbackStore.getFeedbackVariables(feedbackStore.data));
   navigator.clipboard.writeText(
     JSON.stringify(feedbackStore.getFeedbackVariables(feedbackStore.data))
   );

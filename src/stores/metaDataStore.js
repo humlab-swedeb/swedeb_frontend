@@ -294,7 +294,7 @@ export const metaDataStore = defineStore("metaDataStore", {
       return `${selected_speakers}\n${selected_parties}\n${selected_genders}\n${selected_chambers}\n${year_string}\n${selected_terms}\n${corpus_version}\n${swerik_ref}\n${swerik_persons}\n${swedeb_ref}`;
     },
 
-    getSelectedKwicTicketFilters() {
+    getSelectedFilters() {
       const filters = {};
       const selected = this.selected;
       const selectedSpeakers = this.filterSelectedSpeakers(selected.speakers);

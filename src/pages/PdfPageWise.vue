@@ -188,7 +188,6 @@ const handleLoadingFail = () => {
   //display first page unless next page requested
   if (fallBackToFirstPage.value){
     setPage(0);
-    console.log(pdfSrc.value)
   }
 
 }

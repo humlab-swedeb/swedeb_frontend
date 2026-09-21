@@ -244,17 +244,12 @@ export const downloadDataStore = defineStore("downloadData", {
           (name) => name === "metadata.txt"
         );
 
-        console.log(metaName)
-
         if (!metaName) {
           return [];
         }
 
         const metaFile = archive.file(metaName)
-
-
         const meta = await metaFile.async("string");
-        console.log(meta)
 
         if (!meta){
           return "";

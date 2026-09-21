@@ -126,7 +126,7 @@ export const kwicDataStore = defineStore("kwicData", {
         words_before: this.wordsLeft,
         words_after: this.wordsRight,
         ...(this.cutOff !== null && { cut_off: this.cutOff }),
-        filters: metaDataStore().getSelectedKwicTicketFilters(),
+        filters: metaDataStore().getSelectedFilters(),
       };
     },
 
@@ -146,12 +146,12 @@ export const kwicDataStore = defineStore("kwicData", {
 
     async fetchEstimate(word) {
       if (!this.canEstimateSearch(word)) {
-        this.clearEstimate()
+        this.clearEstimate();
         return;
       }
 
       const requestId = ++this.estimateRequestSequence;
-      const filters = metaDataStore().getSelectedKwicTicketFilters();
+      const filters = metaDataStore().getSelectedFilters();
       const params = { word: word.trim() };
 
       if (filters.from_year != null) params.from_year = filters.from_year;
@@ -483,7 +483,9 @@ export const kwicDataStore = defineStore("kwicData", {
           "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
         dismissLinkNotify = Notify.create({
           message:
-            (i18n.global.t("downloadFeedback.archiveBuilding" || "Arkivet byggs…")) +
+            i18n.global.t(
+              "downloadFeedback.archiveBuilding" || "Arkivet byggs…",
+            ) +
             " " +
             buildingHint,
           color: "blue-8",

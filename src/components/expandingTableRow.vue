@@ -274,7 +274,7 @@ const replaceNgramWithBoldTags = (str, ngram) => {
     .replaceAll(" .", ".")
     .replaceAll(" ,", ",")
     .replaceAll(" :", ":");
-  return str.replace(fixed_spaces, `<b>${fixed_spaces}</b>`);
+  return str.replaceAll(fixed_spaces, `<b>${fixed_spaces}</b>`);
 };
 
 const downloadCurrentSpeech = () => {

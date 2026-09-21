@@ -235,7 +235,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           .split(",")
           .map((w) => w.trim())
           .filter(Boolean);
-        const filters = metaDataStore().getSelectedKwicTicketFilters();
+        const filters = metaDataStore().getSelectedFilters();
         const response = await api.post("/tools/word_trend_speeches/query", {
           search: words,
           filters,
@@ -352,7 +352,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
         const buffer = await workbook.xlsx.writeBuffer();
         const zip = new JSZip();
         zip.file("word_trend_speeches.xlsx", buffer);
-        zip.file("metadata.txt", metaData)
+        zip.file("metadata.txt", metaData);
         const content = await zip.generateAsync({ type: "blob" });
 
         downloadDataStore().setupDownload("word_trend_speeches.zip", content);

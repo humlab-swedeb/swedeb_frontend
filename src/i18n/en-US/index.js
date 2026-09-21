@@ -71,6 +71,7 @@ export default {
     ticketExpired: "The results have expired. Please submit a new search.",
     kwicTicketTimeout: "The search timed out. Please try again.",
     kwicQueryFailed: "KWIC query failed.",
+    innerQueryFailed: "N-gram speeches query failed",
     ngramTicketTimeout: "The n-gram search timed out. Please try again.",
     ngramQueryFailed: "N-gram query failed.",
   },
