@@ -75,7 +75,14 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       });
     },
 
+    clearArchiveTicketOnNewSearch(){
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.retrievalUrl = null;
+    },
+
     async getWordTrendsResult(search) {
+      this.clearArchiveTicketOnNewSearch();
       try {
         const path = `/tools/word_trends/${search}`;
         const additional_params = { normalize: this.normalizeResults };

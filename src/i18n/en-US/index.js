@@ -69,7 +69,7 @@ export default {
     tooManyRequests: "Too many requests. Please wait a moment before trying again.",
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
-    kwicTicketTimeout: "The search timed out. Please try again.",
+    queryTicketTimeout: "The search timed out. Please try again.",
     kwicQueryFailed: "KWIC query failed.",
     innerQueryFailed: "N-gram speeches query failed",
     ngramTicketTimeout: "The n-gram search timed out. Please try again.",
