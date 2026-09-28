@@ -227,7 +227,6 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           });
         } catch (error) {
           if (error.response?.status === 404) {
-            console.log("it is here");
             throw new Error(
               i18n.global.t("accessibility.ngramTicketTimeout") ||
                 "N-gram search timed out",
