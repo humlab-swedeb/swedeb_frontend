@@ -235,7 +235,7 @@ export const kwicDataStore = defineStore("kwicData", {
         });
       }
 
-      throw new Error(i18n.global.t("accessibility.kwicTicketTimeout"));
+      throw new Error(i18n.global.t("accessibility.queryTicketTimeout"));
     },
 
     async fetchKwicPage({
@@ -409,6 +409,13 @@ export const kwicDataStore = defineStore("kwicData", {
         this.archiveTicketStatus = "pending";
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
 
+        Notify.create({
+          type: "positive",
+          message: i18n.global.t("downloadFeedback.preparing") || "Förbereder nedladdning...",
+          timeout: 2000,
+          position: "top",
+        });
+
         // 2. Poll until ready via generic downloads endpoint
         await pollArchiveTicket(api, {
           statusUrl: `/downloads/${archiveTicketId}`,
@@ -416,6 +423,7 @@ export const kwicDataStore = defineStore("kwicData", {
             this.archiveTicketStatus = status;
           },
         });
+
 
         // 3. Download the artifact
         const downloadResponse = await api.get(
@@ -450,7 +458,7 @@ export const kwicDataStore = defineStore("kwicData", {
     async downloadKwicSpeechArchive(
       downloadKey,
       archiveFormat = "zip",
-      fallbackFilename = `speeches_archive_${this.ticketId}.zip`,
+      fallbackFilename = `kwic_speeches_archive_${this.ticketId}.zip`,
     ) {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
