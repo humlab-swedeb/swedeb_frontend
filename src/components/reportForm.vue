@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineEmits } from "vue";
+import { ref, watch } from "vue";
 import { feedbackDataStore } from "src/stores/feedbackDataStore";
 
 const feedbackStore = feedbackDataStore();
@@ -62,7 +62,6 @@ const copyIcon = ref("content_copy");
 const copyLabel = ref("Kopiera metadata");
 
 const copy = () => {
-  console.log( feedbackStore.getFeedbackVariables(feedbackStore.data));
   navigator.clipboard.writeText(
     JSON.stringify(feedbackStore.getFeedbackVariables(feedbackStore.data))
   );

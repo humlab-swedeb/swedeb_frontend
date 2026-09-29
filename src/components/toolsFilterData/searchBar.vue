@@ -1,5 +1,6 @@
 <template>
   <q-input
+    data-test="search-bar"
     v-model="searchText"
     rounded
     outlined
@@ -89,9 +90,8 @@ watch(
   (newWord) => {
     if (route.path !== "/tools/ngram") return;
     clearTimeout(estimateDebounceTimer);
-    nGramStore.estimatedHits = null;
-    nGramStore.inVocabulary = null;
-    if (!newWord || !newWord.trim()) {
+    nGramStore.clearEstimate();
+    if (!nGramStore.canEstimateSearch(newWord)) {
       return;
     }
     estimateDebounceTimer = setTimeout(() => {
@@ -103,7 +103,7 @@ watch(
 );
 
 watch(
-  () => metaStore.getSelectedKwicTicketFilters(),
+  () => metaStore.getSelectedFilters(),
   () => {
     if (route.path === "/tools/kwic") {
       const word = kwicStore.searchText;
@@ -116,8 +116,9 @@ watch(
       }, 400);
     } else if (route.path === "/tools/ngram") {
       const word = nGramStore.searchText;
-      if (!word || !word.trim()) return;
       clearTimeout(estimateDebounceTimer);
+      nGramStore.clearEstimate();
+      if (!nGramStore.canEstimateSearch(word)) return;
       estimateDebounceTimer = setTimeout(() => {
         if (route.path === "/tools/ngram") {
           nGramStore.fetchEstimate(word);

@@ -5,13 +5,28 @@ export default {
   failed: "Action failed",
   success: "Action was successful",
   kwicFetchError: "Could not load KWIC results.",
-  downloadSpeechCsvArchive: "Download CSV archive (.zip)",
-  downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+  // downloadSpeechCsvArchive: "Download CSV archive (.zip)",
+  // downloadSpeechJsonArchive: "Download JSON archive (.zip)",
+
   downloadSpeechTextArchive: "Download speeches (.zip)",
   downloadSpeechJsonlGzArchive: "Download speeches (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Download speeches (.csv.gz)",
-  downloadKwicJsonlGzArchive: "Download KWIC (.jsonl.gz)",
+
+  downloadKwicCsvGz: "Download KWIC (.csv.gz)",
+  downloadKwicJsonlGz: "Download KWIC (.jsonl.gz)",
+  downloadKwicExcel: "Download KWIC (.xlsx)",
+
+  downloadNGramJsonlGz: "Download N-gram (.jsonl.gz)",
+  downloadNGramCsvGz: "Download N-gram (.csv.gz)",
+  downloadNGramExcel: "Download N-gram (.xlsx)",
+
+  downloadWordTrendsJsonlGz: "Download word trends (.jsonl.gz)",
+  downloadWordTrendsCsvGz: "Download word trends (.csv.gz)",
+  downloadWordTrendsExcel: "Download word trends (.xlsx)",
+
   downloadSpeech: "Download speeches",
+  searchResultHits: "The search returned {count} hits.",
+  searchResultUniqueHits: "The search returned {count} unique hits.",
   downloadFeedback: {
     preparing: "Preparing download...",
     archiveBuilding: "Building archive…",
@@ -42,22 +57,33 @@ export default {
     copyLink: "Copy retrieval link",
     linkCopied: "Link copied!",
   },
-  kwicEstimateHitsPrefix: "Approx.",
-  kwicEstimateHits: "estimated hits",
-  kwicEstimateNotInVocabulary: "The word was not found in the vocabulary",
-  kwicEstimateHighWarning: "the search may take a while.",
-  ngramEstimateHitsPrefix: "Approx.",
-  ngramEstimateHits: "estimated hits",
-  ngramEstimateNotInVocabulary: "The word was not found in the vocabulary",
-  ngramEstimateHighWarning: "the search may take a while.",
+  estimateNotInVocabulary: "The word was not found in the vocabulary",
+  estimateHitsInfo: "Approx. {hits} estimated hits.",
+  kwicEstimateHitsWarning:
+    "Approx. {hits} estimated hits - the search may take a while.",
+  ngramEstimateHighWarning: "generating n-grams may take a while.",
+  ngramsEstimateHitsWarning:
+    "The word occurs approximately {hits} times - generating n-grams may take a while.",
   ngramCountApproximate: "approximate",
   accessibility: {
+    tooManyRequests: "Too many requests. Please wait a moment before trying again.",
     loadingResults: "Loading results, please wait...",
     ticketExpired: "The results have expired. Please submit a new search.",
-    kwicTicketTimeout: "The search timed out. Please try again.",
+    queryTicketTimeout: "The search timed out. Please try again.",
     kwicQueryFailed: "KWIC query failed.",
+    innerQueryFailed: "N-gram speeches query failed",
     ngramTicketTimeout: "The n-gram search timed out. Please try again.",
     ngramQueryFailed: "N-gram query failed.",
   },
   kwicShardProgress: "{complete} of {total} shards loaded",
+  ngramShardProgress: "{complete} of {total} shards loaded",
+  searchDropdownOfHitsInfo:
+    "The 5 most common words related to the search term with {asterisk} are shown here. There are {count} more words to add to refine the search.",
+  wordtrendsResultInfo:
+    "The result is shown as a {resultType} for the selected words and metadata.",
+  wordtrendsResultSpeechInfo:
+    "All {resultType} are shown in a table linked to the selected words and metadata.",
+  wordtrendsResultLine: "trend line",
+  wordtrendsResultTable: "table",
+  wordtrendsResultSpeech: "speeches",
 };

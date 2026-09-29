@@ -9,6 +9,7 @@
     bg-color="white"
     color="accent"
     @keydown.enter="addSearchWord"
+    data-test="search-bar-add"
   >
     <template v-slot:prepend>
       <q-icon name="query_stats" color="accent" />
@@ -33,8 +34,8 @@
       class="resetStyle q-my-sm"
       @click="
         (wtStore.wordHitsSelected = []) &&
-          (wtStore.wordHits = []) &&
-          (wtStore.ifAsterisk = false)
+        (wtStore.wordHits = []) &&
+        (wtStore.ifAsterisk = false)
       "
     />
   </div>
@@ -42,7 +43,7 @@
   <div v-else v-show="wtStore.wordHitsSelected.length > 0">
     <q-item-label class="text-bold">{{ $t("searchAddedWords") }}</q-item-label>
     <div class="row items-center justify-between">
-<!--       <div class="row">
+      <!--       <div class="row">
         <q-item-label caption class="q-my-sm text-bold text-grey-8"
           >Visa alla
           <span class="text-black">{{ wtStore.wordHitsSelected.length }}</span>
@@ -52,7 +53,7 @@
           <q-tooltip>Slå ihop alla ord till en linje</q-tooltip>
         </q-icon>
       </div> -->
-<!--       <q-toggle
+      <!--       <q-toggle
         v-model="wtStore.singleLine"
         color="accent"
         keep-color
@@ -61,12 +62,15 @@
         @update:model-value="toggleSingleLine"
       /> -->
     </div>
-    <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk"
-      >{{ $t("searchDropdownOfHits1") }}
-      <b class="text-subtitle2">{{ $t("searchDropdownOfHits2") }} </b>
-      {{ $t("searchDropdownOfHits3") }}
-      <b>{{ wtStore.wordHits.length - wtStore.wordHitsSelected.length }}</b>
-      {{ $t("searchDropdownOfHits4") }}
+    <q-item-label caption class="text-grey-8" v-if="wtStore.ifAsterisk">
+      <i18n-t keypath="searchDropdownOfHitsInfo" tag="span" scope="global">
+        <template #asterisk>
+          <b class="text-subtitle2">*</b>
+        </template>
+        <template #count>
+          <b>{{ remainingWordHitsCount }}</b>
+        </template>
+      </i18n-t>
     </q-item-label>
 
     <div class="row items-center justify-between">
@@ -135,7 +139,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, watch } from "vue";
+import { computed, ref, watchEffect, watch } from "vue";
 import { useRoute } from "vue-router";
 import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
 import loadingIcon from "src/components/loadingIcon.vue";
@@ -144,6 +148,9 @@ const wtStore = wordTrendsDataStore();
 const route = useRoute();
 const loading = ref(false);
 const selectAll = ref(false);
+const remainingWordHitsCount = computed(
+  () => wtStore.wordHits.length - wtStore.wordHitsSelected.length,
+);
 
 // Funktionen för att slå ihop alla ord till en enda linje
 const toggleSingleLine = (value) => {
@@ -195,7 +202,7 @@ watch(
     // Kontrollera om alla ord är valda, och uppdatera selectAll
     selectAll.value =
       wtStore.wordHitsSelected.length === wtStore.wordHits.length;
-  }
+  },
 );
 </script>
 

@@ -16,6 +16,7 @@
       :label="$t('normalizeResultLabel')"
       :tooltip="$t('normalizeResultTooltip')"
       v-model="wtStore.normalizeResults"
+      data-test="wt-normalize-toggle"
     />
   </q-card-section>
   <q-card-section v-else-if="currentPath === '/tools/kwic'">
@@ -26,6 +27,7 @@
       :label="$t('lemmaResultLabel')"
       :tooltip="$t('lemmaResultTooltip')"
       v-model="kwicStore.lemmatizeSearch"
+      data-test="kwic-lemma-toggle"
     />
     <inputNrOfWords />
   </q-card-section>
@@ -42,7 +44,7 @@
         class="q-mt-lg"
         style="margin-left: -10px"
       >
-        <q-tooltip>{{ $t("tooltipNgramSize") }}</q-tooltip>
+        <q-tooltip>{{ $t("tooltipDelimiterCountedAsTokenKWIC") }}</q-tooltip>
       </q-icon>
     </div>
     <q-card-section horizontal class="q-px-none">

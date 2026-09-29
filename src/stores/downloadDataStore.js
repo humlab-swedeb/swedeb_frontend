@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { api } from "boot/axios";
 import { Notify } from "quasar";
 import JSZip from "jszip";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
 import { metaDataStore } from "./metaDataStore";
 import { pollArchiveTicket } from "./ticketPolling";
 
@@ -46,10 +46,14 @@ export const downloadDataStore = defineStore("downloadData", {
     getDownloadFeedbackMessages() {
       return {
         preparing:
-          i18n.downloadFeedback?.preparing || "Förbereder nedladdning...",
-        success: i18n.downloadFeedback?.success || "Nedladdningen har startat.",
+          i18n.global.t("downloadFeedback.preparing") ||
+          "Förbereder nedladdning...",
+        success:
+          i18n.global.t("downloadFeedback.success") ||
+          "Nedladdningen har startat.",
         error:
-          i18n.downloadFeedback?.error || "Kunde inte starta nedladdningen.",
+          i18n.global.t("downloadFeedback.error") ||
+          "Kunde inte starta nedladdningen.",
       };
     },
 
@@ -138,10 +142,10 @@ export const downloadDataStore = defineStore("downloadData", {
       const year = `År: ${currentProps.year}`;
       const gender = `Kön: ${currentProps.gender}`;
 
-      const corpus_version = i18n.downLoadInfo.corpus_version;
-      const swerik_ref = i18n.downLoadInfo.swerik_ref;
-      const swerik_persons = i18n.downLoadInfo.swerik_persons;
-      const swedeb_ref = i18n.downLoadInfo.swedeb_ref;
+      const corpus_version = i18n.global.t("downLoadInfo.corpus_version");
+      const swerik_ref = i18n.global.t("downLoadInfo.swerik_ref");
+      const swerik_persons = i18n.global.t("downLoadInfo.swerik_persons");
+      const swedeb_ref = i18n.global.t("downLoadInfo.swedeb_ref");
 
       //speaker, party, gender,
 
@@ -230,6 +234,33 @@ export const downloadDataStore = defineStore("downloadData", {
         console.error("Error extracting JSON payload from zip:", error);
         return [];
       }
+    },
+
+    async extractMetaFromPayloadZip(blob){
+      try {
+        const archive = await JSZip.loadAsync(blob);
+
+        const metaName = Object.keys(archive.files).find(
+          (name) => name === "metadata.txt"
+        );
+
+        if (!metaName) {
+          return [];
+        }
+
+        const metaFile = archive.file(metaName)
+        const meta = await metaFile.async("string");
+
+        if (!meta){
+          return "";
+        }
+        return meta
+
+      } catch (error) {
+        console.error("Error extracting JSON payload from zip:", error);
+        return [];
+      }
+
     },
 
     async downloadCurrentSpeechText(text, currentMetadata) {

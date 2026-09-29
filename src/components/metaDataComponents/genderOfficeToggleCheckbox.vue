@@ -20,6 +20,7 @@
       checked-icon="check"
       unchecked-icon="close"
       keep-color
+      data-test="meta-toggle"
     />
   </div>
   <q-checkbox

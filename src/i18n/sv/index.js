@@ -99,18 +99,13 @@ export default {
   ngramWidth: "Bredd",
   ngramSizePlaceLabel:
     "Välj storlek på N-gram och var sökordet ska vara placerat:",
-  tooltipNgramSize:
-    "För närvarande räknas även skiljetecken som ord, till exempel . , : –. \n",
 
   searchInput: "Sök på ett ord eller en fras",
   searchAdd: "Lägg till ord och klicka på +",
   searchClear: "Ta bort alla ord",
   searchAddedWords: "Valda ord:",
-  searchDropdownOfHits1:
-    "Här visas de 5 vanligaste orden relaterade till söktermen med",
-  searchDropdownOfHits2: "*",
-  searchDropdownOfHits3: "Det finns ytterligare",
-  searchDropdownOfHits4: "ord att lägga till för att förfina sökningen.",
+  searchDropdownOfHitsInfo:
+    "Här visas de 5 vanligaste orden relaterade till söktermen med {asterisk} Det finns ytterligare {count} ord att lägga till för att förfina sökningen.",
 
   normalizeResultTooltip:
     "Antalet träffar på sökordet delas med det totala antalet ord per år",
@@ -122,40 +117,38 @@ export default {
 
   nrOfWordsIntro:
     "Välj hur många ord som ska visas till vänster och höger om sökorden:",
-  tooltipKWIC:
+  tooltipDelimiterCountedAsTokenKWIC:
     "För närvarande räknas även skiljetecken som ord, till exempel . , : –",
   nrOfWordsSearch: "Sökord",
   nrOfWordsLeft: "Vänster",
   nrOfWordsRight: "Höger",
   nrCutOffKWIC: "Max antal träffar att visa/ladda ner",
   allHits: "Alla träffar",
-  kwicEstimateHitsPrefix: "Cirka",
-  kwicEstimateHits: "uppskattade träffar",
-  kwicEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  kwicEstimateHighWarning: "sökningen kan ta en stund.",
-  ngramEstimateHitsPrefix: "Cirka",
-  ngramEstimateHits: "uppskattade träffar",
-  ngramEstimateNotInVocabulary: "Ordet hittades inte i vokabulären",
-  ngramEstimateHighWarning: "sökningen kan ta en stund.",
+  estimateNotInVocabulary: "Ordet hittades inte i vokabulären",
+  estimateHitsInfo: "Cirka {hits} uppskattade träffar.",
+  kwicEstimateHitsWarning:
+    "Cirka {hits} uppskattade träffar - sökningen kan ta en stund.",
+  ngramEstimateHighWarning: "generering av n-grams kan ta en stund.",
   ngramCountApproximate: "preliminär",
-
   speechesNoTools: "Filtrera ovan med hjälp av 'Filtrera på metadata'",
 
+
+  ngramsEstimateHitsWarning:
+    "Ordet förekommer ungefär {hits} gånger - generering av n-grams kan ta en stund.",
   // Introduction to tool
 
   // WORDTRENDS PAGE & COMPONENTS ----------------------------------------
   wordTrendsIntroTitle:
     "Ordtrender — Sök på ett eller flera ord för att se hur de har använts över tid.",
   wordTrendsIntro: `
-  För att söka på flera ord, separera dem med kommatecken, till exempel:
-  <code>frihet, jämlikhet</code>. Sök med <code>*</code> för att få fler ordvarianter, till exempel:
-  <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  För att söka på flera ord, separera dem med kommatecken, till exempel: {searchExample5}. Sök med {searchExample3} för att få fler ordvarianter, till exempel:
+{searchExample4}. Under {filterText} kan du avgränsa
   anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
-  wordtrendsResult1: "Här visas resultatet i en",
-  wordtrendsResult2: "för de ord och metadata som valts.",
-  wordtrendsResult3: "Här visas alla",
-  wordtrendsResult4: "i en tabell kopplat till de ord och metadata som valts.",
+  wordtrendsResultInfo:
+    "Här visas resultatet i en {resultType} för de ord och metadata som valts.",
+  wordtrendsResultSpeechInfo:
+    "Här visas alla {resultType} i en tabell kopplat till de ord och metadata som valts.",
   wordtrendsResultLine: "trendlinje",
   wordtrendsResultTable: "tabell",
   wordtrendsResultSpeech: "anföranden",
@@ -163,11 +156,19 @@ export default {
   // KWIC PAGE & COMPONENTS ------------------------------------------------
   kwicIntroTitle:
     "Key Words in Context — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
-  kwicIntro: `Med verktyget <strong>Key Words in Context</strong>&nbsp;kan du söka på ord och fraser,
-  till exempel <code>jämlikhet</code> eller <code>jämlikhet för</code>, och se kontexten till vänster och
-  höger om sökningen. För att få fler träffar kan&nbsp;<code>*</code> användas,
-  till exempel <code>frihet*</code>. Under <b>"Filtrera på metadata"</b> kan du avgränsa
+  kwicIntro: `Med verktyget {kwicTitleText} kan du söka på ord och fraser,
+  till exempel {searchExample1} eller {searchExample2}, och se kontexten till vänster och
+  höger om sökningen. För att få fler träffar kan {kwicExample3} användas,
+  till exempel {serachExample4}. Under {filterText} kan du avgränsa
   anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
+  kwicTitle: `Key Words in Context`, //<strong>
+  filterOnMetadata: "Filtrera på metadata", // <b>
+  searchExample1: `jämlikhet`, // <code>
+  searchExample2: `jämlikhet för`, // <code>
+  searchExample3: `*`, // <code>
+  serachExample4: `frihet*`, // <code>
+  searchExample5: `frihet,jämlikhet`, //code
+
 
   speechesIntro: `Sök på hela anföranden.&nbsp;Under Filtrera sökresultat kan du avgränsa anförandena
   till vissa partier, talare eller år.`,
@@ -175,35 +176,55 @@ export default {
   ngramIntroTitle:
     "N-grams — Sök på ett ord eller en fras och se hur de har använts i olika sammanhang.",
   ngramIntro: `
-  Med verktyget <strong>N-gram</strong> kan du söka på ord och fraser, till exempel
-  <code>jämlikhet</code> eller <code>jämlikhet för</code>, och få fram en lista med mest
+  Med verktyget {ngramTitle} kan du söka på ord och fraser, till exempel
+  {searchExample1} eller {searchExample2}, och få fram en lista med mest
   förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
-   Här måste du söka på exakta ord fraser (<code>*</code> kan inte användas). Träffar ges på N-gram
+   Här måste du söka på exakta ord fraser ({searchExample3} kan inte användas). Träffar ges på N-gram
    med minst två förekomster i anförandena.
-  Under <b>”Filtrera på metadata”</b> kan du avgränsa anförandena till bland
+  Under {filterText} kan du avgränsa anförandena till bland
   annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
+  ngramTitle: `N-ngram`, // strong
 
-  searchResult1: "Sökningen resulterade i ",
+  searchResultHits: "Sökningen resulterade i {count} träffar.",
+  searchResultUniqueHits: "Sökningen resulterade i {count} unika träffar.",
 
-  searchResult2: "träffar.",
-  searchResult2ngram: "unika träffar.",
+  download: "Ladda ner",
+  downloadAll: "Ladda ner alla",
+
+  downloadSpeech: "Ladda ner anföranden",
+  downloadWordtrends: "Ladda ner ordtrender",
+  downloadNgram: "Ladda ner N-gram",
   downloadKWIC: "Ladda ner KWIC",
+
   downloadCSV: "Ladda ner CSV",
   downloadJSON: "Ladda ner JSON",
-  downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
-  downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
+  // downloadSpeechCsvArchive: "Ladda ner CSV-arkiv (.zip)",
+  // downloadSpeechJsonArchive: "Ladda ner JSON-arkiv (.zip)",
   downloadExcel: "Ladda ner Excel",
+
   downloadSpeechTextArchive: "Ladda ner tal (.zip)",
   downloadSpeechJsonlGzArchive: "Ladda ner tal (.jsonl.gz)",
   downloadSpeechCsvGzArchive: "Ladda ner tal (.csv.gz)",
-  downloadKwicJsonlGzArchive: "Ladda ner KWIC (.jsonl.gz)",
+
+  downloadKwicJsonlGz: "Ladda ner KWIC (.jsonl.gz)",
+  downloadKwicCsvGz: "Ladda ner KWIC (.csv.gz)",
+  downloadKwicExcel: "Ladda ner KWIC (.xlsx)",
+
+  // downloadNGramJsonlGz: "Ladda ner N-gram (.jsonl.gz)",
+  downloadNGramCsvGz: "Ladda ner N-gram (.csv.gz)",
+  downloadNGramExcel: "Ladda ner N-gram (.xlsx)",
+
+  // downloadWordTrendsJsonlGz: "Ladda ner ordtrender (.jsonl.gz)",
+  downloadWordTrendsCsvGz: "Ladda ner träfflistan som .csv",
+  downloadWordTrendsExcel: "Ladda ner träfflistan som .xlsx",
+
   downloadFeedback: {
     preparing: "Förbereder nedladdning...",
     archiveBuilding: "Arkivet byggs…",
     archiveBuildingHint:
       "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.",
     archiveLinkCopiedClose:
-      "Länk kopierad — stäng för att hämta senare, eller vänta här.",
+      "Länk kopierad — stäng för att hämta senare inom 24 timmar, eller vänta här.",
     archiveAborted:
       "Länken är sparad — öppna den för att hämta arkivet när det är klart.",
     success: "Nedladdningen har startat.",
@@ -244,7 +265,7 @@ export default {
   // SPEECHES PAGE & COMPONENTS ------------------------------------------
   speechesIntroTitle:
     "Anföranden — Sök på och filtrera fram riksdagsanföranden.",
-  speechesIntro: `Sök på hela anföranden.&nbsp;Under <b>"Filtrera på metadata"</b> kan du
+  speechesIntro: `Sök på hela anföranden. Under {filterText} kan du
   avgränsa anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
 
   // PDF PAGE ------------------------------------------------
@@ -264,7 +285,7 @@ export default {
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
   riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå
-  universitet och Swerik. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+  universitet och Huminfra. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
 
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
@@ -610,7 +631,7 @@ export default {
     },
     9: {
       q: "Hur mycket data och material bygger Riksdagsdebatter.se på?",
-      a: `Alla anföranden och information om riksdagsledamöter som avänds i Riksdagdebatter.se
+      a: `Alla anföranden och information om riksdagsledamöter som används i Riksdagsdebatter.se
       kommer ursprungligen från de svenska riksdagsprotokollen och andra källor som riksdagen
       har varit med och producerat. Med hjälp av automatiska maskininlärningsmodeller och manuellt
       kontrollarbete har alla protokoll har processats av SWERIK-projektet för att identifiera
@@ -650,7 +671,7 @@ export default {
       },
     },
     10: {
-      q: "Var är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
+      q: "Varför är det en pik/dipp runt 1975 när jag söker i ordtrenderverktyget?",
 
       a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
 
@@ -663,11 +684,6 @@ export default {
   searchWordLabel: "Sökord:",
   wikidata: "Wikidata",
   openSource: "Öppna källa",
-  download: "Ladda ner",
-  downloadAll: "Ladda ner alla",
-  downloadSpeech: "Ladda ner anföranden",
-  downloadWordtrends: "Ladda ner ordtrender",
-  downloadNgram: "Ladda ner N-gram",
 
   //Download metadata ------------------------------------------------
   downLoadInfo: {
@@ -693,9 +709,11 @@ export default {
     noResults: "Inga resultat för sökningen.",
     noResultsTip:
       "Försök igen med ett annat sökord, eller andra filtreringsalternativ.",
+    tooManyRequests: "För många sökningar just nu. Vänligen försök igen senare.",
     ticketExpired: "Resultaten har gått ut. Vänligen gör en ny sökning.",
-    kwicTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
+    queryTicketTimeout: "Sökningen tog för lång tid. Vänligen försök igen.",
     kwicQueryFailed: "KWIC-sökningen misslyckades.",
+    innerQueryFailed: "N-gram talen kunde inte hämtas",
     ngramTicketTimeout:
       "N-gram-sökningen tog för lång tid. Vänligen försök igen.",
     ngramQueryFailed: "N-gram-sökningen misslyckades.",
@@ -715,4 +733,5 @@ export default {
     "För att lämna feedback eller rapportera fel (t ex om segmenteringen av anföranden eller om metadatan kopplade till ledamöter), vänligen kopiera metadatan nedan om detta specifika anförande och gå sedan vidare till SWERIK:s GitHub-sida för att skapa ett diskussionsärende. Klistra där in metadatan och förklara vad som är fel och eventuella ändringsförslag.",
   githubLink: "Gå vidare till SWERIK:s GitHub-sida",
   kwicShardProgress: "{complete} av {total} delar inladdade",
+  ngramShardProgress: "{complete} av {total} delar inladdade",
 };

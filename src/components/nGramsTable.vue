@@ -1,9 +1,18 @@
 <template>
-  <template v-if="nGramStore.nGrams && nGramStore.nGrams.length > 0">
+  <template v-if="showLoadingIndicator">
+    <loadingIcon size="64" />
+  </template>
+  <template v-else-if="hasNGramRows">
     <div class="row q-py-md justify-between">
-      <q-item-label class="col-9 q-mt-md" v-if="nGramStore.totalHits > 0">
-        {{ $t("searchResult1") }} <b>{{ nGramStore.totalHits }}</b>
-        {{ $t("searchResult2ngram") }}
+      <q-item-label
+        class="col-9 q-mt-md"
+        v-if="nGramStore.totalHits > 0 && nGramStore.ticketStatus === 'ready'"
+      >
+        <i18n-t keypath="searchResultUniqueHits" tag="span" scope="global">
+          <template #count>
+            <b>{{ nGramStore.totalHits }}</b>
+          </template>
+        </i18n-t>
       </q-item-label>
 
       <q-btn-dropdown
@@ -15,14 +24,90 @@
         style="width: fit-content"
       >
         <q-list>
-          <q-item clickable v-close-popup @click="downloadNgram">
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.csv)"
+            @click="downloadNgram"
+          >
             <q-item-section>
-              <q-item-label>{{ $t("downloadCSV") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.csv)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadNGramCsvGz") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
-          <q-item clickable v-close-popup @click="downloadNgramExcel">
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.excel)"
+            @click="downloadNgramExcel"
+          >
             <q-item-section>
-              <q-item-label>{{ $t("downloadExcel") }}</q-item-label>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.excel)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadNGramExcel") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesZip)"
+            @click="downloadNgramSpeechesZip"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesZip)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechTextArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesJsonlGz)"
+            @click="downloadNgramSpeechesJsonlGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesJsonlGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechJsonlGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesCsvGz)"
+            @click="downloadNgramSpeechesCsvGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesCsvGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechCsvGzArchive") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -36,11 +121,38 @@
       row-key="id"
       :rows-per-page-options="[10, 25, 50]"
       v-model:pagination="paginationModel"
+      v-model:expanded="expanded"
       @request="onRequest"
       :loading="nGramStore.isPageLoading"
       v-if="!loading"
       class="bg-grey-2"
+      data-test="ngram-table"
     >
+      <template v-slot:top-row v-if="nGramStore.ticketStatus === 'partial'">
+        <q-tr>
+          <q-td :colspan="columns.length + 1" class="q-pa-none">
+            <q-linear-progress
+              :value="
+                nGramStore.shardsTotal > 0
+                  ? nGramStore.shardsComplete / nGramStore.shardsTotal
+                  : 0
+              "
+              color="accent"
+              track-color="grey-3"
+              class="q-mb-none"
+              style="height: 6px"
+            />
+            <q-item-label caption class="q-px-sm q-pt-xs text-grey-7">
+              {{
+                $t("ngramShardProgress", {
+                  complete: nGramStore.shardsComplete,
+                  total: nGramStore.shardsTotal,
+                })
+              }}
+            </q-item-label>
+          </q-td>
+        </q-tr>
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -76,6 +188,7 @@
             auto-width
             class="bg-white"
             :class="props.expand ? 'bg-grey-3' : ''"
+
           >
             <q-btn
               size="sm"
@@ -85,10 +198,9 @@
               flat
               :icon="props.expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
             />
-          </q-td>
+          </q-td >
         </q-tr>
         <!-- If row in table is clicked, EXPAND -->
-        <!--  -->
         <q-tr v-show="props.expand" class="bg-grey-1">
           <q-td :colspan="props.cols.length" no-hover>
             <div>
@@ -97,8 +209,11 @@
               </q-item-label>
               <div class="row q-pb-md justify-between">
                 <q-item-label class="col-9 q-mt-md">
-                  {{ $t("searchResult1") }}
-                  <b>{{ props.row.speeches }}</b> {{ $t("searchResult2") }}
+                  <i18n-t keypath="searchResultHits" tag="span" scope="global">
+                    <template #count>
+                      <b>{{ props.row.speeches }}</b>
+                    </template>
+                  </i18n-t>
                 </q-item-label>
               </div>
               <!-- SECOND TABLE -->
@@ -122,8 +237,8 @@
       </template>
     </q-table>
   </template>
-  <template v-else>
-    <!-- Show a message when there's no data -->
+  <template v-else-if="showNoResults">
+    <!-- Show a message when there's no data and not loading -->
     <noResults />
   </template>
 </template>
@@ -133,9 +248,49 @@ import { ref, computed } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { innerNGramDataStore } from "src/stores/innerNGramDataStore";
+import { downloadDataStore } from "src/stores/downloadDataStore";
 import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
+const downloadStore = downloadDataStore();
+const innerStore = innerNGramDataStore();
+
+const downloadKeys = {
+  csv: "ngram-csv",
+  excel: "ngram-excel",
+  speechesZip: "ngram-speeches-zip",
+  speechesJsonlGz: "ngram-speeches-jsonlgz",
+  speechesCsvGz: "ngram-speeches-csvgz",
+};
+
+const hasNGramRows = computed(
+  () => nGramStore.nGrams && nGramStore.nGrams.length > 0,
+);
+
+const isWaitingForInitialResults = computed(
+  () =>
+    nGramStore.hasSubmittedQuery &&
+    !hasNGramRows.value &&
+    (nGramStore.isLoading ||
+      nGramStore.isPageLoading ||
+      nGramStore.ticketStatus === "pending" ||
+      nGramStore.ticketStatus === "partial"),
+);
+
+const showLoadingIndicator = computed(() => isWaitingForInitialResults.value);
+const expanded = ref([]);
+
+const showNoResults = computed(
+  () =>
+    nGramStore.hasSubmittedQuery &&
+    !hasNGramRows.value &&
+    !nGramStore.isLoading &&
+    !nGramStore.isPageLoading &&
+    !nGramStore.errorMessage &&
+    nGramStore.ticketStatus === "ready" &&
+    nGramStore.totalHits === 0,
+);
 
 const loading = ref(false);
 const innerLoading = ref({});
@@ -191,12 +346,39 @@ const formatSearch = (value) => {
   return formattedValue;
 };
 
-const downloadNgram = () => {
-  nGramStore.downloadNGramTableCSV();
+const isDownloadActive = (downloadKey) =>
+  downloadStore.isDownloadActive(downloadKey);
+
+const downloadNgram = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.csv,
+    () => nGramStore.downloadNGramTableCSV(),
+    {
+      getErrorMessage: () => nGramStore.errorMessage,
+    },
+  );
 };
 
-const downloadNgramExcel = () => {
-  nGramStore.downloadNGramTableExcel();
+const downloadNgramExcel = async () => {
+  await downloadStore.runTrackedDownload(
+    downloadKeys.excel,
+    () => nGramStore.downloadNGramTableExcel(),
+    {
+      getErrorMessage: () => nGramStore.errorMessage,
+    },
+  );
+};
+
+const downloadNgramSpeechesZip = async () => {
+  await nGramStore.downloadNGramSpeechesZip(downloadKeys.speechesZip);
+};
+
+const downloadNgramSpeechesJsonlGz = async () => {
+  await nGramStore.downloadNGramSpeechesJsonlGz(downloadKeys.speechesJsonlGz);
+};
+
+const downloadNgramSpeechesCsvGz = async () => {
+  await nGramStore.downloadNGramSpeechesCsvGz(downloadKeys.speechesCsvGz);
 };
 
 const getNumberDocHits = (props) => {
@@ -204,18 +386,16 @@ const getNumberDocHits = (props) => {
 };
 
 const expandRow = async (props) => {
-  props.expand = !props.expand;
 
-  if (props.expand) {
+  if (expanded.value.includes(props.row.id)) {
+    expanded.value = []
+  }else{
+    expanded.value = [props.row.id]
     innerLoading.value[props.row.id] = true;
-
     try {
-      await nGramStore.getNGramSpeeches(
-        props.row.id - 1,
-        props.row.ngram,
-        1, //page, initial value
-        10, //hits per page, initial value
-      );
+      const currentNGram = nGramStore.getCurrentNgram(props.row.id-1)
+      await innerStore.getInnerResult(currentNGram);
+      //await innerS.getInnerResult(props.row.id-1)
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {

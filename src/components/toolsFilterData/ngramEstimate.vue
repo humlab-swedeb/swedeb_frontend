@@ -5,20 +5,17 @@
       dense
       class="bg-grey-2 text-grey-7 text-caption"
     >
-      {{ $t("ngramEstimateNotInVocabulary") }}
+      {{ $t("estimateNotInVocabulary") }}
     </q-banner>
     <q-banner
       v-else-if="isHighCount"
       dense
       class="bg-orange-1 text-orange-9 text-caption"
     >
-      {{ $t("ngramEstimateHitsPrefix") }} {{ formattedHits }}
-      {{ $t("ngramEstimateHits") }} –
-      {{ $t("ngramEstimateHighWarning") }}
+      {{ $t("ngramsEstimateHitsWarning", { hits: formattedHits }) }}
     </q-banner>
     <q-banner v-else dense class="bg-green-1 text-green-9 text-caption">
-      {{ $t("ngramEstimateHitsPrefix") }} {{ formattedHits }}
-      {{ $t("ngramEstimateHits") }}
+      {{ $t("estimateHitsInfo", { hits: formattedHits }) }}
     </q-banner>
   </div>
 </template>

@@ -1,49 +1,75 @@
 <template>
   <template
-    v-if="
-      (wtStore.speechesData.length > 0 &&
-        $route.path === '/tools/wordtrends') ||
-      ($route.path === '/tools/speeches' &&
-        speechStore.speechesData.length > 0) ||
-      ($route.path === '/tools/ngram' && nGramStore.nGramSpeeches.length > 0)
-    "
+    v-if="$route.path === '/tools/ngram' && innerStore.innerSpeeches.length > 0"
   >
     <div>
       <div class="row q-py-md justify-between">
-        <q-item-label
-          class="col-9 q-mt-md"
-          v-if="
-            wtStore.speechesData.length > 0 &&
-            $route.path === '/tools/wordtrends'
-          "
-        >
-          {{ $t("searchResult1") }}
-          <b>{{ wtStore.speechesData.length }}</b>
-          {{ $t("searchResult2") }}
-        </q-item-label>
-        <q-item-label
-          class="col-9 q-mt-md"
-          v-else-if="
-            $route.path === '/tools/speeches' &&
-            speechStore.speechesData.length > 0
-          "
-        >
-          {{ $t("searchResult1") }}
-          <b>{{ speechStore.speechesData.length }}</b> {{ $t("searchResult2") }}
-        </q-item-label>
-        <q-btn
-          no-caps
-          icon="download"
-          class="text-grey-8 col-3"
-          color="secondary"
-          :label="$t('downloadSpeech')"
-          @click="downloadSpeeches"
-          style="width: fit-content"
-        ></q-btn>
+<q-btn-dropdown
+        no-caps
+        icon="download"
+        class="text-grey-8 col-3"
+        color="secondary"
+        :label="$t('downloadSpeech')" 
+        style="width: fit-content"
+      >
+        <q-list>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesZip)"
+            @click="downloadNgramSpeechesZip"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesZip)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechTextArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesJsonlGz)"
+            @click="downloadNgramSpeechesJsonlGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesJsonlGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechJsonlGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-close-popup
+            :disable="isDownloadActive(downloadKeys.speechesCsvGz)"
+            @click="downloadNgramSpeechesCsvGz"
+          >
+            <q-item-section>
+              <q-item-label class="row items-center no-wrap">
+                <q-spinner-tail
+                  v-if="isDownloadActive(downloadKeys.speechesCsvGz)"
+                  size="16px"
+                  class="q-mr-sm"
+                />
+                {{ $t("downloadSpeechCsvGzArchive") }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
       </div>
 
       <q-table
-        ref="SpeechTable"
+        ref="SpeechTableNgram"
         bordered
         flat
         :rows="rows"
@@ -55,6 +81,41 @@
         class="bg-grey-2"
         @request="onRequest"
       >
+        <template v-slot:top-row v-if="innerStore.isPartialInner">
+          <q-tr>
+            <q-td :colspan="columns.length + 1" class="q-pa-none">
+              <q-linear-progress
+                :value="
+                  innerStore.shardsTotalInner > 0
+                    ? innerStore.shardsCompleteInner /
+                      innerStore.shardsTotalInner
+                    : 0
+                "
+                color="accent"
+                track-color="grey-3"
+                class="q-mb-none"
+                style="height: 6px"
+              />
+              <q-item-label caption class="q-px-sm q-pt-xs text-grey-7">
+                {{
+                  $t("ngramShardProgress", {
+                    complete: innerStore.shardsCompleteInner,
+                    total: innerStore.shardsTotalInner,
+                  })
+                }}
+              </q-item-label>
+            </q-td>
+          </q-tr>
+        </template>
+        <template v-slot:loading>
+          <q-inner-loading showing class="table-loading-overlay">
+            <q-spinner-tail size="48px" color="accent" :thickness="5" />
+            <q-item-label caption class="text-center text-bold q-mt-md">
+              {{ $t("accessibility.loadingResults") }}
+            </q-item-label>
+          </q-inner-loading>
+        </template>
+
         <template v-slot:header="props">
           <q-tr :props="props">
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -73,7 +134,12 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props" @click="expandRow(props)" class="cursor-pointer">
+          <q-tr
+            :props="props"
+            @click="expandRow(props)"
+            class="cursor-pointer"
+            data-test="table-row"
+          >
             <q-td
               v-for="col in props.cols"
               :key="col.name"
@@ -144,20 +210,16 @@
 </template>
 
 <script setup>
-import { ref, defineProps, mergeProps } from "vue";
+import { ref, defineProps, computed } from "vue";
 import { metaDataStore } from "src/stores/metaDataStore.js";
-import { speechesDataStore } from "src/stores/speechesDataStore.js";
-import { wordTrendsDataStore } from "src/stores/wordTrendsDataStore";
-import { nGramDataStore } from "src/stores/nGramDataStore";
+import { innerNGramDataStore } from "src/stores/innerNGramDataStore"
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import expandingTableRow from "src/components/expandingTableRow.vue";
 import noResults from "src/components/noResults.vue";
 
 const metaStore = metaDataStore();
-const speechStore = speechesDataStore();
-const wtStore = wordTrendsDataStore();
-const nGramStore = nGramDataStore();
 const downloadStore = downloadDataStore();
+const innerStore = innerNGramDataStore();
 
 const props = defineProps({
   type: String,
@@ -167,81 +229,83 @@ const props = defineProps({
   ngram: String,
 });
 
-const pagination = ref({
-  sortBy: "desc",
-  descending: false,
-  page: 1,
-  rowsPerPage: 10,
-  rowsNumber: props.totalHits,
+const downloadKeys = {
+  csv: "ngram-csv",
+  excel: "ngram-excel",
+  speechesZip: "ngram-speeches-zip",
+  speechesJsonlGz: "ngram-speeches-jsonlgz",
+  speechesCsvGz: "ngram-speeches-csvgz",
+};
+
+const isDownloadActive = (downloadKey) =>
+  downloadStore.isDownloadActive(downloadKey);
+
+innerStore.innerPagination.rowsNumber = props.totalHits;
+
+const pagination = computed({
+  get: () => innerStore.innerPagination,
+  set: (value) => {
+    innerStore.innerPagination = value;
+  },
 });
 
-const loading = ref(false);
+const SpeechTableNgram = ref(null);
 
-const displayedData = ref([]);
-const SpeechTable = ref(null);
-
-const rows = ref([]);
 const columns = ref([]);
 
 const expandRow = async (props) => {
   props.expand = !props.expand;
 };
 
-const currentReqId = ref(0);
+const loading = ref(false);
 
-async function onRequest(table_props) {
-  const { page, rowsPerPage } = table_props.pagination;
+const onRequest = async ({ pagination }) => {
   loading.value = true;
-  const reqId = ++currentReqId.value;
-  try {
-    const data = await nGramStore.getNGramSpeeches(
-      props.rowID - 1,
-      props.ngram,
-      page,
-      rowsPerPage
-    );
-    if (reqId !== currentReqId.value) return;
 
-    pagination.value.rowsNumber = data.total;
-    console.log("Total speeches fetched:", data.total);
-    // Clamp page if user clicked beyond last after total changed
-    const maxPage = Math.max(1, Math.ceil(data.total / rowsPerPage));
-    pagination.value.page = page > maxPage ? maxPage : page;
-    pagination.value.rowsPerPage = rowsPerPage;
-
-    rows.value = mapSpeechesToRows(data.items);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    rows.value = [];
-  } finally {
-    if (reqId === currentReqId.value) loading.value = false;
+  if (!innerStore.ticketIdInner) {
+    return;
   }
-}
 
-if (props.type === "wordTrends") {
-  displayedData.value = wtStore.speechesData;
-} else if (props.type === "speeches") {
-  displayedData.value = speechStore.speechesData;
-} else if (props.type === "ngram") {
-  displayedData.value = nGramStore.nGramSpeeches;
-}
+  // Ignore sort changes while results are still loading (PARTIAL)
+  if (
+    innerStore.isPartialInner &&
+    (pagination.sortBy !== innerStore.innerPagination.sortBy ||
+      pagination.descending !== innerStore.innerPagination.descending)
+  ) {
+    loading.value = false;
+    return;
+  }
 
-function mapSpeechesToRows(speeches) {
-  return speeches.map((speech, idx) => ({
-    id: speech.speech_id,
-    protocol: speech.speech_name,
-    node_word: speech.node_word,
-    speaker: speech.name,
-    gender: speech.gender,
-    party: speech.party_abbrev,
-    party_full: speech.party,
-    source: speech.speech_link,
-    year: speech.year,
-    link: speech.link,
-  }));
-}
+  await innerStore.fetchInnerPage({
+    page: pagination.page,
+    rowsPerPage: pagination.rowsPerPage,
+    sortBy: pagination.sortBy,
+    descending: pagination.descending,
+  });
 
-rows.value = mapSpeechesToRows(displayedData.value);
+  loading.value = false;
+};
+
+const customOptionName = (name) => {
+  return name.replace(/&quot/g, '"');
+};
+
+const rows = computed(() =>
+  innerStore.innerSpeeches.map((entry, index) => ({
+    id: entry.speech_id,
+    unique_id: `${innerStore.innerPagination.page}-${index}-${entry.speech_id}`,
+    year: entry.year,
+    speaker: customOptionName(entry.name),
+    party: entry.party_abbrev,
+    party_full: entry.party,
+    gender: entry.gender,
+    person_id: entry.person_id,
+    link: entry.link,
+    protocol: entry.speech_name,
+    source: entry.speech_link,
+    node_word: entry.node_word,
+  })),
+);
 
 columns.value = [
   {
@@ -250,15 +314,14 @@ columns.value = [
     label: "Anförande",
     align: "left",
     field: (row) => row.protocol,
-    sortable: false,
-    sort: (a, b) => sortSpeeches(a, b),
+    sortable: true,
   },
   {
     name: "speaker",
     required: true,
     label: "Talare",
     field: "speaker",
-    sortable: false,
+    sortable: true,
     align: "left",
   },
   {
@@ -266,7 +329,7 @@ columns.value = [
     required: true,
     label: "Kön",
     field: "gender",
-    sortable: false,
+    sortable: true,
     align: "left",
   },
   {
@@ -274,7 +337,7 @@ columns.value = [
     required: true,
     label: "Parti",
     field: "party",
-    sortable: false,
+    sortable: true,
     align: "left",
   },
   {
@@ -282,73 +345,27 @@ columns.value = [
     required: true,
     label: "År",
     field: "year",
-    sortable: false,
+    sortable: true,
     align: "left",
   },
 ];
 
-if (props.type === "wordTrends") {
-  columns.value.splice(1, 0, {
-    name: "node_word",
-    required: true,
-    label: "Sökord",
-    field: "node_word",
-    sortable: true,
-    align: "left",
-  });
-}
+const downloadNgramSpeechesZip = async () => {
+  await innerStore.downloadNGramSpeechesZipInner(downloadKeys.speechesZip);
+};
 
-function sortByYear(a, b) {
-  const yearRegex = /(\d{4})/;
+const downloadNgramSpeechesJsonlGz = async () => {
+  await innerStore.downloadNGramSpeechesJsonlGzInner(downloadKeys.speechesJsonlGz);
+};
 
-  // Extract the year from the protocol strings
-  const yearA = a.match(yearRegex)[0];
-  const yearB = b.match(yearRegex)[0];
-  if (yearA < yearB) {
-    return -1;
-  } else if (yearA > yearB) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function sortByChamber(a, b) {
-  if (a.includes("Första") && !b.includes("Första")) {
-    return -1;
-  } else if (!a.includes("Första") && b.includes("Första")) {
-    return 1;
-  } else if (a.includes("Andra") && !b.includes("Andra")) {
-    return 1;
-  } else if (!a.includes("Andra") && b.includes("Andra")) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
-function sortByNumber(a, b) {
-  const numberA = parseInt(a.split(":")[1].replace(/\s/g, ""));
-  const numberB = parseInt(b.split(":")[1].replace(/\s/g, ""));
-  return numberA - numberB;
-}
-
-function sortSpeeches(a, b) {
-  const yearRes = sortByYear(a, b);
-  if (yearRes !== 0) {
-    return yearRes;
-  }
-  const chamberRes = sortByChamber(a, b);
-  if (chamberRes !== 0) {
-    return chamberRes;
-  }
-
-  return sortByNumber(a, b);
-}
-
-function downloadSpeeches() {
-  downloadStore.downloadSpeechesZip(rows.value.map((row) => row.id));
-}
+const downloadNgramSpeechesCsvGz = async () => {
+  await innerStore.downloadNGramSpeechesCsvGzInner(downloadKeys.speechesCsvGz);
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-loading-overlay {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(1px);
+}
+</style>

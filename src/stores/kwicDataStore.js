@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
+import { Notify, copyToClipboard } from "quasar";
 import { api } from "boot/axios";
 import axios from "axios";
 import { metaDataStore } from "./metaDataStore";
 import { downloadDataStore } from "./downloadDataStore";
-import i18n from "src/i18n/sv/index.js";
+import { i18n } from "boot/i18n";
+
 import {
   getTicketPollDelayMs,
   pollArchiveTicket,
@@ -44,13 +46,14 @@ export const kwicDataStore = defineStore("kwicData", {
     },
     lemmatizeSearch: false,
     cancelTokenSource: null,
-    useTicketFlow: true,
     ticketId: null,
     totalHits: 0,
     totalPages: 0,
     expiresAt: null,
     errorMessage: "",
     hasSubmittedQuery: false,
+    archiveTicketId: null,
+    archiveTicketStatus: null,
     archiveRetrievalUrl: null,
     isLoading: false,
     isPageLoading: false,
@@ -72,18 +75,6 @@ export const kwicDataStore = defineStore("kwicData", {
   }),
 
   actions: {
-    cancelFetch() {
-      if (this.cancelTokenSource) {
-        this.cancelTokenSource.cancel("Sökning avbruten");
-        this.cancelTokenSource = null;
-      }
-
-      this.requestSequence += 1;
-      this.pageRequestSequence += 1;
-      this.isLoading = false;
-      this.isPageLoading = false;
-    },
-
     normalizeSearch(search) {
       if (search.endsWith("*") && !search.endsWith(".*")) {
         return search.slice(0, -1) + ".*";
@@ -109,6 +100,25 @@ export const kwicDataStore = defineStore("kwicData", {
       };
     },
 
+    resetArchiveTicketState() {
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.archiveRetrievalUrl = null;
+    },
+
+    async retainCopiedArchiveRetrievalLink(archiveTicketId) {
+      try {
+        const response = await api.post(
+          `/downloads/${encodeURIComponent(archiveTicketId)}/copy-link`,
+        );
+        this.archiveTicketStatus = response.data.status;
+        return response.data;
+      } catch (error) {
+        console.error("Error retaining copied archive retrieval link:", error);
+        return null;
+      }
+    },
+
     buildKwicTicketPayload(search) {
       return {
         search,
@@ -116,19 +126,32 @@ export const kwicDataStore = defineStore("kwicData", {
         words_before: this.wordsLeft,
         words_after: this.wordsRight,
         ...(this.cutOff !== null && { cut_off: this.cutOff }),
-        filters: metaDataStore().getSelectedKwicTicketFilters(),
+        filters: metaDataStore().getSelectedFilters(),
       };
     },
 
+    clearEstimate() {
+      this.estimateRequestSequence += 1;
+      this.estimatedHits = null;
+      this.inVocabulary = null;
+    },
+
+    _isPhraseSearch(search) {
+      return search.trim().split(/\s+/).length > 1;
+    },
+
+    canEstimateSearch(search) {
+      return Boolean(search && search.trim() && !this._isPhraseSearch(search));
+    },
+
     async fetchEstimate(word) {
-      if (!word || !word.trim()) {
-        this.estimatedHits = null;
-        this.inVocabulary = null;
+      if (!this.canEstimateSearch(word)) {
+        this.clearEstimate();
         return;
       }
 
       const requestId = ++this.estimateRequestSequence;
-      const filters = metaDataStore().getSelectedKwicTicketFilters();
+      const filters = metaDataStore().getSelectedFilters();
       const params = { word: word.trim() };
 
       if (filters.from_year != null) params.from_year = filters.from_year;
@@ -149,10 +172,6 @@ export const kwicDataStore = defineStore("kwicData", {
         this.estimatedHits = null;
         this.inVocabulary = null;
       }
-    },
-
-    getKwicResultsPath(search) {
-      return `/tools/kwic/${search}`;
     },
 
     getErrorMessage(error) {
@@ -184,7 +203,9 @@ export const kwicDataStore = defineStore("kwicData", {
         }
 
         if (data.status === "error") {
-          throw new Error(data.error || i18n.accessibility.kwicQueryFailed);
+          throw new Error(
+            data.error || i18n.global.t("accessibility.kwicQueryFailed"),
+          );
         }
 
         if (data.status === "partial") {
@@ -214,7 +235,7 @@ export const kwicDataStore = defineStore("kwicData", {
         });
       }
 
-      throw new Error(i18n.accessibility.kwicTicketTimeout);
+      throw new Error(i18n.global.t("accessibility.queryTicketTimeout"));
     },
 
     async fetchKwicPage({
@@ -292,8 +313,11 @@ export const kwicDataStore = defineStore("kwicData", {
 
         return pageData;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
@@ -309,46 +333,7 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
-    async getKwicResultLegacy(search) {
-      const normalizedSearch = this.normalizeSearch(search);
-      this.cancelTokenSource = axios.CancelToken.source();
-
-      try {
-        const path = this.getKwicResultsPath(normalizedSearch);
-        const additionalParams = {
-          words_before: this.wordsLeft,
-          words_after: this.wordsRight,
-          lemmatized: this.lemmatizeSearch,
-          ...(this.cutOff !== null && { cut_off: this.cutOff }),
-        };
-
-        const queryString = metaDataStore().getSelectedParams(additionalParams);
-        const response = await api.get(`${path}?${queryString}`, {
-          cancelToken: this.cancelTokenSource.token,
-        });
-        this.kwicData = response.data.kwic_list;
-        this.totalHits = response.data.kwic_list.length;
-        this.totalPages = 1;
-        this.pagination = {
-          ...this.pagination,
-          page: 1,
-          sortBy: DEFAULT_SORT_BY,
-          descending: false,
-          rowsNumber: response.data.kwic_list.length,
-        };
-      } catch (error) {
-        this.kwicData = [];
-        if (axios.isCancel(error)) {
-          console.log("Request canceled", error.message);
-        } else console.error("Error fetching data:", error);
-      }
-    },
-
     async getKwicResult(search) {
-      if (!this.useTicketFlow) {
-        return this.getKwicResultLegacy(search);
-      }
-
       const normalizedSearch = this.normalizeSearch(search);
       const requestId = ++this.requestSequence;
       this.pageRequestSequence = 0;
@@ -407,12 +392,12 @@ export const kwicDataStore = defineStore("kwicData", {
 
     async downloadKwicArchive(format = "jsonl_gz") {
       if (!this.ticketId) {
-        this.archiveRetrievalUrl = null;
-        this.errorMessage = i18n.accessibility.ticketExpired;
+        this.resetArchiveTicketState();
+        this.errorMessage = i18n.global.t("accessibility.ticketExpired");
         return false;
       }
       this.errorMessage = "";
-      this.archiveRetrievalUrl = null;
+      this.resetArchiveTicketState();
 
       try {
         // 1. Request archive ticket
@@ -420,12 +405,25 @@ export const kwicDataStore = defineStore("kwicData", {
           `/tools/kwic/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(format)}`,
         );
         const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
         this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        Notify.create({
+          type: "positive",
+          message: i18n.global.t("downloadFeedback.preparing") || "Förbereder nedladdning...",
+          timeout: 2000,
+          position: "top",
+        });
 
         // 2. Poll until ready via generic downloads endpoint
         await pollArchiveTicket(api, {
           statusUrl: `/downloads/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
         });
+
 
         // 3. Download the artifact
         const downloadResponse = await api.get(
@@ -443,8 +441,11 @@ export const kwicDataStore = defineStore("kwicData", {
         );
         return true;
       } catch (error) {
-        if (error.response?.status === 404) {
-          this.errorMessage = i18n.accessibility.ticketExpired;
+        if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else if (error.response?.status === 404) {
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
           this.resetTicketState();
         } else {
           this.errorMessage = this.getErrorMessage(error);
@@ -454,12 +455,198 @@ export const kwicDataStore = defineStore("kwicData", {
       }
     },
 
+    async downloadKwicSpeechArchive(
+      downloadKey,
+      archiveFormat = "zip",
+      fallbackFilename = `kwic_speeches_archive_${this.ticketId}.zip`,
+    ) {
+      if (!this.ticketId) {
+        this.resetArchiveTicketState();
+        this.errorMessage = i18n.global.t("accessibility.ticketExpired");
+        return false;
+      }
+      if (downloadKey && downloadDataStore().isDownloadActive(downloadKey))
+        return false;
+
+      this.errorMessage = "";
+      this.resetArchiveTicketState();
+      downloadDataStore().setDownloadActive(downloadKey, true);
+
+      let dismissLinkNotify = null;
+      let abortedByUser = false;
+
+      try {
+        const prepareResponse = await api.post(
+          `/tools/speeches/archive/${encodeURIComponent(this.ticketId)}?archive_format=${encodeURIComponent(archiveFormat)}`,
+        );
+        const archiveTicketId = prepareResponse.data.archive_ticket_id;
+        this.archiveTicketId = archiveTicketId;
+        this.archiveTicketStatus = "pending";
+        this.archiveRetrievalUrl = prepareResponse.data.retrieval_url || null;
+
+        const retrievalUrl =
+          window.location.origin + "/download/" + archiveTicketId;
+        const buildingHint =
+          i18n.global.t("downloadFeedback.archiveBuildingHint") ||
+          "Behåll denna ruta öppen om du vill vänta, eller kopiera länken och stäng för att hämta senare.";
+        dismissLinkNotify = Notify.create({
+          message:
+            i18n.global.t(
+              "downloadFeedback.archiveBuilding" || "Arkivet byggs…",
+            ) +
+            " " +
+            buildingHint,
+          color: "blue-8",
+          icon: "hourglass_top",
+          timeout: 0,
+          position: "top",
+          multiLine: true,
+          actions: [
+            {
+              label:
+                i18n.global.t("downloadRetrievalPage.copyLink") ||
+                "Kopiera hämtningslänk",
+              color: "yellow",
+              handler: () => {
+                const prevDismiss = dismissLinkNotify;
+                copyToClipboard(retrievalUrl)
+                  .then(() =>
+                    this.retainCopiedArchiveRetrievalLink(archiveTicketId),
+                  )
+                  .catch((error) => {
+                    console.error(
+                      "Error copying archive retrieval link:",
+                      error,
+                    );
+                  });
+                const copiedHint =
+                  i18n.global.t("downloadFeedback.archiveLinkCopiedClose") ||
+                  "Länk kopierad — stäng för att hämta senare, eller vänta här.";
+                dismissLinkNotify = Notify.create({
+                  message: copiedHint,
+                  color: "blue-8",
+                  icon: "check",
+                  timeout: 0,
+                  position: "top",
+                  multiLine: true,
+                  actions: [
+                    {
+                      icon: "close",
+                      color: "white",
+                      round: true,
+                      handler: () => {
+                        abortedByUser = true;
+                        if (typeof dismissLinkNotify === "function") {
+                          dismissLinkNotify();
+                          dismissLinkNotify = null;
+                        }
+                      },
+                    },
+                  ],
+                });
+                if (typeof prevDismiss === "function") prevDismiss();
+              },
+            },
+          ],
+        });
+
+        await pollArchiveTicket(api, {
+          statusUrl: `/downloads/${archiveTicketId}`,
+          onStatus: (status) => {
+            this.archiveTicketStatus = status;
+          },
+        });
+
+        if (abortedByUser) {
+          Notify.create({
+            message:
+              i18n.global.t("downloadFeedback.archiveAborted") ||
+              "Nedladdning avbruten — använd länken för att hämta filen när den är klar.",
+            color: "info",
+            icon: "link",
+            timeout: 6000,
+            position: "top",
+          });
+          return true;
+        }
+
+        const downloadResponse = await api.get(
+          `/downloads/${archiveTicketId}/download`,
+          { responseType: "blob" },
+        );
+        downloadDataStore().setupDownload(
+          downloadDataStore().getFilenameFromDisposition(
+            downloadResponse.headers,
+            fallbackFilename,
+          ),
+          downloadResponse.data,
+        );
+        return true;
+      } catch (error) {
+        if (error.response?.status === 404) {
+          this.errorMessage = i18n.global.t("accessibility.ticketExpired");
+          this.resetTicketState();
+        } else if (error.response?.status === 429) {
+          this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
+          this.resetTicketState();
+        } else {
+          this.errorMessage = this.getErrorMessage(error);
+        }
+        Notify.create({
+          type: "negative",
+          message: this.errorMessage,
+          timeout: 4000,
+          position: "top",
+        });
+        console.error("Error downloading KWIC speech archive:", error);
+        return false;
+      } finally {
+        if (typeof dismissLinkNotify === "function") {
+          dismissLinkNotify();
+          dismissLinkNotify = null;
+        }
+        downloadDataStore().setDownloadActive(downloadKey, false);
+      }
+    },
+
     async downloadKWICTableExcel() {
       return this.downloadKwicArchive("xlsx");
     },
 
     async downloadKWICTableCSV() {
       return this.downloadKwicArchive("csv_gz");
+    },
+
+    async downloadKwicExcel(_downloadKey) {
+      return this.downloadKwicArchive("xlsx");
+    },
+
+    async downloadKwicCsvGz(_downloadKey) {
+      return this.downloadKwicArchive("csv_gz");
+    },
+
+    async downloadKwicJsonlGz(_downloadKey) {
+      return this.downloadKwicArchive("jsonl_gz");
+    },
+
+    async downloadKwicSpeechesZip(_downloadKey) {
+      return this.downloadKwicSpeechArchive(_downloadKey);
+    },
+
+    async downloadKwicSpeechesJsonlGz(_downloadKey) {
+      return this.downloadKwicSpeechArchive(
+        _downloadKey,
+        "jsonl_gz",
+        `speeches_archive_${this.ticketId}.jsonl.gz`,
+      );
+    },
+
+    async downloadKwicSpeechesCsvGz(_downloadKey) {
+      return this.downloadKwicSpeechArchive(
+        _downloadKey,
+        "csv_gz",
+        `speeches_archive_${this.ticketId}.csv.gz`,
+      );
     },
   },
 });
