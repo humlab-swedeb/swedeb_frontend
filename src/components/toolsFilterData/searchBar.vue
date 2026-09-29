@@ -103,7 +103,7 @@ watch(
 );
 
 watch(
-  () => metaStore.getSelectedKwicTicketFilters(),
+  () => metaStore.getSelectedFilters(),
   () => {
     if (route.path === "/tools/kwic") {
       const word = kwicStore.searchText;

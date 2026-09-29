@@ -121,6 +121,7 @@
       row-key="id"
       :rows-per-page-options="[10, 25, 50]"
       v-model:pagination="paginationModel"
+      v-model:expanded="expanded"
       @request="onRequest"
       :loading="nGramStore.isPageLoading"
       v-if="!loading"
@@ -247,11 +248,13 @@ import { ref, computed } from "vue";
 import loadingIcon from "src/components/loadingIcon.vue";
 import speechDataTableNgram from "src/components/speechDataTableNgram.vue";
 import { nGramDataStore } from "src/stores/nGramDataStore";
+import { innerNGramDataStore } from "src/stores/innerNGramDataStore";
 import { downloadDataStore } from "src/stores/downloadDataStore";
 import noResults from "src/components/noResults.vue";
 
 const nGramStore = nGramDataStore();
 const downloadStore = downloadDataStore();
+const innerStore = innerNGramDataStore();
 
 const downloadKeys = {
   csv: "ngram-csv",
@@ -276,6 +279,7 @@ const isWaitingForInitialResults = computed(
 );
 
 const showLoadingIndicator = computed(() => isWaitingForInitialResults.value);
+const expanded = ref([]);
 
 const showNoResults = computed(
   () =>
@@ -382,18 +386,16 @@ const getNumberDocHits = (props) => {
 };
 
 const expandRow = async (props) => {
-  props.expand = !props.expand;
 
-  if (props.expand) {
+  if (expanded.value.includes(props.row.id)) {
+    expanded.value = []
+  }else{
+    expanded.value = [props.row.id]
     innerLoading.value[props.row.id] = true;
-
     try {
-      await nGramStore.getNGramSpeeches(
-        props.row.id - 1,
-        props.row.ngram,
-        1, //page, initial value
-        10, //hits per page, initial value
-      );
+      const currentNGram = nGramStore.getCurrentNgram(props.row.id-1)
+      await innerStore.getInnerResult(currentNGram);
+      //await innerS.getInnerResult(props.row.id-1)
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {

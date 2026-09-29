@@ -18,16 +18,15 @@ const SORT_FIELD_MAP = {
   count: "window_count",
 };
 
+
 export const nGramDataStore = defineStore("nGramDataStore", {
   state: () => ({
     searchText: "",
     nGrams: [],
-    nGramSpeeches: [],
     width: 3,
     placingOptions: ["Ej specificerat", "Vänster", "Höger"],
     placingSelected: "Ej specificerat",
     searchString: "",
-    columnNames: ["ngram", "count", "number_speeches"],
 
     // Ticket flow state
     ticketId: null,
@@ -122,13 +121,17 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
+    getCurrentNgram(ngramIndex){
+      return this.nGrams[ngramIndex].ngram;
+    },
+
     _buildTicketPayload(normalizedSearch) {
       return {
         search: normalizedSearch,
         width: this.width,
         target: "word",
         mode: this.getPosition(),
-        filters: metaDataStore().getSelectedKwicTicketFilters(),
+        filters: metaDataStore().getSelectedFilters(), //x
       };
     },
 
@@ -143,7 +146,7 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
 
       const requestId = ++this.estimateRequestSequence;
-      const filters = metaDataStore().getSelectedKwicTicketFilters();
+      const filters = metaDataStore().getSelectedFilters();
       const params = { word: word.trim() };
       if (filters.from_year != null) params.from_year = filters.from_year;
       if (filters.to_year != null) params.to_year = filters.to_year;
@@ -181,45 +184,55 @@ export const nGramDataStore = defineStore("nGramDataStore", {
         if (requestId !== this.requestSequence || !this.ticketId) {
           return false;
         }
-
-        const response = await api.get(`/tools/ngrams/status/${this.ticketId}`);
-
-        if (requestId !== this.requestSequence) {
-          return false;
-        }
-
-        const data = response.data;
-        this.expiresAt = data.expires_at;
-
-        if (data.status === "ready") {
-          this.ticketStatus = "ready";
-          return true;
-        }
-
-        if (data.status === "partial") {
-          this.ticketStatus = "partial";
-          this.aggregateVersion = data.aggregate_version ?? 0;
-          this.shardsComplete = data.shards_complete ?? this.shardsComplete;
-          this.shardsTotal = data.shards_total ?? this.shardsTotal;
-          return true;
-        }
-
-        if (data.status === "error") {
-          throw new Error(
-            data.error ||
-              i18n.global.t("accessibility.ngramQueryFailed") ||
-              "N-gram query failed",
+        try {
+          const response = await api.get(
+            `/tools/ngrams/status/${this.ticketId}`,
           );
-        }
 
-        this.ticketStatus = data.status ?? "pending";
-        const delayMs = getTicketPollDelayMs(
-          attempt,
-          response.headers?.["retry-after"],
-        );
-        await new Promise((resolve) => {
-          window.setTimeout(resolve, delayMs);
-        });
+          if (requestId !== this.requestSequence) {
+            return false;
+          }
+
+          const data = response.data;
+          this.expiresAt = data.expires_at;
+
+          if (data.status === "ready") {
+            this.ticketStatus = "ready";
+            return true;
+          }
+
+          if (data.status === "partial") {
+            this.ticketStatus = "partial";
+            this.aggregateVersion = data.aggregate_version ?? 0;
+            this.shardsComplete = data.shards_complete ?? this.shardsComplete;
+            this.shardsTotal = data.shards_total ?? this.shardsTotal;
+            return true;
+          }
+
+          if (data.status === "error") {
+            throw new Error(
+              data.error ||
+                i18n.global.t("accessibility.ngramQueryFailed") ||
+                "N-gram query failed",
+            );
+          }
+
+          this.ticketStatus = data.status ?? "pending";
+          const delayMs = getTicketPollDelayMs(
+            attempt,
+            response.headers?.["retry-after"],
+          );
+          await new Promise((resolve) => {
+            window.setTimeout(resolve, delayMs);
+          });
+        } catch (error) {
+          if (error.response?.status === 404) {
+            throw new Error(
+              i18n.global.t("accessibility.ngramTicketTimeout") ||
+                "N-gram search timed out",
+            );
+          }
+        }
       }
 
       throw new Error(
@@ -311,8 +324,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage =
-            i18n.global.t("accessibility.ticketExpired") || "Results expired";
+          this.errorMessage = this.errorMessage =
+            i18n.global.t("accessibility.ticketExpired") || "Results expired!";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -428,55 +441,10 @@ export const nGramDataStore = defineStore("nGramDataStore", {
       }
     },
 
-    getSpeechIdsForRow(row_nr, page, rows_per_page) {
-      if (row_nr >= 0 && row_nr < this.nGrams.length) {
-        const documents = this.nGrams[row_nr].documents;
-        const start = (page - 1) * rows_per_page;
-        const end = start + rows_per_page;
-        return documents.slice(start, end);
-      } else {
-        return [];
-      }
-    },
-
-    async getNGramSpeeches(row_nr, ngram, page, rows_per_page) {
-      const documents =
-        row_nr >= 0 && row_nr < this.nGrams.length
-          ? this.nGrams[row_nr].documents
-          : [];
-      const total = documents.length;
-
-      const start = (page - 1) * rows_per_page;
-      const end = start + rows_per_page;
-      const speech_ids = documents.slice(start, end);
-
-      if (speech_ids.length === 0) {
-        this.nGramSpeeches = [];
-        return { items: [], total };
-      }
-
-      const queryString = speech_ids.map((id) => `speech_id=${id}`).join("&");
-      const path = `/tools/speeches?${queryString}`;
-
-      try {
-        const response = await api.get(path);
-        const items = response.data.speech_list.map((s) => ({
-          ...s,
-          node_word: ngram,
-        }));
-        this.nGramSpeeches = items;
-        return { items, total };
-      } catch (error) {
-        console.log("Error fetching n-gram speeches", error);
-        this.nGramSpeeches = [];
-        return { items: [], total };
-      }
-    },
-
     async downloadNgramArchive(format = "csv_gz") {
       if (!this.ticketId) {
-        this.errorMessage =
-          i18n.global.t("accessibility.ticketExpired") || "Results expired";
+        this.errorMessage = this.errorMessage =
+          i18n.global.t("accessibility.ticketExpired") || "Results expired!";
         return false;
       }
 
@@ -520,9 +488,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
           this.errorMessage = i18n.global.t("accessibility.tooManyRequests");
           this.resetTicketState();
         } else if (error.response?.status === 404) {
-          this.errorMessage = i18n.global.t(
-            'accessibility.ticketExpired || "Results expired"',
-          );
+          this.errorMessage =
+            i18n.global.t("accessibility.ticketExpired") || "Results expired!";
           this.resetTicketState();
         } else {
           this.errorMessage = this._getErrorMessage(error);
@@ -547,9 +514,8 @@ export const nGramDataStore = defineStore("nGramDataStore", {
     ) {
       if (!this.ticketId) {
         this.resetArchiveTicketState();
-        this.errorMessage = i18n.global.t(
-          'accessibility.ticketExpired || "Results expired"',
-        );
+        this.errorMessage =
+          i18n.global.t("accessibility.ticketExpired") || "Results expired!";
         return false;
       }
       if (downloadKey && downloadDataStore().isDownloadActive(downloadKey)) {

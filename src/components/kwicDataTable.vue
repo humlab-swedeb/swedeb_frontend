@@ -72,6 +72,7 @@
               </q-item-label>
             </q-item-section>
           </q-item>
+          <q-separator />
           <q-item
             clickable
             v-close-popup

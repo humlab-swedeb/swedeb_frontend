@@ -75,7 +75,14 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
       });
     },
 
+    clearArchiveTicketOnNewSearch(){
+      this.archiveTicketId = null;
+      this.archiveTicketStatus = null;
+      this.retrievalUrl = null;
+    },
+
     async getWordTrendsResult(search) {
+      this.clearArchiveTicketOnNewSearch();
       try {
         const path = `/tools/word_trends/${search}`;
         const additional_params = { normalize: this.normalizeResults };
@@ -235,7 +242,7 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           .split(",")
           .map((w) => w.trim())
           .filter(Boolean);
-        const filters = metaDataStore().getSelectedKwicTicketFilters();
+        const filters = metaDataStore().getSelectedFilters();
         const response = await api.post("/tools/word_trend_speeches/query", {
           search: words,
           filters,
@@ -329,6 +336,8 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
             "Kunde inte starta nedladdningen.";
           return false;
         }
+        const metaData = await downloadDataStore().extractMetaFromPayloadZip(response.data);
+
         const headers = [
           "year",
           "name",
@@ -344,13 +353,15 @@ export const wordTrendsDataStore = defineStore("wordTrendsData", {
           return newObj;
         });
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Sheet1");
+        const worksheet = workbook.addWorksheet("Resultat");
         worksheet.columns = headers.map((h) => ({ header: h, key: h }));
         data.forEach((row) => worksheet.addRow(row));
         const buffer = await workbook.xlsx.writeBuffer();
         const zip = new JSZip();
         zip.file("word_trend_speeches.xlsx", buffer);
+        zip.file("metadata.txt", metaData);
         const content = await zip.generateAsync({ type: "blob" });
+
         downloadDataStore().setupDownload("word_trend_speeches.zip", content);
         return true;
       } catch (error) {
