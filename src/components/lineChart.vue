@@ -4,7 +4,12 @@
       Klicka på "Totalt" i legenden för att endast visa totalsumman av alla ord.
     </q-item-label>
     <div class="row justify-center q-mt-lg">
-      <div ref="chartContainer" id="chartContainer" class="fit" data-test="line-chart"></div>
+      <div
+        ref="chartContainer"
+        id="chartContainer"
+        class="fit"
+        data-test="line-chart"
+      ></div>
     </div>
   </template>
   <template v-else>
@@ -19,6 +24,7 @@ import { reactive, watchEffect, ref } from "vue";
 import { useQuasar } from "quasar";
 import NoResults from "src/components/noResults.vue";
 import Highcharts from "highcharts";
+import JSZip from "jszip";
 // Highcharts 12+ modules auto-register when imported
 import "highcharts/modules/annotations";
 import "highcharts/modules/exporting";
@@ -36,9 +42,9 @@ let categories = [];
 const chartOptions = reactive({
   chart: {
     type: "line",
-    animation: false,/* {
+    animation: false /* {
       duration: 300  // Fast animation (300ms instead of default 1000ms)
-    },*/
+    },*/,
     style: {
       fontFamily: '"Open Sans", sans-serif',
     },
@@ -125,13 +131,12 @@ const chartOptions = reactive({
   plotOptions: {
     line: {
       lineWidth: 3,
-      animation: false, /* {
+      animation: false /* {
         duration: 300  // Fast line drawing animation
-      } */
+      } */,
     },
   },
   colors: [
-
     "#332288",
     "#88CCEE",
     "#44AA99",
@@ -182,7 +187,7 @@ const chartOptions = reactive({
   credits: {
     enabled: false,
   },
-  
+
   responsive: {
     rules: [
       {
@@ -204,23 +209,19 @@ const chartOptions = reactive({
       contextButton: {
         menuItems: [
           {
-            text: "Ladda ner som PNG",
-            onclick: function () {
-              this.update({
-                title: { text: "Riksdagsdebatter.se - Ordtrender" },
-              });
-              this.exportChartLocal({ type: "image/png" });
-              downloadMetadata();
+            text: "Ladda ner som PNG (zip)",
+            onclick: async function () {
+              const blob = await svgToPngBlob(getTitledSvg(this));
+              await downloadZip(blob, "word-trends.png");
             },
           },
           {
-            text: "Ladda ner som SVG",
-            onclick: function () {
-              this.update({
-                title: { text: "Riksdagsdebatter.se - Ordtrender" },
+            text: "Ladda ner som SVG (zip)",
+            onclick: async function () {
+              const blob = new Blob([getTitledSvg(this)], {
+                type: "image/svg+xml",
               });
-              this.exportChartLocal({ type: "image/svg+xml" });
-              downloadMetadata();
+              await downloadZip(blob, "word-trends.svg");
             },
           },
           {
@@ -235,18 +236,42 @@ const chartOptions = reactive({
   },
 });
 
-function downloadMetadata() {
-  const textContent = generateTextFileContent();
-  const blob = new Blob([textContent], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "metadata.txt";
-  link.click();
+function getTitledSvg(chart) {
+  return chart.getSVG({
+    title: { text: "Riksdagsdebatter.se - Ordtrender" },
+    chart: { width: 1080 },
+  });
 }
 
-function generateTextFileContent() {
-  const selectedMetaData = metaStore.selectedMetadataToText("wordTrends");
-  return selectedMetaData;
+function svgToPngBlob(svg) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext("2d").drawImage(img, 0, 0);
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("PNG export failed"))),
+        "image/png",
+      );
+    };
+    img.onerror = reject;
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+
+async function downloadZip(imageBlob, imageName) {
+  const zip = new JSZip();
+  zip.file(imageName, imageBlob);
+  zip.file("metadata.txt", metaStore.selectedMetadataToText("wordTrends"));
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  const url = URL.createObjectURL(zipBlob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "word-trends.zip";
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 const dataLoaded = ref(false);
@@ -265,10 +290,10 @@ function addDataPointsForMissingYears(categories) {
   const maxCategory = Math.max(...categories);
   const categoryRange = Array.from(
     { length: maxCategory - minCategory + 1 },
-    (_, i) => minCategory + i
+    (_, i) => minCategory + i,
   );
   const missingYears = categoryRange.filter(
-    (year) => !categories.includes(year)
+    (year) => !categories.includes(year),
   );
 
   missingYears.forEach((year) => {
@@ -293,7 +318,10 @@ function prepareDataForLineChart() {
   const seriesData = Object.keys(wtStore.wordTrends[0].count)
     .map((word) => ({
       name: word,
-      total: wtStore.wordTrends.reduce((sum, entry) => sum + entry.count[word], 0),
+      total: wtStore.wordTrends.reduce(
+        (sum, entry) => sum + entry.count[word],
+        0,
+      ),
       data: wtStore.wordTrends.map((entry) => entry.count[word]),
     }))
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
@@ -344,7 +372,7 @@ function renderChart(container, categories, seriesData) {
 
             if (clickedSeries.name === "Totalt") {
               const allOtherSeriesVisible = series.some(
-                (s) => s !== clickedSeries && s.visible
+                (s) => s !== clickedSeries && s.visible,
               );
 
               series.forEach((s) => {
@@ -371,8 +399,6 @@ function renderChart(container, categories, seriesData) {
     },
   });
 }
-
-
 </script>
 
 <style scoped></style>

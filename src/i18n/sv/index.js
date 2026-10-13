@@ -29,10 +29,11 @@ export default {
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i riksdagen
   sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med
   finansiering av Umeå universitet och `,
-  indexPageIntroText2: `vid samma universitet. Det dataset med
+  indexPageIntroText2: `vid samma universitet samt `,
+  indexPageIntroText25: `. Det dataset med
   annoterade anföranden som Riksdagsdebatter.se bygger på hämtas från
   forskningsinfrastrukturprojektet`,
-  indexPageIntroText3: ` Om ni använder riksdagsdebatter.se i forskning eller annan verkamhet är det välkommet att referera till publikationen`,
+  indexPageIntroText3: `, finansierat av Riksbankens Jubileumsfond. Om ni använder Riksdagsdebatter.se i forskning eller annan verkamhet är det välkommet att referera till publikationen`,
 
   wordTrendsTitle: "Ordtrender",
   wordTrendsText:
@@ -159,14 +160,14 @@ export default {
   kwicIntro: `Med verktyget {kwicTitleText} kan du söka på ord och fraser,
   till exempel {searchExample1} eller {searchExample2}, och se kontexten till vänster och
   höger om sökningen. För att få fler träffar kan {kwicExample3} användas,
-  till exempel {serachExample4}. Under {filterText} kan du avgränsa
+  till exempel {searchExample4}. Notera att även skiljetecken (till exempel . , – ”) också räknas som ord när du väljer storleken på ordfönstret. Under {filterText} kan du avgränsa
   anförandena till bland annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
   kwicTitle: `Key Words in Context`, //<strong>
   filterOnMetadata: "Filtrera på metadata", // <b>
   searchExample1: `jämlikhet`, // <code>
   searchExample2: `jämlikhet för`, // <code>
   searchExample3: `*`, // <code>
-  serachExample4: `frihet*`, // <code>
+  searchExample4: `frihet*`, // <code>
   searchExample5: `frihet,jämlikhet`, //code
 
 
@@ -179,8 +180,8 @@ export default {
   Med verktyget {ngramTitle} kan du söka på ord och fraser, till exempel
   {searchExample1} eller {searchExample2}, och få fram en lista med mest
   förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
-   Här måste du söka på exakta ord fraser ({searchExample3} kan inte användas). Träffar ges på N-gram
-   med minst två förekomster i anförandena.
+   Här måste du söka på exakta ord eller fraser ({searchExample3} kan inte användas). Träffar ges på N-gram
+   med minst två förekomster i anförandena. Notera att även skiljetecken (till exempel . , – ”) också räknas som ord när du väljer storleken på N-gram.
   Under {filterText} kan du avgränsa anförandena till bland
   annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,
   ngramTitle: `N-ngram`, // strong
@@ -285,22 +286,20 @@ export default {
   aboutPageIntroText: `Riksdagsdebatter.se är skapad för att göra det lättare att utforska,
   läsa och ladda ner anföranden av svenska riksdagsledamöter och andra som talat i
   riksdagen sedan 1867. Gränssnittet är utvecklat inom projektet ”Svenska riksdagsdebatter” med finansiering av Umeå
-  universitet och Huminfra. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+  universitet och  `,
+  aboutPageIntroText1:`. GitHub används som utvecklingsplattform för Riksdagsdebatter.se och du finner den öppna källkoden`,
+  aboutPageIntroText2: ` Om ni använder Riksdagsdebatter.se i forskning eller annan verkamhet är det välkommet att referera till publikationen`,
 
   aboutFinance:
     "Riksdagsdebatter.se primära finansiärer är Umeå universitet, Humlab samt",
   financiers: {
+
     0: {
-      alt: "Umeå universitet logo",
-      src: "/images/umu-logo-left-SE.png",
-      style: "width: 200px",
-    },
-    1: {
       alt: "Humlab logo",
       src: "/images/humlab_logo_left_se.png",
       style: "width: 250px",
     },
-    2: {
+    1: {
       alt: "Huminfra logo",
       src: "/images/HumInfra_3_b.png",
       style: "width: 150px",
@@ -405,7 +404,7 @@ export default {
     1: {
       q: "Var kommer listan med partier ifrån?",
       a: `Listan med partier som används bygger på främst Sten Carlssons partiförteckning i
-      biografbandserien <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988).</i>
+      biografbandserien <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar</i> (1988).
       Bilden nedan är hämtad från Carlssons kapitel i biografiböckerna.
       Den visar utvecklingen av partibildningar, partisplittringar och partisammanslagningar
       under hela tvåkammartiden, från 1867 till 1970. Information om senare partier som har
@@ -463,11 +462,7 @@ export default {
       a: `Partinamnen som används i Riksdagsdebatter.se bygger på de namn som anges
       i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
       samt information från riksdagens register. Många av partiförkortningarna är
-      däremot konstruerade av teamet bakom Riksdagsdebatter.se.`,
-      a: `Partinamnen som används i Riksdagsdebatter.se bygger på de namn som anges
-      i biografibanden <i>Tvåkammarriksdagen 1867–1970: Ledamöter och valkretsar (1988)</i>
-      samt information från riksdagens register. Många av partiförkortningarna är
-      däremot konstruerade av teamet bakom Riksdagsdebatter.se.
+      däremot konstruerade av teamet bakom Riksdagsdebatter.se. AK står för andra kammaren och FK står för första kammaren..
 </br></br>
       <ul style="list-style-type: none; padding: 0; margin: 0;">
         <li><b>AK-bd</b>: AK:s bondeska diskussionsklubben (1897–1899)</li>
@@ -537,7 +532,9 @@ export default {
       från 1867 och framåt via Wikidata. Det gör att alla är välkomna att bidra med
       att lägga till information om ledamöterna. Den information som används i
       Riksdagsdebatter.se är dock begränsad till bland annat parti, levnadsår och kön.
-      SWERIK har en katalog med alla svenska riksdagsledamöter. `,
+      SWERIK har en katalog med alla svenska riksdagsledamöter. 
+      SWERIK-projektet har också skapat ett kontrollsystem som förhindrar att systematiskt felaktiga tillägg i 
+      Wikidata införlivas i nya versioner av databasen.`,
       links: {
         0: {
           link: "https://swerik-project.github.io/",
@@ -639,12 +636,12 @@ export default {
 </br></br>
       På grund av det stora materialet är det svårt för modellerna att uppnå 100 % träffsäkerhet,
       till exempel vad gäller att identifiera alla anföranden och koppla dessa till rätt ledamot.
-      Den statistiskt uppskattade träffsäkerheten för att koppla samman anföranden med rätt ledamot
-      är över 90 % efter 1900 (och ofta över 95 % efter 1920). Du kan följa kvalitén i den senaste
+      Den statistiskt uppskattade träffsäkerheten för att koppla samman anföranden med rätt ledamot är 
+      ofta över 95 % under hela perioden. Du kan följa kvalitén i den senaste
       versionen på SWERIKs GitHub-sida.
 </br></br>
       Generell information om den anförande-data som SWERIK har förfinat finns i konferenspapret
-      "The Swedish Parliament Corpus 1867–2022" som publicerades på LREC-Coling 2024 2024.
+      "The Swedish Parliament Corpus 1867–2022" som publicerades på LREC-Coling 2024.
       I stora drag bygger Riksdagsdebatter.se på följande dataset (sedan 1867):
       <ul>
         <li>ca 18,000 riksdagsprotokoll</li>
@@ -676,7 +673,7 @@ export default {
       a: `Riksdagen ändrade från hela kalenderår till riksdagsår (cirka september till juni) 1975/1976.
 
       Det påverkade även vilka år som angavs i riksdagsprotokollens namn (t ex från 1972 till 1978/79).
-      Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i riksdagsdebatter.se.`,
+      Detta skifte påverkar i nuläget även hur ordfrekvenserna presenteras i Riksdagsdebatter.se.`,
     },
   },
 

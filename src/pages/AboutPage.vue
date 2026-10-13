@@ -6,10 +6,14 @@
       :class="$q.screen.lt.sm ? '' : 'text-align'"
     >
       {{ $t("aboutPageIntroText") }}
+      <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
+        Huminfra
+      </a>
+      {{ $t("aboutPageIntroText1") }}
       <a :href="$t('links.swedebGithub')" class="link-deco text-accent text-bold">
         här.
       </a>
-      {{ $t("indexPageIntroText3") }}
+      {{ $t("aboutPageIntroText2") }}
       <a :href="$t('links.dhnb')" class="link-deco text-accent text-bold">
         Riksdagsdebatter.se – An Interface to Explore Swedish Parliamentary Debates Since 1867.
       </a>
