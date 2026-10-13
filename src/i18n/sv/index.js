@@ -180,7 +180,7 @@ export default {
   Med verktyget {ngramTitle} kan du söka på ord och fraser, till exempel
   {searchExample1} eller {searchExample2}, och få fram en lista med mest
   förekommande N-grams (beroende på dess storlek) före och/eller efter sökordet eller sökfrasen.
-   Här måste du söka på exakta ord fraser ({searchExample3} kan inte användas). Träffar ges på N-gram
+   Här måste du söka på exakta ord eller fraser ({searchExample3} kan inte användas). Träffar ges på N-gram
    med minst två förekomster i anförandena. Notera att även skiljetecken (till exempel . , – ”) också räknas som ord när du väljer storleken på N-gram.
   Under {filterText} kan du avgränsa anförandena till bland
   annat vissa partier, talare eller år. Observera att sökningar som har en hög träffrekvens kan ta längre tid.`,

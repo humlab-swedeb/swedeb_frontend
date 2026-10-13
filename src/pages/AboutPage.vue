@@ -7,7 +7,7 @@
     >
       {{ $t("aboutPageIntroText") }}
       <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
-        Huminfra.
+        Huminfra
       </a>
       {{ $t("aboutPageIntroText1") }}
       <a :href="$t('links.swedebGithub')" class="link-deco text-accent text-bold">
