@@ -13,7 +13,11 @@
       </a>
       {{ $t("indexPageIntroText2") }}
       <a :href="$t('links.huminfra')" class="link-deco text-accent text-bold">
-        HUMINFRA.
+        Huminfra
+      </a>
+      {{ $t("indexPageIntroText25") }}
+      <a :href="$t('links.swerik')" class="link-deco text-accent text-bold">
+        SWERIK
       </a>
       {{ $t("indexPageIntroText3") }}
       <a :href="$t('links.dhnb')" class="link-deco text-accent text-bold">

@@ -24,8 +24,8 @@
       <template #kwicExample3>
         <code>{{ $t("searchExample3") }}</code>
       </template>
-      <template #serachExample4>
-        <code>{{ $t("serachExample4") }}</code>
+      <template #searchExample4>
+        <code>{{ $t("searchExample4") }}</code>
       </template>
     </i18n-t>
   </q-card>
